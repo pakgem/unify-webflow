@@ -26,8 +26,7 @@ const MIMIC_FOLLOW = {
   minMomentum: 0.35,
   maxMomentumStep: 18,
   idleTimeoutMs: 1800,
-  rootMargin: 80,
-  browserExitMargin: 44,
+  reengageRadius: 84,
   maxBrowserDistance: 600,
   returnDelayMs: 320,
 };
@@ -108,7 +107,7 @@ export class PausedCursorMimic {
 
     const point = { x: event.clientX, y: event.clientY };
 
-    if (!this.isPointNearRoot(point)) {
+    if (!this.isPointInsideViewport(point)) {
       if (this.active) {
         this.startSniffing();
       }
@@ -120,6 +119,8 @@ export class PausedCursorMimic {
       if (this.mode === "follow") {
         this.updateFollowTarget(point);
         this.lastMoveAt = performance.now();
+      } else if (this.isPointNearStoryCursor(point, MIMIC_FOLLOW.reengageRadius)) {
+        this.resumeFollowing(point);
       }
       this.scheduleFollow();
       return;
@@ -240,7 +241,7 @@ export class PausedCursorMimic {
   };
 
   private updateFollowTarget(point: Point): void {
-    if (!this.isPointNearBrowser(point)) {
+    if (!this.isPointInsideViewport(point)) {
       this.startSniffing();
       return;
     }
@@ -274,6 +275,17 @@ export class PausedCursorMimic {
     this.target = target;
     this.pointer = point;
     this.lastPointer = point;
+  }
+
+  private resumeFollowing(point: Point): void {
+    this.mode = "follow";
+    this.sniffAnchor = null;
+    this.nextSniffAt = 0;
+    this.sniffIndex = 0;
+    this.returnAt = 0;
+    this.lastPointer = point;
+    this.updateFollowTarget(point);
+    this.lastMoveAt = performance.now();
   }
 
   private startSniffing(): void {
@@ -367,7 +379,7 @@ export class PausedCursorMimic {
     return distanceToRect(viewportCursor, shellRect) > MIMIC_FOLLOW.maxBrowserDistance;
   }
 
-  private isPointNearStoryCursor(point: Point): boolean {
+  private isPointNearStoryCursor(point: Point, radius = MIMIC_TRIGGER.radius): boolean {
     const rootRect = this.root.getBoundingClientRect();
     const cursorPoint = this.cursor.readPosition();
     const viewportCursor = {
@@ -375,30 +387,15 @@ export class PausedCursorMimic {
       y: rootRect.top + cursorPoint.y,
     };
 
-    return distance(point, viewportCursor) <= MIMIC_TRIGGER.radius;
+    return distance(point, viewportCursor) <= radius;
   }
 
-  private isPointNearRoot(point: Point): boolean {
-    const rect = this.root.getBoundingClientRect();
-
+  private isPointInsideViewport(point: Point): boolean {
     return (
-      point.x >= rect.left - MIMIC_FOLLOW.rootMargin &&
-      point.x <= rect.right + MIMIC_FOLLOW.rootMargin &&
-      point.y >= rect.top - MIMIC_FOLLOW.rootMargin &&
-      point.y <= rect.bottom + MIMIC_FOLLOW.rootMargin
-    );
-  }
-
-  private isPointNearBrowser(point: Point): boolean {
-    const rect = this.root.querySelector<HTMLElement>("[data-chat-shell]")?.getBoundingClientRect();
-
-    if (!rect) return true;
-
-    return (
-      point.x >= rect.left - MIMIC_FOLLOW.browserExitMargin &&
-      point.x <= rect.right + MIMIC_FOLLOW.browserExitMargin &&
-      point.y >= rect.top - MIMIC_FOLLOW.browserExitMargin &&
-      point.y <= rect.bottom + MIMIC_FOLLOW.browserExitMargin
+      point.x >= 0 &&
+      point.x <= window.innerWidth &&
+      point.y >= 0 &&
+      point.y <= window.innerHeight
     );
   }
 

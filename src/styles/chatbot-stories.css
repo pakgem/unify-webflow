@@ -3362,11 +3362,13 @@ body {
   content: "";
   position: absolute;
   opacity: 0;
+  top: 0;
   left: 0;
   width: var(--wa-cursor-default-width);
+  height: var(--wa-cursor-default-height);
   background-repeat: no-repeat;
   background-position: 0 0;
-  background-size: var(--wa-cursor-default-width) var(--wa-cursor-default-height);
+  background-size: 100% 100%;
   pointer-events: none;
 }
 
@@ -3381,17 +3383,15 @@ body {
 }
 
 .wa-cursor[data-cursor-mimicking="true"][data-cursor-mode="default"] .wa-cursor__glyph::before {
-  top: 0;
-  height: 56%;
-  background-position: 0 0;
+  clip-path: inset(0 0 46% 0);
+  z-index: 2;
 }
 
 .wa-cursor[data-cursor-mimicking="true"][data-cursor-mode="default"] .wa-cursor__glyph::after {
-  bottom: 0;
-  height: 52%;
-  background-position: 0 100%;
-  transform-origin: 2px 0;
+  clip-path: inset(46% 0 0 0);
+  transform-origin: 3px 48%;
   animation: wa-cursor-wag 165ms ease-in-out infinite alternate;
+  z-index: 1;
 }
 
 .wa-cursor[data-cursor-mode="pointer"] .wa-cursor__glyph,
