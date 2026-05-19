@@ -1,0 +1,219 @@
+import type { gsap } from "gsap";
+import type { CursorActor } from "../actors/CursorActor";
+import type { ChatActor } from "../actors/ChatActor";
+import type { TargetResolver } from "./TargetResolver";
+
+export type CursorMode = "default" | "pointer" | "click" | "drag" | "release" | "text";
+export type CursorIntent = "entry" | "hover" | "click" | "drag" | "text" | "exit";
+export type CursorSpeed = "slow" | "normal" | "quick";
+export type BreakpointName = "mobile" | "tablet" | "desktop" | "wide";
+export type AnchorName =
+  | "center"
+  | "topLeft"
+  | "topRight"
+  | "bottomLeft"
+  | "bottomRight"
+  | "left"
+  | "right"
+  | "top"
+  | "bottom";
+
+export type Point = {
+  x: number;
+  y: number;
+};
+
+export type Offset = {
+  x?: number;
+  y?: number;
+};
+
+export type TargetSpec = {
+  target?: string | HTMLElement;
+  x?: number;
+  y?: number;
+  anchor?: AnchorName;
+  offset?: Offset;
+  outside?: "left" | "right" | "top" | "bottom";
+  humanOffset?: boolean;
+};
+
+export type ResponsiveTarget =
+  | TargetSpec
+  | Partial<Record<BreakpointName, TargetSpec>>;
+
+export type CursorMoveOptions = {
+  mode?: CursorMode;
+  intent?: CursorIntent;
+  speed?: CursorSpeed;
+  curve?: number;
+  overshoot?: number | false;
+  settle?: boolean;
+  releaseHold?: number;
+  preserveMode?: boolean;
+  label?: string;
+};
+
+export type ResultCardConfig = {
+  id: string;
+  kicker?: string;
+  title: string;
+  body?: string;
+  rows?: Array<{
+    label: string;
+    value: string;
+    tone?: "neutral" | "positive" | "warning" | "accent";
+  }>;
+  actions?: Array<{
+    label: string;
+    targetId: string;
+  }>;
+};
+
+export type StrategyPlanConfig = {
+  id: string;
+  label: string;
+  title: string;
+  audience: string;
+  motion: string;
+  proof: string;
+};
+
+export type DataSourceGridConfig = {
+  id: string;
+  title: string;
+  subtitle?: string;
+  sources: Array<{
+    id: string;
+    name: string;
+    detail: string;
+  }>;
+};
+
+export type UploadedFileConfig = {
+  name: string;
+  detail: string;
+  type?: string;
+};
+
+export type OutreachStyleProfileConfig = {
+  id: string;
+  title: string;
+  subtitle?: string;
+  signals: Array<{
+    label: string;
+    value: string;
+  }>;
+  examples?: string[];
+};
+
+export type ProximityLeadListConfig = {
+  id: string;
+  title: string;
+  subtitle?: string;
+  leads: Array<{
+    rank: string;
+    name: string;
+    company: string;
+    title: string;
+    proximity: string;
+    personalization: string;
+    score: string;
+  }>;
+};
+
+export type SequenceEngagementConfig = {
+  id: string;
+  title: string;
+  subtitle?: string;
+  peopleCount: string;
+  sequences: Array<{
+    name: string;
+    company: string;
+    subject: string;
+    personalization: string;
+  }>;
+  channels: Array<{
+    label: string;
+    detail: string;
+    badge?: string;
+  }>;
+};
+
+export type DataTableConfig = {
+  id: string;
+  title: string;
+  eyebrow?: string;
+  count?: string;
+  variant?: "default" | "filtered" | "enriched";
+  columns: Array<{
+    key: string;
+    label: string;
+    width?: string;
+  }>;
+  rows: Array<{
+    id: string;
+    values: Record<string, string>;
+  }>;
+};
+
+export type EnrichmentConfig = {
+  id: string;
+  title: string;
+  subtitle: string;
+  modeLabel: string;
+  fields: Array<{
+    title: string;
+    steps: string[];
+  }>;
+};
+
+export type StoryDefinition = {
+  id: string;
+  label: string;
+  navLabel?: string;
+  navDescription?: string;
+  eyebrow: string;
+  summary: string;
+  accent?: string;
+  entry: ResponsiveTarget;
+  entryLeadTime?: number;
+  prepare?: (ctx: StoryContext) => void;
+  build: (ctx: StoryContext) => gsap.core.Timeline;
+};
+
+export type StoryContext = {
+  root: HTMLElement;
+  story: StoryDefinition;
+  resolver: TargetResolver;
+  cursor: CursorActor;
+  chat: ChatActor;
+  timeline: () => gsap.core.Timeline;
+};
+
+export type ChatbotStoriesConfig = {
+  stories?: StoryDefinition[];
+  autoplay?: boolean;
+  loop?: boolean;
+  autoAdvanceDelay?: number;
+  initialStory?: number | string;
+  injectStyles?: boolean;
+  reducedMotion?: boolean;
+  showBuilder?: boolean;
+  onStoryChange?: (story: StoryDefinition, index: number) => void;
+};
+
+export type ChatbotStoriesInstance = {
+  play: () => void;
+  pause: () => void;
+  next: () => void;
+  previous: () => void;
+  goTo: (story: number | string) => void;
+  destroy: () => void;
+  getState: () => {
+    story: StoryDefinition;
+    index: number;
+    progress: number;
+    playing: boolean;
+  };
+};
