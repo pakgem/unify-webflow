@@ -16,6 +16,14 @@ const MIMIC_TRIGGER = {
   minTravel: 34,
   minAxisReversals: 1,
 };
+const MIMIC_DISMISS = {
+  sampleWindowMs: 560,
+  minTravel: 300,
+  minAxisReversals: 4,
+  minAverageSpeed: 0.58,
+  minTravelToNetRatio: 2.25,
+  maxNetDistance: 180,
+};
 
 const MIMIC_FOLLOW = {
   smoothing: 0.22,
@@ -47,6 +55,7 @@ export class PausedCursorMimic {
   private mode: MimicMode = "idle";
   private listening = false;
   private samples: PointerSample[] = [];
+  private dismissSamples: PointerSample[] = [];
   private target: Point | null = null;
   private pointer: Point | null = null;
   private homePoint: Point | null = null;
@@ -72,6 +81,7 @@ export class PausedCursorMimic {
 
     this.paused = paused;
     this.samples = [];
+    this.dismissSamples = [];
 
     if (paused) {
       this.listen();
@@ -112,14 +122,22 @@ export class PausedCursorMimic {
         this.startSniffing();
       }
       this.samples = [];
+      this.dismissSamples = [];
       return;
     }
 
     if (this.active) {
+      const now = performance.now();
+
       if (this.mode === "follow") {
         this.updateFollowTarget(point);
-        this.lastMoveAt = performance.now();
-      } else if (this.isPointNearStoryCursor(point, MIMIC_FOLLOW.reengageRadius)) {
+        this.lastMoveAt = now;
+        this.trackDismissShake(point, now);
+
+        if (this.hasDismissShake()) {
+          this.startReturnAfterPause(0);
+        }
+      } else if (this.mode === "sniff" && this.isPointNearStoryCursor(point, MIMIC_FOLLOW.reengageRadius)) {
         this.resumeFollowing(point);
       }
       this.scheduleFollow();
@@ -144,6 +162,7 @@ export class PausedCursorMimic {
       this.startSniffing();
     }
     this.samples = [];
+    this.dismissSamples = [];
   };
 
   private startMimicking(point: Point): void {
@@ -156,6 +175,7 @@ export class PausedCursorMimic {
     this.updateFollowTarget(point);
     this.lastMoveAt = performance.now();
     this.samples = [];
+    this.dismissSamples = [];
     this.root.dataset.cursorMimicking = "true";
     this.options.onMimicStart?.();
     this.cursor.beginMimicControl();
@@ -173,6 +193,7 @@ export class PausedCursorMimic {
     this.sniffAnchor = null;
     this.lastPointer = null;
     this.velocity = { x: 0, y: 0 };
+    this.dismissSamples = [];
     delete this.root.dataset.cursorMimicking;
     window.cancelAnimationFrame(this.frame);
     this.frame = 0;
@@ -285,6 +306,7 @@ export class PausedCursorMimic {
     this.returnAt = 0;
     this.lastPointer = point;
     this.updateFollowTarget(point);
+    this.dismissSamples = [];
     this.lastMoveAt = performance.now();
   }
 
@@ -299,6 +321,7 @@ export class PausedCursorMimic {
     this.sniffIndex = 0;
     this.pointer = null;
     this.velocity = { x: 0, y: 0 };
+    this.dismissSamples = [];
     this.scheduleFollow();
   }
 
@@ -335,7 +358,7 @@ export class PausedCursorMimic {
     };
   }
 
-  private startReturnAfterPause(): void {
+  private startReturnAfterPause(delayMs = MIMIC_FOLLOW.returnDelayMs): void {
     if (!this.active) return;
 
     this.mode = "returnWait";
@@ -343,9 +366,10 @@ export class PausedCursorMimic {
     this.pointer = null;
     this.lastPointer = null;
     this.velocity = { x: 0, y: 0 };
+    this.dismissSamples = [];
     window.cancelAnimationFrame(this.frame);
     this.frame = 0;
-    this.returnAt = performance.now() + MIMIC_FOLLOW.returnDelayMs;
+    this.returnAt = performance.now() + delayMs;
     this.scheduleFollow();
   }
 
@@ -358,6 +382,7 @@ export class PausedCursorMimic {
     this.sniffAnchor = null;
     this.lastPointer = null;
     this.velocity = { x: 0, y: 0 };
+    this.dismissSamples = [];
     delete this.root.dataset.cursorMimicking;
     window.cancelAnimationFrame(this.frame);
     this.frame = 0;
@@ -413,6 +438,11 @@ export class PausedCursorMimic {
     this.samples = this.samples.filter((sample) => now - sample.time <= MIMIC_TRIGGER.sampleWindowMs);
   }
 
+  private trackDismissShake(point: Point, now: number): void {
+    this.dismissSamples.push({ ...point, time: now });
+    this.dismissSamples = this.dismissSamples.filter((sample) => now - sample.time <= MIMIC_DISMISS.sampleWindowMs);
+  }
+
   private hasMimicGesture(): boolean {
     if (this.samples.length < 4) return false;
 
@@ -422,17 +452,48 @@ export class PausedCursorMimic {
       return previous ? sum + distance(sample, previous) : sum;
     }, 0);
 
-    return travel >= MIMIC_TRIGGER.minTravel && this.countAxisReversals() >= MIMIC_TRIGGER.minAxisReversals;
+    return travel >= MIMIC_TRIGGER.minTravel && this.countAxisReversals(this.samples) >= MIMIC_TRIGGER.minAxisReversals;
   }
 
-  private countAxisReversals(): number {
+  private hasDismissShake(): boolean {
+    if (this.dismissSamples.length < 6) return false;
+
+    for (let startIndex = 0; startIndex <= this.dismissSamples.length - 6; startIndex += 1) {
+      if (this.isDismissShakeWindow(this.dismissSamples.slice(startIndex))) return true;
+    }
+
+    return false;
+  }
+
+  private isDismissShakeWindow(samples: PointerSample[]): boolean {
+    const first = samples[0];
+    const last = samples[samples.length - 1];
+    const duration = Math.max(1, last.time - first.time);
+    const travel = samples.reduce((sum, sample, index) => {
+      const previous = samples[index - 1];
+
+      return previous ? sum + distance(sample, previous) : sum;
+    }, 0);
+    const netDistance = distance(first, last);
+    const travelToNetRatio = travel / Math.max(netDistance, 1);
+
+    return (
+      travel >= MIMIC_DISMISS.minTravel &&
+      netDistance <= MIMIC_DISMISS.maxNetDistance &&
+      travel / duration >= MIMIC_DISMISS.minAverageSpeed &&
+      travelToNetRatio >= MIMIC_DISMISS.minTravelToNetRatio &&
+      this.countAxisReversals(samples) >= MIMIC_DISMISS.minAxisReversals
+    );
+  }
+
+  private countAxisReversals(samples: PointerSample[]): number {
     let reversals = 0;
     let previousXDirection = 0;
     let previousYDirection = 0;
 
-    for (let index = 1; index < this.samples.length; index += 1) {
-      const previous = this.samples[index - 1];
-      const current = this.samples[index];
+    for (let index = 1; index < samples.length; index += 1) {
+      const previous = samples[index - 1];
+      const current = samples[index];
       const xDirection = signWithDeadzone(current.x - previous.x);
       const yDirection = signWithDeadzone(current.y - previous.y);
 
