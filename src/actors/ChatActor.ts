@@ -160,11 +160,11 @@ const THINKING_STEP_FOLD = {
 };
 
 const COMPOSER_MOTION = {
-  hiddenY: 8,
-  hiddenScaleX: 0.76,
-  hiddenScaleY: 0.16,
-  showDuration: motionDuration(0.26),
-  hideDuration: motionDuration(0.22),
+  hiddenY: 0,
+  hiddenScaleX: 0.62,
+  hiddenScaleY: 0.42,
+  showDuration: motionDuration(0.3),
+  hideDuration: motionDuration(0.28),
   threadGap: 44,
 };
 
@@ -458,7 +458,8 @@ export class ChatActor {
       scaleY: 1,
       visibility: "visible",
       duration: COMPOSER_MOTION.showDuration,
-      ease: "back.out(1.45)",
+      ease: "power3.out",
+      force3D: true,
       overwrite: "auto",
       onStart: () => {
         this.setComposerVisibleState(true);
@@ -466,7 +467,7 @@ export class ChatActor {
           display: "grid",
           opacity: 1,
           visibility: "visible",
-          transformOrigin: "center bottom",
+          transformOrigin: "center center",
         });
       },
       onUpdate: () => {
@@ -498,7 +499,8 @@ export class ChatActor {
       scaleY: COMPOSER_MOTION.hiddenScaleY,
       opacity: 1,
       duration: COMPOSER_MOTION.hideDuration,
-      ease: "power3.inOut",
+      ease: "power2.inOut",
+      force3D: true,
       overwrite: "auto",
       onStart: () => {
         this.setComposerFocusState(false);
@@ -546,7 +548,7 @@ export class ChatActor {
       scaleX: COMPOSER_MOTION.hiddenScaleX,
       scaleY: COMPOSER_MOTION.hiddenScaleY,
       display: "",
-      transformOrigin: "center bottom",
+      transformOrigin: "center center",
     };
   }
 

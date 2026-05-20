@@ -2421,7 +2421,7 @@ body {
   box-shadow:
     0 18px 34px rgba(23, 23, 20, 0.12),
     0 1px 0 rgba(255, 255, 255, 0.74) inset;
-  transform-origin: center bottom;
+  transform-origin: center center;
   backface-visibility: hidden;
   transition:
     border-color 140ms ease,
