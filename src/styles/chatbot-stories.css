@@ -1371,6 +1371,7 @@ body {
   align-items: center;
   gap: 6px;
   min-width: 0;
+  padding-left: 72px;
 }
 
 .wa-data-table-action {
@@ -1425,7 +1426,7 @@ body {
 .wa-data-table-action__tooltip {
   position: absolute;
   bottom: calc(100% + 7px);
-  left: 0;
+  left: 50%;
   z-index: 4;
   display: inline-flex;
   align-items: center;
@@ -1442,7 +1443,7 @@ body {
   white-space: nowrap;
   opacity: 0;
   visibility: hidden;
-  transform: translate3d(0, 4px, 0);
+  transform: translate3d(-50%, 4px, 0);
   transition:
     opacity 120ms ease,
     visibility 120ms ease,
@@ -1452,7 +1453,7 @@ body {
 .wa-data-table-action[data-tooltip-visible="true"] .wa-data-table-action__tooltip {
   opacity: 1;
   visibility: visible;
-  transform: translate3d(0, 0, 0);
+  transform: translate3d(-50%, 0, 0);
 }
 
 .wa-data-table__pagination {
@@ -4267,6 +4268,7 @@ body {
 
   .wa-data-table__actions {
     gap: 4px;
+    padding-left: 52px;
   }
 
   .wa-data-table-action {
