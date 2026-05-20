@@ -1744,7 +1744,7 @@ function createSeedSteps(storyId: string, fallbackSummary: string): BuilderStep[
       },
     ],
     "research-brief": [
-      { kind: "user", text: "Show me 50 heads of sales that have recently visited my website.", note: "" },
+      { kind: "user", text: "Show me 50 sales leaders that have recently visited my website.", note: "" },
       {
         kind: "component",
         text: "Table: 50 recent website visitors",

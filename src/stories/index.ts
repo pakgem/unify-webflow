@@ -675,7 +675,7 @@ const WEBSITE_VISITOR_SALES_TABLE = {
   id: "website-visitors-sales",
   title: "Recent website visitors",
   eyebrow: "Visitor intent",
-  count: "50 heads of sales",
+  count: "50 sales leaders",
   variant: "filtered",
   columns: WEBSITE_VISITOR_SALES_COLUMNS,
   rows: WEBSITE_VISITOR_SALES_PAGE_ONE,
@@ -989,7 +989,7 @@ export const defaultStories: StoryDefinition[] = [
       return buildStorySteps(ctx, [
         {
           kind: "prompt",
-          text: "Show me 50 heads of sales that have recently visited my website.",
+          text: "Show me 50 sales leaders that have recently visited my website.",
           duration: STORY_TIMING.typeLong,
           sendLabel: "send-visitor-sales-list",
           statusBefore: "Finding visitors",

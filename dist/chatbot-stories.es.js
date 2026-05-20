@@ -5505,7 +5505,7 @@ function Ts(o, e) {
       }
     ],
     "research-brief": [
-      { kind: "user", text: "Show me 50 heads of sales that have recently visited my website.", note: "" },
+      { kind: "user", text: "Show me 50 sales leaders that have recently visited my website.", note: "" },
       {
         kind: "component",
         text: "Table: 50 recent website visitors",
@@ -6729,7 +6729,7 @@ const lo = [
   id: "website-visitors-sales",
   title: "Recent website visitors",
   eyebrow: "Visitor intent",
-  count: "50 heads of sales",
+  count: "50 sales leaders",
   variant: "filtered",
   columns: xo,
   rows: Di,
@@ -7017,7 +7017,7 @@ const lo = [
       return _t(o, [
         {
           kind: "prompt",
-          text: "Show me 50 heads of sales that have recently visited my website.",
+          text: "Show me 50 sales leaders that have recently visited my website.",
           duration: L.typeLong,
           sendLabel: "send-visitor-sales-list",
           statusBefore: "Finding visitors",
