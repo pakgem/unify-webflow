@@ -2797,7 +2797,8 @@ class ms {
       stagger: he.stagger
     }) : (w.set(r, { autoAlpha: 0, y: 0, scale: 1 }), w.timeline().call(() => {
       this.scrollTween?.kill(), this.scrollTween = null, t.style.display = "grid", w.set(t, {
-        autoAlpha: 1,
+        opacity: 1,
+        visibility: "hidden",
         y: 0,
         scale: 1,
         transformOrigin: "right center"
@@ -2832,7 +2833,7 @@ class ms {
       },
       `-=${T(0.16)}`
     ).call(() => {
-      this.renderFileLandingClones(n, 1), w.set(r, { autoAlpha: 1, y: 0, scale: 1 }), n.forEach((d) => d.el.remove()), e.remove(), this.animateMessageScrollIntoView(t);
+      this.renderFileLandingClones(n, 1), w.set(r, { autoAlpha: 1, y: 0, scale: 1 }), w.set(t, { opacity: 1, visibility: "visible" }), n.forEach((d) => d.el.remove()), e.remove(), this.animateMessageScrollIntoView(t);
     }));
   }
   createFileLandingClones(e, t) {

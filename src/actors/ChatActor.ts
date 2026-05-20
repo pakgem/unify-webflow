@@ -1216,7 +1216,8 @@ export class ChatActor {
         this.scrollTween = null;
         message.style.display = "grid";
         gsap.set(message, {
-          autoAlpha: 1,
+          opacity: 1,
+          visibility: "hidden",
           y: 0,
           scale: 1,
           transformOrigin: "right center",
@@ -1260,6 +1261,7 @@ export class ChatActor {
       .call(() => {
         this.renderFileLandingClones(clones, 1);
         gsap.set(revealTargets, { autoAlpha: 1, y: 0, scale: 1 });
+        gsap.set(message, { opacity: 1, visibility: "visible" });
         clones.forEach((clone) => clone.el.remove());
         cursorFile.remove();
         this.animateMessageScrollIntoView(message);
