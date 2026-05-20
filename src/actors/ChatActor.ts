@@ -373,6 +373,13 @@ export class ChatActor {
     }
   }
 
+  prepareStoryStart(): void {
+    this.setComposerFocusState(false);
+    this.setComposerVisibleState(false);
+    gsap.set(this.composer, this.getComposerHiddenVars());
+    gsap.set(this.composerText, { autoAlpha: 1, y: 0 });
+  }
+
   setStatus(text: string): gsap.core.Timeline {
     const tl = gsap.timeline();
 

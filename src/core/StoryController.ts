@@ -171,7 +171,10 @@ export class StoryController implements ChatbotStoriesInstance {
     const leadTime = story.entryLeadTime ?? 0.24;
 
     tl.add(entryMove, 0);
+    storyBody.pause(0);
     tl.add(storyBody, Math.max(0, entryMove.duration() - leadTime));
+    storyBody.paused(false);
+    this.chat.prepareStoryStart();
 
     return tl;
   }

@@ -2217,6 +2217,9 @@ class ms {
     for (const e of this.cardPool)
       e.style.display = "none";
   }
+  prepareStoryStart() {
+    this.setComposerFocusState(!1), this.setComposerVisibleState(!1), w.set(this.composer, this.getComposerHiddenVars()), w.set(this.composerText, { autoAlpha: 1, y: 0 });
+  }
   setStatus(e) {
     const t = w.timeline();
     return this.status && t.to(this.status, {
@@ -6774,7 +6777,7 @@ class ko {
       speed: "normal",
       label: "story-entry"
     }), s = a.build(r), l = a.entryLeadTime ?? 0.24;
-    return i.add(n, 0), i.add(s, Math.max(0, n.duration() - l)), i;
+    return i.add(n, 0), s.pause(0), i.add(s, Math.max(0, n.duration() - l)), s.paused(!1), this.chat.prepareStoryStart(), i;
   }
   stopTimeline() {
     this.autoAdvance?.kill(), this.seekTween?.kill(), this.cancelHistoryParkMotion(), this.pausedCursorMimic?.setPaused(!1), this.activeTimeline?.kill(), this.activeTimeline = null, this.cursor.resetInteraction();
