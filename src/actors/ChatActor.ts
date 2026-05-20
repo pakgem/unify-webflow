@@ -39,18 +39,31 @@ type CursorFileFollowOffset = {
   x: number;
   y: number;
 };
+type RgbaColor = {
+  r: number;
+  g: number;
+  b: number;
+  a: number;
+};
 type FileLandingClone = {
   el: HTMLElement;
-  sourceRect: DOMRect;
   target: HTMLElement;
   startX: number;
   startY: number;
+  startScaleX: number;
+  startScaleY: number;
   startRotation: number;
+  startBackground: RgbaColor;
+  endBackground: RgbaColor;
+  startBorderColor: RgbaColor;
+  detailEls: HTMLElement[];
   setX: (value: number) => void;
   setY: (value: number) => void;
   setScaleX: (value: number) => void;
   setScaleY: (value: number) => void;
   setRotation: (value: number) => void;
+  setBackgroundColor: (value: string) => void;
+  setBorderColor: (value: string) => void;
 };
 
 type DropAreaOptions = {
@@ -217,6 +230,11 @@ const FILE_DROP_LANDING = {
   stagger: 0.055,
   ease: "power3.inOut",
   rotations: [2, -5, 6, -8],
+  detailStart: 0.42,
+  detailSpan: 0.34,
+  shadowY: 16,
+  shadowBlur: 28,
+  shadowAlpha: 0.18,
 };
 
 const COMPONENT_CHILD_REVEAL = {
@@ -1228,26 +1246,19 @@ export class ChatActor {
         0,
       )
       .to(
-        revealTargets,
+        extras,
         {
           autoAlpha: 1,
-          duration: motionDuration(0.1),
+          y: 0,
+          scale: 1,
+          duration: motionDuration(0.16),
           ease: "power1.out",
           stagger: FILE_DROP_LANDING.stagger,
         },
-        `-=${motionDuration(0.13)}`,
-      )
-      .to(
-        clones.map((clone) => clone.el),
-        {
-          autoAlpha: 0,
-          duration: motionDuration(0.1),
-          ease: "power1.out",
-          stagger: FILE_DROP_LANDING.stagger,
-        },
-        "<",
+        `-=${motionDuration(0.16)}`,
       )
       .call(() => {
+        this.renderFileLandingClones(clones, 1);
         gsap.set(revealTargets, { autoAlpha: 1, y: 0, scale: 1 });
         clones.forEach((clone) => clone.el.remove());
         cursorFile.remove();
@@ -1261,9 +1272,16 @@ export class ChatActor {
     return targets.map((target, index) => {
       const sourceCard = sourceCards[Math.min(index, sourceCards.length - 1)];
       const sourceRect = sourceCard.getBoundingClientRect();
+      const targetRect = target.getBoundingClientRect();
       const sourceLocalRect = this.getRootLocalRect(sourceRect);
-      const clone = sourceCard.cloneNode(true) as HTMLElement;
+      const clone = target.cloneNode(true) as HTMLElement;
       const startRotation = this.getCursorFileCardRotation(index, sourceCards.length);
+      const sourceStyle = window.getComputedStyle(sourceCard);
+      const targetStyle = window.getComputedStyle(target);
+      const startBackground = this.parseCssColor(sourceStyle.backgroundColor) ?? { r: 255, g: 255, b: 249, a: 0.96 };
+      const endBackground = this.parseCssColor(targetStyle.backgroundColor) ?? startBackground;
+      const startBorderColor = this.parseCssColor(sourceStyle.borderTopColor) ?? { r: 23, g: 23, b: 20, a: 0.12 };
+      const detailEls = this.queryElements(clone, ".wa-uploaded-file__body span");
 
       clone.classList.add("wa-file-landing-clone");
       clone.dataset.fileLandingClone = "";
@@ -1273,31 +1291,45 @@ export class ChatActor {
         zIndex: 21,
         top: 0,
         left: 0,
-        width: sourceRect.width,
-        height: sourceRect.height,
+        width: targetRect.width,
+        height: targetRect.height,
         x: sourceLocalRect.left,
         y: sourceLocalRect.top,
-        scaleX: 1,
-        scaleY: 1,
+        scaleX: sourceRect.width / Math.max(1, targetRect.width),
+        scaleY: sourceRect.height / Math.max(1, targetRect.height),
         rotation: startRotation,
         transformOrigin: "left top",
         pointerEvents: "none",
         margin: 0,
         autoAlpha: 1,
+        visibility: "visible",
+        backgroundColor: this.formatRgba(startBackground),
+        borderColor: this.formatRgba(startBorderColor),
+        borderStyle: sourceStyle.borderTopStyle === "none" ? "solid" : sourceStyle.borderTopStyle,
+        borderWidth: sourceStyle.borderTopWidth || "1px",
+        boxShadow: this.getFileLandingShadow(0),
       });
+      gsap.set(detailEls, { autoAlpha: 0, y: -3 });
 
       return {
         el: clone,
-        sourceRect,
         target,
         startX: sourceLocalRect.left,
         startY: sourceLocalRect.top,
+        startScaleX: sourceRect.width / Math.max(1, targetRect.width),
+        startScaleY: sourceRect.height / Math.max(1, targetRect.height),
         startRotation,
+        startBackground,
+        endBackground,
+        startBorderColor,
+        detailEls,
         setX: gsap.quickSetter(clone, "x", "px") as (value: number) => void,
         setY: gsap.quickSetter(clone, "y", "px") as (value: number) => void,
         setScaleX: gsap.quickSetter(clone, "scaleX") as (value: number) => void,
         setScaleY: gsap.quickSetter(clone, "scaleY") as (value: number) => void,
         setRotation: gsap.quickSetter(clone, "rotation", "deg") as (value: number) => void,
+        setBackgroundColor: gsap.quickSetter(clone, "backgroundColor") as (value: string) => void,
+        setBorderColor: gsap.quickSetter(clone, "borderColor") as (value: string) => void,
       };
     });
   }
@@ -1309,14 +1341,31 @@ export class ChatActor {
       const targetRect = clone.target.getBoundingClientRect();
       const targetLeft = targetRect.left - rootRect.left;
       const targetTop = targetRect.top - rootRect.top;
-      const targetScaleX = targetRect.width / Math.max(1, clone.sourceRect.width);
-      const targetScaleY = targetRect.height / Math.max(1, clone.sourceRect.height);
+      const detailProgress = clampUnit(
+        (progress - FILE_DROP_LANDING.detailStart) / FILE_DROP_LANDING.detailSpan,
+      );
 
       clone.setX(this.interpolate(clone.startX, targetLeft, progress));
       clone.setY(this.interpolate(clone.startY, targetTop, progress));
-      clone.setScaleX(this.interpolate(1, targetScaleX, progress));
-      clone.setScaleY(this.interpolate(1, targetScaleY, progress));
+      clone.setScaleX(this.interpolate(clone.startScaleX, 1, progress));
+      clone.setScaleY(this.interpolate(clone.startScaleY, 1, progress));
       clone.setRotation(this.interpolate(clone.startRotation, 0, progress));
+      clone.setBackgroundColor(this.interpolateRgba(clone.startBackground, clone.endBackground, progress));
+      clone.setBorderColor(this.interpolateRgba(clone.startBorderColor, {
+        ...clone.startBorderColor,
+        a: 0,
+      }, progress));
+      clone.el.style.boxShadow = this.getFileLandingShadow(progress);
+
+      if (clone.detailEls.length) {
+        const detailY = this.interpolate(-3, 0, detailProgress);
+
+        clone.detailEls.forEach((detail) => {
+          detail.style.opacity = String(detailProgress);
+          detail.style.visibility = detailProgress > 0 ? "visible" : "hidden";
+          detail.style.transform = `translate3d(0, ${detailY}px, 0)`;
+        });
+      }
     }
   }
 
@@ -1340,6 +1389,42 @@ export class ChatActor {
 
   private interpolate(from: number, to: number, progress: number): number {
     return from + (to - from) * progress;
+  }
+
+  private parseCssColor(value: string): RgbaColor | null {
+    const matches = value.match(/[\d.]+/g);
+
+    if (!matches || matches.length < 3) return null;
+
+    return {
+      r: Number(matches[0]),
+      g: Number(matches[1]),
+      b: Number(matches[2]),
+      a: matches[3] === undefined ? 1 : Number(matches[3]),
+    };
+  }
+
+  private interpolateRgba(from: RgbaColor, to: RgbaColor, progress: number): string {
+    return this.formatRgba({
+      r: this.interpolate(from.r, to.r, progress),
+      g: this.interpolate(from.g, to.g, progress),
+      b: this.interpolate(from.b, to.b, progress),
+      a: this.interpolate(from.a, to.a, progress),
+    });
+  }
+
+  private formatRgba(color: RgbaColor): string {
+    return `rgba(${Math.round(color.r)}, ${Math.round(color.g)}, ${Math.round(color.b)}, ${color.a.toFixed(3)})`;
+  }
+
+  private getFileLandingShadow(progress: number): string {
+    const remaining = 1 - progress;
+
+    return `0 ${this.interpolate(FILE_DROP_LANDING.shadowY, 0, progress).toFixed(2)}px ${this.interpolate(
+      FILE_DROP_LANDING.shadowBlur,
+      0,
+      progress,
+    ).toFixed(2)}px rgba(23, 23, 20, ${(FILE_DROP_LANDING.shadowAlpha * remaining).toFixed(3)})`;
   }
 
   private revealMessageWithChildren(
@@ -2992,4 +3077,8 @@ export class ChatActor {
     this.scheduledScrollMessage = null;
     this.lastStreamScrollAt = 0;
   }
+}
+
+function clampUnit(value: number): number {
+  return Math.min(1, Math.max(0, value));
 }
