@@ -4359,7 +4359,7 @@ function Na() {
   const t = document.createElementNS(We, "path");
   t.classList.add("wa-cursor-svg__tail-shape"), t.setAttribute("d", Ti[0]), t.append(Pi(Ti));
   const a = document.createElementNS(We, "path");
-  a.classList.add("wa-cursor-svg__tail-outline"), a.setAttribute("d", Ei[0]), a.append(Pi(Ei)), e.append(t, a);
+  a.classList.add("wa-cursor-svg__tail-outline"), a.setAttribute("d", Ei[0]), a.append(Pi(Ei)), e.append(a, t);
   const i = document.createElementNS(We, "path");
   i.classList.add("wa-cursor-svg__body"), i.setAttribute("d", "M1.2 0.5L1.2 31.7L10.9 21.1L23.4 21.1Z");
   const r = document.createElementNS(We, "path");

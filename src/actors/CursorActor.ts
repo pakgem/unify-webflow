@@ -922,7 +922,7 @@ export function createMimicCursorSvg(): SVGSVGElement {
   tailOutline.setAttribute("d", TAIL_WAG_OUTLINE_PATHS[0]);
   tailOutline.append(createTailPathAnimation(TAIL_WAG_OUTLINE_PATHS));
 
-  tail.append(tailShape, tailOutline);
+  tail.append(tailOutline, tailShape);
 
   const body = document.createElementNS(SVG_NS, "path");
   body.classList.add("wa-cursor-svg__body");
