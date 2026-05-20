@@ -375,7 +375,7 @@ export class CursorActor {
           settle: false,
           preserveMode: true,
         }),
-        "+=0.04",
+        this.options.reducedMotion ? 0 : 0.03,
       )
       .call(() => {
         this.modeOverride = "drag";

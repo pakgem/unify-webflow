@@ -4077,7 +4077,7 @@ class As {
         settle: !1,
         preserveMode: !0
       }),
-      "+=0.04"
+      this.options.reducedMotion ? 0 : 0.03
     ).call(() => {
       this.modeOverride = "drag", this.setMode("drag");
     }).to({}, { duration: t.releaseHold ?? 0 }).call(() => {
@@ -6738,7 +6738,7 @@ const uo = [
           kind: "cursorDrag",
           target: a,
           options: { mode: "drag", speed: "slow", releaseHold: 0.34, label: "drag-context-files" },
-          at: "+=0.1"
+          at: "<+=0.1"
         },
         { kind: "custom", build: () => e.activate(), at: "<+=0.02" },
         { kind: "custom", build: () => e.complete(), at: "-=0.18" },
@@ -6862,7 +6862,7 @@ const uo = [
           kind: "cursorDrag",
           target: a,
           options: { mode: "drag", speed: "slow", releaseHold: 0.46, label: "drag-webinar-csv" },
-          at: "+=0.1"
+          at: "<+=0.1"
         },
         { kind: "custom", build: () => e.activate(), at: "<+=0.02" },
         { kind: "custom", build: () => e.complete(), at: "-=0.24" },
