@@ -806,7 +806,7 @@ body {
 
 .wa-research-step[data-step-state="complete"] {
   min-height: 20px;
-  align-items: center;
+  align-items: start;
 }
 
 .wa-research-step__check {
