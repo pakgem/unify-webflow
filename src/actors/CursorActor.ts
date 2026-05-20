@@ -889,15 +889,23 @@ export class CursorActor {
     svg.setAttribute("aria-hidden", "true");
     svg.setAttribute("focusable", "false");
 
-    const tail = document.createElementNS(SVG_NS, "path");
+    const tail = document.createElementNS(SVG_NS, "g");
     tail.classList.add("wa-cursor-svg__tail");
-    tail.setAttribute("d", "M8.9 17.6L16.1 17.6L21 34.2L15.3 36.2Z");
+
+    const tailShape = document.createElementNS(SVG_NS, "path");
+    tailShape.classList.add("wa-cursor-svg__tail-shape");
+    tailShape.setAttribute("d", "M7.2 15.8L17.2 15.8L21 34.2L15.2 36.2Z");
+    tail.append(tailShape);
 
     const body = document.createElementNS(SVG_NS, "path");
     body.classList.add("wa-cursor-svg__body");
     body.setAttribute("d", "M2.4 1.7L2.4 30.4L10.9 21.1L22.9 21.1Z");
 
-    svg.append(tail, body);
+    const bodyOutline = document.createElementNS(SVG_NS, "path");
+    bodyOutline.classList.add("wa-cursor-svg__body-outline");
+    bodyOutline.setAttribute("d", "M22.9 21.1L2.4 1.7L2.4 30.4L10.9 21.1");
+
+    svg.append(tail, body, bodyOutline);
     return svg;
   }
 }

@@ -3686,12 +3686,20 @@ body {
 }
 
 .wa-cursor-svg__body,
-.wa-cursor-svg__tail {
+.wa-cursor-svg__tail-shape {
   fill: #000;
+}
+
+.wa-cursor-svg__tail-shape,
+.wa-cursor-svg__body-outline {
   stroke: #fff;
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-width: 1.65;
+}
+
+.wa-cursor-svg__body-outline {
+  fill: none;
 }
 
 .wa-cursor[data-cursor-mimicking="true"][data-cursor-mode="default"] .wa-cursor__glyph {
