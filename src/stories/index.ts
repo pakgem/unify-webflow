@@ -739,7 +739,7 @@ export const defaultStories: StoryDefinition[] = [
         { kind: "transitionSignupToChat", at: `+=${STORY_TIMING.beat}` },
         { kind: "assistant", text: "I’ll learn Acme first, then suggest the cleanest GTM plays." },
         { kind: "status", text: "Researching Acme", at: "<" },
-        { kind: "research", steps: GTM_RESEARCH_STEPS, hold: 0.46, at: "+=0.02" },
+        { kind: "thinking", steps: GTM_RESEARCH_STEPS, hold: 0.46, at: "+=0.02" },
         { kind: "assistant", text: "I found three GTM paths worth testing first." },
         { kind: "status", text: "Game plans ready", at: "<" },
         { kind: "strategyPlans", plans: GTM_STRATEGY_PLANS, at: "-=0.08" },
@@ -843,7 +843,7 @@ export const defaultStories: StoryDefinition[] = [
         { kind: "custom", build: () => cursorFile.landAsUploadedFiles(AGENT_CONTEXT_FILES), at: "<" },
         { kind: "status", text: "Learning outreach style", at: "<" },
         {
-          kind: "research",
+          kind: "thinking",
           steps: [
             "Reading battle cards and competitive traps",
             "Extracting voice and tone rules",
@@ -972,7 +972,7 @@ export const defaultStories: StoryDefinition[] = [
         { kind: "custom", build: () => cursorFile.landAsUploadedFile("webinar_attendees.csv", "1,284 attendees"), at: "<" },
         { kind: "status", text: "Cleaning CSV", at: "<" },
         {
-          kind: "research",
+          kind: "thinking",
           steps: [
             "Parsing webinar attendee CSV",
             "Normalizing email addresses",

@@ -114,6 +114,13 @@ type AttentionState = {
   lastTextSkimStep: number;
 };
 
+type ThinkingStep = {
+  kind: "thinking";
+  hold?: number;
+  statusBefore?: string;
+  at?: TimelinePosition;
+} & ({ label: string; steps?: never } | { steps: string[]; label?: never });
+
 export const EXIT_TARGETS = {
   right: { target: "[data-chat-shell]", anchor: "right", outside: "right" },
   topRight: { target: "[data-chat-shell]", anchor: "topRight", outside: "top" },
@@ -127,8 +134,7 @@ export type StoryStep =
   | { kind: "typeSignupEmail"; email: string; duration?: number; at?: TimelinePosition }
   | { kind: "transitionSignupToChat"; at?: TimelinePosition }
   | { kind: "assistant"; text: string; at?: TimelinePosition }
-  | { kind: "thinking"; label: string; hold?: number; statusBefore?: string; at?: TimelinePosition }
-  | { kind: "research"; steps: string[]; hold?: number; statusBefore?: string; at?: TimelinePosition }
+  | ThinkingStep
   | { kind: "dataTable"; config: DataTableConfig; at?: TimelinePosition }
   | { kind: "enrichmentPanel"; config: EnrichmentConfig; at?: TimelinePosition }
   | { kind: "strategyPlans"; plans: StrategyPlanConfig[]; at?: TimelinePosition }
@@ -194,16 +200,13 @@ function addStep(
         stepIndex,
       });
       return;
-    case "thinking":
+    case "thinking": {
+      const thinkingItems = getThinkingItems(step);
       if (step.statusBefore) tl.add(ctx.chat.setStatus(step.statusBefore), step.at);
-      tl.add(ctx.chat.thinkingState(step.label, step.hold), step.statusBefore ? undefined : step.at);
-      addThinkingCursorMotion(tl, ctx, attention, step.hold, 1, step.label, stepIndex);
+      tl.add(ctx.chat.thinkingState(thinkingItems, step.hold), step.statusBefore ? undefined : step.at);
+      addThinkingCursorMotion(tl, ctx, attention, step.hold, thinkingItems.length, thinkingItems.join("|"), stepIndex);
       return;
-    case "research":
-      if (step.statusBefore) tl.add(ctx.chat.setStatus(step.statusBefore), step.at);
-      tl.add(ctx.chat.researchSequence(step.steps, step.hold), step.statusBefore ? undefined : step.at);
-      addThinkingCursorMotion(tl, ctx, attention, step.hold, step.steps.length, step.steps.join("|"), stepIndex);
-      return;
+    }
     case "dataTable":
       addComponentWithAttention(
         tl,
@@ -277,6 +280,12 @@ function addStep(
       tl.add(step.build(ctx), step.at);
       return;
   }
+}
+
+function getThinkingItems(step: ThinkingStep): string[] {
+  if (Array.isArray(step.steps)) return step.steps;
+
+  return [step.label as string];
 }
 
 function addComponentWithAttention(

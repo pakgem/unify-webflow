@@ -710,23 +710,16 @@ export class ChatActor {
     );
   }
 
-  thinkingState(label: string, hold = 1.1): gsap.core.Timeline {
-    return this.runThinkingSequence([label], {
-      hold,
-      itemStartY: 6,
-      headerDuration: 0.28,
-      afterStepHold: hold,
-      finalHold: 0,
-    });
-  }
+  thinkingState(labelOrSteps: string | string[], hold = 1.1): gsap.core.Timeline {
+    const steps = Array.isArray(labelOrSteps) ? labelOrSteps : [labelOrSteps];
+    const isSequence = steps.length > 1;
 
-  researchSequence(steps: string[], hold = 0.42): gsap.core.Timeline {
     return this.runThinkingSequence(steps, {
       hold,
-      itemStartY: 10,
-      headerDuration: 0.24,
-      afterStepHold: hold * 0.45,
-      finalHold: hold * 0.35,
+      itemStartY: isSequence ? 10 : 6,
+      headerDuration: isSequence ? 0.24 : 0.28,
+      afterStepHold: isSequence ? hold * 0.45 : hold,
+      finalHold: isSequence ? hold * 0.35 : 0,
     });
   }
 
