@@ -711,8 +711,8 @@ const ENGAGEMENT_SEQUENCE_THINKING = {
   id: "visitor-sequence-build",
   title: "Building outbound sequence",
   subtitle: "Using Unify’s offering, visitor intent, and role-level context to draft the campaign.",
-  templateLabel: "Sequence template",
-  template: "Trigger → role-specific pain → relevant proof → low-friction CTA",
+  templateLabel: "Generating sequence template from company offering",
+  template: "Using Unify’s offering, visitor intent, role-specific pain, relevant proof, and a low-friction CTA.",
   total: 50,
   tracks: [
     {

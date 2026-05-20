@@ -1278,73 +1278,99 @@ export class ChatActor {
   }
 
   sequenceBuildThinking(config: SequenceBuildThinkingConfig): gsap.core.Timeline {
-    const panel = this.createSequenceBuildThinking(config);
-    const message = this.claimComponentMessage("thinking", panel);
-    const title = panel.querySelector<HTMLElement>(".wa-sequence-thinking__title");
-    const subtitle = panel.querySelector<HTMLElement>(".wa-sequence-thinking__subtitle");
-    const template = panel.querySelector<HTMLElement>(".wa-sequence-thinking-template");
-    const rows = this.queryElements(panel, ".wa-sequence-thinking-track");
+    const templateItem = this.createSequenceThinkingStep(config.templateLabel, config.template, 0);
+    const trackItems = config.tracks.map((track, index) =>
+      this.createSequenceThinkingStep(track.label, track.detail, index + 1, config.total),
+    );
+    const thinking = this.claimThinkingMessage([templateItem, ...trackItems], this.getThinkingElapsed(3));
     const progress = { value: 1 };
+    const progressBars = trackItems
+      .map((item) => item.querySelector<HTMLElement>(".wa-sequence-thinking-progress__bar span"))
+      .filter((bar): bar is HTMLElement => Boolean(bar));
 
-    gsap.set([title, subtitle, template, ...rows], { autoAlpha: 0, y: 8 });
-    gsap.set(panel.querySelectorAll(".wa-sequence-thinking-track__bar span"), {
+    thinking.message.querySelector<HTMLElement>(".wa-thinking-block")!.dataset.sequenceThinking = config.id;
+    gsap.set(thinking.header, { autoAlpha: 0, y: 5 });
+    gsap.set(thinking.steps, { display: "grid", autoAlpha: 1, y: 0 });
+    gsap.set([templateItem, ...trackItems], { autoAlpha: 0, y: 10, display: "none" });
+    gsap.set(progressBars, {
       scaleX: 1 / Math.max(1, config.total),
       transformOrigin: "left center",
     });
 
-    return gsap
-      .timeline()
-      .add(this.revealMessage(message))
-      .to([title, subtitle], {
+    const tl = gsap.timeline()
+      .add(this.revealMessage(thinking.message))
+      .to(thinking.header, {
         autoAlpha: 1,
         y: 0,
-        duration: motionDuration(0.28),
+        duration: motionDuration(0.24),
         ease: "power2.out",
-        stagger: 0.04,
-      }, "-=0.16")
-      .to(template, {
-        autoAlpha: 1,
-        y: 0,
-        duration: motionDuration(0.28),
-        ease: "power2.out",
-      }, "-=0.08")
-      .to(rows, {
+      })
+      .add(this.streamThinkingHeader(thinking.header), "-=0.08")
+      .call(() => {
+        templateItem.dataset.stepState = "current";
+        gsap.set(templateItem, { display: "grid" });
+      })
+      .to(templateItem, {
         autoAlpha: 1,
         y: 0,
         duration: motionDuration(0.26),
         ease: "power2.out",
-        stagger: 0.06,
-      }, "-=0.08")
-      .to(progress, {
-        value: config.total,
-        duration: motionDuration(1.85),
-        ease: "power1.inOut",
-        onStart: () => {
-          rows.forEach((row) => {
-            row.dataset.stepState = "current";
-          });
-        },
-        onUpdate: () => {
-          const current = Math.max(1, Math.round(progress.value));
-          const ratio = current / Math.max(1, config.total);
-
-          rows.forEach((row) => {
-            const label = row.querySelector<HTMLElement>(".wa-sequence-thinking-track__progress");
-            const bar = row.querySelector<HTMLElement>(".wa-sequence-thinking-track__bar span");
-
-            if (label) label.textContent = `${current}/${config.total}`;
-            if (bar) gsap.set(bar, { scaleX: ratio });
-          });
-          this.requestMessageScroll(message);
-        },
-      }, "+=0.04")
-      .to({}, { duration: motionDuration(0.24) })
+      }, "<")
+      .add(this.streamThinkingStepLabel(templateItem), THINKING_STEP_STREAM.startOverlap)
+      .add(this.streamThinkingStepDetail(templateItem), "-=0.02")
+      .to({}, { duration: motionDuration(0.54) })
+      .add(this.foldThinkingStep(templateItem))
       .call(() => {
-        rows.forEach((row) => {
-          row.dataset.stepState = "complete";
+        trackItems.forEach((item) => {
+          item.dataset.stepState = "current";
+          gsap.set(item, { display: "grid" });
         });
-        this.animateMessageScrollIntoView(message);
+      }, undefined, "+=0.1")
+      .to(trackItems, {
+        autoAlpha: 1,
+        y: 0,
+        duration: motionDuration(0.3),
+        ease: "power2.out",
+        stagger: 0.04,
+      }, "<");
+
+    trackItems.forEach((item, index) => {
+      tl.add(this.streamThinkingStepLabel(item), index === 0 ? THINKING_STEP_STREAM.startOverlap : "<");
+    });
+    trackItems.forEach((item, index) => {
+      tl.add(this.streamThinkingStepDetail(item), index === 0 ? "-=0.02" : "<");
+    });
+
+    tl.to(progress, {
+      value: config.total,
+      duration: motionDuration(3.9),
+      ease: "power1.inOut",
+      onUpdate: () => {
+        const current = Math.max(1, Math.round(progress.value));
+        const ratio = current / Math.max(1, config.total);
+
+        trackItems.forEach((item) => {
+          const label = item.querySelector<HTMLElement>(".wa-sequence-thinking-progress__count");
+          const bar = item.querySelector<HTMLElement>(".wa-sequence-thinking-progress__bar span");
+
+          if (label) label.textContent = `${current}/${config.total}`;
+          if (bar) gsap.set(bar, { scaleX: ratio });
+        });
+        this.requestMessageScroll(thinking.message);
+      },
+    }, "+=0.14")
+      .to({}, { duration: motionDuration(0.34) });
+
+    trackItems.forEach((item, index) => {
+      tl.add(this.foldThinkingStep(item), index === 0 ? undefined : "<");
+    });
+
+    return tl.call(() => {
+      trackItems.forEach((item) => {
+        item.dataset.stepState = "complete";
       });
+      this.animateMessageScrollIntoView(thinking.message);
+    });
   }
 
   sequencePerson(sequenceId: string, index: number): gsap.core.Timeline {
@@ -2307,7 +2333,7 @@ export class ChatActor {
 
   private foldThinkingStep(item: HTMLElement): gsap.core.Timeline {
     const foldTargets = item.querySelectorAll<HTMLElement>(
-      ".wa-research-step__detail, .wa-research-step__disclosure, .wa-research-step__chevron",
+      ".wa-research-step__detail, .wa-sequence-thinking-progress, .wa-research-step__disclosure, .wa-research-step__chevron",
     );
 
     return gsap
@@ -3591,65 +3617,36 @@ export class ChatActor {
     return section;
   }
 
-  private createSequenceBuildThinking(config: SequenceBuildThinkingConfig): HTMLElement {
-    const section = document.createElement("section");
-    const header = document.createElement("div");
-    const glyph = document.createElement("span");
-    const title = document.createElement("span");
-    const elapsed = document.createElement("span");
-    const subtitle = document.createElement("p");
-    const template = document.createElement("div");
-    const templateLabel = document.createElement("span");
-    const templateBody = document.createElement("strong");
-    const tracks = document.createElement("div");
+  private createSequenceThinkingStep(
+    labelText: string,
+    detailText: string,
+    index: number,
+    total?: number,
+  ): HTMLElement {
+    const item = this.createThinkingStep(labelText, index);
+    const detail = item.querySelector<HTMLElement>(".wa-research-step__detail");
+    const body = item.querySelector<HTMLElement>(".wa-research-step__body");
 
-    section.className = "wa-sequence-thinking";
-    section.dataset.sequenceThinking = config.id;
-    header.className = "wa-thinking wa-sequence-thinking__header";
-    glyph.className = "wa-thinking__glyph";
-    glyph.setAttribute("aria-hidden", "true");
-    title.className = "wa-thinking__title wa-sequence-thinking__title";
-    title.textContent = config.title;
-    elapsed.className = "wa-thinking__elapsed";
-    elapsed.textContent = "4m 20s";
-    subtitle.className = "wa-sequence-thinking__subtitle";
-    subtitle.textContent = config.subtitle;
-    template.className = "wa-sequence-thinking-template";
-    templateLabel.className = "wa-sequence-thinking-template__label";
-    templateLabel.textContent = config.templateLabel;
-    templateBody.className = "wa-sequence-thinking-template__body";
-    templateBody.textContent = config.template;
-    tracks.className = "wa-sequence-thinking-tracks";
+    if (detail) detail.dataset.fullText = detailText;
 
-    config.tracks.forEach((track) => {
-      const row = document.createElement("div");
-      const copy = document.createElement("span");
-      const label = document.createElement("strong");
-      const detail = document.createElement("span");
+    if (typeof total === "number" && body) {
       const progress = document.createElement("span");
+      const count = document.createElement("span");
       const bar = document.createElement("span");
       const fill = document.createElement("span");
 
-      row.className = "wa-sequence-thinking-track";
-      row.dataset.sequenceThinkingTrack = track.id;
-      row.dataset.stepState = "pending";
-      copy.className = "wa-sequence-thinking-track__copy";
-      label.textContent = track.label;
-      detail.textContent = track.detail;
-      progress.className = "wa-sequence-thinking-track__progress";
-      progress.textContent = `1/${config.total}`;
-      bar.className = "wa-sequence-thinking-track__bar";
+      progress.className = "wa-sequence-thinking-progress";
+      progress.dataset.sequenceThinkingTrack = labelText;
+      count.className = "wa-sequence-thinking-progress__count";
+      count.textContent = `1/${total}`;
+      bar.className = "wa-sequence-thinking-progress__bar";
       fill.setAttribute("aria-hidden", "true");
       bar.append(fill);
-      copy.append(label, detail);
-      row.append(copy, progress, bar);
-      tracks.append(row);
-    });
+      progress.append(count, bar);
+      body.append(progress);
+    }
 
-    header.append(glyph, title, elapsed);
-    template.append(templateLabel, templateBody);
-    section.append(header, subtitle, template, tracks);
-    return section;
+    return item;
   }
 
   private findSequenceEngagement(sequenceId: string): HTMLElement | null {
