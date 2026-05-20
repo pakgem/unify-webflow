@@ -857,7 +857,7 @@ export class CursorActor {
 
     const glyph = document.createElement("div");
     glyph.className = "wa-cursor__glyph";
-    glyph.append(this.createMimicCursorSvg());
+    glyph.append(createMimicCursorSvg());
     floatLayer.append(glyph);
     el.append(floatLayer);
 
@@ -872,7 +872,7 @@ export class CursorActor {
 
     const glyph = this.el.querySelector<HTMLElement>(".wa-cursor__glyph") ?? document.createElement("div");
     if (!glyph.classList.contains("wa-cursor__glyph")) glyph.className = "wa-cursor__glyph";
-    if (!glyph.querySelector(".wa-cursor-svg")) glyph.append(this.createMimicCursorSvg());
+    if (!glyph.querySelector(".wa-cursor-svg")) glyph.append(createMimicCursorSvg());
 
     const floatLayer = document.createElement("div");
     floatLayer.className = "wa-cursor__float";
@@ -882,37 +882,38 @@ export class CursorActor {
     return floatLayer;
   }
 
-  private createMimicCursorSvg(): SVGSVGElement {
-    const svg = document.createElementNS(SVG_NS, "svg");
-    svg.classList.add("wa-cursor-svg");
-    svg.setAttribute("viewBox", "0 0 24 38");
-    svg.setAttribute("aria-hidden", "true");
-    svg.setAttribute("focusable", "false");
+}
 
-    const tail = document.createElementNS(SVG_NS, "g");
-    tail.classList.add("wa-cursor-svg__tail");
+export function createMimicCursorSvg(): SVGSVGElement {
+  const svg = document.createElementNS(SVG_NS, "svg");
+  svg.classList.add("wa-cursor-svg");
+  svg.setAttribute("viewBox", "0 0 24 38");
+  svg.setAttribute("aria-hidden", "true");
+  svg.setAttribute("focusable", "false");
 
-    const tailShape = document.createElementNS(SVG_NS, "path");
-    tailShape.classList.add("wa-cursor-svg__tail-shape");
-    tailShape.setAttribute("d", "M9.7 20.8L14.8 20.8L18.3 34.3L14.2 35.8Z");
+  const tail = document.createElementNS(SVG_NS, "g");
+  tail.classList.add("wa-cursor-svg__tail");
 
-    const tailOutline = document.createElementNS(SVG_NS, "path");
-    tailOutline.classList.add("wa-cursor-svg__tail-outline");
-    tailOutline.setAttribute("d", "M9.7 20.8L14.2 35.8L18.3 34.3L14.8 20.8");
+  const tailShape = document.createElementNS(SVG_NS, "path");
+  tailShape.classList.add("wa-cursor-svg__tail-shape");
+  tailShape.setAttribute("d", "M9.7 20.8L14.8 20.8L18.3 34.3L14.2 35.8Z");
 
-    tail.append(tailShape, tailOutline);
+  const tailOutline = document.createElementNS(SVG_NS, "path");
+  tailOutline.classList.add("wa-cursor-svg__tail-outline");
+  tailOutline.setAttribute("d", "M9.7 20.8L14.2 35.8L18.3 34.3L14.8 20.8");
 
-    const body = document.createElementNS(SVG_NS, "path");
-    body.classList.add("wa-cursor-svg__body");
-    body.setAttribute("d", "M2.4 1.7L2.4 30.4L10.9 21.1L22.9 21.1Z");
+  tail.append(tailShape, tailOutline);
 
-    const bodyOutline = document.createElementNS(SVG_NS, "path");
-    bodyOutline.classList.add("wa-cursor-svg__body-outline");
-    bodyOutline.setAttribute("d", "M22.9 21.1L2.4 1.7L2.4 30.4L10.9 21.1");
+  const body = document.createElementNS(SVG_NS, "path");
+  body.classList.add("wa-cursor-svg__body");
+  body.setAttribute("d", "M2.4 1.7L2.4 30.4L10.9 21.1L22.9 21.1Z");
 
-    svg.append(tail, body, bodyOutline);
-    return svg;
-  }
+  const bodyOutline = document.createElementNS(SVG_NS, "path");
+  bodyOutline.classList.add("wa-cursor-svg__body-outline");
+  bodyOutline.setAttribute("d", "M22.9 21.1L2.4 1.7L2.4 30.4L10.9 21.1");
+
+  svg.append(tail, body, bodyOutline);
+  return svg;
 }
 
 function interpolatePoint(start: Point, end: Point, amount: number): Point {

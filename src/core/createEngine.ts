@@ -2,10 +2,13 @@ import { ChatActor } from "../actors/ChatActor";
 import { CursorActor } from "../actors/CursorActor";
 import { StoryBuilder } from "../builder/StoryBuilder";
 import { defaultStories } from "../stories";
+import { DebugTailCursor } from "./DebugTailCursor";
 import { StoryController } from "./StoryController";
 import { TargetResolver } from "./TargetResolver";
 import type { ChatbotStoriesConfig, ChatbotStoriesInstance } from "./types";
 import { renderDefaultMarkup } from "./renderDefaultMarkup";
+
+const ENABLE_DEBUG_TAIL_CURSOR = true;
 
 export function createEngine(root: HTMLElement, config: ChatbotStoriesConfig = {}): ChatbotStoriesInstance {
   renderDefaultMarkup(root, { showBuilder: config.showBuilder !== false });
@@ -33,6 +36,7 @@ export function createEngine(root: HTMLElement, config: ChatbotStoriesConfig = {
       : new StoryBuilder(root, stories, {
           onStorySelect: (storyId) => controller.goTo(storyId),
         });
+  const debugTailCursor = ENABLE_DEBUG_TAIL_CURSOR ? new DebugTailCursor(root) : null;
 
   controller.mount();
   builder?.mount();
@@ -45,6 +49,7 @@ export function createEngine(root: HTMLElement, config: ChatbotStoriesConfig = {
     goTo: controller.goTo.bind(controller),
     getState: controller.getState.bind(controller),
     destroy: () => {
+      debugTailCursor?.destroy();
       builder?.destroy();
       destroy();
       cursor.destroy();
