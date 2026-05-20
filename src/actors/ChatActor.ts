@@ -5,6 +5,8 @@ import type {
   DataTableConfig,
   EnrichmentConfig,
   OutreachStyleProfileConfig,
+  PersonalizationSwipeDecision,
+  PersonalizationSwipeGameConfig,
   ProximityLeadListConfig,
   ResultCardConfig,
   SequenceEngagementConfig,
@@ -57,6 +59,7 @@ type ComponentKind =
   | "sources"
   | "style"
   | "proximity"
+  | "game"
   | "sequence"
   | "drop";
 type MessageKind = ComponentKind | "file";
@@ -94,6 +97,7 @@ const MESSAGE_KIND_CLASSES = [
       "sources",
       "style",
       "proximity",
+      "game",
       "sequence",
       "drop",
       "file",
@@ -861,6 +865,145 @@ export class ChatActor {
       ...COMPONENT_CHILD_REVEAL.stackCard,
       to: { ...COMPONENT_CHILD_REVEAL.stackCard.to, duration: motionDuration(0.25), stagger: 0.06 },
     });
+  }
+
+  personalizationSwipeGame(config: PersonalizationSwipeGameConfig): gsap.core.Timeline {
+    const game = this.createPersonalizationSwipeGame(config);
+    const revealTargets = [
+      ...Array.from(game.querySelectorAll<HTMLElement>(".wa-mini-game__header, .wa-swipe-game__prompt, .wa-swipe-game__axis")),
+      game.querySelector<HTMLElement>(".wa-swipe-game__stack"),
+      game.querySelector<HTMLElement>(".wa-swipe-game__actions"),
+    ].filter((target): target is HTMLElement => Boolean(target));
+
+    this.layoutSwipeGameCards(game, 0);
+
+    return this.revealComponentItems("game", game, revealTargets, {
+      from: { autoAlpha: 0, y: 12, scale: 0.985 },
+      to: {
+        autoAlpha: 1,
+        y: 0,
+        scale: 1,
+        duration: motionDuration(0.32),
+        ease: "power2.out",
+        stagger: 0.05,
+      },
+      position: "-=0.2",
+    });
+  }
+
+  swipePersonalizationCard(
+    gameId: string,
+    signalId: string,
+    decision: PersonalizationSwipeDecision,
+  ): gsap.core.Timeline {
+    const game = this.root.querySelector<HTMLElement>(
+      `[data-personalization-swipe-game="${this.escapeSelectorValue(gameId)}"]`,
+    );
+    const card = game?.querySelector<HTMLElement>(`[data-swipe-card="${this.escapeSelectorValue(signalId)}"]`);
+    const cards = game ? Array.from(game.querySelectorAll<HTMLElement>("[data-swipe-card]")) : [];
+    const index = card ? cards.indexOf(card) : -1;
+    const nextCard = cards[index + 1];
+    const direction = decision === "use" ? 1 : -1;
+    const action = game?.querySelector<HTMLElement>(`[data-swipe-action="${decision}"]`);
+    const complete = game?.querySelector<HTMLElement>("[data-swipe-complete]");
+    const actions = game?.querySelector<HTMLElement>(".wa-swipe-game__actions");
+    const tl = gsap.timeline();
+
+    if (!game || !card || index < 0) return tl;
+
+    tl.call(() => {
+      game.dataset.swipeDecision = decision;
+      if (action) action.dataset.active = "true";
+    })
+      .to(
+        action ?? {},
+        {
+          scale: 0.92,
+          duration: motionDuration(0.08),
+          ease: "power2.out",
+        },
+        0,
+      )
+      .to(
+        action ?? {},
+        {
+          scale: 1,
+          duration: motionDuration(0.18),
+          ease: "back.out(2)",
+        },
+        motionDuration(0.1),
+      )
+      .to(
+        card,
+        {
+          x: direction * 520,
+          y: index % 2 === 0 ? -28 : 24,
+          rotation: direction * (16 + index * 2),
+          autoAlpha: 0,
+          duration: motionDuration(0.5),
+          ease: "power3.in",
+          force3D: true,
+        },
+        0.08,
+      )
+      .call(
+        () => {
+          delete game.dataset.swipeDecision;
+          if (action) delete action.dataset.active;
+          card.dataset.swipeState = "done";
+          gsap.set(card, { display: "none" });
+          this.layoutSwipeGameCards(game, index + 1);
+        },
+        undefined,
+        "-=0.12",
+      );
+
+    if (nextCard) {
+      tl.fromTo(
+        nextCard,
+        {
+          x: -direction * 18,
+          y: 10,
+          scale: 0.965,
+          rotation: -direction * 1.5,
+          autoAlpha: 0.74,
+        },
+        {
+          x: 0,
+          y: 0,
+          scale: 1,
+          rotation: 0,
+          autoAlpha: 1,
+          duration: motionDuration(0.28),
+          ease: "power2.out",
+          force3D: true,
+        },
+        "-=0.2",
+      );
+    } else if (complete && actions) {
+      tl.to(
+        actions,
+        {
+          autoAlpha: 0,
+          y: 8,
+          duration: motionDuration(0.18),
+          ease: "power2.out",
+        },
+        "-=0.16",
+      ).to(
+        complete,
+        {
+          autoAlpha: 1,
+          y: 0,
+          scale: 1,
+          duration: motionDuration(0.28),
+          ease: "back.out(1.55)",
+        },
+        "-=0.06",
+      );
+    }
+
+    return tl;
   }
 
   sequenceEngagement(config: SequenceEngagementConfig): gsap.core.Timeline {
@@ -2362,6 +2505,127 @@ export class ChatActor {
     return section;
   }
 
+  private createPersonalizationSwipeGame(config: PersonalizationSwipeGameConfig): HTMLElement {
+    const section = document.createElement("section");
+    section.className = "wa-mini-game wa-swipe-game";
+    section.dataset.personalizationSwipeGame = config.id;
+
+    const intro = this.createSectionHeader(
+      "wa-mini-game",
+      config.title,
+      config.subtitle ?? "Swipe to teach the agent which personalization patterns sound like you.",
+    );
+    const eyebrow = document.createElement("span");
+    eyebrow.className = "wa-mini-game__eyebrow";
+    eyebrow.textContent = "Mini game";
+    intro.prepend(eyebrow);
+
+    const prompt = document.createElement("p");
+    prompt.className = "wa-swipe-game__prompt";
+    prompt.textContent = config.prompt ?? "Swipe toward the personalization you would use.";
+
+    const axis = document.createElement("div");
+    axis.className = "wa-swipe-game__axis";
+
+    const avoidLabel = document.createElement("span");
+    avoidLabel.textContent = config.labels?.avoid ?? "Never me";
+
+    const progress = document.createElement("span");
+    progress.dataset.swipeProgress = "";
+
+    const useLabel = document.createElement("span");
+    useLabel.textContent = config.labels?.use ?? "I'd use it";
+
+    axis.append(avoidLabel, progress, useLabel);
+
+    const stack = document.createElement("div");
+    stack.className = "wa-swipe-game__stack";
+
+    const glow = document.createElement("div");
+    glow.className = "wa-swipe-game__glow";
+    glow.setAttribute("aria-hidden", "true");
+    stack.append(glow);
+
+    config.signals.forEach((signal, index) => {
+      const card = document.createElement("article");
+      card.className = "wa-swipe-card";
+      card.dataset.swipeCard = signal.id;
+      card.dataset.swipeDecision = signal.decision;
+      card.dataset.cardIndex = String(index);
+
+      const label = document.createElement("strong");
+      label.className = "wa-swipe-card__label";
+      label.textContent = signal.label;
+
+      const detail = document.createElement("span");
+      detail.className = "wa-swipe-card__detail";
+      detail.textContent = signal.detail;
+
+      card.append(label, detail);
+      stack.append(card);
+    });
+
+    const complete = document.createElement("div");
+    complete.className = "wa-swipe-game__complete";
+    complete.dataset.swipeComplete = "";
+    complete.textContent = config.completeLabel ?? `${config.signals.length} choices captured`;
+    stack.append(complete);
+    gsap.set(complete, { autoAlpha: 0, y: 12, scale: 0.96 });
+
+    const actions = document.createElement("div");
+    actions.className = "wa-swipe-game__actions";
+    actions.append(
+      this.createSwipeActionButton("avoid", config.labels?.avoid ?? "Never me"),
+      this.createSwipeActionButton("use", config.labels?.use ?? "I'd use it"),
+    );
+
+    section.append(intro, prompt, axis, stack, actions);
+    this.updateSwipeGameProgress(section, 0);
+    return section;
+  }
+
+  private createSwipeActionButton(decision: PersonalizationSwipeDecision, label: string): HTMLElement {
+    const button = document.createElement("button");
+    button.className = "wa-swipe-game__action";
+    button.type = "button";
+    button.tabIndex = -1;
+    button.dataset.swipeAction = decision;
+    button.setAttribute("aria-label", label);
+    return button;
+  }
+
+  private layoutSwipeGameCards(game: HTMLElement, activeIndex: number): void {
+    const cards = Array.from(game.querySelectorAll<HTMLElement>("[data-swipe-card]"));
+
+    cards.forEach((card, index) => {
+      const depth = index - activeIndex;
+      const visible = depth >= 0 && depth < 3;
+
+      card.dataset.swipeState = depth === 0 ? "active" : depth > 0 ? "queued" : "done";
+      gsap.set(card, {
+        display: depth >= 0 ? "grid" : "none",
+        x: 0,
+        y: Math.max(0, depth) * 8,
+        scale: 1 - Math.max(0, depth) * 0.035,
+        rotation: depth === 1 ? -1.15 : depth === 2 ? 1.05 : 0,
+        autoAlpha: visible ? 1 - Math.max(0, depth) * 0.18 : 0,
+        zIndex: cards.length - index,
+        transformOrigin: "center center",
+        force3D: true,
+      });
+    });
+
+    this.updateSwipeGameProgress(game, activeIndex);
+  }
+
+  private updateSwipeGameProgress(game: HTMLElement, activeIndex: number): void {
+    const progress = game.querySelector<HTMLElement>("[data-swipe-progress]");
+    const total = game.querySelectorAll("[data-swipe-card]").length;
+    const current = Math.min(activeIndex + 1, total);
+
+    if (progress) progress.textContent = `${current}/${total}`;
+  }
+
   private createSequenceEngagement(config: SequenceEngagementConfig): HTMLElement {
     const section = document.createElement("section");
     section.className = "wa-sequence-engagement";
@@ -2505,6 +2769,12 @@ export class ChatActor {
     }
 
     return el;
+  }
+
+  private escapeSelectorValue(value: string): string {
+    return typeof CSS !== "undefined" && "escape" in CSS
+      ? CSS.escape(value)
+      : value.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
   }
 
   private clearCustomResults(): void {

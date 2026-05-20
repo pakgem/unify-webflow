@@ -124,6 +124,26 @@ export type ProximityLeadListConfig = {
   }>;
 };
 
+export type PersonalizationSwipeDecision = "use" | "avoid";
+
+export type PersonalizationSwipeGameConfig = {
+  id: string;
+  title: string;
+  subtitle?: string;
+  prompt?: string;
+  labels?: {
+    avoid: string;
+    use: string;
+  };
+  completeLabel?: string;
+  signals: Array<{
+    id: string;
+    label: string;
+    detail: string;
+    decision: PersonalizationSwipeDecision;
+  }>;
+};
+
 export type SequenceEngagementConfig = {
   id: string;
   title: string;

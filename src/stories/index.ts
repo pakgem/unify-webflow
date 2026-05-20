@@ -3,6 +3,7 @@ import type {
   DataTableConfig,
   EnrichmentConfig,
   OutreachStyleProfileConfig,
+  PersonalizationSwipeGameConfig,
   ProximityLeadListConfig,
   ResponsiveTarget,
   SequenceEngagementConfig,
@@ -491,6 +492,38 @@ const OUTREACH_STYLE_PROFILE = {
   ],
 } satisfies OutreachStyleProfileConfig;
 
+const PERSONALIZATION_SWIPE_GAME = {
+  id: "personalization-swipe-calibration",
+  title: "Personalization preferences",
+  subtitle: "A tiny game teaches the agent what should and should not show up in outreach.",
+  prompt: "Swipe toward the personalization you would actually use.",
+  labels: {
+    avoid: "Never me",
+    use: "I'd use it",
+  },
+  completeLabel: "3 personalization rules captured",
+  signals: [
+    {
+      id: "recent-post-topic",
+      label: "{{reference something they recently posted}}",
+      detail: "Use a real public post when it connects to the reason for reaching out.",
+      decision: "use",
+    },
+    {
+      id: "local-weather",
+      label: "Hope the weather in {{city}} is treating you well",
+      detail: "A location warm-up that adds words without adding context.",
+      decision: "avoid",
+    },
+    {
+      id: "mutual-connection",
+      label: "{{mention a mutual connection}}",
+      detail: "Useful when the shared contact creates a credible reason to compare notes.",
+      decision: "use",
+    },
+  ],
+} satisfies PersonalizationSwipeGameConfig;
+
 const PROXIMITY_LEADS = {
   id: "personalized-lead-proximity",
   title: "Ranked leads with proximity fields",
@@ -821,6 +854,17 @@ export const defaultStories: StoryDefinition[] = [
           at: `+=${STORY_TIMING.beat}`,
         },
         { kind: "custom", build: () => ctx.chat.outreachStyleProfile(OUTREACH_STYLE_PROFILE), at: "-=0.02" },
+        {
+          kind: "assistant",
+          text: "Before drafting, I’ll calibrate which personalization patterns sound like you.",
+          at: `+=${STORY_TIMING.beat}`,
+        },
+        {
+          kind: "personalizationSwipeGame",
+          config: PERSONALIZATION_SWIPE_GAME,
+          at: "+=0.06",
+        },
+        { kind: "status", text: "Personalization rules learned", at: "+=0.12" },
         {
           kind: "prompt",
           text: "Write a sequence for consumer fintech founders.",

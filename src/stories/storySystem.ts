@@ -8,6 +8,7 @@ import type {
   DataTableConfig,
   EnrichmentConfig,
   Offset,
+  PersonalizationSwipeGameConfig,
   ResponsiveTarget,
   SequenceEngagementConfig,
   StoryContext,
@@ -133,6 +134,7 @@ export type StoryStep =
   | { kind: "strategyPlans"; plans: StrategyPlanConfig[]; at?: TimelinePosition }
   | { kind: "dataSourcesGrid"; config: DataSourceGridConfig; at?: TimelinePosition }
   | { kind: "marketingDataSourcesGrid"; config: DataSourceGridConfig; at?: TimelinePosition }
+  | { kind: "personalizationSwipeGame"; config: PersonalizationSwipeGameConfig; at?: TimelinePosition }
   | { kind: "sequenceEngagement"; config: SequenceEngagementConfig; at?: TimelinePosition }
   | { kind: "cursorMove"; target: ResponsiveTarget; options?: CursorMoveOptions; at?: TimelinePosition }
   | { kind: "cursorDrag"; target: ResponsiveTarget; options?: CursorMoveOptions; at?: TimelinePosition }
@@ -252,6 +254,9 @@ function addStep(
         `marketing-sources-${step.config.id}`,
       );
       return;
+    case "personalizationSwipeGame":
+      addPersonalizationSwipeGame(tl, ctx, step.config, step.at);
+      return;
     case "sequenceEngagement":
       addComponentWithAttention(
         tl,
@@ -284,6 +289,64 @@ function addComponentWithAttention(
 ): void {
   tl.add(reveal, at);
   tl.add(componentAttention(ctx, selector, label), "+=0.06");
+}
+
+function addPersonalizationSwipeGame(
+  tl: gsap.core.Timeline,
+  ctx: StoryContext,
+  config: PersonalizationSwipeGameConfig,
+  at: TimelinePosition | undefined,
+): void {
+  const gameSelector = chatThreadSelector(
+    `[data-personalization-swipe-game="${escapeAttributeValue(config.id)}"]`,
+  );
+
+  tl.add(ctx.chat.personalizationSwipeGame(config), at);
+
+  config.signals.forEach((signal, index) => {
+    const cardSelector = `${gameSelector} [data-swipe-card="${escapeAttributeValue(signal.id)}"]`;
+    const direction = signal.decision === "use" ? 1 : -1;
+    const side: AnchorName = signal.decision === "use" ? "right" : "left";
+    const target = responsiveElementTarget(cardSelector, side, {
+      desktop: { x: direction * 154, y: index % 2 === 0 ? -18 : 16 },
+      tablet: { x: direction * 132, y: index % 2 === 0 ? -14 : 14 },
+      mobile: { x: direction * 86, y: index % 2 === 0 ? -10 : 10 },
+    }, false);
+
+    tl.add(
+      ctx.cursor.moveTo(responsiveElementTarget(cardSelector, "center", {}, false), {
+        intent: "hover",
+        mode: "default",
+        speed: index === 0 ? "normal" : "quick",
+        overshoot: false,
+        settle: false,
+        label: `swipe-card-${signal.id}-center`,
+      }),
+      index === 0 ? "+=0.2" : "+=0.12",
+    );
+
+    tl.add(
+      ctx.cursor.dragTo(target, {
+        speed: "slow",
+        releaseHold: 0.08,
+        label: `swipe-card-${signal.id}-${signal.decision}`,
+      }),
+      "-=0.02",
+    );
+    tl.add(ctx.chat.swipePersonalizationCard(config.id, signal.id, signal.decision), "<+=0.2");
+  });
+
+  tl.add(
+    ctx.cursor.moveTo(THINKING_IDLE_TARGET, {
+      intent: "hover",
+      mode: "default",
+      speed: "slow",
+      overshoot: false,
+      settle: false,
+      label: `swipe-game-complete-${config.id}`,
+    }),
+    "+=0.08",
+  );
 }
 
 function componentAttention(ctx: StoryContext, selector: string, label: string): gsap.core.Timeline {

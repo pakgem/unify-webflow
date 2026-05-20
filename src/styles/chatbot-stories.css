@@ -2082,6 +2082,7 @@ body {
   line-height: 1.18;
 }
 
+.wa-mini-game,
 .wa-style-profile,
 .wa-proximity-list,
 .wa-sequence-engagement {
@@ -2091,6 +2092,7 @@ body {
   min-width: 0;
 }
 
+.wa-mini-game__header,
 .wa-style-profile__header,
 .wa-proximity-list__header,
 .wa-sequence-engagement__header {
@@ -2098,6 +2100,15 @@ body {
   gap: 3px;
 }
 
+.wa-mini-game__eyebrow {
+  color: var(--wa-color-muted);
+  font-size: 9px;
+  line-height: 1;
+  font-weight: 680;
+  text-transform: uppercase;
+}
+
+.wa-mini-game__title,
 .wa-style-profile__title,
 .wa-proximity-list__title,
 .wa-sequence-engagement__title {
@@ -2109,6 +2120,7 @@ body {
   letter-spacing: 0;
 }
 
+.wa-mini-game__subtitle,
 .wa-style-profile__subtitle,
 .wa-proximity-list__subtitle,
 .wa-sequence-engagement__subtitle {
@@ -2117,6 +2129,190 @@ body {
   font-size: 11.5px;
   line-height: 1.26;
   font-weight: 410;
+}
+
+.wa-swipe-game {
+  gap: 9px;
+  max-width: 520px;
+}
+
+.wa-swipe-game__prompt {
+  margin: 0;
+  color: var(--wa-ink);
+  font-size: 12px;
+  line-height: 1.28;
+  font-weight: 430;
+}
+
+.wa-swipe-game__axis {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 8px;
+  color: var(--wa-color-muted);
+  font-size: 10px;
+  line-height: 1;
+  font-weight: 520;
+}
+
+.wa-swipe-game__axis span:first-child {
+  color: rgba(127, 29, 29, 0.58);
+}
+
+.wa-swipe-game__axis span:nth-child(2) {
+  color: var(--wa-color-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.wa-swipe-game__axis span:last-child {
+  justify-self: end;
+  color: rgba(22, 101, 52, 0.62);
+}
+
+.wa-swipe-game__stack {
+  position: relative;
+  height: 184px;
+  overflow: visible;
+}
+
+.wa-swipe-game__glow {
+  position: absolute;
+  inset: 12px -18px 0;
+  z-index: 0;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    rgba(127, 29, 29, 0.055),
+    transparent 42%,
+    transparent 58%,
+    rgba(22, 101, 52, 0.065)
+  );
+  filter: blur(22px);
+  pointer-events: none;
+}
+
+.wa-swipe-card,
+.wa-swipe-game__complete {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  min-width: 0;
+  border: 1px solid rgba(228, 228, 231, 0.82);
+  border-radius: 21px;
+  background: #fafafa;
+  text-align: center;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.08);
+  will-change: transform, opacity;
+}
+
+.wa-swipe-card {
+  gap: 13px;
+  padding: 22px 26px;
+}
+
+.wa-swipe-game[data-swipe-decision="avoid"] .wa-swipe-card[data-swipe-state="active"] {
+  border-color: rgba(210, 152, 152, 0.62);
+  background: linear-gradient(135deg, rgb(248, 241, 241), #fafafa 68%);
+  box-shadow: -22px 28px 70px rgba(127, 29, 29, 0.12);
+}
+
+.wa-swipe-game[data-swipe-decision="use"] .wa-swipe-card[data-swipe-state="active"] {
+  border-color: rgba(142, 183, 157, 0.64);
+  background: linear-gradient(135deg, #fafafa 32%, rgb(240, 247, 242));
+  box-shadow: 22px 28px 70px rgba(22, 101, 52, 0.12);
+}
+
+.wa-swipe-card__label {
+  max-width: 360px;
+  color: var(--wa-ink);
+  font-size: 20px;
+  line-height: 1.05;
+  font-weight: 580;
+  letter-spacing: 0;
+}
+
+.wa-swipe-card__detail {
+  max-width: 340px;
+  color: var(--wa-color-muted);
+  font-size: 11.5px;
+  line-height: 1.35;
+  font-weight: 410;
+}
+
+.wa-swipe-game__actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  max-width: 420px;
+  will-change: transform, opacity;
+}
+
+.wa-swipe-game__action {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  border: 1px solid var(--wa-line-12);
+  border-radius: 999px;
+  background: var(--wa-panel);
+  cursor: default;
+  will-change: transform;
+}
+
+.wa-swipe-game__action::before,
+.wa-swipe-game__action::after {
+  content: "";
+  position: absolute;
+  display: block;
+}
+
+.wa-swipe-game__action[data-swipe-action="avoid"] {
+  border-color: rgba(210, 152, 152, 0.48);
+  background: rgba(248, 241, 241, 0.9);
+}
+
+.wa-swipe-game__action[data-swipe-action="avoid"]::before,
+.wa-swipe-game__action[data-swipe-action="avoid"]::after {
+  width: 14px;
+  height: 1.5px;
+  border-radius: 999px;
+  background: #ba4d4d;
+}
+
+.wa-swipe-game__action[data-swipe-action="avoid"]::before {
+  transform: rotate(45deg);
+}
+
+.wa-swipe-game__action[data-swipe-action="avoid"]::after {
+  transform: rotate(-45deg);
+}
+
+.wa-swipe-game__action[data-swipe-action="use"] {
+  border-color: rgba(142, 183, 157, 0.5);
+  background: rgba(240, 247, 242, 0.95);
+}
+
+.wa-swipe-game__action[data-swipe-action="use"]::before {
+  width: 13px;
+  height: 7px;
+  border-bottom: 1.7px solid #2f8f4d;
+  border-left: 1.7px solid #2f8f4d;
+  transform: translateY(-1px) rotate(-45deg);
+}
+
+.wa-swipe-game__action[data-active="true"] {
+  border-color: var(--wa-ink);
+}
+
+.wa-swipe-game__complete {
+  z-index: 10;
+  color: var(--wa-ink);
+  font-size: 17px;
+  line-height: 1.1;
+  font-weight: 560;
 }
 
 .wa-sequence-engagement__header {
@@ -2925,6 +3121,8 @@ body {
 .wa-builder-style-profile-editor textarea,
 .wa-builder-proximity-editor input,
 .wa-builder-proximity-editor textarea,
+.wa-builder-swipe-game-editor input,
+.wa-builder-swipe-game-editor textarea,
 .wa-builder-sequence-editor input,
 .wa-builder-sequence-editor textarea,
 .wa-builder-channel-editor input,
@@ -3132,6 +3330,7 @@ body {
 .wa-builder-style-profile-editor,
 .wa-builder-style-profile-editor__examples,
 .wa-builder-proximity-editor,
+.wa-builder-swipe-game-editor,
 .wa-builder-sequence-editor,
 .wa-builder-channel-editor {
   display: grid;
@@ -3141,6 +3340,7 @@ body {
 .wa-builder-file-list-editor__card,
 .wa-builder-style-profile-editor__row,
 .wa-builder-proximity-editor__row,
+.wa-builder-swipe-game-editor__row,
 .wa-builder-sequence-editor__card,
 .wa-builder-channel-editor__card {
   display: grid;
@@ -3163,6 +3363,7 @@ body {
 .wa-builder-file-list-editor__type,
 .wa-builder-proximity-editor__rank,
 .wa-builder-proximity-editor__score,
+.wa-builder-swipe-game-editor__decision,
 .wa-builder-sequence-editor__count,
 .wa-builder-channel-editor__badge {
   color: var(--wa-color-accent);
@@ -3175,6 +3376,7 @@ body {
 .wa-builder-file-list-editor__name,
 .wa-builder-style-profile-editor__value,
 .wa-builder-proximity-editor__name,
+.wa-builder-swipe-game-editor__label,
 .wa-builder-sequence-editor__name,
 .wa-builder-channel-editor__label {
   color: var(--wa-color-heading-strong);
@@ -3186,6 +3388,7 @@ body {
 .wa-builder-file-list-editor__detail,
 .wa-builder-style-profile-editor__example,
 .wa-builder-proximity-editor__personalization,
+.wa-builder-swipe-game-editor__detail,
 .wa-builder-sequence-editor__personalization,
 .wa-builder-channel-editor__detail {
   min-height: 44px;
@@ -3203,6 +3406,7 @@ body {
 .wa-builder-proximity-editor__company,
 .wa-builder-proximity-editor__title,
 .wa-builder-proximity-editor__proximity,
+.wa-builder-swipe-game-editor__decision,
 .wa-builder-sequence-editor__company {
   color: var(--wa-color-muted);
   font-size: 11px;
@@ -3215,8 +3419,13 @@ body {
 }
 
 .wa-builder-proximity-editor__proximity,
-.wa-builder-proximity-editor__personalization {
+.wa-builder-proximity-editor__personalization,
+.wa-builder-swipe-game-editor__detail {
   grid-column: 1 / -1;
+}
+
+.wa-builder-swipe-game-editor__row {
+  grid-template-columns: 72px minmax(0, 1fr);
 }
 
 .wa-builder-sequence-editor {
@@ -3833,9 +4042,11 @@ body {
   .wa-data-source-grid__list,
   .wa-engage-channels,
   .wa-style-profile__rows,
+  .wa-swipe-game__actions,
   .wa-builder-data-sources-editor,
   .wa-builder-style-profile-editor,
   .wa-builder-proximity-editor__row,
+  .wa-builder-swipe-game-editor__row,
   .wa-builder-sequence-editor,
   .wa-builder-channel-editor {
     grid-template-columns: minmax(0, 1fr);
@@ -3973,6 +4184,26 @@ body {
 
   .wa-strategy-plan__summary {
     font-size: 11px;
+  }
+
+  .wa-swipe-game {
+    max-width: 100%;
+  }
+
+  .wa-swipe-game__stack {
+    height: 168px;
+  }
+
+  .wa-swipe-card {
+    padding: 18px 16px;
+  }
+
+  .wa-swipe-card__label {
+    font-size: 16px;
+  }
+
+  .wa-swipe-card__detail {
+    font-size: 10.5px;
   }
 
   .wa-composer {

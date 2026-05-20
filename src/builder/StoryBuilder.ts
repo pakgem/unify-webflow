@@ -83,6 +83,18 @@ type BuilderProximityListComponent = {
   }>;
 };
 
+type BuilderPersonalizationSwipeComponent = {
+  kind: "personalizationSwipeGame";
+  title: string;
+  subtitle: string;
+  prompt: string;
+  signals: Array<{
+    label: string;
+    detail: string;
+    decision: "use" | "avoid";
+  }>;
+};
+
 type BuilderSequenceEngagementComponent = {
   kind: "sequenceEngagement";
   title: string;
@@ -115,6 +127,7 @@ type BuilderComponent =
   | BuilderUploadedFilesComponent
   | BuilderStyleProfileComponent
   | BuilderProximityListComponent
+  | BuilderPersonalizationSwipeComponent
   | BuilderSequenceEngagementComponent
   | BuilderGenericComponent;
 
@@ -619,6 +632,9 @@ export class StoryBuilder {
     if (step.component.kind === "uploadedFiles") return this.createUploadedFilesComponentBody(step, step.component);
     if (step.component.kind === "styleProfile") return this.createStyleProfileComponentBody(step, step.component);
     if (step.component.kind === "proximityList") return this.createProximityListComponentBody(step, step.component);
+    if (step.component.kind === "personalizationSwipeGame") {
+      return this.createPersonalizationSwipeComponentBody(step, step.component);
+    }
     if (step.component.kind === "sequenceEngagement") {
       return this.createSequenceEngagementComponentBody(step, step.component);
     }
@@ -977,6 +993,49 @@ export class StoryBuilder {
     });
 
     content.append(title, subtitle, list);
+    return card;
+  }
+
+  private createPersonalizationSwipeComponentBody(
+    step: BuilderStep,
+    component: BuilderPersonalizationSwipeComponent,
+  ): HTMLElement {
+    const card = this.createStructuredComponentCard("Personalization swipe game");
+    const content = card.querySelector<HTMLElement>(".wa-builder-component-card__content")!;
+
+    const title = this.createComponentField(step.id, "title", component.title, {
+      className: "wa-builder-component-card__title",
+    });
+    const subtitle = this.createComponentField(step.id, "subtitle", component.subtitle, {
+      className: "wa-builder-component-card__subtitle",
+    });
+    const prompt = this.createComponentField(step.id, "prompt", component.prompt, {
+      className: "wa-builder-component-card__subtitle",
+    });
+    const list = document.createElement("div");
+    list.className = "wa-builder-swipe-game-editor";
+
+    component.signals.forEach((signal, itemIndex) => {
+      const row = document.createElement("div");
+      row.className = "wa-builder-swipe-game-editor__row";
+      row.append(
+        this.createComponentInput(step.id, "swipeDecision", signal.decision, {
+          itemIndex,
+          className: "wa-builder-swipe-game-editor__decision",
+        }),
+        this.createComponentField(step.id, "swipeLabel", signal.label, {
+          itemIndex,
+          className: "wa-builder-swipe-game-editor__label",
+        }),
+        this.createComponentField(step.id, "swipeDetail", signal.detail, {
+          itemIndex,
+          className: "wa-builder-swipe-game-editor__detail",
+        }),
+      );
+      list.append(row);
+    });
+
+    content.append(title, subtitle, prompt, list);
     return card;
   }
 
@@ -1669,6 +1728,12 @@ function createSeedSteps(storyId: string, fallbackSummary: string): BuilderStep[
         note: "Shows the style and qualification rules the AI learned.",
         component: createStyleProfileComponent(),
       },
+      {
+        kind: "component",
+        text: "Personalization swipe mini game",
+        note: "Swipe cards to teach which personalization patterns sound like Joel.",
+        component: createPersonalizationSwipeComponent(),
+      },
       { kind: "user", text: "Write a sequence for consumer fintech founders.", note: "This is intentionally outside the learned ICP." },
       { kind: "assistant", text: "Are you sure? this doesn't fit your ICP", note: "Guardrail response based on the uploaded context." },
       { kind: "user", text: "Okay, generate leads ranked by how personally connected they are to us.", note: "" },
@@ -1930,6 +1995,32 @@ function createStyleProfileComponent(): BuilderStyleProfileComponent {
   };
 }
 
+function createPersonalizationSwipeComponent(): BuilderPersonalizationSwipeComponent {
+  return {
+    kind: "personalizationSwipeGame",
+    title: "Personalization preferences",
+    subtitle: "A tiny game teaches the agent what should and should not show up in outreach.",
+    prompt: "Swipe toward the personalization you would actually use.",
+    signals: [
+      {
+        label: "{{reference something they recently posted}}",
+        detail: "Use a real public post when it connects to the reason for reaching out.",
+        decision: "use",
+      },
+      {
+        label: "Hope the weather in {{city}} is treating you well",
+        detail: "A location warm-up that adds words without adding context.",
+        decision: "avoid",
+      },
+      {
+        label: "{{mention a mutual connection}}",
+        detail: "Useful when the shared contact creates a credible reason to compare notes.",
+        decision: "use",
+      },
+    ],
+  };
+}
+
 function createProximityListComponent(): BuilderProximityListComponent {
   return {
     kind: "proximityList",
@@ -2081,6 +2172,20 @@ function updateComponentValue(
     }
   }
 
+  if (component.kind === "personalizationSwipeGame") {
+    if (field === "subtitle") component.subtitle = value;
+    if (field === "prompt") component.prompt = value;
+
+    if (indexes.itemIndex !== null) {
+      const signal = component.signals[indexes.itemIndex];
+      if (!signal) return;
+
+      if (field === "swipeDecision") signal.decision = value === "avoid" ? "avoid" : "use";
+      if (field === "swipeLabel") signal.label = value;
+      if (field === "swipeDetail") signal.detail = value;
+    }
+  }
+
   if (component.kind === "sequenceEngagement") {
     if (field === "subtitle") component.subtitle = value;
     if (field === "peopleCount") component.peopleCount = value;
@@ -2147,6 +2252,7 @@ function getComponentDisplayText(component: BuilderComponent): string {
   if (component.kind === "uploadedFiles") return component.title;
   if (component.kind === "styleProfile") return component.title;
   if (component.kind === "proximityList") return component.title;
+  if (component.kind === "personalizationSwipeGame") return component.title;
   if (component.kind === "sequenceEngagement") return component.title;
 
   return component.title;
