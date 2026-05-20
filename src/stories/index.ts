@@ -716,8 +716,8 @@ export const defaultStories: StoryDefinition[] = [
   },
   {
     id: "data-marketplace",
-    label: "100+ Data Sources at Your Fingertips",
-    navLabel: "100+ Data Sources at Your Fingertips",
+    label: "100+ data sources at your fingertips",
+    navLabel: "100+ data sources at your fingertips",
     navDescription:
       "A One-Stop Shop for Your Data Needs, B2B Contacts and Companies, E-commerce, Local Businesses, Technographics, and More in a Single Natural Language Search.",
     eyebrow: "Data marketplace",
