@@ -1025,7 +1025,7 @@ export const defaultStories: StoryDefinition[] = [
           at: "+=0.24",
         },
         { kind: "custom", build: () => ctx.chat.dataTableActionTooltip("website-visitors-sales", "power-dialer", true), at: "<+=0.04" },
-        { kind: "custom", build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat }), at: "+=0.12" },
+        { kind: "custom", build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat + 1 }), at: "+=0.12" },
         { kind: "custom", build: () => ctx.chat.dataTableActionTooltip("website-visitors-sales", "power-dialer", false), at: "<" },
         {
           kind: "cursorMove",
