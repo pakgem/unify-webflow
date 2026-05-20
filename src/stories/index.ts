@@ -752,7 +752,7 @@ export const defaultStories: StoryDefinition[] = [
     label: "100+ data sources at your fingertips",
     navLabel: "100+ data sources at your fingertips",
     navDescription:
-      "A One-Stop Shop for Your Data Needs, B2B Contacts and Companies, E-commerce, Local Businesses, Technographics, and More in a Single Natural Language Search.",
+      "A one-stop shop for your data needs, B2B contacts and companies, e-commerce, local businesses, technographics, and more in a single natural language search.",
     eyebrow: "Data marketplace",
     summary: "The assistant searches, filters, and enriches B2B company and contact data.",
     entry: CHAT_INPUT_TARGETS.dataMarketplace,
