@@ -33,6 +33,7 @@ const HISTORY_PARK = {
   minTopInset: 74,
   maxTopInset: 190,
 };
+const SVG_NS = "http://www.w3.org/2000/svg";
 const DEFAULT_CURSOR_POINT_ANGLE = -135;
 const MIMIC_ROTATION_SMOOTHING = 0.34;
 
@@ -856,6 +857,7 @@ export class CursorActor {
 
     const glyph = document.createElement("div");
     glyph.className = "wa-cursor__glyph";
+    glyph.append(this.createMimicCursorSvg());
     floatLayer.append(glyph);
     el.append(floatLayer);
 
@@ -870,6 +872,7 @@ export class CursorActor {
 
     const glyph = this.el.querySelector<HTMLElement>(".wa-cursor__glyph") ?? document.createElement("div");
     if (!glyph.classList.contains("wa-cursor__glyph")) glyph.className = "wa-cursor__glyph";
+    if (!glyph.querySelector(".wa-cursor-svg")) glyph.append(this.createMimicCursorSvg());
 
     const floatLayer = document.createElement("div");
     floatLayer.className = "wa-cursor__float";
@@ -877,6 +880,25 @@ export class CursorActor {
     floatLayer.append(glyph);
     this.el.append(floatLayer);
     return floatLayer;
+  }
+
+  private createMimicCursorSvg(): SVGSVGElement {
+    const svg = document.createElementNS(SVG_NS, "svg");
+    svg.classList.add("wa-cursor-svg");
+    svg.setAttribute("viewBox", "0 0 24 38");
+    svg.setAttribute("aria-hidden", "true");
+    svg.setAttribute("focusable", "false");
+
+    const tail = document.createElementNS(SVG_NS, "path");
+    tail.classList.add("wa-cursor-svg__tail");
+    tail.setAttribute("d", "M10.9 20.9L15.8 34.9L20.4 33.1L15.3 20.9Z");
+
+    const body = document.createElementNS(SVG_NS, "path");
+    body.classList.add("wa-cursor-svg__body");
+    body.setAttribute("d", "M3.5 2.7L3.5 29.2L10.9 20.9H23Z");
+
+    svg.append(tail, body);
+    return svg;
   }
 }
 
