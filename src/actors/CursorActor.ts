@@ -59,6 +59,7 @@ export class CursorActor {
   private targetObserver: MutationObserver | null = null;
   private lastModeSyncAt = 0;
   private lastModeSyncPoint: Point = { x: Number.NaN, y: Number.NaN };
+  private modeWatchFrame = 0;
 
   constructor(
     private root: HTMLElement,
@@ -149,10 +150,14 @@ export class CursorActor {
   }
 
   setMode(mode: CursorMode): void {
-    if (this.mode === mode && this.el.dataset.cursorMode === mode) return;
+    if (this.mode === mode && this.el.dataset.cursorMode === mode) {
+      this.updateModeWatch();
+      return;
+    }
 
     this.mode = mode;
     this.el.dataset.cursorMode = mode;
+    this.updateModeWatch();
   }
 
   moveTo(target: ResponsiveTarget, options: CursorMoveOptions = {}): gsap.core.Timeline {
@@ -401,6 +406,7 @@ export class CursorActor {
 
   destroy(): void {
     this.targetObserver?.disconnect();
+    this.stopModeWatch();
     this.stopIdleFloat();
     this.el.remove();
   }
@@ -763,6 +769,37 @@ export class CursorActor {
     this.lastModeSyncAt = now;
     this.lastModeSyncPoint = { ...point };
     this.syncModeToPoint(point);
+  }
+
+  private updateModeWatch(): void {
+    if (this.mode !== "default" && !this.modeOverride) {
+      this.scheduleModeWatch();
+      return;
+    }
+
+    this.stopModeWatch();
+  }
+
+  private scheduleModeWatch(): void {
+    if (this.modeWatchFrame) return;
+
+    this.modeWatchFrame = window.requestAnimationFrame(this.watchModeTarget);
+  }
+
+  private watchModeTarget = (): void => {
+    this.modeWatchFrame = 0;
+
+    if (this.modeOverride || this.mode === "default") return;
+
+    this.syncModeToPoint(this.currentPosition);
+    if (this.el.dataset.cursorMode !== "default" && !this.modeOverride) this.scheduleModeWatch();
+  };
+
+  private stopModeWatch(): void {
+    if (!this.modeWatchFrame) return;
+
+    window.cancelAnimationFrame(this.modeWatchFrame);
+    this.modeWatchFrame = 0;
   }
 
   private syncModeToPoint(point: Point): void {
