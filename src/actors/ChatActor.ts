@@ -1022,10 +1022,6 @@ export class ChatActor {
     dropArea.dataset.csvDropArea = "";
     dropArea.dataset.dropState = "idle";
 
-    const icon = document.createElement("span");
-    icon.className = "wa-csv-drop__icon";
-    icon.setAttribute("aria-hidden", "true");
-
     const copy = document.createElement("span");
     copy.className = "wa-csv-drop__copy";
 
@@ -1036,7 +1032,7 @@ export class ChatActor {
     detail.textContent = options.detail ?? "Accepts webinar exports, event lists, and messy attendee spreadsheets.";
 
     copy.append(title, detail);
-    dropArea.append(icon, copy);
+    dropArea.append(copy);
     return dropArea;
   }
 
