@@ -123,10 +123,8 @@ export class StoryController implements ChatbotStoriesInstance {
           },
         ),
       )
-      .add(this.chat.dataTablePageTooltip(restore.tableId, restore.expectedPage, true), "<+=0.04")
       .add(this.cursor.click(), "-=0.02")
-      .add(this.chat.dataTablePage(restore.tableId, restore.expectedPage, { updateExpected: false }), "-=0.03")
-      .add(this.chat.dataTablePageTooltip(restore.tableId, restore.expectedPage, false), "+=0.05");
+      .add(this.chat.dataTablePage(restore.tableId, restore.expectedPage, { updateExpected: false }), "-=0.03");
 
     return timeline;
   }

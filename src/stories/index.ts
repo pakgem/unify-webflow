@@ -684,8 +684,8 @@ const WEBSITE_VISITOR_SALES_TABLE = {
     totalRows: 50,
     activePage: 1,
     pages: [
-      { page: 1, range: "1-10 of 50", rows: WEBSITE_VISITOR_SALES_PAGE_ONE },
-      { page: 2, range: "11-20 of 50", rows: WEBSITE_VISITOR_SALES_PAGE_TWO },
+      { page: 1, range: "1-10 of 50 people", rows: WEBSITE_VISITOR_SALES_PAGE_ONE },
+      { page: 2, range: "11-20 of 50 people", rows: WEBSITE_VISITOR_SALES_PAGE_TWO },
     ],
   },
   actions: [
@@ -693,7 +693,8 @@ const WEBSITE_VISITOR_SALES_TABLE = {
       id: "power-dialer",
       label: "Power dialer",
       icon: "dialer",
-      tooltip: "Coming soon",
+      tooltip: "Start power dialing",
+      badge: "Coming soon",
       variant: "primary",
     },
     {
@@ -1003,23 +1004,19 @@ export const defaultStories: StoryDefinition[] = [
           options: { mode: "pointer", intent: "click", speed: "normal", label: "open-visitor-page-2" },
           at: "+=0.2",
         },
-        { kind: "custom", build: () => ctx.chat.dataTablePageTooltip("website-visitors-sales", 2, true), at: "<+=0.04" },
         { kind: "cursorClick", at: "-=0.02" },
         { kind: "custom", build: () => ctx.chat.dataTablePage("website-visitors-sales", 2), at: "-=0.03" },
         {
           kind: "custom",
           build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat }),
         },
-        { kind: "custom", build: () => ctx.chat.dataTablePageTooltip("website-visitors-sales", 2, false), at: "<" },
         {
           kind: "cursorMove",
           target: pageOneTarget,
           options: { mode: "pointer", intent: "click", speed: "normal", label: "return-visitor-page-1" },
         },
-        { kind: "custom", build: () => ctx.chat.dataTablePageTooltip("website-visitors-sales", 1, true), at: "<+=0.04" },
         { kind: "cursorClick", at: "-=0.02" },
         { kind: "custom", build: () => ctx.chat.dataTablePage("website-visitors-sales", 1), at: "-=0.03" },
-        { kind: "custom", build: () => ctx.chat.dataTablePageTooltip("website-visitors-sales", 1, false), at: "+=0.08" },
         { kind: "status", text: "Ready to engage", at: "<" },
         {
           kind: "cursorMove",

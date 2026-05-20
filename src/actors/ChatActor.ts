@@ -979,40 +979,6 @@ export class ChatActor {
     });
   }
 
-  dataTablePageTooltip(tableId: string, page: number, visible: boolean): gsap.core.Timeline {
-    return gsap.timeline().call(() => {
-      const table = this.findDataTable(tableId);
-
-      if (!table) {
-        this.hideDataTableControlTooltip();
-        return;
-      }
-
-      const buttons = this.queryElements(table, "[data-table-page-button]");
-      buttons.forEach((button) => {
-        const active = Number(button.dataset.tablePageButton) === page && visible;
-        button.dataset.tooltipVisible = String(active);
-      });
-      const activeButton = visible
-        ? buttons.find((button) => Number(button.dataset.tablePageButton) === page)
-        : undefined;
-
-      if (!activeButton) {
-        this.hideDataTableControlTooltip();
-        return;
-      }
-
-      const text = this.getDataTableControlTooltipText(activeButton);
-
-      if (!text) {
-        this.hideDataTableControlTooltip();
-        return;
-      }
-
-      this.showDataTableControlTooltip(activeButton, text);
-    });
-  }
-
   enrichmentPanel(config: EnrichmentConfig): gsap.core.Timeline {
     const panel = this.createEnrichmentPanel(config);
 
@@ -2680,8 +2646,6 @@ export class ChatActor {
         button.dataset.tablePageButton = String(page.page);
         button.dataset.pageRange = page.range;
         button.dataset.active = String(active);
-        button.dataset.tooltip = `Show page ${page.page}`;
-        button.dataset.tooltipVisible = "false";
         button.setAttribute("aria-label", `Show page ${page.page}`);
         button.setAttribute("aria-current", active ? "page" : "false");
         button.textContent = String(page.page);
@@ -2712,6 +2676,7 @@ export class ChatActor {
     button.append(this.createDataTableActionIcon(action.icon ?? "email"));
 
     if (action.badge) {
+      button.dataset.tooltipBadge = action.badge;
       const badge = document.createElement("span");
       badge.className = "wa-data-table-action__badge";
       badge.textContent = action.badge;
@@ -2780,7 +2745,22 @@ export class ChatActor {
     const x = controlRect.left - shellRect.left + controlRect.width * 0.5;
     const y = controlRect.top - shellRect.top - 7;
 
-    this.tableControlTooltip.textContent = text;
+    const label = document.createElement("span");
+    const badgeText = control.dataset.tooltipBadge?.trim();
+
+    label.className = "wa-data-table-floating-tooltip__label";
+    label.textContent = text;
+    this.tableControlTooltip.replaceChildren(label);
+
+    if (badgeText) {
+      const badge = document.createElement("span");
+
+      badge.className = "wa-data-table-floating-tooltip__badge";
+      badge.textContent = badgeText;
+      this.tableControlTooltip.append(badge);
+    }
+
+    this.tableControlTooltip.dataset.hasBadge = String(Boolean(badgeText));
     this.tableControlTooltip.dataset.visible = "true";
     gsap.set(this.tableControlTooltip, {
       x,
@@ -2792,7 +2772,8 @@ export class ChatActor {
 
   private hideDataTableControlTooltip(): void {
     this.tableControlTooltip.dataset.visible = "false";
-    this.queryElements(this.chatShell, "[data-table-action], [data-table-page-button]").forEach((control) => {
+    this.tableControlTooltip.dataset.hasBadge = "false";
+    this.queryElements(this.chatShell, "[data-table-action]").forEach((control) => {
       control.dataset.tooltipVisible = "false";
     });
   }
@@ -2800,8 +2781,8 @@ export class ChatActor {
   private setDataTableControlTooltipVisible(activeControl: HTMLElement): void {
     const table = activeControl.closest<HTMLElement>("[data-data-table]");
     const controls = table
-      ? this.queryElements(table, "[data-table-action], [data-table-page-button]")
-      : this.queryElements(this.chatShell, "[data-table-action], [data-table-page-button]");
+      ? this.queryElements(table, "[data-table-action]")
+      : this.queryElements(this.chatShell, "[data-table-action]");
 
     controls.forEach((control) => {
       control.dataset.tooltipVisible = String(control === activeControl);
@@ -2816,7 +2797,7 @@ export class ChatActor {
 
   private findDataTableControl(target: EventTarget | null): HTMLElement | null {
     if (!(target instanceof Element)) return null;
-    return target.closest<HTMLElement>("[data-table-action], [data-table-page-button]");
+    return target.closest<HTMLElement>("[data-table-action]");
   }
 
   private findDataTablePageButton(target: EventTarget | null): HTMLElement | null {
