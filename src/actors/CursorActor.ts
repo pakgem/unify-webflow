@@ -891,11 +891,11 @@ export class CursorActor {
 
     const tail = document.createElementNS(SVG_NS, "path");
     tail.classList.add("wa-cursor-svg__tail");
-    tail.setAttribute("d", "M10.9 20.9L15.8 34.9L20.4 33.1L15.3 20.9Z");
+    tail.setAttribute("d", "M8.9 17.6L16.1 17.6L21 34.2L15.3 36.2Z");
 
     const body = document.createElementNS(SVG_NS, "path");
     body.classList.add("wa-cursor-svg__body");
-    body.setAttribute("d", "M3.5 2.7L3.5 29.2L10.9 20.9H23Z");
+    body.setAttribute("d", "M2.4 1.7L2.4 30.4L10.9 21.1L22.9 21.1Z");
 
     svg.append(tail, body);
     return svg;

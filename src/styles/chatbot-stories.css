@@ -3691,7 +3691,7 @@ body {
   stroke: #fff;
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-width: 1.7;
+  stroke-width: 1.65;
 }
 
 .wa-cursor[data-cursor-mimicking="true"][data-cursor-mode="default"] .wa-cursor__glyph {
@@ -3704,8 +3704,8 @@ body {
 
 .wa-cursor[data-cursor-mimicking="true"][data-cursor-mode="default"] .wa-cursor-svg__tail {
   animation: wa-cursor-tail-wag 140ms ease-in-out infinite alternate;
-  transform-box: fill-box;
-  transform-origin: 15% 2%;
+  transform-box: view-box;
+  transform-origin: 12px 21px;
   will-change: transform;
 }
 
@@ -3758,11 +3758,11 @@ body {
 
 @keyframes wa-cursor-tail-wag {
   from {
-    transform: rotate(-24deg) translateX(-1.8px);
+    transform: rotate(-18deg);
   }
 
   to {
-    transform: rotate(24deg) translateX(1.8px);
+    transform: rotate(18deg);
   }
 }
 
