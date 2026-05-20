@@ -154,9 +154,10 @@ const THINKING_STEP_FOLD = {
 
 const COMPOSER_MOTION = {
   hiddenY: 8,
-  hiddenScale: 0.94,
+  hiddenScaleX: 0.76,
+  hiddenScaleY: 0.16,
   showDuration: motionDuration(0.26),
-  hideDuration: motionDuration(0.2),
+  hideDuration: motionDuration(0.22),
   threadGap: 44,
 };
 
@@ -432,9 +433,10 @@ export class ChatActor {
     const tl = gsap.timeline();
 
     tl.to(this.composer, {
-      autoAlpha: 1,
       y: 0,
-      scale: 1,
+      scaleX: 1,
+      scaleY: 1,
+      visibility: "visible",
       duration: COMPOSER_MOTION.showDuration,
       ease: "back.out(1.45)",
       overwrite: "auto",
@@ -442,6 +444,8 @@ export class ChatActor {
         this.setComposerVisibleState(true);
         gsap.set(this.composer, {
           display: "grid",
+          opacity: 1,
+          visibility: "visible",
           transformOrigin: "center bottom",
         });
       },
@@ -469,15 +473,19 @@ export class ChatActor {
 
   hideComposer(): gsap.core.Timeline {
     return gsap.timeline().to(this.composer, {
-      autoAlpha: 0,
       y: COMPOSER_MOTION.hiddenY,
-      scale: COMPOSER_MOTION.hiddenScale,
+      scaleX: COMPOSER_MOTION.hiddenScaleX,
+      scaleY: COMPOSER_MOTION.hiddenScaleY,
+      opacity: 1,
       duration: COMPOSER_MOTION.hideDuration,
-      ease: "power2.in",
+      ease: "power3.inOut",
       overwrite: "auto",
       onStart: () => {
         this.setComposerFocusState(false);
         this.setComposerVisibleState(false);
+      },
+      onComplete: () => {
+        gsap.set(this.composer, { visibility: "hidden" });
       },
     }).to(
       this.thread,
@@ -494,23 +502,10 @@ export class ChatActor {
   }
 
   clearComposer(): gsap.core.Timeline {
-    return gsap
-      .timeline()
-      .to(this.composerText, {
-        autoAlpha: 0,
-        y: -4,
-        duration: motionDuration(0.16),
-        ease: "power1.out",
-      })
-      .call(() => {
-        this.composerText.textContent = "";
-      })
-      .set(this.composerText, { y: 0 })
-      .to(this.composerText, {
-        autoAlpha: 1,
-        duration: motionDuration(0.12),
-        ease: "power1.out",
-      });
+    return gsap.timeline().call(() => {
+      this.composerText.textContent = "";
+      gsap.set(this.composerText, { autoAlpha: 1, y: 0 });
+    });
   }
 
   private setComposerFocusState(focused: boolean): void {
@@ -525,9 +520,11 @@ export class ChatActor {
 
   private getComposerHiddenVars(): gsap.TweenVars {
     return {
-      autoAlpha: 0,
+      opacity: 1,
+      visibility: "hidden",
       y: COMPOSER_MOTION.hiddenY,
-      scale: COMPOSER_MOTION.hiddenScale,
+      scaleX: COMPOSER_MOTION.hiddenScaleX,
+      scaleY: COMPOSER_MOTION.hiddenScaleY,
       display: "",
       transformOrigin: "center bottom",
     };

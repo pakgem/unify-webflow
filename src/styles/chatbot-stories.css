@@ -2417,10 +2417,11 @@ body {
     0 18px 34px rgba(23, 23, 20, 0.12),
     0 1px 0 rgba(255, 255, 255, 0.74) inset;
   transform-origin: center bottom;
+  backface-visibility: hidden;
   transition:
     border-color 140ms ease,
     box-shadow 140ms ease;
-  will-change: transform, opacity;
+  will-change: transform;
 }
 
 .wa-composer[data-visible="false"] {
