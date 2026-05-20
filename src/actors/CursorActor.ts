@@ -40,18 +40,18 @@ const TAIL_WAG_DURATION = "300ms";
 const TAIL_WAG_KEY_TIMES = "0;0.24;0.38;0.64;1";
 const TAIL_WAG_EASING = "0.16 0.88 0.24 1;0.16 0 0.24 1;0.16 0.88 0.24 1;0.2 0 0.24 1";
 const TAIL_WAG_STROKE_PATHS = [
-  "M10.3 20.4C10 25.2 9.5 31.1 9.1 36.4",
-  "M10.3 20.4C12.5 25 15.8 30.3 18.3 34.8",
-  "M10.3 20.4C12.1 24.9 14.7 29.7 16.7 34.4",
-  "M10.3 20.4C9.4 25.2 8.1 30.4 6.7 35",
-  "M10.3 20.4C10 25.2 9.5 31.1 9.1 36.4",
+  "M10.3 20.4C10.1 23.9 9.8 28 9.6 31.1C9.5 32.9 9.3 34 9.1 34.9",
+  "M10.3 20.4C12.3 24 15.2 27.9 16.9 31C17.7 32.6 18.2 33.6 17.8 34",
+  "M10.3 20.4C12 23.9 14.1 27.7 15.5 30.7C16.2 32.2 16.6 33.2 16.2 33.6",
+  "M10.3 20.4C9.5 24.1 8.2 28.2 7.3 31.1C6.8 32.8 6.5 33.8 7 34.2",
+  "M10.3 20.4C10.1 23.9 9.8 28 9.6 31.1C9.5 32.9 9.3 34 9.1 34.9",
 ];
 const TAIL_WAG_OUTLINE_PATHS = [
-  "M10 22.2C9.8 26.2 9.5 31.2 9.1 36.4",
-  "M11.1 22.2C13 26.1 15.9 30.4 18.3 34.8",
-  "M10.9 22.2C12.5 26 14.8 29.8 16.7 34.4",
-  "M9.7 22.2C8.9 26.2 8 30.5 6.7 35",
-  "M10 22.2C9.8 26.2 9.5 31.2 9.1 36.4",
+  "M10 22.2C9.8 25 9.7 28.3 9.6 31.1C9.5 32.9 9.3 34 9.1 34.9",
+  "M11.1 22.2C13 25 15.6 28.4 16.9 31C17.7 32.6 18.2 33.6 17.8 34",
+  "M10.9 22.2C12.5 24.9 14.3 28.2 15.5 30.7C16.2 32.2 16.6 33.2 16.2 33.6",
+  "M9.7 22.2C8.9 25.1 8 28.4 7.3 31.1C6.8 32.8 6.5 33.8 7 34.2",
+  "M10 22.2C9.8 25 9.7 28.3 9.6 31.1C9.5 32.9 9.3 34 9.1 34.9",
 ];
 
 export class CursorActor {
@@ -928,11 +928,15 @@ export function createMimicCursorSvg(): SVGSVGElement {
   body.classList.add("wa-cursor-svg__body");
   body.setAttribute("d", "M1.2 0.5L1.2 31.7L10.9 21.1L23.4 21.1Z");
 
+  const tailBridge = document.createElementNS(SVG_NS, "path");
+  tailBridge.classList.add("wa-cursor-svg__tail-bridge");
+  tailBridge.setAttribute("d", "M7.1 20.1H15.2V23.9H7.1Z");
+
   const bodyOutline = document.createElementNS(SVG_NS, "path");
   bodyOutline.classList.add("wa-cursor-svg__body-outline");
   bodyOutline.setAttribute("d", "M23.4 21.1L1.2 0.5L1.2 31.7L10.9 21.1");
 
-  svg.append(tail, body, bodyOutline);
+  svg.append(tail, body, tailBridge, bodyOutline);
   return svg;
 }
 

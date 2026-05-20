@@ -3690,7 +3690,8 @@ body {
   overflow: visible;
 }
 
-.wa-cursor-svg__body {
+.wa-cursor-svg__body,
+.wa-cursor-svg__tail-bridge {
   fill: #000;
 }
 
