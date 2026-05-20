@@ -766,9 +766,9 @@ export const defaultStories: StoryDefinition[] = [
     eyebrow: "Context learning",
     summary: "The assistant learns your sales context, protects ICP fit, and ranks leads by relationship proximity.",
     entry: {
-      desktop: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 120, y: -68 } },
-      tablet: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 96, y: -54 } },
-      mobile: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 72, y: -42 } },
+      desktop: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 270, y: -68 } },
+      tablet: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 224, y: -54 } },
+      mobile: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 172, y: -42 } },
     } satisfies ResponsiveTarget,
     entryLeadTime: 0.18,
     build: (ctx) => {
@@ -888,9 +888,9 @@ export const defaultStories: StoryDefinition[] = [
     eyebrow: "CSV cleanup",
     summary: "The assistant accepts a messy CSV, cleans attendee fields, and returns a normalized table.",
     entry: {
-      desktop: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 120, y: 70 } },
-      tablet: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 96, y: 56 } },
-      mobile: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 72, y: 42 } },
+      desktop: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 270, y: 70 } },
+      tablet: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 224, y: 56 } },
+      mobile: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 172, y: 42 } },
     } satisfies ResponsiveTarget,
     entryLeadTime: 0.18,
     build: (ctx) => {

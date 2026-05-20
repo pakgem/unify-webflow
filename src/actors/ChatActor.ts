@@ -30,6 +30,10 @@ type PreparedCursorFile = {
   startFollow: () => gsap.core.Timeline;
   stopFollow: () => gsap.core.Timeline;
 };
+type CursorFileFollowOffset = {
+  x: number;
+  y: number;
+};
 
 type DropAreaOptions = {
   title?: string;
@@ -169,6 +173,11 @@ const CHAT_SCROLL_MOTION = {
 
 const STREAM_SCROLL_INTERVAL_MS = 96;
 const TRANSIENT_ELEMENT_SELECTOR = ".wa-cursor-file, .wa-csv-drop";
+const CURSOR_FILE_ENTRY = {
+  offscreenMargin: 96,
+  pullInDuration: motionDuration(0.38),
+  pullInEase: "power3.out",
+};
 
 const COMPONENT_CHILD_REVEAL = {
   tableRow: {
@@ -752,9 +761,11 @@ export class ChatActor {
   prepareCursorFile(fileName: string, cursor: CursorActor, fileType = "CSV"): PreparedCursorFile {
     const file = this.createCursorFile(fileName, fileType);
     let removeFollower: (() => void) | null = null;
+    let followOffset: CursorFileFollowOffset = { x: 0, y: 0 };
     this.registerTransientElement(file, () => {
       removeFollower?.();
       removeFollower = null;
+      gsap.killTweensOf(followOffset);
     });
 
     return {
@@ -764,20 +775,28 @@ export class ChatActor {
           .timeline()
           .call(() => {
             removeFollower?.();
-            removeFollower = this.followCursorWithFile(file, cursor);
+            followOffset = this.getCursorFileEntryOffset(file, cursor);
+            removeFollower = this.followCursorWithFile(file, cursor, followOffset);
           })
+          .to(followOffset, {
+            x: 0,
+            y: 0,
+            duration: CURSOR_FILE_ENTRY.pullInDuration,
+            ease: CURSOR_FILE_ENTRY.pullInEase,
+          }, 0)
           .to(file, {
             autoAlpha: 1,
             scale: 1,
             duration: motionDuration(0.24),
             ease: "back.out(1.9)",
-          }),
+          }, 0.04),
       stopFollow: () =>
         gsap
           .timeline()
           .call(() => {
             removeFollower?.();
             removeFollower = null;
+            gsap.killTweensOf(followOffset);
           })
           .to(file, {
             autoAlpha: 0,
@@ -1072,18 +1091,22 @@ export class ChatActor {
     const file = document.createElement("div");
     file.className = "wa-cursor-file";
     file.setAttribute("aria-hidden", "true");
-    file.innerHTML = `
-      <span class="wa-cursor-file__icon"></span>
-      <span class="wa-cursor-file__name"></span>
-    `;
-    file.querySelector<HTMLElement>(".wa-cursor-file__icon")!.textContent = fileType;
-    file.querySelector<HTMLElement>(".wa-cursor-file__name")!.textContent = fileName;
+
+    const stackCount = this.getCursorFileStackCount(fileName);
+
+    if (stackCount > 1) {
+      file.classList.add("wa-cursor-file--stack");
+      file.append(...this.createCursorFileStack(fileName, fileType, stackCount));
+    } else {
+      file.append(this.createCursorFileCard(fileName, fileType));
+    }
+
     this.root.append(file);
     gsap.set(file, { autoAlpha: 0, scale: 0.88, x: -120, y: -120 });
     return file;
   }
 
-  private followCursorWithFile(file: HTMLElement, cursor: CursorActor): () => void {
+  private followCursorWithFile(file: HTMLElement, cursor: CursorActor, offset: CursorFileFollowOffset): () => void {
     const fileWidth = file.offsetWidth || 154;
     const fileHeight = file.offsetHeight || 42;
     const setFileX = gsap.quickSetter(file, "x", "px") as (value: number) => void;
@@ -1092,8 +1115,8 @@ export class ChatActor {
 
     const follow = () => {
       const point = cursor.readPosition();
-      const nextX = point.x - fileWidth * 0.5;
-      const nextY = point.y - fileHeight * 0.5;
+      const nextX = point.x - fileWidth * 0.5 + offset.x;
+      const nextY = point.y - fileHeight * 0.5 + offset.y;
 
       if (nextX !== transformState.x) {
         transformState.x = nextX;
@@ -1109,6 +1132,58 @@ export class ChatActor {
     follow();
     gsap.ticker.add(follow);
     return () => gsap.ticker.remove(follow);
+  }
+
+  private getCursorFileEntryOffset(file: HTMLElement, cursor: CursorActor): CursorFileFollowOffset {
+    const fileWidth = file.offsetWidth || 154;
+    const point = cursor.readPosition();
+    const rootWidth = this.root.getBoundingClientRect().width || window.innerWidth;
+    const fileRightWhenCentered = point.x + fileWidth * 0.5;
+    const offscreenRight = rootWidth + CURSOR_FILE_ENTRY.offscreenMargin;
+
+    return {
+      x: Math.max(0, offscreenRight - fileRightWhenCentered),
+      y: 0,
+    };
+  }
+
+  private getCursorFileStackCount(fileName: string): number {
+    const match = fileName.match(/^(\d+)\s+/);
+    return match ? Math.max(1, Math.min(4, Number(match[1]))) : 1;
+  }
+
+  private createCursorFileStack(fileName: string, fileType: string, count: number): HTMLElement[] {
+    const labels = this.getCursorFileStackLabels(fileName, count);
+
+    return labels.map((label, index) => {
+      const card = this.createCursorFileCard(label, fileType);
+      card.classList.add("wa-cursor-file__card--stacked");
+      return card;
+    });
+  }
+
+  private getCursorFileStackLabels(fileName: string, count: number): string[] {
+    if (fileName.toLowerCase().includes("context")) {
+      return ["Battle cards", "ICP notes", "Voice doc", "Playbook"].slice(0, count);
+    }
+
+    return Array.from({ length: count }, (_item, index) => (index === 0 ? fileName : `File ${index + 1}`));
+  }
+
+  private createCursorFileCard(fileName: string, fileType: string): HTMLElement {
+    const card = document.createElement("span");
+    card.className = "wa-cursor-file__card";
+
+    const icon = document.createElement("span");
+    icon.className = "wa-cursor-file__icon";
+    icon.textContent = fileType;
+
+    const name = document.createElement("span");
+    name.className = "wa-cursor-file__name";
+    name.textContent = fileName;
+
+    card.append(icon, name);
+    return card;
   }
 
   private createUploadedFile(fileName: string, detail: string): HTMLElement {
