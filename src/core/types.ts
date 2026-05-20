@@ -162,6 +162,11 @@ export type SequenceEngagementConfig = {
   }>;
 };
 
+export type DataTableRowConfig = {
+  id: string;
+  values: Record<string, string>;
+};
+
 export type DataTableConfig = {
   id: string;
   title: string;
@@ -173,9 +178,23 @@ export type DataTableConfig = {
     label: string;
     width?: string;
   }>;
-  rows: Array<{
+  rows: DataTableRowConfig[];
+  pagination?: {
+    pageSize: number;
+    totalRows: number;
+    activePage?: number;
+    pages: Array<{
+      page: number;
+      range: string;
+      rows: DataTableRowConfig[];
+    }>;
+  };
+  actions?: Array<{
     id: string;
-    values: Record<string, string>;
+    label: string;
+    tooltip?: string;
+    badge?: string;
+    variant?: "primary" | "secondary";
   }>;
 };
 

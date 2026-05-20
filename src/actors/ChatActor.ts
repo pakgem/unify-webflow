@@ -749,6 +749,117 @@ export class ChatActor {
     return this.revealComponentItems("table", table, ".wa-data-table__row", COMPONENT_CHILD_REVEAL.tableRow);
   }
 
+  dataTablePage(tableId: string, page: number): gsap.core.Timeline {
+    const tl = gsap.timeline();
+    const fadeOut = { value: 0 };
+    const fadeIn = { value: 0 };
+    const state: {
+      canSwitch: boolean;
+      table: HTMLElement | null;
+      currentRows: HTMLElement[];
+      targetRows: HTMLElement[];
+      buttons: HTMLElement[];
+      targetButton?: HTMLElement;
+      range: HTMLElement | null;
+    } = {
+      canSwitch: false,
+      table: null,
+      currentRows: [],
+      targetRows: [],
+      buttons: [],
+      range: null,
+    };
+
+    tl.to(fadeOut, {
+      value: 1,
+      duration: motionDuration(0.14),
+      ease: "power1.out",
+      onStart: () => {
+        state.table = this.findDataTable(tableId);
+        state.currentRows = state.table ? this.getVisibleDataTableRows(state.table) : [];
+        state.targetRows = state.table ? this.queryElements(state.table, `.wa-data-table__row[data-page="${page}"]`) : [];
+        state.buttons = state.table ? this.queryElements(state.table, "[data-table-page-button]") : [];
+        state.targetButton = state.buttons.find((button) => Number(button.dataset.tablePageButton) === page);
+        state.range = state.table?.querySelector<HTMLElement>("[data-table-page-range]") ?? null;
+        state.canSwitch = Boolean(
+          state.table &&
+          state.targetRows.length &&
+          state.table.dataset.activePage !== String(page),
+        );
+        if (state.canSwitch) gsap.set(state.currentRows, { autoAlpha: 1, y: 0 });
+      },
+      onUpdate: () => {
+        if (!state.canSwitch) return;
+
+        const progress = fadeOut.value;
+        const y = this.interpolate(0, -4, progress);
+
+        state.currentRows.forEach((row) => {
+          row.style.opacity = String(1 - progress);
+          row.style.visibility = progress > 0.98 ? "hidden" : "visible";
+          row.style.transform = `translate3d(0, ${y}px, 0)`;
+        });
+      },
+    })
+      .call(() => {
+        if (!state.table || !state.canSwitch) return;
+
+        state.table.dataset.activePage = String(page);
+        state.currentRows.forEach((row) => {
+          row.style.display = "none";
+        });
+        state.targetRows.forEach((row) => {
+          row.style.display = "grid";
+        });
+        state.buttons.forEach((button) => {
+          const active = Number(button.dataset.tablePageButton) === page;
+          button.dataset.active = String(active);
+          button.setAttribute("aria-current", active ? "page" : "false");
+        });
+        if (state.range && state.targetButton?.dataset.pageRange) {
+          state.range.textContent = state.targetButton.dataset.pageRange;
+        }
+        gsap.set(state.targetRows, { autoAlpha: 0, y: 6 });
+      })
+      .to(fadeIn, {
+        value: 1,
+        duration: motionDuration(0.2),
+        ease: "power2.out",
+        onStart: () => {
+          fadeIn.value = 0;
+        },
+        onUpdate: () => {
+          if (!state.canSwitch) return;
+
+          const progress = fadeIn.value;
+          const y = this.interpolate(6, 0, progress);
+
+          state.targetRows.forEach((row) => {
+            row.style.opacity = String(progress);
+            row.style.visibility = progress > 0 ? "visible" : "hidden";
+            row.style.transform = `translate3d(0, ${y}px, 0)`;
+          });
+        },
+        onComplete: () => {
+          if (state.canSwitch) gsap.set(state.targetRows, { autoAlpha: 1, y: 0 });
+        },
+      });
+
+    return tl;
+  }
+
+  dataTableActionTooltip(tableId: string, actionId: string, visible: boolean): gsap.core.Timeline {
+    return gsap.timeline().call(() => {
+      const table = this.findDataTable(tableId);
+
+      if (!table) return;
+
+      this.queryElements(table, "[data-table-action]").forEach((button) => {
+        button.dataset.tooltipVisible = String(button.dataset.tableAction === actionId && visible);
+      });
+    });
+  }
+
   enrichmentPanel(config: EnrichmentConfig): gsap.core.Timeline {
     const panel = this.createEnrichmentPanel(config);
 
@@ -2254,10 +2365,14 @@ export class ChatActor {
 
   private createDataTable(config: DataTableConfig): HTMLElement {
     const table = document.createElement("article");
+    const pages = this.getDataTablePages(config);
+    const activePage = config.pagination?.activePage ?? pages[0]?.page ?? 1;
+
     table.className = "wa-data-table";
     table.dataset.dataTable = config.id;
     table.dataset.tableVariant = config.variant ?? "default";
     table.dataset.columnCount = String(config.columns.length);
+    table.dataset.activePage = String(activePage);
     table.style.setProperty(
       "--wa-data-table-columns",
       config.columns.map((column) => column.width ?? "minmax(0, 1fr)").join(" "),
@@ -2287,11 +2402,25 @@ export class ChatActor {
     grid.className = "wa-data-table__grid";
     grid.append(this.createDataTableRow("header", config.columns, {}, config.id));
 
-    for (const row of config.rows) {
-      grid.append(this.createDataTableRow(row.id, config.columns, row.values, config.id));
+    for (const page of pages) {
+      for (const row of page.rows) {
+        const rowEl = this.createDataTableRow(row.id, config.columns, row.values, config.id, page.page);
+
+        if (page.page !== activePage) {
+          rowEl.style.display = "none";
+          gsap.set(rowEl, { autoAlpha: 0, y: 6 });
+        }
+
+        grid.append(rowEl);
+      }
     }
 
     table.append(header, grid);
+
+    if (config.actions?.length || config.pagination) {
+      table.append(this.createDataTableFooter(config, pages, activePage));
+    }
+
     return table;
   }
 
@@ -2300,6 +2429,7 @@ export class ChatActor {
     columns: DataTableConfig["columns"],
     values: Record<string, string>,
     tableId: string,
+    page?: number,
   ): HTMLElement {
     const row = document.createElement("div");
     row.className = "wa-data-table__row";
@@ -2309,6 +2439,7 @@ export class ChatActor {
 
     if (isHeader) row.dataset.header = "true";
     if (!isHeader && values.source) row.dataset.source = values.source;
+    if (!isHeader && page !== undefined) row.dataset.page = String(page);
 
     for (const column of columns) {
       const cell = document.createElement(isHeader ? "strong" : "span");
@@ -2339,6 +2470,117 @@ export class ChatActor {
     }
 
     return row;
+  }
+
+  private getDataTablePages(config: DataTableConfig): Array<{ page: number; range: string; rows: DataTableConfig["rows"] }> {
+    if (config.pagination?.pages.length) return config.pagination.pages;
+
+    return [
+      {
+        page: 1,
+        range: config.count ?? `${config.rows.length} records`,
+        rows: config.rows,
+      },
+    ];
+  }
+
+  private createDataTableFooter(
+    config: DataTableConfig,
+    pages: Array<{ page: number; range: string; rows: DataTableConfig["rows"] }>,
+    activePage: number,
+  ): HTMLElement {
+    const footer = document.createElement("div");
+    footer.className = "wa-data-table__footer";
+
+    if (config.actions?.length) {
+      const actions = document.createElement("div");
+      actions.className = "wa-data-table__actions";
+
+      for (const action of config.actions) {
+        actions.append(this.createDataTableAction(config.id, action));
+      }
+
+      footer.append(actions);
+    }
+
+    if (config.pagination) {
+      const pagination = document.createElement("div");
+      pagination.className = "wa-data-table__pagination";
+
+      const activeRange = pages.find((page) => page.page === activePage)?.range ?? pages[0]?.range ?? "";
+      const range = document.createElement("span");
+      range.className = "wa-data-table__range";
+      range.dataset.tablePageRange = "";
+      range.textContent = activeRange;
+
+      const controls = document.createElement("span");
+      controls.className = "wa-data-table__page-controls";
+
+      for (const page of pages) {
+        const button = document.createElement("button");
+        const active = page.page === activePage;
+
+        button.className = "wa-data-table__page-button";
+        button.type = "button";
+        button.tabIndex = -1;
+        button.dataset.tablePageButton = String(page.page);
+        button.dataset.pageRange = page.range;
+        button.dataset.active = String(active);
+        button.setAttribute("aria-label", `Show page ${page.page}`);
+        button.setAttribute("aria-current", active ? "page" : "false");
+        button.textContent = String(page.page);
+        controls.append(button);
+      }
+
+      pagination.append(range, controls);
+      footer.append(pagination);
+    }
+
+    return footer;
+  }
+
+  private createDataTableAction(
+    tableId: string,
+    action: NonNullable<DataTableConfig["actions"]>[number],
+  ): HTMLElement {
+    const button = document.createElement("button");
+    button.className = "wa-data-table-action";
+    button.type = "button";
+    button.tabIndex = -1;
+    button.dataset.tableAction = action.id;
+    button.dataset.tableActionTable = tableId;
+    button.dataset.actionVariant = action.variant ?? "secondary";
+    button.dataset.tooltipVisible = "false";
+    button.setAttribute("aria-label", action.tooltip ?? action.label);
+
+    const label = document.createElement("span");
+    label.className = "wa-data-table-action__label";
+    label.textContent = action.label;
+    button.append(label);
+
+    if (action.badge) {
+      const badge = document.createElement("span");
+      badge.className = "wa-data-table-action__badge";
+      badge.textContent = action.badge;
+      button.append(badge);
+    }
+
+    if (action.tooltip) {
+      const tooltip = document.createElement("span");
+      tooltip.className = "wa-data-table-action__tooltip";
+      tooltip.textContent = action.tooltip;
+      button.append(tooltip);
+    }
+
+    return button;
+  }
+
+  private findDataTable(tableId: string): HTMLElement | null {
+    return this.queryElements(this.root, "[data-data-table]").find((table) => table.dataset.dataTable === tableId) ?? null;
+  }
+
+  private getVisibleDataTableRows(table: HTMLElement): HTMLElement[] {
+    return this.queryElements(table, ".wa-data-table__row[data-page]").filter((row) => row.style.display !== "none");
   }
 
   private createDataTablePerson(values: Record<string, string>, name: string): HTMLElement {

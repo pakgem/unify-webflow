@@ -637,6 +637,73 @@ const ENGAGEMENT_SEQUENCE_LAUNCH = {
   ],
 } satisfies SequenceEngagementConfig;
 
+const WEBSITE_VISITOR_SALES_COLUMNS = [
+  { key: "name", label: "Name", width: "1.2fr" },
+  { key: "company", label: "Company", width: "0.95fr" },
+  { key: "title", label: "Title", width: "1.15fr" },
+  { key: "visit", label: "Last visit", width: "0.86fr" },
+  { key: "signal", label: "Signal", width: "1.18fr" },
+] satisfies DataTableConfig["columns"];
+
+const WEBSITE_VISITOR_SALES_PAGE_ONE = [
+  { id: "maya-patel-visitor", values: { name: "Maya Patel", company: "OrbitGrid", title: "VP Sales", visit: "12m ago", signal: "Pricing page", source: "signal", avatarTone: "1" } },
+  { id: "evan-brooks-visitor", values: { name: "Evan Brooks", company: "Northstar Dev", title: "Head of Sales", visit: "18m ago", signal: "Integrations", source: "signal", avatarTone: "2" } },
+  { id: "clara-wong-visitor", values: { name: "Clara Wong", company: "BrightLayer", title: "VP Revenue", visit: "27m ago", signal: "Case study", source: "engage", avatarTone: "3" } },
+  { id: "andre-park-visitor", values: { name: "Andre Park", company: "Ramp", title: "Head of Sales", visit: "33m ago", signal: "Demo page", source: "signal", avatarTone: "4" } },
+  { id: "jamie-chen-visitor", values: { name: "Jamie Chen", company: "Square", title: "VP Sales", visit: "42m ago", signal: "ROI calculator", source: "signal", avatarTone: "5" } },
+  { id: "nina-kapoor-visitor", values: { name: "Nina Kapoor", company: "Mercury", title: "Sales Director", visit: "51m ago", signal: "Security page", source: "database", avatarTone: "6" } },
+  { id: "david-kim-visitor", values: { name: "David Kim", company: "Stripe", title: "Revenue Lead", visit: "1h ago", signal: "Docs", source: "engage", avatarTone: "7" } },
+  { id: "sam-hollis-visitor", values: { name: "Sam Hollis", company: "Apollo", title: "VP Sales", visit: "1h ago", signal: "Comparison", source: "signal", avatarTone: "8" } },
+  { id: "rachel-cho-visitor", values: { name: "Rachel Cho", company: "Retool", title: "Head of Sales", visit: "2h ago", signal: "Pricing page", source: "database", avatarTone: "9" } },
+  { id: "owen-lee-visitor", values: { name: "Owen Lee", company: "Linear", title: "Sales Lead", visit: "2h ago", signal: "Demo page", source: "signal", avatarTone: "1" } },
+];
+
+const WEBSITE_VISITOR_SALES_PAGE_TWO = [
+  { id: "fatima-ali-visitor", values: { name: "Fatima Ali", company: "Vercel", title: "VP Sales", visit: "2h ago", signal: "Enterprise", source: "signal", avatarTone: "2" } },
+  { id: "leo-martin-visitor", values: { name: "Leo Martin", company: "Hex", title: "Head of Sales", visit: "3h ago", signal: "Blog", source: "database", avatarTone: "3" } },
+  { id: "priya-rao-visitor", values: { name: "Priya Rao", company: "Census", title: "Sales Director", visit: "3h ago", signal: "Demo page", source: "engage", avatarTone: "4" } },
+  { id: "jules-meyer-visitor", values: { name: "Jules Meyer", company: "Notion", title: "VP Sales", visit: "4h ago", signal: "Integrations", source: "signal", avatarTone: "5" } },
+  { id: "marcus-reed-visitor", values: { name: "Marcus Reed", company: "Figma", title: "Revenue Lead", visit: "4h ago", signal: "Pricing page", source: "signal", avatarTone: "6" } },
+  { id: "zoe-carter-visitor", values: { name: "Zoe Carter", company: "Rippling", title: "Head of Sales", visit: "5h ago", signal: "Case study", source: "engage", avatarTone: "7" } },
+  { id: "liam-price-visitor", values: { name: "Liam Price", company: "Webflow", title: "VP Sales", visit: "5h ago", signal: "Security page", source: "database", avatarTone: "8" } },
+  { id: "sara-nelson-visitor", values: { name: "Sara Nelson", company: "Airtable", title: "Sales Lead", visit: "6h ago", signal: "Comparison", source: "signal", avatarTone: "9" } },
+  { id: "noah-singh-visitor", values: { name: "Noah Singh", company: "dbt Labs", title: "Head of Sales", visit: "6h ago", signal: "ROI calculator", source: "signal", avatarTone: "1" } },
+  { id: "ava-garcia-visitor", values: { name: "Ava Garcia", company: "Gusto", title: "VP Revenue", visit: "7h ago", signal: "Demo page", source: "engage", avatarTone: "2" } },
+];
+
+const WEBSITE_VISITOR_SALES_TABLE = {
+  id: "website-visitors-sales",
+  title: "Recent website visitors",
+  eyebrow: "Visitor intent",
+  count: "50 heads of sales",
+  variant: "filtered",
+  columns: WEBSITE_VISITOR_SALES_COLUMNS,
+  rows: WEBSITE_VISITOR_SALES_PAGE_ONE,
+  pagination: {
+    pageSize: 10,
+    totalRows: 50,
+    activePage: 1,
+    pages: [
+      { page: 1, range: "1-10 of 50", rows: WEBSITE_VISITOR_SALES_PAGE_ONE },
+      { page: 2, range: "11-20 of 50", rows: WEBSITE_VISITOR_SALES_PAGE_TWO },
+    ],
+  },
+  actions: [
+    {
+      id: "power-dialer",
+      label: "Power dialer",
+      tooltip: "Start power dialing session",
+      badge: "Coming soon",
+      variant: "primary",
+    },
+    {
+      id: "email-sequence",
+      label: "Create outreach sequence",
+      variant: "secondary",
+    },
+  ],
+} satisfies DataTableConfig;
+
 /* --------------------------------------------------------------------------
    Story 5: cursor leaves -> drags CSV -> drop area -> cleaned table
 
@@ -896,42 +963,61 @@ export const defaultStories: StoryDefinition[] = [
     label: "Zero effort engagement",
     navLabel: "Zero effort engagement, built in",
     eyebrow: "Engagement engine",
-    summary: "The assistant expands an outbound list, writes personalized sequences, and starts engagement from one workflow.",
+    summary: "The assistant turns website visitor intent into a paginated list and engagement actions.",
     entry: CHAT_INPUT_TARGETS.researchBrief,
     entryLeadTime: INPUT_ENTRY_LEAD_TIME,
     build: (ctx) => {
+      const pageTwoTarget = responsiveElementTarget(
+        '[data-data-table="website-visitors-sales"] [data-table-page-button="2"]',
+        "center",
+      );
+      const pageOneTarget = responsiveElementTarget(
+        '[data-data-table="website-visitors-sales"] [data-table-page-button="1"]',
+        "center",
+      );
+      const powerDialerTarget = responsiveElementTarget(
+        '[data-data-table="website-visitors-sales"] [data-table-action="power-dialer"]',
+        "center",
+      );
+
       return buildStorySteps(ctx, [
         {
           kind: "prompt",
-          text: "Start with these 10 best-fit buyers.",
-          duration: STORY_TIMING.typeShort,
-          sendLabel: "send-start-list",
-          statusBefore: "Building list",
+          text: "Show me 50 heads of sales that have recently visited my website.",
+          duration: STORY_TIMING.typeLong,
+          sendLabel: "send-visitor-sales-list",
+          statusBefore: "Finding visitors",
+          statusAfter: "Building visitor list",
           fromEntry: true,
         },
-        { kind: "dataTable", config: ENGAGEMENT_LIST_10, at: "-=0.02" },
+        { kind: "dataTable", config: WEBSITE_VISITOR_SALES_TABLE, at: "-=0.02" },
         {
-          kind: "prompt",
-          text: "Expand this to 50 people and personalize outreach for each.",
-          duration: STORY_TIMING.typeMedium,
-          sendLabel: "send-expand-list",
-          statusAfter: "Expanding audience",
-          at: `+=${STORY_TIMING.beat}`,
+          kind: "cursorMove",
+          target: pageTwoTarget,
+          options: { mode: "pointer", intent: "click", speed: "normal", label: "open-visitor-page-2" },
+          at: "+=0.2",
+        },
+        { kind: "cursorClick", at: "-=0.02" },
+        { kind: "custom", build: () => ctx.chat.dataTablePage("website-visitors-sales", 2), at: "-=0.03" },
+        {
+          kind: "custom",
+          build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat }),
         },
         {
-          kind: "thinking",
-          label: "Finding 40 more lookalike buyers and account triggers",
-          hold: STORY_TIMING.thinkingShort,
+          kind: "cursorMove",
+          target: pageOneTarget,
+          options: { mode: "pointer", intent: "click", speed: "normal", label: "return-visitor-page-1" },
         },
-        { kind: "dataTable", config: ENGAGEMENT_LIST_50, at: "-=0.04" },
-        { kind: "status", text: "Writing sequences", at: "<" },
+        { kind: "cursorClick", at: "-=0.02" },
+        { kind: "custom", build: () => ctx.chat.dataTablePage("website-visitors-sales", 1), at: "-=0.03" },
+        { kind: "status", text: "Ready to engage", at: "<" },
         {
-          kind: "thinking",
-          label: "Generating personalized sequences for all 50 people",
-          hold: STORY_TIMING.thinkingMedium,
+          kind: "cursorMove",
+          target: powerDialerTarget,
+          options: { mode: "pointer", intent: "hover", speed: "normal", label: "hover-power-dialer" },
+          at: "+=0.24",
         },
-        { kind: "sequenceEngagement", config: ENGAGEMENT_SEQUENCE_LAUNCH, at: "-=0.04" },
-        exitStory(EXIT_TARGETS.bottomRight, "+=0.14"),
+        { kind: "custom", build: () => ctx.chat.dataTableActionTooltip("website-visitors-sales", "power-dialer", true), at: "<+=0.04" },
       ]);
     },
   },

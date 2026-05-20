@@ -1744,51 +1744,25 @@ function createSeedSteps(storyId: string, fallbackSummary: string): BuilderStep[
       },
     ],
     "research-brief": [
-      { kind: "user", text: "Start with these 10 best-fit buyers.", note: "" },
+      { kind: "user", text: "Show me 50 heads of sales that have recently visited my website.", note: "" },
       {
         kind: "component",
-        text: "Table: 10 best-fit buyers",
-        note: "Starting list before expansion.",
-        component: createEngagementTableComponent("10 best-fit buyers", [
-          ["Maya Patel", "OrbitGrid", "VP Revenue", "High"],
-          ["Evan Brooks", "Northstar Dev", "Head of Growth", "High"],
-          ["Clara Wong", "BrightLayer", "RevOps Lead", "Med"],
-          ["Sam Hollis", "Apollo", "Growth Lead", "Med"],
-          ["Nina Kapoor", "Mercury", "Sales Ops", "High"],
+        text: "Table: 50 recent website visitors",
+        note: "Shows 10 rows at a time with pagination, power dialer, and outreach sequence actions.",
+        component: createWebsiteVisitorTableComponent("50 recent website visitors", [
+          ["Maya Patel", "OrbitGrid", "VP Sales", "12m ago", "Pricing page"],
+          ["Evan Brooks", "Northstar Dev", "Head of Sales", "18m ago", "Integrations"],
+          ["Clara Wong", "BrightLayer", "VP Revenue", "27m ago", "Case study"],
+          ["Andre Park", "Ramp", "Head of Sales", "33m ago", "Demo page"],
+          ["Jamie Chen", "Square", "VP Sales", "42m ago", "ROI calculator"],
+          ["Nina Kapoor", "Mercury", "Sales Director", "51m ago", "Security page"],
+          ["David Kim", "Stripe", "Revenue Lead", "1h ago", "Docs"],
+          ["Sam Hollis", "Apollo", "VP Sales", "1h ago", "Comparison"],
+          ["Rachel Cho", "Retool", "Head of Sales", "2h ago", "Pricing page"],
+          ["Owen Lee", "Linear", "Sales Lead", "2h ago", "Demo page"],
         ]),
       },
-      { kind: "user", text: "Expand this to 50 people and personalize outreach for each.", note: "" },
-      {
-        kind: "thinking",
-        text: "Finding 40 more lookalike buyers and account triggers",
-        note: "Use firmographic fit, role match, hiring signals, and account similarity.",
-      },
-      {
-        kind: "component",
-        text: "Table: 50-person expanded list",
-        note: "The story shows the expanded audience before sequence generation.",
-        component: createEngagementTableComponent("50-person expanded list", [
-          ["Maya Patel", "OrbitGrid", "VP Revenue", "High"],
-          ["Evan Brooks", "Northstar Dev", "Head of Growth", "High"],
-          ["Clara Wong", "BrightLayer", "RevOps Lead", "Med"],
-          ["Sam Hollis", "Apollo", "Growth Lead", "Med"],
-          ["Nina Kapoor", "Mercury", "Sales Ops", "High"],
-          ["Andre Park", "Ramp", "Head of Growth", "High"],
-          ["Jamie Chen", "Square", "VP Sales", "High"],
-          ["David Kim", "Stripe", "Revenue Lead", "Med"],
-        ]),
-      },
-      {
-        kind: "thinking",
-        text: "Generating personalized sequences for all 50 people",
-        note: "Create a reason, opener, and engagement path for every person.",
-      },
-      {
-        kind: "component",
-        text: "50 personalized sequences ready",
-        note: "The in-app dialer action should carry the Soon badge.",
-        component: createSequenceEngagementComponent(),
-      },
+      { kind: "cursor", text: "Cursor clicks page 2, then page 1, then hovers the power dialer action.", note: "Tooltip reads “Start power dialing session”; dialer badge reads Coming soon." },
     ],
     "csv-import-cleanup": [
       { kind: "cursor", text: "Cursor exits right and drags a CSV into the browser.", note: "Drop overlay appears as soon as the file enters." },
@@ -1867,6 +1841,15 @@ function createEngagementTableComponent(title: string, rows: string[][]): Builde
     kind: "table",
     title,
     columns: ["Name", "Company", "Title", "Fit"],
+    rows,
+  };
+}
+
+function createWebsiteVisitorTableComponent(title: string, rows: string[][]): BuilderTableComponent {
+  return {
+    kind: "table",
+    title,
+    columns: ["Name", "Company", "Title", "Last visit", "Signal"],
     rows,
   };
 }
