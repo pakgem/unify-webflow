@@ -3499,13 +3499,13 @@ body {
 }
 
 .wa-cursor[data-cursor-mimicking="true"][data-cursor-mode="default"] .wa-cursor__glyph::before {
-  clip-path: inset(0 0 46% 0);
+  clip-path: inset(0 0 34% 0);
   z-index: 2;
 }
 
 .wa-cursor[data-cursor-mimicking="true"][data-cursor-mode="default"] .wa-cursor__glyph::after {
-  clip-path: inset(46% 0 0 0);
-  transform-origin: 3px 48%;
+  clip-path: inset(66% 0 0 0);
+  transform-origin: 50% 66%;
   animation: wa-cursor-wag 165ms ease-in-out infinite alternate;
   z-index: 1;
 }
@@ -3559,11 +3559,11 @@ body {
 
 @keyframes wa-cursor-wag {
   from {
-    transform: translateX(-1.2px) rotate(-7deg);
+    transform: rotate(-10deg);
   }
 
   to {
-    transform: translateX(1.5px) rotate(8deg);
+    transform: rotate(10deg);
   }
 }
 
