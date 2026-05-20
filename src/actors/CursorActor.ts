@@ -33,26 +33,8 @@ const HISTORY_PARK = {
   minTopInset: 74,
   maxTopInset: 190,
 };
-const SVG_NS = "http://www.w3.org/2000/svg";
 const DEFAULT_CURSOR_POINT_ANGLE = -135;
 const MIMIC_ROTATION_SMOOTHING = 0.34;
-const TAIL_WAG_DURATION = "300ms";
-const TAIL_WAG_KEY_TIMES = "0;0.24;0.38;0.64;1";
-const TAIL_WAG_EASING = "0.16 0.88 0.24 1;0.16 0 0.24 1;0.16 0.88 0.24 1;0.2 0 0.24 1";
-const TAIL_WAG_STROKE_PATHS = [
-  "M10.3 20.4C10.1 23.9 9.8 28 9.6 31.1C9.5 32.9 9.3 34 9.1 34.9",
-  "M10.3 20.4C12.3 24 15.2 27.9 16.9 31C17.7 32.6 18.2 33.6 17.8 34",
-  "M10.3 20.4C12 23.9 14.1 27.7 15.5 30.7C16.2 32.2 16.6 33.2 16.2 33.6",
-  "M10.3 20.4C9.5 24.1 8.2 28.2 7.3 31.1C6.8 32.8 6.5 33.8 7 34.2",
-  "M10.3 20.4C10.1 23.9 9.8 28 9.6 31.1C9.5 32.9 9.3 34 9.1 34.9",
-];
-const TAIL_WAG_OUTLINE_PATHS = [
-  "M10 22.2C9.8 25 9.7 28.3 9.6 31.1C9.5 32.9 9.3 34 9.1 34.9",
-  "M11.1 22.2C13 25 15.6 28.4 16.9 31C17.7 32.6 18.2 33.6 17.8 34",
-  "M10.9 22.2C12.5 24.9 14.3 28.2 15.5 30.7C16.2 32.2 16.6 33.2 16.2 33.6",
-  "M9.7 22.2C8.9 25.1 8 28.4 7.3 31.1C6.8 32.8 6.5 33.8 7 34.2",
-  "M10 22.2C9.8 25 9.7 28.3 9.6 31.1C9.5 32.9 9.3 34 9.1 34.9",
-];
 
 export class CursorActor {
   readonly el: HTMLElement;
@@ -874,7 +856,7 @@ export class CursorActor {
 
     const glyph = document.createElement("div");
     glyph.className = "wa-cursor__glyph";
-    glyph.append(createMimicCursorSvg());
+    glyph.append(createMimicCursorLayers());
     floatLayer.append(glyph);
     el.append(floatLayer);
 
@@ -889,7 +871,7 @@ export class CursorActor {
 
     const glyph = this.el.querySelector<HTMLElement>(".wa-cursor__glyph") ?? document.createElement("div");
     if (!glyph.classList.contains("wa-cursor__glyph")) glyph.className = "wa-cursor__glyph";
-    if (!glyph.querySelector(".wa-cursor-svg")) glyph.append(createMimicCursorSvg());
+    if (!glyph.querySelector(".wa-cursor__mimic-head")) glyph.append(createMimicCursorLayers());
 
     const floatLayer = document.createElement("div");
     floatLayer.className = "wa-cursor__float";
@@ -901,56 +883,17 @@ export class CursorActor {
 
 }
 
-export function createMimicCursorSvg(): SVGSVGElement {
-  const svg = document.createElementNS(SVG_NS, "svg");
-  svg.classList.add("wa-cursor-svg");
-  svg.setAttribute("viewBox", "0 0 24 38");
-  svg.setAttribute("aria-hidden", "true");
-  svg.setAttribute("focusable", "false");
+export function createMimicCursorLayers(): DocumentFragment {
+  const fragment = document.createDocumentFragment();
+  const tail = document.createElement("span");
+  const head = document.createElement("span");
 
-  const tail = document.createElementNS(SVG_NS, "g");
-  tail.classList.add("wa-cursor-svg__tail");
-  tail.setAttribute("transform", "rotate(-5 10.3 20.3)");
-
-  const tailShape = document.createElementNS(SVG_NS, "path");
-  tailShape.classList.add("wa-cursor-svg__tail-shape");
-  tailShape.setAttribute("d", TAIL_WAG_STROKE_PATHS[0]);
-  tailShape.append(createTailPathAnimation(TAIL_WAG_STROKE_PATHS));
-
-  const tailOutline = document.createElementNS(SVG_NS, "path");
-  tailOutline.classList.add("wa-cursor-svg__tail-outline");
-  tailOutline.setAttribute("d", TAIL_WAG_OUTLINE_PATHS[0]);
-  tailOutline.append(createTailPathAnimation(TAIL_WAG_OUTLINE_PATHS));
-
-  tail.append(tailOutline, tailShape);
-
-  const body = document.createElementNS(SVG_NS, "path");
-  body.classList.add("wa-cursor-svg__body");
-  body.setAttribute("d", "M1.2 0.5L1.2 31.7L10.9 21.1L23.4 21.1Z");
-
-  const tailBridge = document.createElementNS(SVG_NS, "path");
-  tailBridge.classList.add("wa-cursor-svg__tail-bridge");
-  tailBridge.setAttribute("d", "M7.1 20.1H15.2V23.9H7.1Z");
-
-  const bodyOutline = document.createElementNS(SVG_NS, "path");
-  bodyOutline.classList.add("wa-cursor-svg__body-outline");
-  bodyOutline.setAttribute("d", "M23.4 21.1L1.2 0.5L1.2 31.7L10.9 21.1");
-
-  svg.append(tail, body, tailBridge, bodyOutline);
-  return svg;
-}
-
-function createTailPathAnimation(values: string[]): SVGElement {
-  const animation = document.createElementNS(SVG_NS, "animate");
-
-  animation.setAttribute("attributeName", "d");
-  animation.setAttribute("dur", TAIL_WAG_DURATION);
-  animation.setAttribute("repeatCount", "indefinite");
-  animation.setAttribute("calcMode", "spline");
-  animation.setAttribute("keyTimes", TAIL_WAG_KEY_TIMES);
-  animation.setAttribute("keySplines", TAIL_WAG_EASING);
-  animation.setAttribute("values", values.join(";"));
-  return animation;
+  tail.className = "wa-cursor__mimic-tail";
+  head.className = "wa-cursor__mimic-head";
+  tail.setAttribute("aria-hidden", "true");
+  head.setAttribute("aria-hidden", "true");
+  fragment.append(tail, head);
+  return fragment;
 }
 
 function interpolatePoint(start: Point, end: Point, amount: number): Point {

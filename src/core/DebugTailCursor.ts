@@ -1,5 +1,5 @@
 import { gsap } from "gsap";
-import { createMimicCursorSvg } from "../actors/CursorActor";
+import { createMimicCursorLayers } from "../actors/CursorActor";
 import type { Point } from "./types";
 
 const DEBUG_TAIL_CURSOR = {
@@ -91,7 +91,7 @@ export class DebugTailCursor {
 
     const glyph = document.createElement("div");
     glyph.className = "wa-cursor__glyph";
-    glyph.append(createMimicCursorSvg());
+    glyph.append(createMimicCursorLayers());
 
     floatLayer.append(glyph);
     el.append(floatLayer);
