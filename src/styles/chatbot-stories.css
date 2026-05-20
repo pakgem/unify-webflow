@@ -71,7 +71,7 @@ body {
   --wa-window-hairline: rgba(0, 0, 0, 0.03);
   --wa-card-accent-bg: rgba(242, 59, 10, 0.13);
   --wa-row-bg: rgba(245, 244, 237, 0.82);
-  --wa-cursor-shadow: rgba(0, 0, 0, 0.3);
+  --wa-cursor-shadow: rgba(0, 0, 0, 0.18);
 
   /* Media slab */
   --wa-media-warm-1: rgba(255, 139, 77, 0.32);
@@ -3661,7 +3661,7 @@ body {
   transform: translate(0, 0);
   transform-origin: 0 0;
   backface-visibility: hidden;
-  filter: drop-shadow(0 8px 12px var(--wa-cursor-shadow));
+  filter: drop-shadow(0 3px 5px var(--wa-cursor-shadow));
   will-change: transform;
 }
 

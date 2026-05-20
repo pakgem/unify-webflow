@@ -17,12 +17,13 @@ const MIMIC_TRIGGER = {
   minAxisReversals: 1,
 };
 const MIMIC_DISMISS = {
-  sampleWindowMs: 560,
-  minTravel: 300,
-  minAxisReversals: 4,
-  minAverageSpeed: 0.58,
-  minTravelToNetRatio: 2.25,
-  maxNetDistance: 180,
+  sampleWindowMs: 960,
+  minDurationMs: 620,
+  minTravel: 480,
+  minAxisReversals: 6,
+  minAverageSpeed: 0.54,
+  minTravelToNetRatio: 2.55,
+  maxNetDistance: 165,
 };
 
 const MIMIC_FOLLOW = {
@@ -525,6 +526,7 @@ export class PausedCursorMimic {
     const travelToNetRatio = travel / Math.max(netDistance, 1);
 
     return (
+      duration >= MIMIC_DISMISS.minDurationMs &&
       travel >= MIMIC_DISMISS.minTravel &&
       netDistance <= MIMIC_DISMISS.maxNetDistance &&
       travel / duration >= MIMIC_DISMISS.minAverageSpeed &&
