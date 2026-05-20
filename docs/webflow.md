@@ -45,7 +45,7 @@ Initialize manually when you want to pass options:
   const stories = ChatbotStories.init("[data-chatbot-stories]", {
     autoplay: true,
     loop: true,
-    autoAdvanceDelay: 1.2
+    autoAdvanceDelay: 3.2
   });
 </script>
 ```

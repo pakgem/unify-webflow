@@ -706,17 +706,17 @@ export class ChatActor {
   strategyPlans(plans: StrategyPlanConfig[]): gsap.core.Timeline {
     const cards = plans.map((plan) => this.createStrategyPlan(plan));
     const grid = document.createElement("div");
-    const rows = cards.flatMap((card) => Array.from(card.querySelectorAll(".wa-strategy-plan__row")));
+    const summaries = cards.flatMap((card) => Array.from(card.querySelectorAll(".wa-strategy-plan__summary")));
 
     grid.className = "wa-result-grid has-strategy-plans";
     grid.dataset.strategyPlans = plans.map((plan) => plan.id).join(" ");
     grid.append(...cards);
 
-    gsap.set(rows, { autoAlpha: 0, y: 8 });
+    gsap.set(summaries, { autoAlpha: 0, y: 8 });
 
     return this.revealComponentItems("strategy", grid, cards, COMPONENT_CHILD_REVEAL.strategyCard)
       .to(
-        rows,
+        summaries,
         {
           autoAlpha: 1,
           y: 0,
@@ -2006,29 +2006,18 @@ export class ChatActor {
     title.className = "wa-strategy-plan__title";
     title.textContent = plan.title;
 
-    card.append(
-      label,
-      title,
-      this.createStrategyPlanRow("Who", plan.audience),
-      this.createStrategyPlanRow("Motion", plan.motion),
-      this.createStrategyPlanRow("Proof", plan.proof),
-    );
+    const summary = document.createElement("p");
+    summary.className = "wa-strategy-plan__summary";
+    summary.textContent = this.getStrategyPlanSummary(plan);
 
+    card.append(label, title, summary);
     return card;
   }
 
-  private createStrategyPlanRow(labelText: string, valueText: string): HTMLElement {
-    const row = document.createElement("div");
-    row.className = "wa-strategy-plan__row";
+  private getStrategyPlanSummary(plan: StrategyPlanConfig): string {
+    if (plan.summary) return plan.summary;
 
-    const label = document.createElement("span");
-    label.textContent = labelText;
-
-    const value = document.createElement("strong");
-    value.textContent = valueText;
-
-    row.append(label, value);
-    return row;
+    return [plan.audience, plan.motion, plan.proof].filter(Boolean).join(". ");
   }
 
   private createDataSourcesGrid(config: DataSourceGridConfig): HTMLElement {

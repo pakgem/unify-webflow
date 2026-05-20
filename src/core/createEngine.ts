@@ -22,7 +22,7 @@ export function createEngine(root: HTMLElement, config: ChatbotStoriesConfig = {
   const controller = new StoryController(root, stories, resolver, cursor, chat, {
     autoplay: config.autoplay ?? true,
     loop: config.loop ?? true,
-    autoAdvanceDelay: config.autoAdvanceDelay ?? 1.2,
+    autoAdvanceDelay: config.autoAdvanceDelay ?? 3.2,
     initialStory: config.initialStory ?? 0,
     onStoryChange: config.onStoryChange,
   });

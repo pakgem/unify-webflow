@@ -22,14 +22,14 @@ import {
 } from "./storySystem";
 
 /* --------------------------------------------------------------------------
-   Story 1: sign-up -> research -> GTM game plans
+   Story 1: sign-up -> research -> GTM strategies
 
       0ms   cursor heads to first visible sign-up field
     300ms   email typing starts before the cursor fully settles
    1500ms   sign-up scene scrolls up and the chat workspace enters
    2200ms   assistant narrates the company-learning pass
    2900ms   research steps cycle through public company signals
-   5700ms   three GTM game plans reveal as compact strategy cards
+   5700ms   three GTM strategies reveal as compact strategy cards
    -------------------------------------------------------------------------- */
 
 const GTM_RESEARCH_STEPS = [
@@ -43,27 +43,21 @@ const GTM_RESEARCH_STEPS = [
 const GTM_STRATEGY_PLANS = [
   {
     id: "founder-signal",
-    label: "Plan 01",
+    label: "Strategy one",
     title: "Founder-led signal capture",
-    audience: "Seed founders hiring sales",
-    motion: "Trigger-based outbound",
-    proof: "Funding + new sales roles",
+    summary: "Use hiring, funding, and founder activity to catch seed teams right as they start building a repeatable sales motion.",
   },
   {
     id: "revops-consolidation",
-    label: "Plan 02",
+    label: "Strategy two",
     title: "RevOps consolidation wedge",
-    audience: "RevOps leaders cleaning CRM",
-    motion: "Audit-led pain sequence",
-    proof: "Data-quality blog themes",
+    summary: "Lead with a data-quality audit for teams already showing CRM cleanup pain, then turn the gaps into a consolidation case.",
   },
   {
     id: "pipeline-acceleration",
-    label: "Plan 03",
+    label: "Strategy three",
     title: "Pipeline acceleration sprint",
-    audience: "Sales VPs with stalled pipeline",
-    motion: "14-day account sprint",
-    proof: "Demand-gen hiring signals",
+    summary: "Package the strongest buyer and account signals into a short sprint for sales leaders who need near-term pipeline movement.",
   },
 ] satisfies StrategyPlanConfig[];
 

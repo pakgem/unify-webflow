@@ -74,9 +74,10 @@ export type StrategyPlanConfig = {
   id: string;
   label: string;
   title: string;
-  audience: string;
-  motion: string;
-  proof: string;
+  summary?: string;
+  audience?: string;
+  motion?: string;
+  proof?: string;
 };
 
 export type DataSourceGridConfig = {

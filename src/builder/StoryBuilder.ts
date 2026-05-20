@@ -22,9 +22,7 @@ type BuilderStrategyComponent = {
   cards: Array<{
     label: string;
     title: string;
-    audience: string;
-    motion: string;
-    proof: string;
+    summary: string;
   }>;
 };
 
@@ -742,9 +740,10 @@ export class StoryBuilder {
           cardIndex,
           className: "wa-builder-strategy-editor__title",
         }),
-        this.createLabeledComponentField(step.id, "Audience", "cardAudience", strategy.audience, cardIndex),
-        this.createLabeledComponentField(step.id, "Motion", "cardMotion", strategy.motion, cardIndex),
-        this.createLabeledComponentField(step.id, "Proof", "cardProof", strategy.proof, cardIndex),
+        this.createComponentField(step.id, "cardSummary", strategy.summary, {
+          cardIndex,
+          className: "wa-builder-strategy-editor__summary",
+        }),
       );
 
       grid.append(strategyCard);
@@ -1066,31 +1065,6 @@ export class StoryBuilder {
     content.append(label);
     card.append(content);
     return card;
-  }
-
-  private createLabeledComponentField(
-    stepId: string,
-    labelText: string,
-    fieldName: string,
-    value: string,
-    cardIndex: number,
-  ): HTMLElement {
-    const row = document.createElement("label");
-    row.className = "wa-builder-strategy-editor__row";
-
-    const label = document.createElement("span");
-    label.className = "wa-builder-strategy-editor__row-label";
-    label.textContent = labelText;
-
-    row.append(
-      label,
-      this.createComponentInput(stepId, fieldName, value, {
-        cardIndex,
-        className: "wa-builder-strategy-editor__input",
-      }),
-    );
-
-    return row;
   }
 
   private createComponentField(
@@ -1615,7 +1589,7 @@ function createSeedSteps(storyId: string, fallbackSummary: string): BuilderStep[
       { kind: "thinking", text: "Researching the company profile", note: "Read site copy, metadata, category, and recent announcements." },
       { kind: "thinking", text: "Learning the ICP and buyer roles", note: "Infer accounts, personas, and likely pains from public signals." },
       { kind: "thinking", text: "Reading blog posts and careers pages", note: "Find positioning themes and current priorities." },
-      { kind: "assistant", text: "I found three go-to-market game plans worth testing first.", note: "" },
+      { kind: "assistant", text: "I found three go-to-market strategies worth testing first.", note: "" },
       {
         kind: "component",
         text: "Three compact GTM strategy cards",
@@ -1836,28 +1810,22 @@ function createEngagementTableComponent(title: string, rows: string[][]): Builde
 function createStrategyComponent(): BuilderStrategyComponent {
   return {
     kind: "strategyCards",
-    title: "Three go-to-market game plans",
+    title: "Three go-to-market strategies",
     cards: [
       {
-        label: "Plan 01",
+        label: "Strategy one",
         title: "Founder-led signal capture",
-        audience: "Seed founders hiring sales",
-        motion: "Trigger-based outbound",
-        proof: "Funding + new sales roles",
+        summary: "Use hiring, funding, and founder activity to catch seed teams right as they start building a repeatable sales motion.",
       },
       {
-        label: "Plan 02",
+        label: "Strategy two",
         title: "RevOps consolidation wedge",
-        audience: "RevOps leaders cleaning CRM",
-        motion: "Audit-led pain sequence",
-        proof: "Data-quality blog themes",
+        summary: "Lead with a data-quality audit for teams already showing CRM cleanup pain, then turn the gaps into a consolidation case.",
       },
       {
-        label: "Plan 03",
+        label: "Strategy three",
         title: "Pipeline acceleration sprint",
-        audience: "Sales VPs with stalled pipeline",
-        motion: "14-day account sprint",
-        proof: "Demand-gen hiring signals",
+        summary: "Package the strongest buyer and account signals into a short sprint for sales leaders who need near-term pipeline movement.",
       },
     ],
   };
@@ -2153,9 +2121,7 @@ function updateComponentValue(
 
     if (field === "cardLabel") card.label = value;
     if (field === "cardTitle") card.title = value;
-    if (field === "cardAudience") card.audience = value;
-    if (field === "cardMotion") card.motion = value;
-    if (field === "cardProof") card.proof = value;
+    if (field === "cardSummary") card.summary = value;
   }
 
   if (component.kind === "enrichment") {
