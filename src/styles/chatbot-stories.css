@@ -3717,9 +3717,9 @@ body {
 }
 
 .wa-cursor[data-cursor-mimicking="true"][data-cursor-mode="default"] .wa-cursor-svg__tail {
-  animation: wa-cursor-tail-wag 140ms ease-in-out infinite alternate;
+  animation: wa-cursor-tail-wag 180ms cubic-bezier(0.3, 1.45, 0.45, 1) infinite alternate;
   transform-box: view-box;
-  transform-origin: 12.25px 21.3px;
+  transform-origin: 11.35px 21.2px;
   will-change: transform;
 }
 
@@ -3771,12 +3771,20 @@ body {
 }
 
 @keyframes wa-cursor-tail-wag {
-  from {
-    transform: rotate(-15deg);
+  0% {
+    transform: rotate(-15deg) scaleX(1.02);
   }
 
-  to {
-    transform: rotate(15deg);
+  58% {
+    transform: rotate(18.5deg) scaleX(0.98);
+  }
+
+  78% {
+    transform: rotate(13.5deg) scaleX(1.01);
+  }
+
+  100% {
+    transform: rotate(15deg) scaleX(1);
   }
 }
 

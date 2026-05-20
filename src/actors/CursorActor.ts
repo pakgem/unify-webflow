@@ -896,21 +896,21 @@ export function createMimicCursorSvg(): SVGSVGElement {
 
   const tailShape = document.createElementNS(SVG_NS, "path");
   tailShape.classList.add("wa-cursor-svg__tail-shape");
-  tailShape.setAttribute("d", "M9.7 20.8L14.8 20.8L18.3 34.3L14.2 35.8Z");
+  tailShape.setAttribute("d", "M8.7 20.5L14.4 20.5L18.2 34.6L13.5 36.2Z");
 
   const tailOutline = document.createElementNS(SVG_NS, "path");
   tailOutline.classList.add("wa-cursor-svg__tail-outline");
-  tailOutline.setAttribute("d", "M9.7 20.8L14.2 35.8L18.3 34.3L14.8 20.8");
+  tailOutline.setAttribute("d", "M8.7 20.5L13.5 36.2L18.2 34.6L14.4 20.5");
 
   tail.append(tailShape, tailOutline);
 
   const body = document.createElementNS(SVG_NS, "path");
   body.classList.add("wa-cursor-svg__body");
-  body.setAttribute("d", "M2.4 1.7L2.4 30.4L10.9 21.1L22.9 21.1Z");
+  body.setAttribute("d", "M1.2 0.5L1.2 31.7L10.9 21.1L23.4 21.1Z");
 
   const bodyOutline = document.createElementNS(SVG_NS, "path");
   bodyOutline.classList.add("wa-cursor-svg__body-outline");
-  bodyOutline.setAttribute("d", "M22.9 21.1L2.4 1.7L2.4 30.4L10.9 21.1");
+  bodyOutline.setAttribute("d", "M23.4 21.1L1.2 0.5L1.2 31.7L10.9 21.1");
 
   svg.append(tail, body, bodyOutline);
   return svg;
