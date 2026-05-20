@@ -190,7 +190,7 @@ const CHAT_SCROLL_MOTION = {
 
 const MARKETING_PAGE_MOTION = {
   threadY: -176,
-  threadOpacity: 0.1,
+  threadOpacity: 0,
   revealDuration: motionDuration(0.62),
   revealEase: "power3.inOut",
   cardDuration: motionDuration(0.28),
@@ -759,10 +759,10 @@ export class ChatActor {
 
   marketingDataSourcesGrid(config: DataSourceGridConfig): gsap.core.Timeline {
     const page = this.createMarketingDataSourcesGrid(config);
-    const cards = Array.from(page.querySelectorAll<HTMLElement>(".wa-data-source-card"));
+    const logos = Array.from(page.querySelectorAll<HTMLElement>(".wa-data-vendor-logo"));
     const groups = Array.from(page.querySelectorAll<HTMLElement>(".wa-data-source-group"));
     const header = page.querySelector<HTMLElement>(".wa-data-source-grid__header");
-    const introTargets = [header, ...groups, ...cards].filter((el): el is HTMLElement => Boolean(el));
+    const introTargets = [header, ...groups, ...logos].filter((el): el is HTMLElement => Boolean(el));
 
     return gsap
       .timeline()
@@ -835,7 +835,7 @@ export class ChatActor {
         0.36,
       )
       .to(
-        cards,
+        logos,
         {
           autoAlpha: 1,
           y: 0,
@@ -1322,7 +1322,11 @@ export class ChatActor {
   ): gsap.core.Timeline {
     if (targets.length) gsap.set(targets, { ...preset.from });
 
-    return this.revealMessageWithChildren(message, targets, { ...preset.to }, preset.position);
+    return this.revealMessageWithChildren(message, targets, { ...preset.to }, preset.position).call(
+      () => this.animateMessageScrollIntoView(message),
+      undefined,
+      "+=0.02",
+    );
   }
 
   private revealMessage(message: HTMLElement): gsap.core.Timeline {
@@ -2356,7 +2360,7 @@ export class ChatActor {
       list.className = "wa-data-source-grid__list";
 
       groupConfig.sources.forEach((source) => {
-        list.append(this.createDataSourceCard(source));
+        list.append(this.createDataVendorLogo(source));
       });
 
       group.append(label, list);
@@ -2365,6 +2369,20 @@ export class ChatActor {
 
     section.replaceChildren(...[header, groupedList].filter((el): el is HTMLElement => Boolean(el)));
     return section;
+  }
+
+  private createDataVendorLogo(source: DataSourceGridConfig["sources"][number]): HTMLElement {
+    const logo = document.createElement("span");
+    logo.className = "wa-data-vendor-logo";
+    logo.dataset.vendorLogo = source.id;
+    logo.title = source.detail;
+
+    const mark = document.createElement("span");
+    mark.className = "wa-data-vendor-logo__mark";
+    mark.textContent = source.name;
+
+    logo.append(mark);
+    return logo;
   }
 
   private groupDataSources(sources: DataSourceGridConfig["sources"]): DataSourceGroup[] {
