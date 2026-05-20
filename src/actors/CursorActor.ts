@@ -39,19 +39,19 @@ const MIMIC_ROTATION_SMOOTHING = 0.34;
 const TAIL_WAG_DURATION = "300ms";
 const TAIL_WAG_KEY_TIMES = "0;0.24;0.38;0.64;1";
 const TAIL_WAG_EASING = "0.16 0.88 0.24 1;0.16 0 0.24 1;0.16 0.88 0.24 1;0.2 0 0.24 1";
-const TAIL_WAG_FILL_PATHS = [
-  "M6.6 20.3C7.6 25 8.3 30.8 6.9 35.7L12.7 37.4C13.6 31.4 14 25.2 14 20.3Z",
-  "M6.6 20.3C9 25.3 13.8 30.7 18.6 35.4L21.3 31.8C17.1 28.6 14.4 24.7 14 20.3Z",
-  "M6.6 20.3C8.6 25.1 13 30.4 17.2 35.1L20 32.7C16.4 29.2 14.2 24.9 14 20.3Z",
-  "M6.6 20.3C7.3 25.2 7.2 30.9 5.4 35.2L10.8 37.2C13.2 31.6 13.6 25.4 14 20.3Z",
-  "M6.6 20.3C7.6 25 8.3 30.8 6.9 35.7L12.7 37.4C13.6 31.4 14 25.2 14 20.3Z",
+const TAIL_WAG_STROKE_PATHS = [
+  "M10.3 20.4C10 25.2 9.5 31.1 9.1 36.4",
+  "M10.3 20.4C12.5 25 15.8 30.3 18.3 34.8",
+  "M10.3 20.4C12.1 24.9 14.7 29.7 16.7 34.4",
+  "M10.3 20.4C9.4 25.2 8.1 30.4 6.7 35",
+  "M10.3 20.4C10 25.2 9.5 31.1 9.1 36.4",
 ];
 const TAIL_WAG_OUTLINE_PATHS = [
-  "M6.9 22.2C7.6 25 8.3 30.8 6.9 35.7L12.7 37.4C13.6 31.4 14 25.2 13.7 22.2",
-  "M7.2 22.2C9 25.3 13.8 30.7 18.6 35.4L21.3 31.8C17.1 28.6 14.4 24.7 13.7 22.2",
-  "M7.1 22.2C8.6 25.1 13 30.4 17.2 35.1L20 32.7C16.4 29.2 14.2 24.9 13.7 22.2",
-  "M6.8 22.2C7.3 25.2 7.2 30.9 5.4 35.2L10.8 37.2C13.2 31.6 13.6 25.4 13.7 22.2",
-  "M6.9 22.2C7.6 25 8.3 30.8 6.9 35.7L12.7 37.4C13.6 31.4 14 25.2 13.7 22.2",
+  "M10 22.2C9.8 26.2 9.5 31.2 9.1 36.4",
+  "M11.1 22.2C13 26.1 15.9 30.4 18.3 34.8",
+  "M10.9 22.2C12.5 26 14.8 29.8 16.7 34.4",
+  "M9.7 22.2C8.9 26.2 8 30.5 6.7 35",
+  "M10 22.2C9.8 26.2 9.5 31.2 9.1 36.4",
 ];
 
 export class CursorActor {
@@ -914,8 +914,8 @@ export function createMimicCursorSvg(): SVGSVGElement {
 
   const tailShape = document.createElementNS(SVG_NS, "path");
   tailShape.classList.add("wa-cursor-svg__tail-shape");
-  tailShape.setAttribute("d", TAIL_WAG_FILL_PATHS[0]);
-  tailShape.append(createTailPathAnimation(TAIL_WAG_FILL_PATHS));
+  tailShape.setAttribute("d", TAIL_WAG_STROKE_PATHS[0]);
+  tailShape.append(createTailPathAnimation(TAIL_WAG_STROKE_PATHS));
 
   const tailOutline = document.createElementNS(SVG_NS, "path");
   tailOutline.classList.add("wa-cursor-svg__tail-outline");

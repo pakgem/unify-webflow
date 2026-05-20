@@ -3690,23 +3690,31 @@ body {
   overflow: visible;
 }
 
-.wa-cursor-svg__body,
-.wa-cursor-svg__tail-shape {
+.wa-cursor-svg__body {
   fill: #000;
+}
+
+.wa-cursor-svg__tail-shape {
+  fill: none;
+  stroke: #000;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 5.1;
 }
 
 .wa-cursor-svg__tail-outline,
 .wa-cursor-svg__body-outline {
   stroke: #fff;
   stroke-linejoin: round;
-  stroke-width: 1.65;
 }
 
 .wa-cursor-svg__tail-outline {
+  stroke-width: 7;
   stroke-linecap: butt;
 }
 
 .wa-cursor-svg__body-outline {
+  stroke-width: 1.65;
   stroke-linecap: round;
 }
 
