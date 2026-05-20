@@ -45,7 +45,8 @@ const MIMIC_SNIFF = {
   smoothing: 0.2,
 };
 const MIMIC_RETURN = {
-  smoothing: 0.18,
+  durationMs: 980,
+  amplitude: 18,
   arriveDistance: 3.5,
 };
 
@@ -58,12 +59,14 @@ export class PausedCursorMimic {
   private dismissSamples: PointerSample[] = [];
   private target: Point | null = null;
   private pointer: Point | null = null;
-  private homePoint: Point | null = null;
   private sniffAnchor: Point | null = null;
   private sniffStartedAt = 0;
   private nextSniffAt = 0;
   private sniffIndex = 0;
   private returnAt = 0;
+  private returnStart: Point | null = null;
+  private returnStartedAt = 0;
+  private returnWaveDirection = 1;
   private lastPointer: Point | null = null;
   private trailDirection: Point = { x: -0.94, y: 0.34 };
   private velocity: Point = { x: 0, y: 0 };
@@ -170,7 +173,6 @@ export class PausedCursorMimic {
 
     this.active = true;
     this.mode = "follow";
-    this.homePoint = this.getCursorViewportPoint();
     this.lastPointer = this.samples[this.samples.length - 2] ?? null;
     this.updateFollowTarget(point);
     this.lastMoveAt = performance.now();
@@ -189,8 +191,9 @@ export class PausedCursorMimic {
     this.mode = "idle";
     this.target = null;
     this.pointer = null;
-    this.homePoint = null;
     this.sniffAnchor = null;
+    this.returnStart = null;
+    this.returnStartedAt = 0;
     this.lastPointer = null;
     this.velocity = { x: 0, y: 0 };
     this.dismissSamples = [];
@@ -215,8 +218,7 @@ export class PausedCursorMimic {
 
     if (this.mode === "returnWait") {
       if (now >= this.returnAt) {
-        this.mode = "return";
-        this.target = this.homePoint ?? this.getCursorViewportPoint();
+        this.beginReturn(now);
       }
       this.scheduleFollow();
       return;
@@ -231,11 +233,16 @@ export class PausedCursorMimic {
     }
 
     if (this.mode === "return") {
-      const home = this.homePoint ?? this.getCursorViewportPoint();
-      this.target = home;
-      this.cursor.mimicViewportPoint(home, MIMIC_RETURN.smoothing, home);
+      const home = this.getReturnHomePoint();
+      const progress = clampUnit((now - this.returnStartedAt) / MIMIC_RETURN.durationMs);
+      const point = this.getReturnWavePoint(progress, home);
+      const lookAhead = this.getReturnWavePoint(Math.min(1, progress + 0.035), home);
 
-      if (distance(this.getCursorViewportPoint(), home) <= MIMIC_RETURN.arriveDistance) {
+      this.target = home;
+      this.cursor.mimicViewportPoint(point, 1, progress < 1 ? lookAhead : home);
+
+      if (progress >= 1 || distance(this.getCursorViewportPoint(), home) <= MIMIC_RETURN.arriveDistance) {
+        this.cursor.mimicViewportPoint(home, 1, home);
         this.completeReturn();
         return;
       }
@@ -365,6 +372,8 @@ export class PausedCursorMimic {
     this.target = null;
     this.pointer = null;
     this.lastPointer = null;
+    this.returnStart = null;
+    this.returnStartedAt = 0;
     this.velocity = { x: 0, y: 0 };
     this.dismissSamples = [];
     window.cancelAnimationFrame(this.frame);
@@ -373,13 +382,51 @@ export class PausedCursorMimic {
     this.scheduleFollow();
   }
 
+  private beginReturn(now: number): void {
+    const start = this.getCursorViewportPoint();
+    const home = this.getReturnHomePoint();
+
+    this.mode = "return";
+    this.returnStart = start;
+    this.returnStartedAt = now;
+    this.returnWaveDirection = home.y >= start.y ? 1 : -1;
+    this.target = home;
+  }
+
+  private getReturnHomePoint(): Point {
+    return this.cursor.getHistoryParkViewportPoint();
+  }
+
+  private getReturnWavePoint(progress: number, home: Point): Point {
+    const start = this.returnStart ?? this.getCursorViewportPoint();
+    const eased = easeInOutSine(progress);
+    const dx = home.x - start.x;
+    const dy = home.y - start.y;
+    const length = Math.hypot(dx, dy);
+    const base = {
+      x: start.x + dx * eased,
+      y: start.y + dy * eased,
+    };
+
+    if (length < 1) return base;
+
+    const envelope = Math.sin(Math.PI * progress);
+    const wave = Math.sin(Math.PI * 2 * progress) * envelope * MIMIC_RETURN.amplitude * this.returnWaveDirection;
+
+    return {
+      x: base.x - dy / length * wave,
+      y: base.y + dx / length * wave,
+    };
+  }
+
   private completeReturn(): void {
     this.active = false;
     this.mode = "idle";
     this.target = null;
     this.pointer = null;
-    this.homePoint = null;
     this.sniffAnchor = null;
+    this.returnStart = null;
+    this.returnStartedAt = 0;
     this.lastPointer = null;
     this.velocity = { x: 0, y: 0 };
     this.dismissSamples = [];
@@ -510,6 +557,14 @@ export class PausedCursorMimic {
 
 function distance(a: Point, b: Point): number {
   return Math.hypot(b.x - a.x, b.y - a.y);
+}
+
+function clampUnit(value: number): number {
+  return Math.min(1, Math.max(0, value));
+}
+
+function easeInOutSine(value: number): number {
+  return -(Math.cos(Math.PI * value) - 1) / 2;
 }
 
 function distanceToRect(point: Point, rect: DOMRect): number {

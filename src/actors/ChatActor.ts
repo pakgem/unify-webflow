@@ -1971,7 +1971,7 @@ export class ChatActor {
       });
       gsap.set(thinking.header, { autoAlpha: 0, y: 5 });
       gsap.set(thinking.steps, { display: "grid", autoAlpha: 1, y: 0 });
-      gsap.set(items, { autoAlpha: 0, y: options.itemStartY });
+      gsap.set(items, { autoAlpha: 0, y: options.itemStartY, display: "none" });
     })
       .add(this.revealMessage(thinking.message))
       .to(thinking.header, {
@@ -2012,8 +2012,15 @@ export class ChatActor {
 
   private activateThinkingStep(items: HTMLElement[], activeIndex: number): void {
     items.forEach((item, itemIndex) => {
-      if (itemIndex > activeIndex) item.dataset.stepState = "pending";
-      if (itemIndex === activeIndex) item.dataset.stepState = "current";
+      if (itemIndex > activeIndex) {
+        item.dataset.stepState = "pending";
+        gsap.set(item, { display: "none" });
+      }
+
+      if (itemIndex === activeIndex) {
+        item.dataset.stepState = "current";
+        gsap.set(item, { display: "grid" });
+      }
     });
   }
 

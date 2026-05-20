@@ -92,6 +92,16 @@ export class CursorActor {
     return this.currentPosition;
   }
 
+  getHistoryParkViewportPoint(): Point {
+    const rootRect = this.root.getBoundingClientRect();
+    const point = this.resolveHistoryParkPoint();
+
+    return {
+      x: rootRect.left + point.x,
+      y: rootRect.top + point.y,
+    };
+  }
+
   beginMimicControl(): void {
     this.stopIdleFloat(true);
     this.modeOverride = "default";
