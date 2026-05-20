@@ -497,7 +497,11 @@ export class ChatActor {
       overwrite: "auto",
       onStart: () => {
         this.setComposerVisibleState(true);
-        gsap.set(this.composerContents, { visibility: "visible" });
+        gsap.set(this.composerContents, {
+          visibility: "visible",
+          opacity: 1,
+          clearProps: "transform",
+        });
         gsap.set(this.composer, {
           display: "grid",
           opacity: 1,
@@ -540,9 +544,9 @@ export class ChatActor {
       onStart: () => {
         this.setComposerFocusState(false);
         this.setComposerVisibleState(false);
-        gsap.set(this.composerContents, { visibility: "hidden" });
       },
       onComplete: () => {
+        gsap.set(this.composerContents, { visibility: "hidden" });
         gsap.set(this.composer, { visibility: "hidden" });
       },
     }).to(
@@ -562,7 +566,6 @@ export class ChatActor {
   clearComposer(): gsap.core.Timeline {
     return gsap.timeline().call(() => {
       this.composerText.textContent = "";
-      gsap.set(this.composerContents, { visibility: "visible" });
       gsap.set(this.composerText, { autoAlpha: 1, y: 0 });
     });
   }
