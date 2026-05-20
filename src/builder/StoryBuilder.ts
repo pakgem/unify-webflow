@@ -1644,7 +1644,6 @@ function createSeedSteps(storyId: string, fallbackSummary: string): BuilderStep[
     "hit-ground-running": [
       { kind: "status", text: "Sign up", note: "Start in the browser sign-up screen." },
       { kind: "user", text: "joel@acme.co", note: "Typed into the sign-up field." },
-      { kind: "assistant", text: "I’ll learn Acme first, then turn the signal into launch-ready GTM paths.", note: "" },
       { kind: "thinking", text: "Researching the company profile", note: "Read site copy, metadata, category, and recent announcements." },
       { kind: "thinking", text: "Learning the ICP and buyer roles", note: "Infer accounts, personas, and likely pains from public signals." },
       { kind: "thinking", text: "Reading blog posts and careers pages", note: "Find positioning themes and current priorities." },
