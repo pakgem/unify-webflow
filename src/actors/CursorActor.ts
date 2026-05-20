@@ -894,8 +894,13 @@ export class CursorActor {
 
     const tailShape = document.createElementNS(SVG_NS, "path");
     tailShape.classList.add("wa-cursor-svg__tail-shape");
-    tailShape.setAttribute("d", "M7.2 15.8L17.2 15.8L21 34.2L15.2 36.2Z");
-    tail.append(tailShape);
+    tailShape.setAttribute("d", "M9.7 20.8L14.8 20.8L18.3 34.3L14.2 35.8Z");
+
+    const tailOutline = document.createElementNS(SVG_NS, "path");
+    tailOutline.classList.add("wa-cursor-svg__tail-outline");
+    tailOutline.setAttribute("d", "M9.7 20.8L14.2 35.8L18.3 34.3L14.8 20.8");
+
+    tail.append(tailShape, tailOutline);
 
     const body = document.createElementNS(SVG_NS, "path");
     body.classList.add("wa-cursor-svg__body");

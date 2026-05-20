@@ -3690,7 +3690,7 @@ body {
   fill: #000;
 }
 
-.wa-cursor-svg__tail-shape,
+.wa-cursor-svg__tail-outline,
 .wa-cursor-svg__body-outline {
   stroke: #fff;
   stroke-linecap: round;
@@ -3698,6 +3698,7 @@ body {
   stroke-width: 1.65;
 }
 
+.wa-cursor-svg__tail-outline,
 .wa-cursor-svg__body-outline {
   fill: none;
 }
@@ -3713,7 +3714,7 @@ body {
 .wa-cursor[data-cursor-mimicking="true"][data-cursor-mode="default"] .wa-cursor-svg__tail {
   animation: wa-cursor-tail-wag 140ms ease-in-out infinite alternate;
   transform-box: view-box;
-  transform-origin: 12px 21px;
+  transform-origin: 12.25px 21.3px;
   will-change: transform;
 }
 
@@ -3766,11 +3767,11 @@ body {
 
 @keyframes wa-cursor-tail-wag {
   from {
-    transform: rotate(-18deg);
+    transform: rotate(-15deg);
   }
 
   to {
-    transform: rotate(18deg);
+    transform: rotate(15deg);
   }
 }
 
