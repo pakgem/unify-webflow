@@ -722,6 +722,12 @@ body {
 .wa-message--file .wa-message__body {
   width: auto;
   justify-self: end;
+  padding: 0;
+  background: transparent;
+}
+
+.wa-message[data-message-role="user"].wa-message--file .wa-message__body {
+  background: transparent;
 }
 
 .wa-thinking-block {

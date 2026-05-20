@@ -1855,10 +1855,6 @@ export class ChatActor {
     const stack = document.createElement("div");
     stack.className = "wa-uploaded-files";
 
-    const header = document.createElement("span");
-    header.className = "wa-uploaded-files__summary";
-    header.textContent = `${files.length} business context files`;
-
     const list = document.createElement("div");
     list.className = "wa-uploaded-files__list";
     files.forEach((fileConfig) => {
@@ -1868,7 +1864,7 @@ export class ChatActor {
       list.append(file);
     });
 
-    stack.append(header, list);
+    stack.append(list);
     return stack;
   }
 
