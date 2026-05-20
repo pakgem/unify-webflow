@@ -1763,6 +1763,14 @@ function createSeedSteps(storyId: string, fallbackSummary: string): BuilderStep[
         ]),
       },
       { kind: "cursor", text: "Cursor clicks page 2, then page 1, hovers the dialer icon, then clicks the email icon.", note: "Dialer tooltip reads “Start power dialing” with a “Coming soon” badge; email tooltip reads “Build outreach sequence.”" },
+      { kind: "thinking", text: "Generating a sequence template from the company offering", note: "Template uses trigger, role-specific pain, proof, and a low-friction CTA." },
+      { kind: "thinking", text: "Researching companies and people 1/50", note: "Two progress tracks run simultaneously for account research and person research." },
+      {
+        kind: "component",
+        text: "Personalized sequence preview",
+        note: "Switch between people to inspect tailored email, LinkedIn, email, and call steps before kickoff.",
+        component: createSequenceEngagementComponent(),
+      },
     ],
     "csv-import-cleanup": [
       { kind: "cursor", text: "Cursor exits right and drags a CSV into the browser.", note: "Drop overlay appears as soon as the file enters." },
@@ -2052,33 +2060,31 @@ function createProximityListComponent(): BuilderProximityListComponent {
 function createSequenceEngagementComponent(): BuilderSequenceEngagementComponent {
   return {
     kind: "sequenceEngagement",
-    title: "50 personalized sequences ready",
-    subtitle: "Each person gets a reason, opener, and channel plan from the same workflow.",
+    title: "Personalized sequence preview",
+    subtitle: "Each visitor gets a channel plan based on company fit, page intent, and role-level context.",
     peopleCount: "50 people",
     sequences: [
       {
         name: "Maya Patel",
         company: "OrbitGrid",
-        subject: "RevOps hiring + data quality",
-        personalization: "Opens with the new RevOps roles and their public data-quality push.",
+        subject: "OrbitGrid’s pricing-page interest",
+        personalization: "Email → LinkedIn → email → call, tailored to pricing intent and RevOps hiring.",
       },
       {
         name: "Evan Brooks",
         company: "Northstar Dev",
-        subject: "PLG growth handoff",
-        personalization: "References the growth team expansion and routes to a low-friction benchmark CTA.",
+        subject: "Northstar Dev’s integration-led growth",
+        personalization: "Email → LinkedIn → email → call, tailored to partner-fit account research.",
       },
       {
-        name: "Nina Kapoor",
-        company: "Mercury",
-        subject: "Sales ops cleanup",
-        personalization: "Leads with CRM hygiene language pulled from similar hiring patterns.",
+        name: "Clara Wong",
+        company: "BrightLayer",
+        subject: "BrightLayer’s case-study research",
+        personalization: "Email → LinkedIn → email → call, tailored to proof-seeking revenue leadership.",
       },
     ],
     channels: [
-      { label: "Email sequences", detail: "Launch all 50 now", badge: "" },
-      { label: "LinkedIn tasks", detail: "Create follow-up steps", badge: "" },
-      { label: "In-app dialer", detail: "Call queue from this list", badge: "Soon" },
+      { label: "Kick off sequence", detail: "Launch tailored touches for 50 people", badge: "" },
     ],
   };
 }

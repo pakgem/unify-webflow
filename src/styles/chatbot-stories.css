@@ -2249,7 +2249,8 @@ body {
 .wa-mini-game,
 .wa-style-profile,
 .wa-proximity-list,
-.wa-sequence-engagement {
+.wa-sequence-engagement,
+.wa-sequence-thinking {
   display: grid;
   gap: 10px;
   width: min(100%, 540px);
@@ -2502,6 +2503,115 @@ body {
   white-space: nowrap;
 }
 
+.wa-sequence-thinking {
+  gap: 9px;
+}
+
+.wa-sequence-thinking__header {
+  grid-template-columns: auto auto 1fr;
+  width: 100%;
+}
+
+.wa-sequence-thinking__title {
+  min-width: 0;
+}
+
+.wa-sequence-thinking__subtitle {
+  margin: 0;
+  color: var(--wa-color-muted);
+  font-size: 11.5px;
+  line-height: 1.26;
+  font-weight: 410;
+}
+
+.wa-sequence-thinking-template {
+  display: grid;
+  gap: 4px;
+  padding: 9px 10px;
+  border: 1px solid var(--wa-line-10);
+  border-radius: var(--wa-radius-sm);
+  background: var(--wa-row-bg);
+}
+
+.wa-sequence-thinking-template__label {
+  color: var(--wa-color-muted);
+  font-size: 9px;
+  line-height: 1;
+  font-weight: 680;
+  text-transform: uppercase;
+}
+
+.wa-sequence-thinking-template__body {
+  color: var(--wa-ink);
+  font-size: 12px;
+  line-height: 1.22;
+  font-weight: 520;
+}
+
+.wa-sequence-thinking-tracks {
+  display: grid;
+  gap: 7px;
+}
+
+.wa-sequence-thinking-track {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 7px 10px;
+  align-items: center;
+  padding: 9px 10px;
+  border: 1px solid var(--wa-line-10);
+  border-radius: var(--wa-radius-sm);
+  background: var(--wa-panel);
+}
+
+.wa-sequence-thinking-track__copy {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.wa-sequence-thinking-track__copy strong {
+  color: var(--wa-ink);
+  font-size: 12px;
+  line-height: 1.12;
+  font-weight: 540;
+}
+
+.wa-sequence-thinking-track__copy span {
+  color: var(--wa-color-muted);
+  font-size: 10.5px;
+  line-height: 1.2;
+  font-weight: 410;
+}
+
+.wa-sequence-thinking-track__progress {
+  color: var(--wa-color-muted);
+  font-size: 10px;
+  line-height: 1;
+  font-weight: 620;
+  font-variant-numeric: tabular-nums;
+}
+
+.wa-sequence-thinking-track__bar {
+  grid-column: 1 / -1;
+  display: block;
+  height: 5px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(17, 17, 15, 0.1);
+}
+
+.wa-sequence-thinking-track__bar span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--wa-color-accent);
+  transform: scaleX(0.02);
+  transform-origin: left center;
+  will-change: transform;
+}
+
 .wa-style-profile__rows {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2644,6 +2754,34 @@ body {
   gap: 7px;
 }
 
+.wa-sequence-people {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.wa-sequence-person-button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 0 9px;
+  border: 1px solid var(--wa-line-10);
+  border-radius: 999px;
+  color: var(--wa-color-muted);
+  background: var(--wa-panel);
+  font: inherit;
+  font-size: 10px;
+  line-height: 1;
+  font-weight: 560;
+  cursor: pointer;
+}
+
+.wa-sequence-person-button[data-active="true"] {
+  border-color: var(--wa-ink);
+  color: var(--wa-color-inverse);
+  background: var(--wa-ink);
+}
+
 .wa-sequence-card {
   display: grid;
   gap: 6px;
@@ -2704,6 +2842,57 @@ body {
   margin: 0;
 }
 
+.wa-sequence-steps {
+  display: grid;
+  gap: 5px;
+  margin-top: 2px;
+}
+
+.wa-sequence-step {
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr);
+  gap: 8px;
+  align-items: start;
+  padding: 7px 8px;
+  border: 1px solid var(--wa-line-08);
+  border-radius: var(--wa-radius-sm);
+  background: rgba(255, 255, 251, 0.62);
+}
+
+.wa-sequence-step__channel {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 18px;
+  border-radius: 999px;
+  color: var(--wa-color-inverse);
+  background: var(--wa-ink);
+  font-size: 8px;
+  line-height: 1;
+  font-weight: 680;
+  text-transform: uppercase;
+}
+
+.wa-sequence-step__copy {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.wa-sequence-step__copy strong {
+  color: var(--wa-ink);
+  font-size: 10.5px;
+  line-height: 1.12;
+  font-weight: 560;
+}
+
+.wa-sequence-step__copy span {
+  color: var(--wa-color-muted);
+  font-size: 10px;
+  line-height: 1.22;
+  font-weight: 410;
+}
+
 .wa-engage-channels {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -2760,6 +2949,47 @@ body {
   font-weight: 740;
   text-transform: uppercase;
   white-space: nowrap;
+}
+
+.wa-sequence-kickoff {
+  display: grid;
+  gap: 3px;
+  justify-items: start;
+  min-width: 0;
+  min-height: 46px;
+  padding: 10px 12px;
+  border: 1px solid var(--wa-ink);
+  border-radius: var(--wa-radius-sm);
+  color: var(--wa-color-inverse);
+  background: var(--wa-ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  box-shadow: 0 10px 22px rgba(23, 23, 20, 0.12);
+  will-change: transform, opacity;
+}
+
+.wa-sequence-kickoff__label {
+  font-size: 12px;
+  line-height: 1.05;
+  font-weight: 580;
+}
+
+.wa-sequence-kickoff__detail {
+  color: rgba(255, 255, 251, 0.72);
+  font-size: 9.5px;
+  line-height: 1.15;
+  font-weight: 410;
+}
+
+.wa-sequence-kickoff[data-launched="true"] {
+  border-color: var(--wa-color-accent);
+  color: var(--wa-ink);
+  background: var(--wa-color-accent);
+}
+
+.wa-sequence-kickoff[data-launched="true"] .wa-sequence-kickoff__detail {
+  color: rgba(17, 17, 15, 0.62);
 }
 
 .wa-composer {
@@ -4248,6 +4478,22 @@ body {
   .wa-builder-sequence-editor,
   .wa-builder-channel-editor {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .wa-sequence-thinking-track,
+  .wa-sequence-step {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .wa-sequence-step__channel {
+    justify-self: start;
+    padding: 0 8px;
+  }
+
+  .wa-sequence-person-button {
+    min-height: 22px;
+    padding: 0 8px;
+    font-size: 9px;
   }
 
   .wa-data-table {

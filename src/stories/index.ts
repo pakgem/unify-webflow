@@ -6,6 +6,7 @@ import type {
   PersonalizationSwipeGameConfig,
   ProximityLeadListConfig,
   ResponsiveTarget,
+  SequenceBuildThinkingConfig,
   SequenceEngagementConfig,
   StoryDefinition,
   StrategyPlanConfig,
@@ -606,36 +607,126 @@ const ENGAGEMENT_LIST_50 = {
 } satisfies DataTableConfig;
 
 const ENGAGEMENT_SEQUENCE_LAUNCH = {
-  id: "zero-effort-sequences",
-  title: "50 personalized sequences ready",
-  subtitle: "Each person gets a reason, opener, and channel plan from the same workflow.",
+  id: "visitor-outreach-sequences",
+  title: "Personalized sequence preview",
+  subtitle: "Each visitor gets a channel plan based on company fit, page intent, and the person’s role.",
   peopleCount: "50 people",
+  launchLabel: "Kick off sequence",
   sequences: [
     {
       name: "Maya Patel",
       company: "OrbitGrid",
-      subject: "RevOps hiring + data quality",
-      personalization: "Opens with the new RevOps roles and their public data-quality push.",
+      title: "VP Sales",
+      signal: "Pricing page",
+      subject: "OrbitGrid’s pricing-page interest",
+      personalization: "Maya viewed pricing after OrbitGrid added two RevOps roles, so the opener ties visitor intent to cleaner account research.",
+      steps: [
+        {
+          channel: "Email",
+          label: "Lead with the trigger",
+          body: "Mention the pricing visit and RevOps hiring pattern; ask if their team is evaluating ways to source better-fit accounts.",
+        },
+        {
+          channel: "LinkedIn",
+          label: "Light proof",
+          body: "Reference a similar sales team using Unify to turn inbound intent into researched outbound lists.",
+        },
+        {
+          channel: "Email",
+          label: "Offer the play",
+          body: "Send a short teardown of three accounts showing why they match OrbitGrid’s current motion.",
+        },
+        {
+          channel: "Call",
+          label: "Use context",
+          body: "Open with the pricing visit and ask whether pipeline quality or source coverage is the bigger gap.",
+        },
+      ],
     },
     {
       name: "Evan Brooks",
       company: "Northstar Dev",
-      subject: "PLG growth handoff",
-      personalization: "References the growth team expansion and routes to a low-friction benchmark CTA.",
+      title: "Head of Sales",
+      signal: "Integrations",
+      subject: "Northstar Dev’s integration-led growth",
+      personalization: "Evan came through integrations after Northstar Dev expanded sales leadership, so the sequence frames Unify as a way to find accounts already showing ecosystem fit.",
+      steps: [
+        {
+          channel: "Email",
+          label: "Anchor to integrations",
+          body: "Point to their integrations-page visit and the likely need to prioritize partner-fit accounts.",
+        },
+        {
+          channel: "LinkedIn",
+          label: "Ask a narrow question",
+          body: "Ask whether partner signals are already part of Northstar Dev’s outbound scoring.",
+        },
+        {
+          channel: "Email",
+          label: "Show the workflow",
+          body: "Share how Unify can pull partner usage, firmographics, and contact data into one sequence-ready list.",
+        },
+        {
+          channel: "Call",
+          label: "Reference the path",
+          body: "Mention the integrations research and ask if sales is prioritizing ecosystem-led campaigns this quarter.",
+        },
+      ],
     },
     {
-      name: "Nina Kapoor",
-      company: "Mercury",
-      subject: "Sales ops cleanup",
-      personalization: "Leads with CRM hygiene language pulled from similar hiring patterns.",
+      name: "Clara Wong",
+      company: "BrightLayer",
+      title: "VP Revenue",
+      signal: "Case study",
+      subject: "BrightLayer’s case-study research",
+      personalization: "Clara read a customer story, so the sequence mirrors the proof format and offers a concise account-selection playbook.",
+      steps: [
+        {
+          channel: "Email",
+          label: "Mirror the proof",
+          body: "Reference the case study visit and connect it to finding more accounts that match the same buying pattern.",
+        },
+        {
+          channel: "LinkedIn",
+          label: "Share a takeaway",
+          body: "Send one concise observation about BrightLayer’s likely expansion motion based on the page viewed.",
+        },
+        {
+          channel: "Email",
+          label: "Personalized follow-up",
+          body: "Offer a mini list of 10 lookalike companies with the reason each one matches BrightLayer’s best-fit segment.",
+        },
+        {
+          channel: "Call",
+          label: "Ask for fit",
+          body: "Ask whether revenue is looking for more accounts like the case-study customer or a new adjacent segment.",
+        },
+      ],
     },
   ],
-  channels: [
-    { label: "Email sequences", detail: "Launch all 50 now" },
-    { label: "LinkedIn tasks", detail: "Create follow-up steps" },
-    { label: "In-app dialer", detail: "Call queue from this list", badge: "Soon" },
-  ],
+  channels: [],
 } satisfies SequenceEngagementConfig;
+
+const ENGAGEMENT_SEQUENCE_THINKING = {
+  id: "visitor-sequence-build",
+  title: "Building outbound sequence",
+  subtitle: "Using Unify’s offering, visitor intent, and role-level context to draft the campaign.",
+  templateLabel: "Sequence template",
+  template: "Trigger → role-specific pain → relevant proof → low-friction CTA",
+  total: 50,
+  tracks: [
+    {
+      id: "companies",
+      label: "Researching companies",
+      detail: "Reading firmographics, page intent, recent hiring, and relevant account signals.",
+    },
+    {
+      id: "people",
+      label: "Researching people",
+      detail: "Checking role, seniority, likely ownership, and channel-specific personalization angles.",
+    },
+  ],
+} satisfies SequenceBuildThinkingConfig;
 
 const WEBSITE_VISITOR_SALES_COLUMNS = [
   { key: "name", label: "Name", width: "1.2fr" },
@@ -986,6 +1077,18 @@ export const defaultStories: StoryDefinition[] = [
         '[data-data-table="website-visitors-sales"] [data-table-action="email-sequence"]',
         "center",
       );
+      const sequencePersonTwoTarget = responsiveElementTarget(
+        '[data-sequence-person-button="visitor-outreach-sequences:1"]',
+        "center",
+      );
+      const sequencePersonThreeTarget = responsiveElementTarget(
+        '[data-sequence-person-button="visitor-outreach-sequences:2"]',
+        "center",
+      );
+      const sequenceKickoffTarget = responsiveElementTarget(
+        '[data-sequence-kickoff="visitor-outreach-sequences"]',
+        "center",
+      );
 
       return buildStorySteps(ctx, [
         {
@@ -1034,7 +1137,35 @@ export const defaultStories: StoryDefinition[] = [
         },
         { kind: "custom", build: () => ctx.chat.dataTableActionTooltip("website-visitors-sales", "email-sequence", true), at: "<+=0.04" },
         { kind: "cursorClick", at: "+=0.18" },
+        { kind: "custom", build: () => ctx.chat.dataTableActionTooltip("website-visitors-sales", "email-sequence", false), at: "<+=0.02" },
         { kind: "status", text: "Building outreach sequence", at: "<" },
+        { kind: "custom", build: () => ctx.chat.sequenceBuildThinking(ENGAGEMENT_SEQUENCE_THINKING), at: "+=0.06" },
+        { kind: "sequenceEngagement", config: ENGAGEMENT_SEQUENCE_LAUNCH, at: "-=0.02" },
+        { kind: "custom", build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat + 0.24 }), at: "+=0.04" },
+        {
+          kind: "cursorMove",
+          target: sequencePersonTwoTarget,
+          options: { mode: "pointer", intent: "click", speed: "normal", label: "preview-evan-sequence" },
+        },
+        { kind: "cursorClick", at: "-=0.02" },
+        { kind: "custom", build: () => ctx.chat.sequencePerson("visitor-outreach-sequences", 1), at: "-=0.03" },
+        { kind: "custom", build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat + 0.24 }), at: "+=0.04" },
+        {
+          kind: "cursorMove",
+          target: sequencePersonThreeTarget,
+          options: { mode: "pointer", intent: "click", speed: "normal", label: "preview-clara-sequence" },
+        },
+        { kind: "cursorClick", at: "-=0.02" },
+        { kind: "custom", build: () => ctx.chat.sequencePerson("visitor-outreach-sequences", 2), at: "-=0.03" },
+        { kind: "custom", build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat + 0.28 }), at: "+=0.04" },
+        {
+          kind: "cursorMove",
+          target: sequenceKickoffTarget,
+          options: { mode: "pointer", intent: "click", speed: "normal", label: "kickoff-visitor-sequence" },
+        },
+        { kind: "cursorClick", at: "-=0.02" },
+        { kind: "custom", build: () => ctx.chat.sequenceKickoff("visitor-outreach-sequences"), at: "-=0.04" },
+        { kind: "status", text: "Sequence kicked off", at: "<" },
       ]);
     },
   },

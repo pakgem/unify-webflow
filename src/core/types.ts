@@ -149,16 +149,38 @@ export type SequenceEngagementConfig = {
   title: string;
   subtitle?: string;
   peopleCount: string;
+  launchLabel?: string;
   sequences: Array<{
     name: string;
     company: string;
+    title?: string;
+    signal?: string;
     subject: string;
     personalization: string;
+    steps?: Array<{
+      channel: string;
+      label: string;
+      body: string;
+    }>;
   }>;
   channels: Array<{
     label: string;
     detail: string;
     badge?: string;
+  }>;
+};
+
+export type SequenceBuildThinkingConfig = {
+  id: string;
+  title: string;
+  subtitle: string;
+  templateLabel: string;
+  template: string;
+  total: number;
+  tracks: Array<{
+    id: string;
+    label: string;
+    detail: string;
   }>;
 };
 

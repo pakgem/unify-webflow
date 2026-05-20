@@ -9,6 +9,7 @@ import type {
   PersonalizationSwipeGameConfig,
   ProximityLeadListConfig,
   ResultCardConfig,
+  SequenceBuildThinkingConfig,
   SequenceEngagementConfig,
   StrategyPlanConfig,
   UploadedFileConfig,
@@ -1271,9 +1272,143 @@ export class ChatActor {
     return this.revealComponentItems(
       "sequence",
       panel,
-      ".wa-sequence-card, .wa-engage-channel",
+      ".wa-sequence-person-button, .wa-sequence-card, .wa-sequence-step, .wa-engage-channel, .wa-sequence-kickoff",
       COMPONENT_CHILD_REVEAL.stackCard,
     );
+  }
+
+  sequenceBuildThinking(config: SequenceBuildThinkingConfig): gsap.core.Timeline {
+    const panel = this.createSequenceBuildThinking(config);
+    const message = this.claimComponentMessage("thinking", panel);
+    const title = panel.querySelector<HTMLElement>(".wa-sequence-thinking__title");
+    const subtitle = panel.querySelector<HTMLElement>(".wa-sequence-thinking__subtitle");
+    const template = panel.querySelector<HTMLElement>(".wa-sequence-thinking-template");
+    const rows = this.queryElements(panel, ".wa-sequence-thinking-track");
+    const progress = { value: 1 };
+
+    gsap.set([title, subtitle, template, ...rows], { autoAlpha: 0, y: 8 });
+    gsap.set(panel.querySelectorAll(".wa-sequence-thinking-track__bar span"), {
+      scaleX: 1 / Math.max(1, config.total),
+      transformOrigin: "left center",
+    });
+
+    return gsap
+      .timeline()
+      .add(this.revealMessage(message))
+      .to([title, subtitle], {
+        autoAlpha: 1,
+        y: 0,
+        duration: motionDuration(0.28),
+        ease: "power2.out",
+        stagger: 0.04,
+      }, "-=0.16")
+      .to(template, {
+        autoAlpha: 1,
+        y: 0,
+        duration: motionDuration(0.28),
+        ease: "power2.out",
+      }, "-=0.08")
+      .to(rows, {
+        autoAlpha: 1,
+        y: 0,
+        duration: motionDuration(0.26),
+        ease: "power2.out",
+        stagger: 0.06,
+      }, "-=0.08")
+      .to(progress, {
+        value: config.total,
+        duration: motionDuration(1.85),
+        ease: "power1.inOut",
+        onStart: () => {
+          rows.forEach((row) => {
+            row.dataset.stepState = "current";
+          });
+        },
+        onUpdate: () => {
+          const current = Math.max(1, Math.round(progress.value));
+          const ratio = current / Math.max(1, config.total);
+
+          rows.forEach((row) => {
+            const label = row.querySelector<HTMLElement>(".wa-sequence-thinking-track__progress");
+            const bar = row.querySelector<HTMLElement>(".wa-sequence-thinking-track__bar span");
+
+            if (label) label.textContent = `${current}/${config.total}`;
+            if (bar) gsap.set(bar, { scaleX: ratio });
+          });
+          this.requestMessageScroll(message);
+        },
+      }, "+=0.04")
+      .to({}, { duration: motionDuration(0.24) })
+      .call(() => {
+        rows.forEach((row) => {
+          row.dataset.stepState = "complete";
+        });
+        this.animateMessageScrollIntoView(message);
+      });
+  }
+
+  sequencePerson(sequenceId: string, index: number): gsap.core.Timeline {
+    const section = this.findSequenceEngagement(sequenceId);
+    const tl = gsap.timeline();
+
+    if (!section) return tl;
+
+    const cards = this.queryElements(section, "[data-sequence-card]");
+    const buttons = this.queryElements(section, "[data-sequence-person-button]");
+    const count = section.querySelector<HTMLElement>("[data-sequence-count]");
+    const activeCard = cards.find((card) => card.dataset.active === "true");
+    const targetCard = cards.find((card) => Number(card.dataset.sequenceIndex) === index);
+
+    if (!targetCard || activeCard === targetCard) {
+      this.setActiveSequencePerson(section, index);
+      return tl;
+    }
+
+    tl.to(activeCard ?? [], {
+      autoAlpha: 0,
+      y: -6,
+      duration: motionDuration(0.16),
+      ease: "power2.in",
+    })
+      .call(() => {
+        cards.forEach((card) => {
+          const active = card === targetCard;
+
+          card.dataset.active = String(active);
+          card.style.display = active ? "grid" : "none";
+        });
+        buttons.forEach((button) => {
+          const active = Number(button.dataset.sequenceIndex) === index;
+
+          button.dataset.active = String(active);
+          button.setAttribute("aria-pressed", String(active));
+        });
+        if (count) count.textContent = this.getSequenceCountLabel(index, section.dataset.peopleCount ?? "");
+        gsap.set(targetCard, { autoAlpha: 0, y: 8 });
+      })
+      .to(targetCard, {
+        autoAlpha: 1,
+        y: 0,
+        duration: motionDuration(0.28),
+        ease: "power2.out",
+      })
+      .call(() => this.animateMessageScrollIntoView(section.closest<HTMLElement>(".wa-message") ?? section));
+
+    return tl;
+  }
+
+  sequenceKickoff(sequenceId: string): gsap.core.Timeline {
+    return gsap.timeline().call(() => {
+      const section = this.findSequenceEngagement(sequenceId);
+      const button = section?.querySelector<HTMLElement>("[data-sequence-kickoff]");
+      const label = button?.querySelector<HTMLElement>(".wa-sequence-kickoff__label");
+
+      if (!section || !button) return;
+
+      section.dataset.sequenceLaunched = "true";
+      button.dataset.launched = "true";
+      if (label) label.textContent = "Sequence kicked off";
+    });
   }
 
   prepareCsvDropArea(options: DropAreaOptions = {}): PreparedCsvDropArea {
@@ -3292,18 +3427,56 @@ export class ChatActor {
     const section = document.createElement("section");
     section.className = "wa-sequence-engagement";
     section.dataset.sequenceEngagement = config.id;
+    section.dataset.peopleCount = config.peopleCount;
 
     const count = document.createElement("span");
     count.className = "wa-sequence-engagement__count";
-    count.textContent = config.peopleCount;
+    count.dataset.sequenceCount = "";
+    count.textContent = config.sequences.some((sequence) => sequence.steps?.length)
+      ? this.getSequenceCountLabel(0, config.peopleCount)
+      : config.peopleCount;
     const header = this.createSectionHeader("wa-sequence-engagement", config.title, config.subtitle, count);
 
     const sequences = document.createElement("div");
     sequences.className = "wa-sequence-engagement__sequences";
 
-    config.sequences.forEach((sequence) => {
+    const hasSequenceSteps = config.sequences.some((sequence) => sequence.steps?.length);
+    let peopleNav: HTMLElement | null = null;
+
+    if (hasSequenceSteps) {
+      peopleNav = document.createElement("div");
+      peopleNav.className = "wa-sequence-people";
+      peopleNav.setAttribute("aria-label", "Sequence people");
+    }
+
+    config.sequences.forEach((sequence, index) => {
       const card = document.createElement("article");
       card.className = "wa-sequence-card";
+      card.dataset.sequenceCard = `${config.id}:${index}`;
+      card.dataset.sequenceIndex = String(index);
+      card.dataset.active = String(index === 0);
+      if (index !== 0) {
+        card.style.display = "none";
+        gsap.set(card, { autoAlpha: 0, y: 8 });
+      }
+
+      if (peopleNav) {
+        const button = document.createElement("button");
+
+        button.className = "wa-sequence-person-button";
+        button.type = "button";
+        button.tabIndex = -1;
+        button.dataset.sequencePersonButton = `${config.id}:${index}`;
+        button.dataset.sequenceIndex = String(index);
+        button.dataset.active = String(index === 0);
+        button.setAttribute("aria-pressed", String(index === 0));
+        button.setAttribute("aria-label", `Show sequence for ${sequence.name}`);
+        button.textContent = sequence.name.split(" ")[0] ?? sequence.name;
+        button.addEventListener("click", () => {
+          this.sequencePerson(config.id, index).play();
+        });
+        peopleNav.append(button);
+      }
 
       const top = document.createElement("div");
       top.className = "wa-sequence-card__top";
@@ -3313,12 +3486,12 @@ export class ChatActor {
       const name = document.createElement("strong");
       name.textContent = sequence.name;
       const company = document.createElement("span");
-      company.textContent = sequence.company;
+      company.textContent = [sequence.title, sequence.company].filter(Boolean).join(", ");
       identity.append(name, company);
 
       const label = document.createElement("span");
       label.className = "wa-sequence-card__label";
-      label.textContent = "Personalized";
+      label.textContent = sequence.signal ?? "Personalized";
 
       top.append(identity, label);
 
@@ -3331,6 +3504,31 @@ export class ChatActor {
       personalization.textContent = sequence.personalization;
 
       card.append(top, subject, personalization);
+
+      if (sequence.steps?.length) {
+        const steps = document.createElement("div");
+
+        steps.className = "wa-sequence-steps";
+        sequence.steps.forEach((step) => {
+          const stepEl = document.createElement("div");
+          const channel = document.createElement("span");
+          const copy = document.createElement("span");
+          const stepLabel = document.createElement("strong");
+          const body = document.createElement("span");
+
+          stepEl.className = "wa-sequence-step";
+          channel.className = "wa-sequence-step__channel";
+          channel.textContent = step.channel;
+          copy.className = "wa-sequence-step__copy";
+          stepLabel.textContent = step.label;
+          body.textContent = step.body;
+          copy.append(stepLabel, body);
+          stepEl.append(channel, copy);
+          steps.append(stepEl);
+        });
+        card.append(steps);
+      }
+
       sequences.append(card);
     });
 
@@ -3366,8 +3564,124 @@ export class ChatActor {
       channels.append(item);
     });
 
-    section.append(header, sequences, channels);
+    const kickoff = document.createElement("button");
+    const kickoffLabel = document.createElement("span");
+    const kickoffDetail = document.createElement("span");
+
+    kickoff.className = "wa-sequence-kickoff";
+    kickoff.type = "button";
+    kickoff.tabIndex = -1;
+    kickoff.dataset.sequenceKickoff = config.id;
+    kickoff.setAttribute("aria-label", config.launchLabel ?? "Kick off sequence");
+    kickoffLabel.className = "wa-sequence-kickoff__label";
+    kickoffLabel.textContent = config.launchLabel ?? "Kick off sequence";
+    kickoffDetail.className = "wa-sequence-kickoff__detail";
+    kickoffDetail.textContent = `Launch tailored touches for ${config.peopleCount}`;
+    kickoff.append(kickoffLabel, kickoffDetail);
+    kickoff.addEventListener("click", () => {
+      this.sequenceKickoff(config.id).play();
+    });
+
+    if (hasSequenceSteps) {
+      section.append(...this.compactElements(header, peopleNav, sequences, kickoff));
+    } else {
+      section.append(header, sequences, channels);
+    }
+
     return section;
+  }
+
+  private createSequenceBuildThinking(config: SequenceBuildThinkingConfig): HTMLElement {
+    const section = document.createElement("section");
+    const header = document.createElement("div");
+    const glyph = document.createElement("span");
+    const title = document.createElement("span");
+    const elapsed = document.createElement("span");
+    const subtitle = document.createElement("p");
+    const template = document.createElement("div");
+    const templateLabel = document.createElement("span");
+    const templateBody = document.createElement("strong");
+    const tracks = document.createElement("div");
+
+    section.className = "wa-sequence-thinking";
+    section.dataset.sequenceThinking = config.id;
+    header.className = "wa-thinking wa-sequence-thinking__header";
+    glyph.className = "wa-thinking__glyph";
+    glyph.setAttribute("aria-hidden", "true");
+    title.className = "wa-thinking__title wa-sequence-thinking__title";
+    title.textContent = config.title;
+    elapsed.className = "wa-thinking__elapsed";
+    elapsed.textContent = "4m 20s";
+    subtitle.className = "wa-sequence-thinking__subtitle";
+    subtitle.textContent = config.subtitle;
+    template.className = "wa-sequence-thinking-template";
+    templateLabel.className = "wa-sequence-thinking-template__label";
+    templateLabel.textContent = config.templateLabel;
+    templateBody.className = "wa-sequence-thinking-template__body";
+    templateBody.textContent = config.template;
+    tracks.className = "wa-sequence-thinking-tracks";
+
+    config.tracks.forEach((track) => {
+      const row = document.createElement("div");
+      const copy = document.createElement("span");
+      const label = document.createElement("strong");
+      const detail = document.createElement("span");
+      const progress = document.createElement("span");
+      const bar = document.createElement("span");
+      const fill = document.createElement("span");
+
+      row.className = "wa-sequence-thinking-track";
+      row.dataset.sequenceThinkingTrack = track.id;
+      row.dataset.stepState = "pending";
+      copy.className = "wa-sequence-thinking-track__copy";
+      label.textContent = track.label;
+      detail.textContent = track.detail;
+      progress.className = "wa-sequence-thinking-track__progress";
+      progress.textContent = `1/${config.total}`;
+      bar.className = "wa-sequence-thinking-track__bar";
+      fill.setAttribute("aria-hidden", "true");
+      bar.append(fill);
+      copy.append(label, detail);
+      row.append(copy, progress, bar);
+      tracks.append(row);
+    });
+
+    header.append(glyph, title, elapsed);
+    template.append(templateLabel, templateBody);
+    section.append(header, subtitle, template, tracks);
+    return section;
+  }
+
+  private findSequenceEngagement(sequenceId: string): HTMLElement | null {
+    return this.queryElements(this.root, "[data-sequence-engagement]")
+      .find((section) => section.dataset.sequenceEngagement === sequenceId) ?? null;
+  }
+
+  private setActiveSequencePerson(section: HTMLElement, index: number): void {
+    const cards = this.queryElements(section, "[data-sequence-card]");
+    const buttons = this.queryElements(section, "[data-sequence-person-button]");
+    const count = section.querySelector<HTMLElement>("[data-sequence-count]");
+
+    cards.forEach((card) => {
+      const active = Number(card.dataset.sequenceIndex) === index;
+
+      card.dataset.active = String(active);
+      card.style.display = active ? "grid" : "none";
+      gsap.set(card, { autoAlpha: active ? 1 : 0, y: 0 });
+    });
+    buttons.forEach((button) => {
+      const active = Number(button.dataset.sequenceIndex) === index;
+
+      button.dataset.active = String(active);
+      button.setAttribute("aria-pressed", String(active));
+    });
+    if (count) count.textContent = this.getSequenceCountLabel(index, section.dataset.peopleCount ?? "");
+  }
+
+  private getSequenceCountLabel(index: number, peopleCount: string): string {
+    const total = peopleCount.match(/\d+/)?.[0] ?? peopleCount;
+
+    return `${index + 1}/${total}`;
   }
 
   private revealCard(card: HTMLElement): gsap.core.Timeline {
