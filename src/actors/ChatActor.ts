@@ -331,6 +331,7 @@ export class ChatActor {
   private composerText: HTMLElement;
   private composer: HTMLElement;
   private composerContents: HTMLElement[] = [];
+  private tableActionTooltip: HTMLElement;
   private signupScene: HTMLElement;
   private signupEmail: HTMLElement;
   private status: HTMLElement | null;
@@ -356,6 +357,8 @@ export class ChatActor {
     this.composerContents = Array.from(this.composer.children).filter(
       (child): child is HTMLElement => child instanceof HTMLElement,
     );
+    this.tableActionTooltip = this.createDataTableFloatingTooltip();
+    this.chatShell.append(this.tableActionTooltip);
     this.signupScene = this.required("[data-signup-scene]");
     this.signupEmail = this.required("[data-signup-email]");
     this.status = this.root.querySelector<HTMLElement>("[data-chat-status]");
@@ -381,6 +384,7 @@ export class ChatActor {
     gsap.killTweensOf([this.composer, this.composerText, this.thread]);
     this.setComposerFocusState(false);
     this.setComposerVisibleState(false);
+    this.hideDataTableActionTooltip();
     this.signupEmail.textContent = "";
     this.status?.replaceChildren(document.createTextNode("Ready"));
     this.clearCustomResults();
@@ -862,11 +866,32 @@ export class ChatActor {
     return gsap.timeline().call(() => {
       const table = this.findDataTable(tableId);
 
-      if (!table) return;
+      if (!table) {
+        this.hideDataTableActionTooltip();
+        return;
+      }
 
-      this.queryElements(table, "[data-table-action]").forEach((button) => {
-        button.dataset.tooltipVisible = String(button.dataset.tableAction === actionId && visible);
+      const buttons = this.queryElements(table, "[data-table-action]");
+      buttons.forEach((button) => {
+        const active = button.dataset.tableAction === actionId && visible;
+        button.dataset.tooltipVisible = String(active);
       });
+      const activeButton = visible ? buttons.find((button) => button.dataset.tableAction === actionId) : undefined;
+
+      if (!activeButton) {
+        this.hideDataTableActionTooltip();
+        return;
+      }
+
+      const tooltip = activeButton.querySelector<HTMLElement>(".wa-data-table-action__tooltip");
+      const text = tooltip?.textContent?.trim() ?? activeButton.getAttribute("aria-label") ?? "";
+
+      if (!text) {
+        this.hideDataTableActionTooltip();
+        return;
+      }
+
+      this.showDataTableActionTooltip(activeButton, text);
     });
   }
 
@@ -2605,6 +2630,35 @@ export class ChatActor {
     }
 
     return svg;
+  }
+
+  private createDataTableFloatingTooltip(): HTMLElement {
+    const tooltip = document.createElement("span");
+
+    tooltip.className = "wa-data-table-floating-tooltip";
+    tooltip.dataset.visible = "false";
+    tooltip.setAttribute("aria-hidden", "true");
+    return tooltip;
+  }
+
+  private showDataTableActionTooltip(button: HTMLElement, text: string): void {
+    const shellRect = this.chatShell.getBoundingClientRect();
+    const buttonRect = button.getBoundingClientRect();
+    const x = buttonRect.left - shellRect.left + buttonRect.width * 0.5;
+    const y = buttonRect.top - shellRect.top - 7;
+
+    this.tableActionTooltip.textContent = text;
+    this.tableActionTooltip.dataset.visible = "true";
+    gsap.set(this.tableActionTooltip, {
+      x,
+      y,
+      xPercent: -50,
+      yPercent: -100,
+    });
+  }
+
+  private hideDataTableActionTooltip(): void {
+    this.tableActionTooltip.dataset.visible = "false";
   }
 
   private findDataTable(tableId: string): HTMLElement | null {
