@@ -21,6 +21,7 @@ type PreparedResultCard = {
 type PreparedCsvDropArea = {
   el: HTMLElement;
   reveal: () => gsap.core.Timeline;
+  revealWhenCursorEnters: (cursor: CursorActor) => gsap.core.Timeline;
   activate: () => gsap.core.Timeline;
   complete: () => gsap.core.Timeline;
 };
@@ -282,6 +283,7 @@ export class ChatActor {
   private scheduledScrollFrame = 0;
   private scheduledScrollMessage: HTMLElement | null = null;
   private scrollTween: gsap.core.Tween | null = null;
+  private dropRevealWatchers = new WeakMap<HTMLElement, () => void>();
   private lastStreamScrollAt = 0;
   private prefersReducedMotion = false;
   private composerVisible = false;
@@ -748,11 +750,12 @@ export class ChatActor {
 
   prepareCsvDropArea(options: DropAreaOptions = {}): PreparedCsvDropArea {
     const dropArea = this.createCsvDropArea(options);
-    this.registerTransientElement(dropArea);
+    this.registerTransientElement(dropArea, () => this.clearDropRevealWatcher(dropArea));
 
     return {
       el: dropArea,
       reveal: () => this.revealCsvDropArea(dropArea),
+      revealWhenCursorEnters: (cursor) => this.revealCsvDropAreaWhenCursorEnters(dropArea, cursor),
       activate: () => this.activateCsvDropArea(dropArea),
       complete: () => this.completeCsvDropArea(dropArea),
     };
@@ -1042,14 +1045,41 @@ export class ChatActor {
       {
         duration: 0.001,
         onStart: () => {
-          if (dropArea.dataset.dropComplete === "true") return;
+          this.showCsvDropArea(dropArea, true);
+        },
+      },
+    );
+  }
 
-          dropArea.dataset.dropState = "idle";
-          if (!dropArea.isConnected) this.chatShell.append(dropArea);
-          gsap.set(dropArea, {
-            autoAlpha: 1,
-            transformOrigin: "center center",
-          });
+  private revealCsvDropAreaWhenCursorEnters(dropArea: HTMLElement, cursor: CursorActor): gsap.core.Timeline {
+    return gsap.timeline().to(
+      {},
+      {
+        duration: 0.001,
+        onStart: () => {
+          this.clearDropRevealWatcher(dropArea);
+
+          if (dropArea.dataset.dropComplete === "true") return;
+          if (this.isCursorInsideChatShell(cursor)) {
+            this.showCsvDropArea(dropArea, false);
+            return;
+          }
+
+          const watch = () => {
+            if (dropArea.dataset.dropComplete === "true") {
+              this.clearDropRevealWatcher(dropArea);
+              return;
+            }
+
+            if (!this.isCursorInsideChatShell(cursor)) return;
+
+            this.clearDropRevealWatcher(dropArea);
+            this.showCsvDropArea(dropArea, false);
+          };
+          const cleanup = () => gsap.ticker.remove(watch);
+
+          this.dropRevealWatchers.set(dropArea, cleanup);
+          gsap.ticker.add(watch);
         },
       },
     );
@@ -1075,11 +1105,49 @@ export class ChatActor {
         onStart: () => {
           dropArea.dataset.dropState = "complete";
           dropArea.dataset.dropComplete = "true";
+          this.clearDropRevealWatcher(dropArea);
           gsap.killTweensOf(dropArea);
           gsap.set(dropArea, { autoAlpha: 0 });
           dropArea.remove();
         },
       },
+    );
+  }
+
+  private showCsvDropArea(dropArea: HTMLElement, resetState: boolean): void {
+    if (dropArea.dataset.dropComplete === "true") return;
+
+    if (resetState || !dropArea.dataset.dropState) dropArea.dataset.dropState = "idle";
+    if (!dropArea.isConnected) this.chatShell.append(dropArea);
+    gsap.set(dropArea, {
+      autoAlpha: 1,
+      transformOrigin: "center center",
+    });
+  }
+
+  private clearDropRevealWatcher(dropArea: HTMLElement): void {
+    const cleanup = this.dropRevealWatchers.get(dropArea);
+
+    if (!cleanup) return;
+
+    cleanup();
+    this.dropRevealWatchers.delete(dropArea);
+  }
+
+  private isCursorInsideChatShell(cursor: CursorActor): boolean {
+    const point = cursor.readPosition();
+    const rootRect = this.root.getBoundingClientRect();
+    const shellRect = this.chatShell.getBoundingClientRect();
+    const viewportPoint = {
+      x: rootRect.left + point.x,
+      y: rootRect.top + point.y,
+    };
+
+    return (
+      viewportPoint.x >= shellRect.left &&
+      viewportPoint.x <= shellRect.right &&
+      viewportPoint.y >= shellRect.top &&
+      viewportPoint.y <= shellRect.bottom
     );
   }
 

@@ -786,7 +786,7 @@ export const defaultStories: StoryDefinition[] = [
       return buildStorySteps(ctx, [
         { kind: "status", text: "Waiting for context" },
         { kind: "custom", build: () => cursorFile.startFollow(), at: "+=0.04" },
-        { kind: "custom", build: () => dropArea.reveal(), at: "<" },
+        { kind: "custom", build: () => dropArea.revealWhenCursorEnters(ctx.cursor), at: "<" },
         {
           kind: "cursorDrag",
           target: dropTarget,
@@ -905,7 +905,7 @@ export const defaultStories: StoryDefinition[] = [
       return buildStorySteps(ctx, [
         { kind: "status", text: "Waiting for CSV" },
         { kind: "custom", build: () => cursorFile.startFollow(), at: "+=0.04" },
-        { kind: "custom", build: () => dropArea.reveal(), at: "<" },
+        { kind: "custom", build: () => dropArea.revealWhenCursorEnters(ctx.cursor), at: "<" },
         {
           kind: "cursorDrag",
           target: dropTarget,
