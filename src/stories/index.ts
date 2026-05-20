@@ -1077,12 +1077,8 @@ export const defaultStories: StoryDefinition[] = [
         '[data-data-table="website-visitors-sales"] [data-table-action="email-sequence"]',
         "center",
       );
-      const sequencePersonTwoTarget = responsiveElementTarget(
-        '[data-sequence-person-button="visitor-outreach-sequences:1"]',
-        "center",
-      );
-      const sequencePersonThreeTarget = responsiveElementTarget(
-        '[data-sequence-person-button="visitor-outreach-sequences:2"]',
+      const sequenceNextTarget = responsiveElementTarget(
+        '[data-sequence-person-button="visitor-outreach-sequences:next"]',
         "center",
       );
       const sequenceKickoffTarget = responsiveElementTarget(
@@ -1144,7 +1140,7 @@ export const defaultStories: StoryDefinition[] = [
         { kind: "custom", build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat + 0.24 }), at: "+=0.04" },
         {
           kind: "cursorMove",
-          target: sequencePersonTwoTarget,
+          target: sequenceNextTarget,
           options: { mode: "pointer", intent: "click", speed: "normal", label: "preview-evan-sequence" },
         },
         { kind: "cursorClick", at: "-=0.02" },
@@ -1152,7 +1148,7 @@ export const defaultStories: StoryDefinition[] = [
         { kind: "custom", build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat + 0.24 }), at: "+=0.04" },
         {
           kind: "cursorMove",
-          target: sequencePersonThreeTarget,
+          target: sequenceNextTarget,
           options: { mode: "pointer", intent: "click", speed: "normal", label: "preview-clara-sequence" },
         },
         { kind: "cursorClick", at: "-=0.02" },

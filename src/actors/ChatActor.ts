@@ -1404,12 +1404,10 @@ export class ChatActor {
           card.style.display = active ? "grid" : "none";
         });
         buttons.forEach((button) => {
-          const active = Number(button.dataset.sequenceIndex) === index;
-
-          button.dataset.active = String(active);
-          button.setAttribute("aria-pressed", String(active));
+          button.dataset.currentIndex = String(index);
         });
         if (count) count.textContent = this.getSequenceCountLabel(index, section.dataset.peopleCount ?? "");
+        this.updateSequencePersonIdentity(section, index);
         gsap.set(targetCard, { autoAlpha: 0, y: 8 });
       })
       .to(targetCard, {
@@ -3473,6 +3471,59 @@ export class ChatActor {
       peopleNav = document.createElement("div");
       peopleNav.className = "wa-sequence-people";
       peopleNav.setAttribute("aria-label", "Sequence people");
+
+      const previous = document.createElement("button");
+      const current = document.createElement("div");
+      const avatar = document.createElement("span");
+      const avatarText = document.createElement("span");
+      const currentCopy = document.createElement("span");
+      const currentName = document.createElement("strong");
+      const currentMeta = document.createElement("span");
+      const next = document.createElement("button");
+      const firstSequence = config.sequences[0];
+
+      previous.className = "wa-sequence-person-button";
+      previous.type = "button";
+      previous.tabIndex = -1;
+      previous.dataset.sequencePersonButton = `${config.id}:prev`;
+      previous.dataset.direction = "prev";
+      previous.dataset.currentIndex = "0";
+      previous.setAttribute("aria-label", "Previous person");
+      previous.textContent = "‹";
+      previous.addEventListener("click", () => {
+        const currentIndex = Number(previous.dataset.currentIndex ?? "0");
+        const targetIndex = (currentIndex - 1 + config.sequences.length) % config.sequences.length;
+
+        this.sequencePerson(config.id, targetIndex).play();
+      });
+
+      current.className = "wa-sequence-person-current";
+      avatar.className = "wa-sequence-person-current__avatar";
+      avatar.dataset.avatarTone = "1";
+      avatarText.textContent = this.getInitials(firstSequence?.name ?? "");
+      avatar.append(avatarText);
+      currentCopy.className = "wa-sequence-person-current__copy";
+      currentName.textContent = firstSequence?.name ?? "";
+      currentMeta.textContent = [firstSequence?.title, firstSequence?.company].filter(Boolean).join(", ");
+      currentCopy.append(currentName, currentMeta);
+      current.append(avatar, currentCopy);
+
+      next.className = "wa-sequence-person-button";
+      next.type = "button";
+      next.tabIndex = -1;
+      next.dataset.sequencePersonButton = `${config.id}:next`;
+      next.dataset.direction = "next";
+      next.dataset.currentIndex = "0";
+      next.setAttribute("aria-label", "Next person");
+      next.textContent = "›";
+      next.addEventListener("click", () => {
+        const currentIndex = Number(next.dataset.currentIndex ?? "0");
+        const targetIndex = (currentIndex + 1) % config.sequences.length;
+
+        this.sequencePerson(config.id, targetIndex).play();
+      });
+
+      peopleNav.append(previous, current, next);
     }
 
     config.sequences.forEach((sequence, index) => {
@@ -3484,24 +3535,6 @@ export class ChatActor {
       if (index !== 0) {
         card.style.display = "none";
         gsap.set(card, { autoAlpha: 0, y: 8 });
-      }
-
-      if (peopleNav) {
-        const button = document.createElement("button");
-
-        button.className = "wa-sequence-person-button";
-        button.type = "button";
-        button.tabIndex = -1;
-        button.dataset.sequencePersonButton = `${config.id}:${index}`;
-        button.dataset.sequenceIndex = String(index);
-        button.dataset.active = String(index === 0);
-        button.setAttribute("aria-pressed", String(index === 0));
-        button.setAttribute("aria-label", `Show sequence for ${sequence.name}`);
-        button.textContent = sequence.name.split(" ")[0] ?? sequence.name;
-        button.addEventListener("click", () => {
-          this.sequencePerson(config.id, index).play();
-        });
-        peopleNav.append(button);
       }
 
       const top = document.createElement("div");
@@ -3535,7 +3568,7 @@ export class ChatActor {
         const steps = document.createElement("div");
 
         steps.className = "wa-sequence-steps";
-        sequence.steps.forEach((step) => {
+        sequence.steps.forEach((step, stepIndex) => {
           const stepEl = document.createElement("div");
           const channel = document.createElement("span");
           const copy = document.createElement("span");
@@ -3543,6 +3576,8 @@ export class ChatActor {
           const body = document.createElement("span");
 
           stepEl.className = "wa-sequence-step";
+          stepEl.dataset.stepOpen = String(stepIndex === 0);
+          stepEl.dataset.channel = this.slugChannelName(step.channel);
           channel.className = "wa-sequence-step__channel";
           channel.textContent = step.channel;
           copy.className = "wa-sequence-step__copy";
@@ -3667,18 +3702,36 @@ export class ChatActor {
       gsap.set(card, { autoAlpha: active ? 1 : 0, y: 0 });
     });
     buttons.forEach((button) => {
-      const active = Number(button.dataset.sequenceIndex) === index;
-
-      button.dataset.active = String(active);
-      button.setAttribute("aria-pressed", String(active));
+      button.dataset.currentIndex = String(index);
     });
     if (count) count.textContent = this.getSequenceCountLabel(index, section.dataset.peopleCount ?? "");
+    this.updateSequencePersonIdentity(section, index);
   }
 
   private getSequenceCountLabel(index: number, peopleCount: string): string {
     const total = peopleCount.match(/\d+/)?.[0] ?? peopleCount;
 
     return `${index + 1}/${total}`;
+  }
+
+  private updateSequencePersonIdentity(section: HTMLElement, index: number): void {
+    const card = this.queryElements(section, "[data-sequence-card]")
+      .find((candidate) => Number(candidate.dataset.sequenceIndex) === index);
+    const name = card?.querySelector<HTMLElement>(".wa-sequence-card__identity strong")?.textContent ?? "";
+    const meta = card?.querySelector<HTMLElement>(".wa-sequence-card__identity span")?.textContent ?? "";
+    const avatar = section.querySelector<HTMLElement>(".wa-sequence-person-current__avatar");
+    const avatarText = avatar?.querySelector<HTMLElement>("span");
+    const currentName = section.querySelector<HTMLElement>(".wa-sequence-person-current__copy strong");
+    const currentMeta = section.querySelector<HTMLElement>(".wa-sequence-person-current__copy span");
+
+    if (avatar) avatar.dataset.avatarTone = String((index % 6) + 1);
+    if (avatarText) avatarText.textContent = this.getInitials(name);
+    if (currentName) currentName.textContent = name;
+    if (currentMeta) currentMeta.textContent = meta;
+  }
+
+  private slugChannelName(channel: string): string {
+    return channel.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
   }
 
   private revealCard(card: HTMLElement): gsap.core.Timeline {
