@@ -1386,7 +1386,7 @@ body {
   color: #555452;
   background: transparent;
   box-shadow: 0 1px 1px rgba(23, 23, 20, 0.03);
-  cursor: default;
+  cursor: pointer;
 }
 
 .wa-data-table-action[data-action-variant="primary"] {
@@ -1492,7 +1492,15 @@ body {
   font-size: 9px;
   line-height: 1;
   font-weight: 560;
-  cursor: default;
+  cursor: pointer;
+}
+
+.wa-data-table-action:hover,
+.wa-data-table-action[data-tooltip-visible="true"],
+.wa-data-table__page-button:hover,
+.wa-data-table__page-button[data-tooltip-visible="true"] {
+  border-color: #bdb7ae;
+  color: #11110f;
 }
 
 .wa-data-table__page-button[data-active="true"] {

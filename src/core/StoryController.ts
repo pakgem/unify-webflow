@@ -1,5 +1,5 @@
 import { gsap } from "gsap";
-import type { ChatActor } from "../actors/ChatActor";
+import type { ChatActor, DataTablePageRestore } from "../actors/ChatActor";
 import type { CursorActor } from "../actors/CursorActor";
 import { PausedCursorMimic } from "./PausedCursorMimic";
 import type {
@@ -23,6 +23,7 @@ export class StoryController implements ChatbotStoriesInstance {
   private activeTimeline: gsap.core.Timeline | null = null;
   private autoAdvance: gsap.core.Tween | null = null;
   private seekTween: gsap.core.Tween | null = null;
+  private resumeRestoreTimeline: gsap.core.Timeline | null = null;
   private resizeObserver: ResizeObserver | null = null;
   private resizeTimer = 0;
   private observedWidth = 0;
@@ -61,11 +62,16 @@ export class StoryController implements ChatbotStoriesInstance {
   }
 
   play(): void {
+    const shouldRestoreDataTables = this.historyPaused;
+
     this.setHistoryPaused(false);
     this.chat.scrollToLive();
     this.playing = true;
-    this.activeTimeline?.play();
     this.updatePlayButton();
+
+    if (shouldRestoreDataTables && this.restoreDataTablePagesBeforePlay()) return;
+
+    this.activeTimeline?.play();
   }
 
   pause(): void {
@@ -74,6 +80,55 @@ export class StoryController implements ChatbotStoriesInstance {
     this.activeTimeline?.pause();
     this.autoAdvance?.kill();
     this.updatePlayButton();
+    this.resumeRestoreTimeline?.kill();
+    this.resumeRestoreTimeline = null;
+  }
+
+  private restoreDataTablePagesBeforePlay(): boolean {
+    if (!this.activeTimeline) return false;
+
+    const restores = this.chat.getDataTablePageRestores();
+
+    if (!restores.length) return false;
+
+    const timeline = gsap.timeline({
+      onComplete: () => {
+        this.resumeRestoreTimeline = null;
+        if (this.playing) this.activeTimeline?.play();
+      },
+    });
+
+    restores.forEach((restore, index) => {
+      const position = index === 0 ? 0 : ">";
+
+      timeline.add(this.buildDataTablePageRestore(restore), position);
+    });
+
+    this.resumeRestoreTimeline = timeline;
+    return true;
+  }
+
+  private buildDataTablePageRestore(restore: DataTablePageRestore): gsap.core.Timeline {
+    const timeline = gsap.timeline();
+
+    timeline
+      .add(
+        this.cursor.moveTo(
+          { target: restore.target, anchor: "center" },
+          {
+            mode: "pointer",
+            intent: "click",
+            speed: "quick",
+            label: `restore-${restore.tableId}-page-${restore.expectedPage}`,
+          },
+        ),
+      )
+      .add(this.chat.dataTablePageTooltip(restore.tableId, restore.expectedPage, true), "<+=0.04")
+      .add(this.cursor.click(), "-=0.02")
+      .add(this.chat.dataTablePage(restore.tableId, restore.expectedPage, { updateExpected: false }), "-=0.03")
+      .add(this.chat.dataTablePageTooltip(restore.tableId, restore.expectedPage, false), "+=0.05");
+
+    return timeline;
   }
 
   next(): void {
@@ -186,6 +241,8 @@ export class StoryController implements ChatbotStoriesInstance {
   private stopTimeline(): void {
     this.autoAdvance?.kill();
     this.seekTween?.kill();
+    this.resumeRestoreTimeline?.kill();
+    this.resumeRestoreTimeline = null;
     this.cancelHistoryParkMotion();
     this.pausedCursorMimic?.setPaused(false);
     this.activeTimeline?.kill();

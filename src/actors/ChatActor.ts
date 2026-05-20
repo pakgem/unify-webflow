@@ -105,6 +105,12 @@ type ChildRevealPreset = {
   to: gsap.TweenVars;
   position?: string | number;
 };
+export type DataTablePageRestore = {
+  tableId: string;
+  currentPage: number;
+  expectedPage: number;
+  target: HTMLElement;
+};
 
 const MESSAGE_KIND_CLASSES = [
   "wa-message--component",
@@ -331,7 +337,7 @@ export class ChatActor {
   private composerText: HTMLElement;
   private composer: HTMLElement;
   private composerContents: HTMLElement[] = [];
-  private tableActionTooltip: HTMLElement;
+  private tableControlTooltip: HTMLElement;
   private signupScene: HTMLElement;
   private signupEmail: HTMLElement;
   private status: HTMLElement | null;
@@ -347,6 +353,48 @@ export class ChatActor {
   private lastStreamScrollAt = 0;
   private prefersReducedMotion = false;
   private composerVisible = false;
+  private activeTablePageTimelines = new Map<string, gsap.core.Timeline>();
+  private expectedDataTablePages = new Map<string, number>();
+
+  private readonly handleDataTableControlPointerOver = (event: PointerEvent): void => {
+    const control = this.findDataTableControl(event.target);
+
+    if (!control) return;
+    this.showTooltipForDataTableControl(control);
+  };
+
+  private readonly handleDataTableControlPointerOut = (event: PointerEvent): void => {
+    const control = this.findDataTableControl(event.target);
+    const relatedTarget = event.relatedTarget;
+
+    if (!control) return;
+    if (relatedTarget instanceof Node && control.contains(relatedTarget)) return;
+    this.hideDataTableControlTooltip();
+  };
+
+  private readonly handleDataTableControlClick = (event: MouseEvent): void => {
+    const pageButton = this.findDataTablePageButton(event.target);
+
+    if (!pageButton) return;
+
+    const table = pageButton.closest<HTMLElement>("[data-data-table]");
+    const tableId = table?.dataset.dataTable;
+    const page = Number(pageButton.dataset.tablePageButton);
+
+    if (!tableId || !Number.isFinite(page)) return;
+
+    event.preventDefault();
+    this.activeTablePageTimelines.get(tableId)?.kill();
+    const timeline = this.dataTablePage(tableId, page, { updateExpected: false });
+
+    this.activeTablePageTimelines.set(tableId, timeline);
+    timeline.eventCallback("onComplete", () => {
+      if (this.activeTablePageTimelines.get(tableId) === timeline) {
+        this.activeTablePageTimelines.delete(tableId);
+      }
+      this.showTooltipForDataTableControl(pageButton);
+    });
+  };
 
   constructor(private root: HTMLElement) {
     this.chatShell = this.required("[data-chat-shell]");
@@ -357,8 +405,11 @@ export class ChatActor {
     this.composerContents = Array.from(this.composer.children).filter(
       (child): child is HTMLElement => child instanceof HTMLElement,
     );
-    this.tableActionTooltip = this.createDataTableFloatingTooltip();
-    this.chatShell.append(this.tableActionTooltip);
+    this.tableControlTooltip = this.createDataTableFloatingTooltip();
+    this.chatShell.append(this.tableControlTooltip);
+    this.chatShell.addEventListener("pointerover", this.handleDataTableControlPointerOver);
+    this.chatShell.addEventListener("pointerout", this.handleDataTableControlPointerOut);
+    this.chatShell.addEventListener("click", this.handleDataTableControlClick);
     this.signupScene = this.required("[data-signup-scene]");
     this.signupEmail = this.required("[data-signup-email]");
     this.status = this.root.querySelector<HTMLElement>("[data-chat-status]");
@@ -384,7 +435,10 @@ export class ChatActor {
     gsap.killTweensOf([this.composer, this.composerText, this.thread]);
     this.setComposerFocusState(false);
     this.setComposerVisibleState(false);
-    this.hideDataTableActionTooltip();
+    this.activeTablePageTimelines.forEach((timeline) => timeline.kill());
+    this.activeTablePageTimelines.clear();
+    this.expectedDataTablePages.clear();
+    this.hideDataTableControlTooltip();
     this.signupEmail.textContent = "";
     this.status?.replaceChildren(document.createTextNode("Ready"));
     this.clearCustomResults();
@@ -409,6 +463,14 @@ export class ChatActor {
     for (const card of this.cardPool) {
       card.style.display = "none";
     }
+  }
+
+  destroy(): void {
+    this.chatShell.removeEventListener("pointerover", this.handleDataTableControlPointerOver);
+    this.chatShell.removeEventListener("pointerout", this.handleDataTableControlPointerOut);
+    this.chatShell.removeEventListener("click", this.handleDataTableControlClick);
+    this.activeTablePageTimelines.forEach((timeline) => timeline.kill());
+    this.activeTablePageTimelines.clear();
   }
 
   prepareStoryStart(): void {
@@ -763,10 +825,11 @@ export class ChatActor {
     return this.revealComponentItems("table", table, ".wa-data-table__row", COMPONENT_CHILD_REVEAL.tableRow);
   }
 
-  dataTablePage(tableId: string, page: number): gsap.core.Timeline {
+  dataTablePage(tableId: string, page: number, options: { updateExpected?: boolean } = {}): gsap.core.Timeline {
     const tl = gsap.timeline();
     const fadeOut = { value: 0 };
     const fadeIn = { value: 0 };
+    const updateExpected = options.updateExpected ?? true;
     const state: {
       canSwitch: boolean;
       table: HTMLElement | null;
@@ -790,6 +853,7 @@ export class ChatActor {
       ease: "power1.out",
       onStart: () => {
         state.table = this.findDataTable(tableId);
+        if (updateExpected) this.expectedDataTablePages.set(tableId, page);
         state.currentRows = state.table ? this.getVisibleDataTableRows(state.table) : [];
         state.targetRows = state.table ? this.queryElements(state.table, `.wa-data-table__row[data-page="${page}"]`) : [];
         state.buttons = state.table ? this.queryElements(state.table, "[data-table-page-button]") : [];
@@ -862,12 +926,33 @@ export class ChatActor {
     return tl;
   }
 
+  getDataTablePageRestores(): DataTablePageRestore[] {
+    const restores: DataTablePageRestore[] = [];
+
+    this.expectedDataTablePages.forEach((expectedPage, tableId) => {
+      const table = this.findDataTable(tableId);
+      const currentPage = Number(table?.dataset.activePage);
+      const target = table?.querySelector<HTMLElement>(`[data-table-page-button="${expectedPage}"]`);
+
+      if (!table || !target || !Number.isFinite(currentPage) || currentPage === expectedPage) return;
+
+      restores.push({
+        tableId,
+        currentPage,
+        expectedPage,
+        target,
+      });
+    });
+
+    return restores;
+  }
+
   dataTableActionTooltip(tableId: string, actionId: string, visible: boolean): gsap.core.Timeline {
     return gsap.timeline().call(() => {
       const table = this.findDataTable(tableId);
 
       if (!table) {
-        this.hideDataTableActionTooltip();
+        this.hideDataTableControlTooltip();
         return;
       }
 
@@ -879,19 +964,52 @@ export class ChatActor {
       const activeButton = visible ? buttons.find((button) => button.dataset.tableAction === actionId) : undefined;
 
       if (!activeButton) {
-        this.hideDataTableActionTooltip();
+        this.hideDataTableControlTooltip();
         return;
       }
 
-      const tooltip = activeButton.querySelector<HTMLElement>(".wa-data-table-action__tooltip");
-      const text = tooltip?.textContent?.trim() ?? activeButton.getAttribute("aria-label") ?? "";
+      const text = this.getDataTableControlTooltipText(activeButton);
 
       if (!text) {
-        this.hideDataTableActionTooltip();
+        this.hideDataTableControlTooltip();
         return;
       }
 
-      this.showDataTableActionTooltip(activeButton, text);
+      this.showDataTableControlTooltip(activeButton, text);
+    });
+  }
+
+  dataTablePageTooltip(tableId: string, page: number, visible: boolean): gsap.core.Timeline {
+    return gsap.timeline().call(() => {
+      const table = this.findDataTable(tableId);
+
+      if (!table) {
+        this.hideDataTableControlTooltip();
+        return;
+      }
+
+      const buttons = this.queryElements(table, "[data-table-page-button]");
+      buttons.forEach((button) => {
+        const active = Number(button.dataset.tablePageButton) === page && visible;
+        button.dataset.tooltipVisible = String(active);
+      });
+      const activeButton = visible
+        ? buttons.find((button) => Number(button.dataset.tablePageButton) === page)
+        : undefined;
+
+      if (!activeButton) {
+        this.hideDataTableControlTooltip();
+        return;
+      }
+
+      const text = this.getDataTableControlTooltipText(activeButton);
+
+      if (!text) {
+        this.hideDataTableControlTooltip();
+        return;
+      }
+
+      this.showDataTableControlTooltip(activeButton, text);
     });
   }
 
@@ -2408,6 +2526,7 @@ export class ChatActor {
     table.dataset.tableVariant = config.variant ?? "default";
     table.dataset.columnCount = String(config.columns.length);
     table.dataset.activePage = String(activePage);
+    this.expectedDataTablePages.set(config.id, activePage);
     table.style.setProperty(
       "--wa-data-table-columns",
       config.columns.map((column) => column.width ?? "minmax(0, 1fr)").join(" "),
@@ -2561,6 +2680,8 @@ export class ChatActor {
         button.dataset.tablePageButton = String(page.page);
         button.dataset.pageRange = page.range;
         button.dataset.active = String(active);
+        button.dataset.tooltip = `Show page ${page.page}`;
+        button.dataset.tooltipVisible = "false";
         button.setAttribute("aria-label", `Show page ${page.page}`);
         button.setAttribute("aria-current", active ? "page" : "false");
         button.textContent = String(page.page);
@@ -2641,15 +2762,27 @@ export class ChatActor {
     return tooltip;
   }
 
-  private showDataTableActionTooltip(button: HTMLElement, text: string): void {
-    const shellRect = this.chatShell.getBoundingClientRect();
-    const buttonRect = button.getBoundingClientRect();
-    const x = buttonRect.left - shellRect.left + buttonRect.width * 0.5;
-    const y = buttonRect.top - shellRect.top - 7;
+  private showTooltipForDataTableControl(control: HTMLElement): void {
+    const text = this.getDataTableControlTooltipText(control);
 
-    this.tableActionTooltip.textContent = text;
-    this.tableActionTooltip.dataset.visible = "true";
-    gsap.set(this.tableActionTooltip, {
+    if (!text) {
+      this.hideDataTableControlTooltip();
+      return;
+    }
+
+    this.setDataTableControlTooltipVisible(control);
+    this.showDataTableControlTooltip(control, text);
+  }
+
+  private showDataTableControlTooltip(control: HTMLElement, text: string): void {
+    const shellRect = this.chatShell.getBoundingClientRect();
+    const controlRect = control.getBoundingClientRect();
+    const x = controlRect.left - shellRect.left + controlRect.width * 0.5;
+    const y = controlRect.top - shellRect.top - 7;
+
+    this.tableControlTooltip.textContent = text;
+    this.tableControlTooltip.dataset.visible = "true";
+    gsap.set(this.tableControlTooltip, {
       x,
       y,
       xPercent: -50,
@@ -2657,8 +2790,38 @@ export class ChatActor {
     });
   }
 
-  private hideDataTableActionTooltip(): void {
-    this.tableActionTooltip.dataset.visible = "false";
+  private hideDataTableControlTooltip(): void {
+    this.tableControlTooltip.dataset.visible = "false";
+    this.queryElements(this.chatShell, "[data-table-action], [data-table-page-button]").forEach((control) => {
+      control.dataset.tooltipVisible = "false";
+    });
+  }
+
+  private setDataTableControlTooltipVisible(activeControl: HTMLElement): void {
+    const table = activeControl.closest<HTMLElement>("[data-data-table]");
+    const controls = table
+      ? this.queryElements(table, "[data-table-action], [data-table-page-button]")
+      : this.queryElements(this.chatShell, "[data-table-action], [data-table-page-button]");
+
+    controls.forEach((control) => {
+      control.dataset.tooltipVisible = String(control === activeControl);
+    });
+  }
+
+  private getDataTableControlTooltipText(control: HTMLElement): string {
+    const inlineTooltip = control.querySelector<HTMLElement>(".wa-data-table-action__tooltip")?.textContent?.trim();
+
+    return inlineTooltip || control.dataset.tooltip || control.getAttribute("aria-label") || "";
+  }
+
+  private findDataTableControl(target: EventTarget | null): HTMLElement | null {
+    if (!(target instanceof Element)) return null;
+    return target.closest<HTMLElement>("[data-table-action], [data-table-page-button]");
+  }
+
+  private findDataTablePageButton(target: EventTarget | null): HTMLElement | null {
+    if (!(target instanceof Element)) return null;
+    return target.closest<HTMLElement>("[data-table-page-button]");
   }
 
   private findDataTable(tableId: string): HTMLElement | null {

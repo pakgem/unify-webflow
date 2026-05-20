@@ -47,6 +47,7 @@ export function createEngine(root: HTMLElement, config: ChatbotStoriesConfig = {
     destroy: () => {
       builder?.destroy();
       destroy();
+      chat.destroy();
       cursor.destroy();
     },
   };
