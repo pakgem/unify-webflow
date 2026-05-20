@@ -46,6 +46,11 @@ type FileLandingClone = {
   startX: number;
   startY: number;
   startRotation: number;
+  setX: (value: number) => void;
+  setY: (value: number) => void;
+  setScaleX: (value: number) => void;
+  setScaleY: (value: number) => void;
+  setRotation: (value: number) => void;
 };
 
 type DropAreaOptions = {
@@ -732,7 +737,7 @@ export class ChatActor {
   strategyPlans(plans: StrategyPlanConfig[]): gsap.core.Timeline {
     const cards = plans.map((plan) => this.createStrategyPlan(plan));
     const grid = document.createElement("div");
-    const summaries = cards.flatMap((card) => Array.from(card.querySelectorAll(".wa-strategy-plan__summary")));
+    const summaries = cards.flatMap((card) => this.queryElements(card, ".wa-strategy-plan__summary"));
 
     grid.className = "wa-result-grid has-strategy-plans";
     grid.dataset.strategyPlans = plans.map((plan) => plan.id).join(" ");
@@ -762,10 +767,10 @@ export class ChatActor {
 
   marketingDataSourcesGrid(config: DataSourceGridConfig): gsap.core.Timeline {
     const page = this.createMarketingDataSourcesGrid(config);
-    const logos = Array.from(page.querySelectorAll<HTMLElement>(".wa-data-vendor-logo"));
-    const groups = Array.from(page.querySelectorAll<HTMLElement>(".wa-data-source-group"));
+    const logos = this.queryElements(page, ".wa-data-vendor-logo");
+    const groups = this.queryElements(page, ".wa-data-source-group");
     const header = page.querySelector<HTMLElement>(".wa-data-source-grid__header");
-    const introTargets = [header, ...groups, ...logos].filter((el): el is HTMLElement => Boolean(el));
+    const introTargets = this.compactElements(header, ...groups, ...logos);
 
     return gsap
       .timeline()
@@ -872,11 +877,11 @@ export class ChatActor {
 
   personalizationSwipeGame(config: PersonalizationSwipeGameConfig): gsap.core.Timeline {
     const game = this.createPersonalizationSwipeGame(config);
-    const revealTargets = [
-      ...Array.from(game.querySelectorAll<HTMLElement>(".wa-mini-game__header, .wa-swipe-game__prompt, .wa-swipe-game__axis")),
+    const revealTargets = this.compactElements(
+      ...this.queryElements(game, ".wa-mini-game__header, .wa-swipe-game__prompt, .wa-swipe-game__axis"),
       game.querySelector<HTMLElement>(".wa-swipe-game__stack"),
       game.querySelector<HTMLElement>(".wa-swipe-game__actions"),
-    ].filter((target): target is HTMLElement => Boolean(target));
+    );
 
     this.layoutSwipeGameCards(game, 0);
 
@@ -903,7 +908,7 @@ export class ChatActor {
       `[data-personalization-swipe-game="${this.escapeSelectorValue(gameId)}"]`,
     );
     const card = game?.querySelector<HTMLElement>(`[data-swipe-card="${this.escapeSelectorValue(signalId)}"]`);
-    const cards = game ? Array.from(game.querySelectorAll<HTMLElement>("[data-swipe-card]")) : [];
+    const cards = this.getSwipeCards(game);
     const index = card ? cards.indexOf(card) : -1;
     const nextCard = cards[index + 1];
     const direction = decision === "use" ? 1 : -1;
@@ -1137,8 +1142,8 @@ export class ChatActor {
   ): gsap.core.Timeline {
     const content = this.createUploadedFiles(files);
     const message = this.claimUserComponentMessage("file", content);
-    const targets = Array.from(content.querySelectorAll<HTMLElement>(".wa-uploaded-file"));
-    const extras = Array.from(content.querySelectorAll<HTMLElement>(".wa-uploaded-files__summary"));
+    const targets = this.queryElements(content, ".wa-uploaded-file");
+    const extras = this.queryElements(content, ".wa-uploaded-files__summary");
 
     return this.revealDroppedFilesMessage(cursorFile, message, targets, extras);
   }
@@ -1288,24 +1293,30 @@ export class ChatActor {
         startX: sourceLocalRect.left,
         startY: sourceLocalRect.top,
         startRotation,
+        setX: gsap.quickSetter(clone, "x", "px") as (value: number) => void,
+        setY: gsap.quickSetter(clone, "y", "px") as (value: number) => void,
+        setScaleX: gsap.quickSetter(clone, "scaleX") as (value: number) => void,
+        setScaleY: gsap.quickSetter(clone, "scaleY") as (value: number) => void,
+        setRotation: gsap.quickSetter(clone, "rotation", "deg") as (value: number) => void,
       };
     });
   }
 
   private renderFileLandingClones(clones: FileLandingClone[], progress: number): void {
+    const rootRect = this.root.getBoundingClientRect();
+
     for (const clone of clones) {
       const targetRect = clone.target.getBoundingClientRect();
-      const targetLocalRect = this.getRootLocalRect(targetRect);
+      const targetLeft = targetRect.left - rootRect.left;
+      const targetTop = targetRect.top - rootRect.top;
       const targetScaleX = targetRect.width / Math.max(1, clone.sourceRect.width);
       const targetScaleY = targetRect.height / Math.max(1, clone.sourceRect.height);
 
-      gsap.set(clone.el, {
-        x: this.interpolate(clone.startX, targetLocalRect.left, progress),
-        y: this.interpolate(clone.startY, targetLocalRect.top, progress),
-        scaleX: this.interpolate(1, targetScaleX, progress),
-        scaleY: this.interpolate(1, targetScaleY, progress),
-        rotation: this.interpolate(clone.startRotation, 0, progress),
-      });
+      clone.setX(this.interpolate(clone.startX, targetLeft, progress));
+      clone.setY(this.interpolate(clone.startY, targetTop, progress));
+      clone.setScaleX(this.interpolate(1, targetScaleX, progress));
+      clone.setScaleY(this.interpolate(1, targetScaleY, progress));
+      clone.setRotation(this.interpolate(clone.startRotation, 0, progress));
     }
   }
 
@@ -1379,7 +1390,7 @@ export class ChatActor {
 
   private resolveRevealTargets(content: HTMLElement, targets: string | HTMLElement[]): HTMLElement[] {
     return typeof targets === "string"
-      ? Array.from(content.querySelectorAll<HTMLElement>(targets))
+      ? this.queryElements(content, targets)
       : targets;
   }
 
@@ -2435,7 +2446,7 @@ export class ChatActor {
       groupedList.append(group);
     }
 
-    section.replaceChildren(...[header, groupedList].filter((el): el is HTMLElement => Boolean(el)));
+    section.replaceChildren(...this.compactElements(header, groupedList));
     return section;
   }
 
@@ -2681,7 +2692,7 @@ export class ChatActor {
   }
 
   private layoutSwipeGameCards(game: HTMLElement, activeIndex: number): void {
-    const cards = Array.from(game.querySelectorAll<HTMLElement>("[data-swipe-card]"));
+    const cards = this.getSwipeCards(game);
 
     cards.forEach((card, index) => {
       const depth = index - activeIndex;
@@ -2706,7 +2717,7 @@ export class ChatActor {
 
   private updateSwipeGameProgress(game: HTMLElement, activeIndex: number): void {
     const progress = game.querySelector<HTMLElement>("[data-swipe-progress]");
-    const total = game.querySelectorAll("[data-swipe-card]").length;
+    const total = this.getSwipeCards(game).length;
     const current = Math.min(activeIndex + 1, total);
 
     if (progress) progress.textContent = `${current}/${total}`;
@@ -2855,6 +2866,18 @@ export class ChatActor {
     }
 
     return el;
+  }
+
+  private queryElements(root: ParentNode, selector: string): HTMLElement[] {
+    return Array.from(root.querySelectorAll<HTMLElement>(selector));
+  }
+
+  private compactElements(...elements: Array<HTMLElement | null | undefined>): HTMLElement[] {
+    return elements.filter((element): element is HTMLElement => Boolean(element));
+  }
+
+  private getSwipeCards(game: HTMLElement | null | undefined): HTMLElement[] {
+    return game ? this.queryElements(game, "[data-swipe-card]") : [];
   }
 
   private escapeSelectorValue(value: string): string {

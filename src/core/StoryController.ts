@@ -31,6 +31,10 @@ export class StoryController implements ChatbotStoriesInstance {
   private storyProgress: number[];
   private historyParkTimeline: gsap.core.Timeline | null = null;
   private pausedCursorMimic: PausedCursorMimic | null = null;
+  private storyTabButtons: HTMLButtonElement[] = [];
+  private scrubber: HTMLInputElement | null = null;
+  private playButton: HTMLButtonElement | null = null;
+  private resumeButton: HTMLButtonElement | null = null;
   private playing = false;
   private historyPaused = false;
 
@@ -235,28 +239,27 @@ export class StoryController implements ChatbotStoriesInstance {
     this.setText("[data-story-title]", story.label);
     this.setText("[data-story-summary]", story.summary);
 
-    this.root.querySelectorAll<HTMLElement>("[data-story-tab]").forEach((button) => {
+    for (const button of this.storyTabButtons) {
       const active = button.dataset.storyTab === story.id;
       button.classList.toggle("is-active", active);
       button.setAttribute("aria-pressed", String(active));
-    });
+    }
   }
 
   private updateProgress(): void {
     const progress = this.activeTimeline?.progress() ?? 0;
-    const scrubber = this.root.querySelector<HTMLInputElement>("[data-story-scrubber]");
 
     this.storyProgress[this.activeIndex] = progress;
     this.root.style.setProperty("--wa-story-progress", progress.toFixed(4));
-    this.updateTabProgress();
+    this.updateTabProgress(this.activeIndex);
 
-    if (scrubber && document.activeElement !== scrubber) {
-      scrubber.value = String(Math.round(progress * 1000));
+    if (this.scrubber && document.activeElement !== this.scrubber) {
+      this.scrubber.value = String(Math.round(progress * 1000));
     }
   }
 
   private updatePlayButton(): void {
-    const button = this.root.querySelector<HTMLButtonElement>("[data-toggle-play]");
+    const button = this.playButton;
 
     if (!button) return;
 
@@ -268,41 +271,15 @@ export class StoryController implements ChatbotStoriesInstance {
     const tabs = this.root.querySelector<HTMLElement>("[data-story-tabs]");
 
     if (tabs) {
+      this.storyTabButtons = this.stories.map((story, index) => this.createStoryTab(story, index));
       tabs.replaceChildren(
-        ...this.stories.map((story, index) => {
-          const button = document.createElement("button");
-          button.className = "wa-story-tab";
-          button.type = "button";
-          button.dataset.storyTab = story.id;
-          button.style.setProperty("--wa-tab-progress", "0");
-          button.setAttribute("aria-pressed", "false");
-          button.addEventListener("click", () => this.goTo(index));
-
-          const marker = document.createElement("span");
-          marker.className = "wa-story-tab__marker";
-          marker.setAttribute("aria-hidden", "true");
-
-          const body = document.createElement("span");
-          body.className = "wa-story-tab__body";
-
-          const title = document.createElement("span");
-          title.className = "wa-story-tab__title";
-          title.textContent = story.navLabel ?? story.label;
-
-          body.append(title);
-
-          if (story.navDescription) {
-            const description = document.createElement("span");
-            description.className = "wa-story-tab__description";
-            description.textContent = story.navDescription;
-            body.append(description);
-          }
-
-          button.append(marker, body);
-          return button;
-        }),
+        ...this.storyTabButtons,
       );
     }
+
+    this.scrubber = this.root.querySelector<HTMLInputElement>("[data-story-scrubber]");
+    this.playButton = this.root.querySelector<HTMLButtonElement>("[data-toggle-play]");
+    this.resumeButton = this.root.querySelector<HTMLButtonElement>("[data-history-resume]");
 
     this.on("[data-prev-story]", "click", () => this.previous());
     this.on("[data-next-story]", "click", () => this.next());
@@ -319,6 +296,41 @@ export class StoryController implements ChatbotStoriesInstance {
       this.seekTo(Number(input.value) / 1000);
     });
     this.attachChatHistoryScroll();
+  }
+
+  private createStoryTab(story: StoryDefinition, index: number): HTMLButtonElement {
+    const button = document.createElement("button");
+    button.className = "wa-story-tab";
+    button.type = "button";
+    button.dataset.storyTab = story.id;
+    button.style.setProperty("--wa-tab-progress", "0");
+    button.setAttribute("aria-pressed", "false");
+    const handleClick = () => this.goTo(index);
+    button.addEventListener("click", handleClick);
+    this.listeners.push(() => button.removeEventListener("click", handleClick));
+
+    const marker = document.createElement("span");
+    marker.className = "wa-story-tab__marker";
+    marker.setAttribute("aria-hidden", "true");
+
+    const body = document.createElement("span");
+    body.className = "wa-story-tab__body";
+
+    const title = document.createElement("span");
+    title.className = "wa-story-tab__title";
+    title.textContent = story.navLabel ?? story.label;
+
+    body.append(title);
+
+    if (story.navDescription) {
+      const description = document.createElement("span");
+      description.className = "wa-story-tab__description";
+      description.textContent = story.navDescription;
+      body.append(description);
+    }
+
+    button.append(marker, body);
+    return button;
   }
 
   private attachChatHistoryScroll(): void {
@@ -384,7 +396,7 @@ export class StoryController implements ChatbotStoriesInstance {
     this.root.dataset.chatHistoryPaused = String(paused);
     this.pausedCursorMimic?.setPaused(paused);
 
-    const resume = this.root.querySelector<HTMLButtonElement>("[data-history-resume]");
+    const resume = this.resumeButton;
 
     if (!resume) return;
 
@@ -446,15 +458,23 @@ export class StoryController implements ChatbotStoriesInstance {
     if (wasPlaying) this.play();
   }
 
-  private updateTabProgress(): void {
-    this.root.querySelectorAll<HTMLElement>("[data-story-tab]").forEach((button, index) => {
+  private updateAllTabProgress(): void {
+    this.storyTabButtons.forEach((button, index) => {
       button.style.setProperty("--wa-tab-progress", this.storyProgress[index]?.toFixed(4) ?? "0");
     });
   }
 
+  private updateTabProgress(index: number): void {
+    const button = this.storyTabButtons[index];
+
+    if (!button) return;
+
+    button.style.setProperty("--wa-tab-progress", this.storyProgress[index]?.toFixed(4) ?? "0");
+  }
+
   private resetStoryProgress(): void {
     this.storyProgress.fill(0);
-    this.updateTabProgress();
+    this.updateAllTabProgress();
   }
 
   private resolveStoryIndex(story: number | string): number {
