@@ -807,8 +807,7 @@ export const defaultStories: StoryDefinition[] = [
         },
         { kind: "custom", build: () => dropArea.activate(), at: "<+=0.02" },
         { kind: "custom", build: () => dropArea.complete(), at: "-=0.18" },
-        { kind: "custom", build: () => cursorFile.stopFollow(), at: "<" },
-        { kind: "custom", build: () => ctx.chat.uploadedFilesMessage(AGENT_CONTEXT_FILES), at: "-=0.08" },
+        { kind: "custom", build: () => cursorFile.landAsUploadedFiles(AGENT_CONTEXT_FILES), at: "<" },
         { kind: "status", text: "Learning outreach style", at: "<" },
         {
           kind: "research",
@@ -926,8 +925,7 @@ export const defaultStories: StoryDefinition[] = [
         },
         { kind: "custom", build: () => dropArea.activate(), at: "<+=0.02" },
         { kind: "custom", build: () => dropArea.complete(), at: "-=0.24" },
-        { kind: "custom", build: () => cursorFile.stopFollow(), at: "<" },
-        { kind: "custom", build: () => ctx.chat.uploadedFileMessage("webinar_attendees.csv", "1,284 attendees"), at: "-=0.08" },
+        { kind: "custom", build: () => cursorFile.landAsUploadedFile("webinar_attendees.csv", "1,284 attendees"), at: "<" },
         { kind: "status", text: "Cleaning CSV", at: "<" },
         {
           kind: "research",

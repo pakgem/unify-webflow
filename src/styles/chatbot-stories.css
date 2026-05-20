@@ -1073,6 +1073,11 @@ body {
   will-change: transform, opacity;
 }
 
+.wa-file-landing-clone {
+  box-sizing: border-box;
+  will-change: transform;
+}
+
 .wa-cursor-file__card {
   display: inline-grid;
   grid-template-columns: 30px minmax(0, auto);

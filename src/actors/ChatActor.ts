@@ -30,10 +30,17 @@ type PreparedCursorFile = {
   el: HTMLElement;
   startFollow: () => gsap.core.Timeline;
   stopFollow: () => gsap.core.Timeline;
+  landAsUploadedFile: (fileName: string, detail?: string) => gsap.core.Timeline;
+  landAsUploadedFiles: (files: UploadedFileConfig[]) => gsap.core.Timeline;
 };
 type CursorFileFollowOffset = {
   x: number;
   y: number;
+};
+type FileLandingClone = {
+  el: HTMLElement;
+  sourceRect: DOMRect;
+  targetRect: DOMRect;
 };
 
 type DropAreaOptions = {
@@ -186,12 +193,18 @@ const MARKETING_PAGE_MOTION = {
 };
 
 const STREAM_SCROLL_INTERVAL_MS = 96;
-const TRANSIENT_ELEMENT_SELECTOR = ".wa-cursor-file, .wa-csv-drop";
+const TRANSIENT_ELEMENT_SELECTOR = ".wa-cursor-file, .wa-file-landing-clone, .wa-csv-drop";
 const MARKETING_PANEL_SELECTOR = "[data-marketing-data-sources-grid]";
 const CURSOR_FILE_ENTRY = {
   offscreenMargin: 96,
   pullInDuration: motionDuration(0.38),
   pullInEase: "power3.out",
+};
+const FILE_DROP_LANDING = {
+  duration: motionDuration(0.54),
+  stagger: 0.055,
+  ease: "power3.inOut",
+  rotations: [2, -5, 6, -8],
 };
 
 const COMPONENT_CHILD_REVEAL = {
@@ -869,10 +882,14 @@ export class ChatActor {
     const file = this.createCursorFile(fileName, fileType);
     let removeFollower: (() => void) | null = null;
     let followOffset: CursorFileFollowOffset = { x: 0, y: 0 };
-    this.registerTransientElement(file, () => {
+    const stopFollowing = () => {
       removeFollower?.();
       removeFollower = null;
       gsap.killTweensOf(followOffset);
+    };
+
+    this.registerTransientElement(file, () => {
+      stopFollowing();
     });
 
     return {
@@ -900,17 +917,23 @@ export class ChatActor {
       stopFollow: () =>
         gsap
           .timeline()
-          .call(() => {
-            removeFollower?.();
-            removeFollower = null;
-            gsap.killTweensOf(followOffset);
-          })
+          .call(stopFollowing)
           .to(file, {
             autoAlpha: 0,
             scale: 0.92,
             duration: motionDuration(0.18),
             ease: "power2.in",
           }),
+      landAsUploadedFile: (landedFileName, detail = "CSV uploaded") =>
+        gsap
+          .timeline()
+          .call(stopFollowing)
+          .add(this.uploadedFileMessageFromCursorFile(file, landedFileName, detail)),
+      landAsUploadedFiles: (files) =>
+        gsap
+          .timeline()
+          .call(stopFollowing)
+          .add(this.uploadedFilesMessageFromCursorFile(file, files)),
     };
   }
 
@@ -931,6 +954,17 @@ export class ChatActor {
     });
   }
 
+  private uploadedFileMessageFromCursorFile(
+    cursorFile: HTMLElement,
+    fileName: string,
+    detail = "CSV uploaded",
+  ): gsap.core.Timeline {
+    const content = this.createUploadedFile(fileName, detail);
+    const message = this.claimUserComponentMessage("file", content);
+
+    return this.revealDroppedFilesMessage(cursorFile, message, [content]);
+  }
+
   uploadedFilesMessage(files: UploadedFileConfig[]): gsap.core.Timeline {
     const content = this.createUploadedFiles(files);
 
@@ -940,6 +974,18 @@ export class ChatActor {
       to: { ...COMPONENT_CHILD_REVEAL.compactRow.to, scale: 1 },
       position: "-=0.24",
     });
+  }
+
+  private uploadedFilesMessageFromCursorFile(
+    cursorFile: HTMLElement,
+    files: UploadedFileConfig[],
+  ): gsap.core.Timeline {
+    const content = this.createUploadedFiles(files);
+    const message = this.claimUserComponentMessage("file", content);
+    const targets = Array.from(content.querySelectorAll<HTMLElement>(".wa-uploaded-file"));
+    const extras = Array.from(content.querySelectorAll<HTMLElement>(".wa-uploaded-files__summary"));
+
+    return this.revealDroppedFilesMessage(cursorFile, message, targets, extras);
   }
 
   pulse(target: HTMLElement | string): gsap.core.Timeline {
@@ -959,6 +1005,110 @@ export class ChatActor {
     });
 
     return tl;
+  }
+
+  private revealDroppedFilesMessage(
+    cursorFile: HTMLElement,
+    message: HTMLElement,
+    targets: HTMLElement[],
+    extras: HTMLElement[] = [],
+  ): gsap.core.Timeline {
+    const revealTargets = [...targets, ...extras];
+    let clones: FileLandingClone[] = [];
+
+    if (!targets.length || !cursorFile.isConnected) {
+      return this.revealMessageWithChildren(message, revealTargets, {
+        autoAlpha: 1,
+        y: 0,
+        scale: 1,
+        duration: motionDuration(0.24),
+        ease: "power2.out",
+        stagger: FILE_DROP_LANDING.stagger,
+      });
+    }
+
+    gsap.set(revealTargets, { autoAlpha: 0 });
+
+    return gsap
+      .timeline()
+      .add(this.revealMessage(message))
+      .call(() => {
+        clones = this.createFileLandingClones(cursorFile, targets);
+        gsap.set(cursorFile, { autoAlpha: 0 });
+      })
+      .to(
+        clones.map((clone) => clone.el),
+        {
+          x: (index) => this.getRootLocalRect(clones[index].targetRect).left,
+          y: (index) => this.getRootLocalRect(clones[index].targetRect).top,
+          scaleX: (index) => clones[index].targetRect.width / Math.max(1, clones[index].sourceRect.width),
+          scaleY: (index) => clones[index].targetRect.height / Math.max(1, clones[index].sourceRect.height),
+          rotation: 0,
+          duration: FILE_DROP_LANDING.duration,
+          ease: FILE_DROP_LANDING.ease,
+          stagger: FILE_DROP_LANDING.stagger,
+          overwrite: "auto",
+        },
+        "-=0.06",
+      )
+      .call(() => {
+        gsap.set(revealTargets, { autoAlpha: 1, y: 0, scale: 1 });
+        clones.forEach((clone) => clone.el.remove());
+        cursorFile.remove();
+      });
+  }
+
+  private createFileLandingClones(cursorFile: HTMLElement, targets: HTMLElement[]): FileLandingClone[] {
+    const sourceCards = this.getCursorFileCards(cursorFile);
+
+    return targets.map((target, index) => {
+      const sourceCard = sourceCards[Math.min(index, sourceCards.length - 1)];
+      const sourceRect = sourceCard.getBoundingClientRect();
+      const targetRect = target.getBoundingClientRect();
+      const sourceLocalRect = this.getRootLocalRect(sourceRect);
+      const clone = sourceCard.cloneNode(true) as HTMLElement;
+
+      clone.classList.add("wa-file-landing-clone");
+      clone.dataset.fileLandingClone = "";
+      this.root.append(clone);
+      gsap.set(clone, {
+        position: "absolute",
+        zIndex: 21,
+        top: 0,
+        left: 0,
+        width: sourceRect.width,
+        height: sourceRect.height,
+        x: sourceLocalRect.left,
+        y: sourceLocalRect.top,
+        scaleX: 1,
+        scaleY: 1,
+        rotation: this.getCursorFileCardRotation(index, sourceCards.length),
+        transformOrigin: "left top",
+        pointerEvents: "none",
+        margin: 0,
+        autoAlpha: 1,
+      });
+
+      return { el: clone, sourceRect, targetRect };
+    });
+  }
+
+  private getCursorFileCards(cursorFile: HTMLElement): HTMLElement[] {
+    const cards = Array.from(cursorFile.querySelectorAll<HTMLElement>(".wa-cursor-file__card"));
+    return cards.length ? cards : [cursorFile];
+  }
+
+  private getCursorFileCardRotation(index: number, sourceCount: number): number {
+    return sourceCount > 1 ? FILE_DROP_LANDING.rotations[index] ?? 0 : 0;
+  }
+
+  private getRootLocalRect(rect: DOMRect): Pick<DOMRect, "left" | "top"> {
+    const rootRect = this.root.getBoundingClientRect();
+
+    return {
+      left: rect.left - rootRect.left,
+      top: rect.top - rootRect.top,
+    };
   }
 
   private revealMessageWithChildren(
