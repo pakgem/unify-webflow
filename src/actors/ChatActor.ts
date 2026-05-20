@@ -42,7 +42,10 @@ type CursorFileFollowOffset = {
 type FileLandingClone = {
   el: HTMLElement;
   sourceRect: DOMRect;
-  targetRect: DOMRect;
+  target: HTMLElement;
+  startX: number;
+  startY: number;
+  startRotation: number;
 };
 
 type DropAreaOptions = {
@@ -1167,6 +1170,8 @@ export class ChatActor {
   ): gsap.core.Timeline {
     const revealTargets = [...targets, ...extras];
     let clones: FileLandingClone[] = [];
+    const progress = { value: 0 };
+    let scrollTarget = 0;
 
     if (!targets.length || !cursorFile.isConnected) {
       return this.revealMessageWithChildren(message, revealTargets, {
@@ -1179,34 +1184,69 @@ export class ChatActor {
       });
     }
 
-    gsap.set(revealTargets, { autoAlpha: 0 });
+    gsap.set(revealTargets, { autoAlpha: 0, y: 0, scale: 1 });
 
     return gsap
       .timeline()
-      .add(this.revealMessage(message))
       .call(() => {
+        this.scrollTween?.kill();
+        this.scrollTween = null;
+        message.style.display = "grid";
+        gsap.set(message, {
+          autoAlpha: 1,
+          y: 0,
+          scale: 1,
+          transformOrigin: "right center",
+        });
         clones = this.createFileLandingClones(cursorFile, targets);
         gsap.set(cursorFile, { autoAlpha: 0 });
+        scrollTarget = this.getMessageScrollTarget(message);
       })
+      .to(
+        this.thread,
+        {
+          scrollTop: () => scrollTarget,
+          duration: FILE_DROP_LANDING.duration,
+          ease: FILE_DROP_LANDING.ease,
+          overwrite: "auto",
+        },
+        0,
+      )
+      .to(
+        progress,
+        {
+          value: 1,
+          duration: FILE_DROP_LANDING.duration,
+          ease: FILE_DROP_LANDING.ease,
+          onUpdate: () => this.renderFileLandingClones(clones, progress.value),
+        },
+        0,
+      )
+      .to(
+        revealTargets,
+        {
+          autoAlpha: 1,
+          duration: motionDuration(0.1),
+          ease: "power1.out",
+          stagger: FILE_DROP_LANDING.stagger,
+        },
+        `-=${motionDuration(0.13)}`,
+      )
       .to(
         clones.map((clone) => clone.el),
         {
-          x: (index) => this.getRootLocalRect(clones[index].targetRect).left,
-          y: (index) => this.getRootLocalRect(clones[index].targetRect).top,
-          scaleX: (index) => clones[index].targetRect.width / Math.max(1, clones[index].sourceRect.width),
-          scaleY: (index) => clones[index].targetRect.height / Math.max(1, clones[index].sourceRect.height),
-          rotation: 0,
-          duration: FILE_DROP_LANDING.duration,
-          ease: FILE_DROP_LANDING.ease,
+          autoAlpha: 0,
+          duration: motionDuration(0.1),
+          ease: "power1.out",
           stagger: FILE_DROP_LANDING.stagger,
-          overwrite: "auto",
         },
-        "-=0.06",
+        "<",
       )
       .call(() => {
         gsap.set(revealTargets, { autoAlpha: 1, y: 0, scale: 1 });
         clones.forEach((clone) => clone.el.remove());
         cursorFile.remove();
+        this.animateMessageScrollIntoView(message);
       });
   }
 
@@ -1216,9 +1256,9 @@ export class ChatActor {
     return targets.map((target, index) => {
       const sourceCard = sourceCards[Math.min(index, sourceCards.length - 1)];
       const sourceRect = sourceCard.getBoundingClientRect();
-      const targetRect = target.getBoundingClientRect();
       const sourceLocalRect = this.getRootLocalRect(sourceRect);
       const clone = sourceCard.cloneNode(true) as HTMLElement;
+      const startRotation = this.getCursorFileCardRotation(index, sourceCards.length);
 
       clone.classList.add("wa-file-landing-clone");
       clone.dataset.fileLandingClone = "";
@@ -1234,15 +1274,39 @@ export class ChatActor {
         y: sourceLocalRect.top,
         scaleX: 1,
         scaleY: 1,
-        rotation: this.getCursorFileCardRotation(index, sourceCards.length),
+        rotation: startRotation,
         transformOrigin: "left top",
         pointerEvents: "none",
         margin: 0,
         autoAlpha: 1,
       });
 
-      return { el: clone, sourceRect, targetRect };
+      return {
+        el: clone,
+        sourceRect,
+        target,
+        startX: sourceLocalRect.left,
+        startY: sourceLocalRect.top,
+        startRotation,
+      };
     });
+  }
+
+  private renderFileLandingClones(clones: FileLandingClone[], progress: number): void {
+    for (const clone of clones) {
+      const targetRect = clone.target.getBoundingClientRect();
+      const targetLocalRect = this.getRootLocalRect(targetRect);
+      const targetScaleX = targetRect.width / Math.max(1, clone.sourceRect.width);
+      const targetScaleY = targetRect.height / Math.max(1, clone.sourceRect.height);
+
+      gsap.set(clone.el, {
+        x: this.interpolate(clone.startX, targetLocalRect.left, progress),
+        y: this.interpolate(clone.startY, targetLocalRect.top, progress),
+        scaleX: this.interpolate(1, targetScaleX, progress),
+        scaleY: this.interpolate(1, targetScaleY, progress),
+        rotation: this.interpolate(clone.startRotation, 0, progress),
+      });
+    }
   }
 
   private getCursorFileCards(cursorFile: HTMLElement): HTMLElement[] {
@@ -1261,6 +1325,10 @@ export class ChatActor {
       left: rect.left - rootRect.left,
       top: rect.top - rootRect.top,
     };
+  }
+
+  private interpolate(from: number, to: number, progress: number): number {
+    return from + (to - from) * progress;
   }
 
   private revealMessageWithChildren(
