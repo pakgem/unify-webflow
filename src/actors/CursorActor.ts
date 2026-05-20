@@ -36,6 +36,23 @@ const HISTORY_PARK = {
 const SVG_NS = "http://www.w3.org/2000/svg";
 const DEFAULT_CURSOR_POINT_ANGLE = -135;
 const MIMIC_ROTATION_SMOOTHING = 0.34;
+const TAIL_WAG_DURATION = "420ms";
+const TAIL_WAG_KEY_TIMES = "0;0.34;0.5;0.68;1";
+const TAIL_WAG_EASING = "0.26 0.95 0.38 1;0.2 0 0.38 1;0.22 0 0.34 1;0.42 0 0.32 1";
+const TAIL_WAG_FILL_PATHS = [
+  "M8.5 20.4C8.9 25.4 7.9 31.2 6.1 35.6L11.1 37.4C13.2 31.5 14.5 25.2 14.5 20.4Z",
+  "M8.5 20.4C10.7 25.2 15.4 31 20.6 35.6L23.1 31.4C18 27.9 15 24.4 14.5 20.4Z",
+  "M8.5 20.4C10.4 25.2 14.5 30.8 18.4 35.2L21.5 32.5C17.3 28.5 14.9 24.5 14.5 20.4Z",
+  "M8.5 20.4C8.6 25.3 6.8 31 3.5 34.7L8.1 37.2C11.1 31.6 14 25.3 14.5 20.4Z",
+  "M8.5 20.4C8.9 25.4 7.9 31.2 6.1 35.6L11.1 37.4C13.2 31.5 14.5 25.2 14.5 20.4Z",
+];
+const TAIL_WAG_OUTLINE_PATHS = [
+  "M8.5 20.4C8.9 25.4 7.9 31.2 6.1 35.6L11.1 37.4C13.2 31.5 14.5 25.2 14.5 20.4",
+  "M8.5 20.4C10.7 25.2 15.4 31 20.6 35.6L23.1 31.4C18 27.9 15 24.4 14.5 20.4",
+  "M8.5 20.4C10.4 25.2 14.5 30.8 18.4 35.2L21.5 32.5C17.3 28.5 14.9 24.5 14.5 20.4",
+  "M8.5 20.4C8.6 25.3 6.8 31 3.5 34.7L8.1 37.2C11.1 31.6 14 25.3 14.5 20.4",
+  "M8.5 20.4C8.9 25.4 7.9 31.2 6.1 35.6L11.1 37.4C13.2 31.5 14.5 25.2 14.5 20.4",
+];
 
 export class CursorActor {
   readonly el: HTMLElement;
@@ -896,11 +913,13 @@ export function createMimicCursorSvg(): SVGSVGElement {
 
   const tailShape = document.createElementNS(SVG_NS, "path");
   tailShape.classList.add("wa-cursor-svg__tail-shape");
-  tailShape.setAttribute("d", "M8.7 20.5L14.4 20.5L18.2 34.6L13.5 36.2Z");
+  tailShape.setAttribute("d", TAIL_WAG_FILL_PATHS[0]);
+  tailShape.append(createTailPathAnimation(TAIL_WAG_FILL_PATHS));
 
   const tailOutline = document.createElementNS(SVG_NS, "path");
   tailOutline.classList.add("wa-cursor-svg__tail-outline");
-  tailOutline.setAttribute("d", "M8.7 20.5L13.5 36.2L18.2 34.6L14.4 20.5");
+  tailOutline.setAttribute("d", TAIL_WAG_OUTLINE_PATHS[0]);
+  tailOutline.append(createTailPathAnimation(TAIL_WAG_OUTLINE_PATHS));
 
   tail.append(tailShape, tailOutline);
 
@@ -914,6 +933,19 @@ export function createMimicCursorSvg(): SVGSVGElement {
 
   svg.append(tail, body, bodyOutline);
   return svg;
+}
+
+function createTailPathAnimation(values: string[]): SVGElement {
+  const animation = document.createElementNS(SVG_NS, "animate");
+
+  animation.setAttribute("attributeName", "d");
+  animation.setAttribute("dur", TAIL_WAG_DURATION);
+  animation.setAttribute("repeatCount", "indefinite");
+  animation.setAttribute("calcMode", "spline");
+  animation.setAttribute("keyTimes", TAIL_WAG_KEY_TIMES);
+  animation.setAttribute("keySplines", TAIL_WAG_EASING);
+  animation.setAttribute("values", values.join(";"));
+  return animation;
 }
 
 function interpolatePoint(start: Point, end: Point, amount: number): Point {
