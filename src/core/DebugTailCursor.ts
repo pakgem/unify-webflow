@@ -5,8 +5,8 @@ import type { Point } from "./types";
 const DEBUG_TAIL_CURSOR = {
   offsetX: 22,
   offsetY: 18,
-  smoothing: 0.46,
-  settleDistance: 0.25,
+  smoothing: 0.62,
+  settleDistance: 0.08,
 };
 
 export class DebugTailCursor {

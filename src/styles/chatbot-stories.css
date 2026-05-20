@@ -3698,9 +3698,16 @@ body {
 .wa-cursor-svg__tail-outline,
 .wa-cursor-svg__body-outline {
   stroke: #fff;
-  stroke-linecap: round;
   stroke-linejoin: round;
   stroke-width: 1.65;
+}
+
+.wa-cursor-svg__tail-outline {
+  stroke-linecap: butt;
+}
+
+.wa-cursor-svg__body-outline {
+  stroke-linecap: round;
 }
 
 .wa-cursor-svg__tail-outline,
