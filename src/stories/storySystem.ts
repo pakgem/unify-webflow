@@ -132,6 +132,7 @@ export type StoryStep =
   | { kind: "enrichmentPanel"; config: EnrichmentConfig; at?: TimelinePosition }
   | { kind: "strategyPlans"; plans: StrategyPlanConfig[]; at?: TimelinePosition }
   | { kind: "dataSourcesGrid"; config: DataSourceGridConfig; at?: TimelinePosition }
+  | { kind: "marketingDataSourcesGrid"; config: DataSourceGridConfig; at?: TimelinePosition }
   | { kind: "sequenceEngagement"; config: SequenceEngagementConfig; at?: TimelinePosition }
   | { kind: "cursorMove"; target: ResponsiveTarget; options?: CursorMoveOptions; at?: TimelinePosition }
   | { kind: "cursorDrag"; target: ResponsiveTarget; options?: CursorMoveOptions; at?: TimelinePosition }
@@ -239,6 +240,16 @@ function addStep(
         step.at,
         chatThreadSelector(`[data-data-sources-grid="${escapeAttributeValue(step.config.id)}"]`),
         `sources-${step.config.id}`,
+      );
+      return;
+    case "marketingDataSourcesGrid":
+      addComponentWithAttention(
+        tl,
+        ctx,
+        ctx.chat.marketingDataSourcesGrid(step.config),
+        step.at,
+        `[data-marketing-data-sources-grid="${escapeAttributeValue(step.config.id)}"]`,
+        `marketing-sources-${step.config.id}`,
       );
       return;
     case "sequenceEngagement":

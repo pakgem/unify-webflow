@@ -43,6 +43,7 @@ type BuilderDataSourcesComponent = {
   title: string;
   subtitle: string;
   sources: Array<{
+    category?: string;
     name: string;
     detail: string;
   }>;
@@ -828,6 +829,10 @@ export class StoryBuilder {
       const sourceCard = document.createElement("div");
       sourceCard.className = "wa-builder-data-sources-editor__card";
       sourceCard.append(
+        this.createComponentInput(step.id, "sourceCategory", source.category ?? "Data partners", {
+          itemIndex,
+          className: "wa-builder-data-sources-editor__category",
+        }),
         this.createComponentInput(step.id, "sourceName", source.name, {
           itemIndex,
           className: "wa-builder-data-sources-editor__name",
@@ -1669,8 +1674,8 @@ function createSeedSteps(storyId: string, fallbackSummary: string): BuilderStep[
       },
       {
         kind: "component",
-        text: "Grid: full data marketplace",
-        note: "Editable list of the source categories shown at the end of the story.",
+        text: "Grid: specific vendor partners",
+        note: "Marketing page grid of vendor partners grouped by data area.",
         component: createDataSourcesComponent(),
       },
     ],
@@ -1879,32 +1884,48 @@ function createEnrichmentComponent(): BuilderEnrichmentComponent {
 function createDataSourcesComponent(): BuilderDataSourcesComponent {
   return {
     kind: "dataSources",
-    title: "Explore the full data marketplace",
-    subtitle: "Search every major GTM data category from one natural-language prompt.",
+    title: "Specific vendors by data area",
+    subtitle: "Unify routes each search across the right partner sources for the job.",
     sources: [
       {
-        name: "B2B contacts",
-        detail: "Verified people, roles, titles, emails, and mobile phones.",
+        category: "People and contacts",
+        name: "Apollo",
+        detail: "Contacts, roles, emails, and outbound-ready people data.",
       },
       {
-        name: "Companies",
-        detail: "Firmographics, headcount, revenue, funding, and hiring signals.",
+        category: "People and contacts",
+        name: "ZoomInfo",
+        detail: "Verified B2B contact and account coverage.",
       },
       {
-        name: "E-commerce",
-        detail: "Stores, platforms, category, traffic, and product signals.",
+        category: "Company intelligence",
+        name: "Crunchbase",
+        detail: "Funding rounds, investor signals, and company growth events.",
       },
       {
-        name: "Local businesses",
-        detail: "Locations, ratings, categories, hours, and regional intent.",
+        category: "Company intelligence",
+        name: "LinkedIn",
+        detail: "Hiring movement, role changes, headcount, and profile signals.",
       },
       {
-        name: "Technographics",
-        detail: "Installed tools, stack changes, pixels, and infrastructure.",
+        category: "Commerce and local",
+        name: "Store Leads",
+        detail: "E-commerce stores, platforms, categories, and growth signals.",
       },
       {
-        name: "Intent signals",
-        detail: "News, job posts, buying triggers, web changes, and enrichment.",
+        category: "Commerce and local",
+        name: "Google Business Profile",
+        detail: "Local business categories, locations, ratings, and presence.",
+      },
+      {
+        category: "Technographics and enrichment",
+        name: "BuiltWith",
+        detail: "Installed tools, web stack, pixels, and infrastructure data.",
+      },
+      {
+        category: "Technographics and enrichment",
+        name: "FullEnrich",
+        detail: "Waterfall enrichment for emails, phones, and missing fields.",
       },
     ],
   };
@@ -2046,6 +2067,7 @@ function updateComponentValue(
       const source = component.sources[indexes.itemIndex];
       if (!source) return;
 
+      if (field === "sourceCategory") source.category = value;
       if (field === "sourceName") source.name = value;
       if (field === "sourceDetail") source.detail = value;
     }

@@ -53,6 +53,10 @@ type ComponentKind =
   | "sequence"
   | "drop";
 type MessageKind = ComponentKind | "file";
+type DataSourceGroup = {
+  category: string;
+  sources: Array<DataSourceGridConfig["sources"][number]>;
+};
 type ThinkingSequenceOptions = {
   hold: number;
   itemStartY: number;
@@ -172,8 +176,17 @@ const CHAT_SCROLL_MOTION = {
   followEase: "power2.out",
 };
 
+const MARKETING_PAGE_MOTION = {
+  threadY: -176,
+  threadOpacity: 0.1,
+  revealDuration: motionDuration(0.62),
+  revealEase: "power3.inOut",
+  cardDuration: motionDuration(0.28),
+};
+
 const STREAM_SCROLL_INTERVAL_MS = 96;
 const TRANSIENT_ELEMENT_SELECTOR = ".wa-cursor-file, .wa-csv-drop";
+const MARKETING_PANEL_SELECTOR = "[data-marketing-data-sources-grid]";
 const CURSOR_FILE_ENTRY = {
   offscreenMargin: 96,
   pullInDuration: motionDuration(0.38),
@@ -269,6 +282,7 @@ const COMPONENT_CHILD_REVEAL = {
 
 export class ChatActor {
   private chatShell: HTMLElement;
+  private chatBody: HTMLElement;
   private thread: HTMLElement;
   private composerText: HTMLElement;
   private composer: HTMLElement;
@@ -290,6 +304,7 @@ export class ChatActor {
 
   constructor(private root: HTMLElement) {
     this.chatShell = this.required("[data-chat-shell]");
+    this.chatBody = this.required(".wa-chat-shell__body");
     this.thread = this.required("[data-chat-thread]");
     this.composer = this.required("[data-chat-input]");
     this.composerText = this.required("[data-composer-text]");
@@ -303,6 +318,7 @@ export class ChatActor {
     this.root.querySelectorAll(TRANSIENT_ELEMENT_SELECTOR).forEach((el) => {
       el.remove();
     });
+    this.clearMarketingPanels();
   }
 
   reset(): void {
@@ -310,10 +326,11 @@ export class ChatActor {
     this.scrollTween?.kill();
     this.scrollTween = null;
     this.clearTransientElements();
+    this.clearMarketingPanels();
     this.messageIndex = 0;
     this.cardIndex = 0;
     this.composerText.textContent = "";
-    gsap.killTweensOf([this.composer, this.composerText]);
+    gsap.killTweensOf([this.composer, this.composerText, this.thread]);
     this.setComposerFocusState(false);
     this.setComposerVisibleState(false);
     this.signupEmail.textContent = "";
@@ -715,6 +732,96 @@ export class ChatActor {
     const grid = this.createDataSourcesGrid(config);
 
     return this.revealComponentItems("sources", grid, ".wa-data-source-card", COMPONENT_CHILD_REVEAL.smallCard);
+  }
+
+  marketingDataSourcesGrid(config: DataSourceGridConfig): gsap.core.Timeline {
+    const page = this.createMarketingDataSourcesGrid(config);
+    const cards = Array.from(page.querySelectorAll<HTMLElement>(".wa-data-source-card"));
+    const groups = Array.from(page.querySelectorAll<HTMLElement>(".wa-data-source-group"));
+    const header = page.querySelector<HTMLElement>(".wa-data-source-grid__header");
+    const introTargets = [header, ...groups, ...cards].filter((el): el is HTMLElement => Boolean(el));
+
+    return gsap
+      .timeline()
+      .call(() => {
+        this.clearMarketingPanels();
+        this.stopScrollMotion();
+        this.chatBody.append(page);
+      })
+      .set(page, {
+        autoAlpha: 0,
+        y: 72,
+        scale: 0.985,
+        transformOrigin: "center bottom",
+      })
+      .set(introTargets, {
+        autoAlpha: 0,
+        y: 12,
+      })
+      .to(
+        this.thread,
+        {
+          scrollTop: () => this.getThreadBottomScrollTarget(),
+          duration: MARKETING_PAGE_MOTION.revealDuration,
+          ease: MARKETING_PAGE_MOTION.revealEase,
+          overwrite: "auto",
+        },
+        0,
+      )
+      .to(
+        this.thread,
+        {
+          y: MARKETING_PAGE_MOTION.threadY,
+          autoAlpha: MARKETING_PAGE_MOTION.threadOpacity,
+          duration: MARKETING_PAGE_MOTION.revealDuration,
+          ease: MARKETING_PAGE_MOTION.revealEase,
+          overwrite: "auto",
+        },
+        0.04,
+      )
+      .to(
+        page,
+        {
+          autoAlpha: 1,
+          y: 0,
+          scale: 1,
+          duration: MARKETING_PAGE_MOTION.revealDuration,
+          ease: MARKETING_PAGE_MOTION.revealEase,
+        },
+        0.16,
+      )
+      .to(
+        header,
+        {
+          autoAlpha: 1,
+          y: 0,
+          duration: motionDuration(0.28),
+          ease: "power2.out",
+        },
+        0.28,
+      )
+      .to(
+        groups,
+        {
+          autoAlpha: 1,
+          y: 0,
+          duration: motionDuration(0.3),
+          ease: "power2.out",
+          stagger: 0.04,
+        },
+        0.36,
+      )
+      .to(
+        cards,
+        {
+          autoAlpha: 1,
+          y: 0,
+          duration: MARKETING_PAGE_MOTION.cardDuration,
+          ease: "power2.out",
+          stagger: 0.025,
+        },
+        0.42,
+      );
   }
 
   outreachStyleProfile(config: OutreachStyleProfileConfig): gsap.core.Timeline {
@@ -1934,30 +2041,85 @@ export class ChatActor {
     list.className = "wa-data-source-grid__list";
 
     config.sources.forEach((source) => {
-      const card = document.createElement("article");
-      card.className = "wa-data-source-card";
-      card.dataset.dataSource = source.id;
-
-      const icon = document.createElement("span");
-      icon.className = "wa-data-source-card__icon";
-      icon.setAttribute("aria-hidden", "true");
-
-      const copy = document.createElement("span");
-      copy.className = "wa-data-source-card__copy";
-
-      const name = document.createElement("strong");
-      name.textContent = source.name;
-
-      const detail = document.createElement("span");
-      detail.textContent = source.detail;
-
-      copy.append(name, detail);
-      card.append(icon, copy);
-      list.append(card);
+      list.append(this.createDataSourceCard(source));
     });
 
     section.append(header, list);
     return section;
+  }
+
+  private createMarketingDataSourcesGrid(config: DataSourceGridConfig): HTMLElement {
+    const section = this.createDataSourcesGrid(config);
+    const groupedList = document.createElement("div");
+    const header = section.querySelector<HTMLElement>(".wa-data-source-grid__header");
+
+    section.classList.add("wa-data-source-grid--marketing");
+    section.dataset.marketingDataSourcesGrid = config.id;
+    groupedList.className = "wa-data-source-grid__groups";
+
+    for (const groupConfig of this.groupDataSources(config.sources)) {
+      const group = document.createElement("section");
+      const label = document.createElement("h4");
+      const list = document.createElement("div");
+
+      group.className = "wa-data-source-group";
+      label.className = "wa-data-source-group__title";
+      label.textContent = groupConfig.category;
+      list.className = "wa-data-source-grid__list";
+
+      groupConfig.sources.forEach((source) => {
+        list.append(this.createDataSourceCard(source));
+      });
+
+      group.append(label, list);
+      groupedList.append(group);
+    }
+
+    section.replaceChildren(...[header, groupedList].filter((el): el is HTMLElement => Boolean(el)));
+    return section;
+  }
+
+  private groupDataSources(sources: DataSourceGridConfig["sources"]): DataSourceGroup[] {
+    const groups: DataSourceGroup[] = [];
+    const groupsByCategory = new Map<string, DataSourceGroup>();
+
+    sources.forEach((source) => {
+      const category = source.category ?? "Data partners";
+      let group = groupsByCategory.get(category);
+
+      if (!group) {
+        group = { category, sources: [] };
+        groupsByCategory.set(category, group);
+        groups.push(group);
+      }
+
+      group.sources.push(source);
+    });
+
+    return groups;
+  }
+
+  private createDataSourceCard(source: DataSourceGridConfig["sources"][number]): HTMLElement {
+    const card = document.createElement("article");
+    card.className = "wa-data-source-card";
+    card.dataset.dataSource = source.id;
+
+    const icon = document.createElement("span");
+    icon.className = "wa-data-source-card__icon";
+    icon.setAttribute("aria-hidden", "true");
+
+    const copy = document.createElement("span");
+    copy.className = "wa-data-source-card__copy";
+
+    const name = document.createElement("strong");
+    name.textContent = source.name;
+
+    const detail = document.createElement("span");
+    detail.textContent = source.detail;
+
+    copy.append(name, detail);
+    card.append(icon, copy);
+    return card;
   }
 
   private createOutreachStyleProfile(config: OutreachStyleProfileConfig): HTMLElement {
@@ -2202,6 +2364,13 @@ export class ChatActor {
 
   private clearCustomResults(): void {
     this.root.querySelectorAll("[data-result-grid] .wa-strategy-plan, [data-result-grid] .wa-data-table, [data-result-grid] .wa-enrichment-panel").forEach((el) => {
+      el.remove();
+    });
+  }
+
+  private clearMarketingPanels(): void {
+    this.root.querySelectorAll<HTMLElement>(MARKETING_PANEL_SELECTOR).forEach((el) => {
+      gsap.killTweensOf(el);
       el.remove();
     });
   }

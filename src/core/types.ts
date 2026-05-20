@@ -87,6 +87,7 @@ export type DataSourceGridConfig = {
     id: string;
     name: string;
     detail: string;
+    category?: string;
   }>;
 };
 
