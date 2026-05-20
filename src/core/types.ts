@@ -192,6 +192,7 @@ export type DataTableConfig = {
   actions?: Array<{
     id: string;
     label: string;
+    icon?: "dialer" | "email";
     tooltip?: string;
     badge?: string;
     variant?: "primary" | "secondary";

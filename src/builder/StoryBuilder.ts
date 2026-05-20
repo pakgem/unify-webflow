@@ -1762,7 +1762,7 @@ function createSeedSteps(storyId: string, fallbackSummary: string): BuilderStep[
           ["Owen Lee", "Linear", "Sales Lead", "2h ago", "Demo page"],
         ]),
       },
-      { kind: "cursor", text: "Cursor clicks page 2, then page 1, then hovers the power dialer action.", note: "Tooltip reads “Start power dialing session”; dialer badge reads Coming soon." },
+      { kind: "cursor", text: "Cursor clicks page 2, then page 1, hovers the dialer icon, then clicks the email icon.", note: "Dialer tooltip reads “Coming soon”; email tooltip reads “Build outreach sequence.”" },
     ],
     "csv-import-cleanup": [
       { kind: "cursor", text: "Cursor exits right and drags a CSV into the browser.", note: "Drop overlay appears as soon as the file enters." },

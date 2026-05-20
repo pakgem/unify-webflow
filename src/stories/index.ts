@@ -692,13 +692,15 @@ const WEBSITE_VISITOR_SALES_TABLE = {
     {
       id: "power-dialer",
       label: "Power dialer",
-      tooltip: "Start power dialing session",
-      badge: "Coming soon",
+      icon: "dialer",
+      tooltip: "Coming soon",
       variant: "primary",
     },
     {
       id: "email-sequence",
       label: "Create outreach sequence",
+      icon: "email",
+      tooltip: "Build outreach sequence",
       variant: "secondary",
     },
   ],
@@ -979,6 +981,10 @@ export const defaultStories: StoryDefinition[] = [
         '[data-data-table="website-visitors-sales"] [data-table-action="power-dialer"]',
         "center",
       );
+      const emailSequenceTarget = responsiveElementTarget(
+        '[data-data-table="website-visitors-sales"] [data-table-action="email-sequence"]',
+        "center",
+      );
 
       return buildStorySteps(ctx, [
         {
@@ -1018,6 +1024,16 @@ export const defaultStories: StoryDefinition[] = [
           at: "+=0.24",
         },
         { kind: "custom", build: () => ctx.chat.dataTableActionTooltip("website-visitors-sales", "power-dialer", true), at: "<+=0.04" },
+        { kind: "custom", build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat }), at: "+=0.12" },
+        { kind: "custom", build: () => ctx.chat.dataTableActionTooltip("website-visitors-sales", "power-dialer", false), at: "<" },
+        {
+          kind: "cursorMove",
+          target: emailSequenceTarget,
+          options: { mode: "pointer", intent: "hover", speed: "normal", label: "hover-email-sequence" },
+        },
+        { kind: "custom", build: () => ctx.chat.dataTableActionTooltip("website-visitors-sales", "email-sequence", true), at: "<+=0.04" },
+        { kind: "cursorClick", at: "+=0.18" },
+        { kind: "status", text: "Building outreach sequence", at: "<" },
       ]);
     },
   },

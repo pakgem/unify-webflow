@@ -473,6 +473,16 @@ export class ChatActor {
     return tl;
   }
 
+  sendComposerText(): gsap.core.Timeline {
+    return gsap.timeline().to(this.composerText, {
+      autoAlpha: 0,
+      y: -9,
+      duration: motionDuration(0.18),
+      ease: "power2.out",
+      overwrite: "auto",
+    });
+  }
+
   setComposerFocus(focused: boolean): gsap.core.Timeline {
     return gsap.timeline().to(
       {},
@@ -2553,10 +2563,7 @@ export class ChatActor {
     button.dataset.tooltipVisible = "false";
     button.setAttribute("aria-label", action.tooltip ?? action.label);
 
-    const label = document.createElement("span");
-    label.className = "wa-data-table-action__label";
-    label.textContent = action.label;
-    button.append(label);
+    button.append(this.createDataTableActionIcon(action.icon ?? "email"));
 
     if (action.badge) {
       const badge = document.createElement("span");
@@ -2573,6 +2580,31 @@ export class ChatActor {
     }
 
     return button;
+  }
+
+  private createDataTableActionIcon(iconName: NonNullable<NonNullable<DataTableConfig["actions"]>[number]["icon"]>): SVGSVGElement {
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    const paths = iconName === "dialer"
+      ? [
+          "M7.2 5.6c.5 4 2.7 6.2 6.2 7.2l1.9-1.9c.3-.3.7-.4 1.1-.2l3.1 1.2c.5.2.8.6.8 1.1v3.1c0 .7-.5 1.2-1.2 1.2C10 17.3 2.7 10 2.7 1.9 2.7 1.2 3.2.7 3.9.7H7c.5 0 .9.3 1.1.8l1.2 3.1c.1.4.1.8-.2 1.1L7.2 7.6",
+        ]
+      : [
+          "M3.5 5.5h17v13h-17z",
+          "m4.2 6.1 4.9 3.8a2.2 2.2 0 0 0 2.8 0l4.9-3.8",
+        ];
+
+    svg.classList.add("wa-data-table-action__icon");
+    svg.setAttribute("viewBox", "0 0 24 24");
+    svg.setAttribute("aria-hidden", "true");
+    svg.setAttribute("focusable", "false");
+
+    for (const d of paths) {
+      const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      path.setAttribute("d", d);
+      svg.append(path);
+    }
+
+    return svg;
   }
 
   private findDataTable(tableId: string): HTMLElement | null {
