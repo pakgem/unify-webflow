@@ -16,7 +16,8 @@ type CursorScanOptions = {
 };
 
 const POINTER_TARGET_SELECTOR = "button, a, [role='button'], [data-send-button], [data-result-action]";
-const TEXT_TARGET_SELECTOR = "[data-chat-input], [data-signup-field], input, textarea, [contenteditable='true']";
+const TEXT_TARGET_SELECTOR =
+  "[data-chat-input][data-visible='true'], [data-signup-field], input, textarea, [contenteditable='true']";
 const IDLE_FLOAT = {
   delay: 0.42,
   returnDuration: 0.18,
@@ -845,15 +846,17 @@ export class CursorActor {
   private getModeForLocalPoint(point: Point, rootRect: DOMRect): CursorMode {
     this.refreshModeTargetCache();
 
-    if (this.findLocalHit(this.pointerTargets, point, rootRect)) return "pointer";
-    if (this.findLocalHit(this.textTargets, point, rootRect)) return "text";
+    if (this.findLocalHit(this.pointerTargets, point, rootRect, POINTER_TARGET_SELECTOR)) return "pointer";
+    if (this.findLocalHit(this.textTargets, point, rootRect, TEXT_TARGET_SELECTOR)) return "text";
 
     return "default";
   }
 
-  private findLocalHit(candidates: Element[], point: Point, rootRect: DOMRect): Element | null {
+  private findLocalHit(candidates: Element[], point: Point, rootRect: DOMRect, selector: string): Element | null {
     return (
       candidates.find((candidate) => {
+        if (!candidate.matches(selector)) return false;
+
         const style = window.getComputedStyle(candidate);
         if (style.display === "none" || style.visibility === "hidden" || Number(style.opacity) < 0.01) return false;
 
@@ -885,6 +888,8 @@ export class CursorActor {
       this.modeTargetsDirty = true;
     });
     this.targetObserver.observe(this.root, {
+      attributes: true,
+      attributeFilter: ["class", "style", "data-visible"],
       childList: true,
       subtree: true,
     });

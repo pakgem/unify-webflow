@@ -186,10 +186,10 @@ const THINKING_STEP_FOLD = {
 
 const COMPOSER_MOTION = {
   hiddenY: 0,
-  hiddenScaleX: 0.62,
-  hiddenScaleY: 0.42,
+  hiddenScaleX: 0.58,
+  hiddenScaleY: 0.58,
   showDuration: motionDuration(0.3),
-  hideDuration: motionDuration(0.28),
+  hideDuration: motionDuration(0.36),
   threadGap: 44,
 };
 
@@ -330,6 +330,7 @@ export class ChatActor {
   private thread: HTMLElement;
   private composerText: HTMLElement;
   private composer: HTMLElement;
+  private composerContents: HTMLElement[] = [];
   private signupScene: HTMLElement;
   private signupEmail: HTMLElement;
   private status: HTMLElement | null;
@@ -352,6 +353,9 @@ export class ChatActor {
     this.thread = this.required("[data-chat-thread]");
     this.composer = this.required("[data-chat-input]");
     this.composerText = this.required("[data-composer-text]");
+    this.composerContents = Array.from(this.composer.children).filter(
+      (child): child is HTMLElement => child instanceof HTMLElement,
+    );
     this.signupScene = this.required("[data-signup-scene]");
     this.signupEmail = this.required("[data-signup-email]");
     this.status = this.root.querySelector<HTMLElement>("[data-chat-status]");
@@ -493,6 +497,7 @@ export class ChatActor {
       overwrite: "auto",
       onStart: () => {
         this.setComposerVisibleState(true);
+        gsap.set(this.composerContents, { visibility: "visible" });
         gsap.set(this.composer, {
           display: "grid",
           opacity: 1,
@@ -529,12 +534,13 @@ export class ChatActor {
       scaleY: COMPOSER_MOTION.hiddenScaleY,
       opacity: 1,
       duration: COMPOSER_MOTION.hideDuration,
-      ease: "power2.inOut",
+      ease: "sine.inOut",
       force3D: true,
       overwrite: "auto",
       onStart: () => {
         this.setComposerFocusState(false);
         this.setComposerVisibleState(false);
+        gsap.set(this.composerContents, { visibility: "hidden" });
       },
       onComplete: () => {
         gsap.set(this.composer, { visibility: "hidden" });
@@ -544,7 +550,7 @@ export class ChatActor {
       {
         paddingBottom: CHAT_BOTTOM_CLEARANCE,
         duration: COMPOSER_MOTION.hideDuration,
-        ease: "power2.inOut",
+        ease: "sine.inOut",
         overwrite: "auto",
         onUpdate: () => this.pinThreadToBottom(),
         onComplete: () => this.pinThreadToBottom(),
@@ -556,6 +562,7 @@ export class ChatActor {
   clearComposer(): gsap.core.Timeline {
     return gsap.timeline().call(() => {
       this.composerText.textContent = "";
+      gsap.set(this.composerContents, { visibility: "visible" });
       gsap.set(this.composerText, { autoAlpha: 1, y: 0 });
     });
   }
