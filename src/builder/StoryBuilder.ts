@@ -160,6 +160,8 @@ type StoryBuilderRefs = {
 
 type StoryBuilderOptions = {
   onStorySelect?: (storyId: string) => void;
+  draftEndpoint?: string | false;
+  draftAutoSave?: boolean;
 };
 
 const STEP_KIND_LABELS: Record<BuilderStepKind, string> = {
@@ -173,6 +175,8 @@ const STEP_KIND_LABELS: Record<BuilderStepKind, string> = {
 };
 
 const ADDABLE_STEP_KINDS: BuilderStepKind[] = ["user", "assistant", "thinking", "component", "cursor", "file"];
+const DEFAULT_DRAFT_ENDPOINT = "/api/story-draft";
+const DRAFT_SAVE_DEBOUNCE_MS = 800;
 
 export class StoryBuilder {
   private refs: StoryBuilderRefs | null = null;
@@ -182,6 +186,11 @@ export class StoryBuilder {
   private listeners: Array<() => void> = [];
   private draggedStepId: string | null = null;
   private copyResetTimer: number | null = null;
+  private saveTimer: number | null = null;
+  private loadingRemoteDraft = false;
+  private pendingSaveAfterLoad = false;
+  private readonly draftEndpoint: string | false;
+  private readonly draftAutoSave: boolean;
 
   constructor(
     private root: HTMLElement,
@@ -190,6 +199,8 @@ export class StoryBuilder {
   ) {
     this.stories = createBuilderStories(sourceStories);
     this.selectedStepId = this.stories[0]?.steps[0]?.id ?? null;
+    this.draftEndpoint = options.draftEndpoint ?? DEFAULT_DRAFT_ENDPOINT;
+    this.draftAutoSave = options.draftAutoSave ?? true;
   }
 
   mount(): void {
@@ -210,6 +221,7 @@ export class StoryBuilder {
 
     this.attachEvents();
     this.render();
+    void this.loadRemoteDraft();
   }
 
   destroy(): void {
@@ -217,6 +229,8 @@ export class StoryBuilder {
     this.listeners = [];
     if (this.copyResetTimer !== null) window.clearTimeout(this.copyResetTimer);
     this.copyResetTimer = null;
+    if (this.saveTimer !== null) window.clearTimeout(this.saveTimer);
+    this.saveTimer = null;
   }
 
   private attachEvents(): void {
@@ -1596,6 +1610,99 @@ export class StoryBuilder {
         },
       }),
     );
+    this.queueRemoteSave();
+  }
+
+  private async loadRemoteDraft(): Promise<void> {
+    if (!this.draftEndpoint) return;
+
+    this.loadingRemoteDraft = true;
+    this.setStatus("loading draft");
+
+    try {
+      const response = await fetch(this.draftEndpoint, {
+        method: "GET",
+        cache: "no-store",
+        headers: { Accept: "application/json" },
+      });
+
+      if (response.status === 404) {
+        const payload = await readJsonResponse(response);
+
+        if (isRecord(payload) && payload.error === "not_found") {
+          this.setStatus("seeding database draft");
+          this.loadingRemoteDraft = false;
+          this.queueRemoteSave();
+          return;
+        }
+
+        throw new Error("draft endpoint unavailable");
+      }
+
+      if (!response.ok) {
+        throw new Error(`draft load failed with ${response.status}`);
+      }
+
+      const payload = await response.json() as unknown;
+      const remoteStories = normalizeBuilderDraftPayload(payload);
+
+      if (!remoteStories?.length) {
+        throw new Error("draft payload did not include stories");
+      }
+
+      this.stories = remoteStories;
+      this.activeStoryIndex = Math.min(this.activeStoryIndex, Math.max(0, this.stories.length - 1));
+      this.selectedStepId = this.activeStory.steps[0]?.id ?? null;
+      this.render();
+      this.setStatus("draft loaded");
+    } catch {
+      this.setStatus("database unavailable; using local draft");
+    } finally {
+      this.loadingRemoteDraft = false;
+      if (this.pendingSaveAfterLoad) {
+        this.pendingSaveAfterLoad = false;
+        this.queueRemoteSave();
+      }
+    }
+  }
+
+  private queueRemoteSave(): void {
+    if (!this.draftEndpoint || !this.draftAutoSave) return;
+
+    if (this.loadingRemoteDraft) {
+      this.pendingSaveAfterLoad = true;
+      return;
+    }
+
+    if (this.saveTimer !== null) window.clearTimeout(this.saveTimer);
+
+    this.saveTimer = window.setTimeout(() => {
+      this.saveTimer = null;
+      void this.saveRemoteDraft();
+    }, DRAFT_SAVE_DEBOUNCE_MS);
+  }
+
+  private async saveRemoteDraft(): Promise<void> {
+    if (!this.draftEndpoint) return;
+
+    try {
+      const response = await fetch(this.draftEndpoint, {
+        method: "PUT",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ stories: this.stories }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`draft save failed with ${response.status}`);
+      }
+
+      this.setStatus("draft saved");
+    } catch {
+      this.setStatus("could not save draft");
+    }
   }
 
   private autoSize(field: HTMLTextAreaElement): void {
@@ -2377,6 +2484,73 @@ function cloneStep(step: BuilderStep): BuilderStep {
 
 function cloneComponent(component: BuilderComponent): BuilderComponent {
   return JSON.parse(JSON.stringify(component)) as BuilderComponent;
+}
+
+function normalizeBuilderDraftPayload(payload: unknown): BuilderStory[] | null {
+  if (!isRecord(payload) || !Array.isArray(payload.stories)) return null;
+
+  const stories = payload.stories
+    .map((story) => normalizeBuilderStory(story))
+    .filter((story): story is BuilderStory => Boolean(story));
+
+  return stories.length ? stories : null;
+}
+
+async function readJsonResponse(response: Response): Promise<unknown> {
+  try {
+    return await response.clone().json() as unknown;
+  } catch {
+    return null;
+  }
+}
+
+function normalizeBuilderStory(story: unknown): BuilderStory | null {
+  if (!isRecord(story) || !Array.isArray(story.steps)) return null;
+
+  const id = toStringValue(story.id);
+  const label = toStringValue(story.label);
+  const summary = toStringValue(story.summary);
+  const steps = story.steps
+    .map((step) => normalizeBuilderStep(step))
+    .filter((step): step is BuilderStep => Boolean(step));
+
+  if (!id || !label || !steps.length) return null;
+
+  return {
+    id,
+    label,
+    summary: summary ?? "",
+    steps,
+  };
+}
+
+function normalizeBuilderStep(step: unknown): BuilderStep | null {
+  if (!isRecord(step)) return null;
+
+  const id = toStringValue(step.id);
+  const kind = toStringValue(step.kind);
+  const text = toStringValue(step.text);
+  const note = toStringValue(step.note);
+
+  if (!id || !kind || !isBuilderStepKind(kind)) return null;
+
+  return {
+    id,
+    kind,
+    text: text ?? "",
+    note: note ?? "",
+    component: isRecord(step.component)
+      ? JSON.parse(JSON.stringify(step.component)) as BuilderComponent
+      : undefined,
+  };
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return Boolean(value && typeof value === "object" && !Array.isArray(value));
+}
+
+function toStringValue(value: unknown): string | null {
+  return typeof value === "string" ? value : null;
 }
 
 function toIndex(value: string | undefined): number | null {

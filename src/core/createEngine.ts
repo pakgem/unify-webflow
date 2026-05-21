@@ -32,6 +32,8 @@ export function createEngine(root: HTMLElement, config: ChatbotStoriesConfig = {
       ? null
       : new StoryBuilder(root, stories, {
           onStorySelect: (storyId) => controller.goTo(storyId),
+          draftEndpoint: config.builderDraftEndpoint,
+          draftAutoSave: config.builderDraftAutoSave,
         });
 
   controller.mount();

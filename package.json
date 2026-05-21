@@ -6,11 +6,13 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "vite build",
+    "build:app": "vite build --mode app",
     "preview": "vite preview --host 127.0.0.1",
     "typecheck": "tsc --noEmit",
     "audit:layout": "node scripts/audit-layout.mjs"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.1.0",
     "gsap": "^3.13.0"
   },
   "devDependencies": {

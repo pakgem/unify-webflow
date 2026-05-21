@@ -267,6 +267,8 @@ export type ChatbotStoriesConfig = {
   injectStyles?: boolean;
   reducedMotion?: boolean;
   showBuilder?: boolean;
+  builderDraftEndpoint?: string | false;
+  builderDraftAutoSave?: boolean;
   onStoryChange?: (story: StoryDefinition, index: number) => void;
 };
 
