@@ -8,7 +8,7 @@ type PausedCursorMimicOptions = {
 type PointerSample = Point & {
   time: number;
 };
-type MimicMode = "idle" | "follow" | "sniff" | "returnWait" | "return";
+type MimicMode = "idle" | "follow" | "play" | "sniff" | "returnWait" | "return";
 
 const MIMIC_TRIGGER = {
   radius: 48,
@@ -39,6 +39,16 @@ const MIMIC_FOLLOW = {
   maxBrowserDistance: 600,
   returnDelayMs: 320,
 };
+const MIMIC_PLAY = {
+  smoothing: 0.22,
+  orbitMs: 1620,
+  bobMs: 690,
+  radiusX: 76,
+  radiusY: 42,
+  bobY: 10,
+  minPointerDistance: 56,
+  viewportInset: 14,
+};
 const MIMIC_SNIFF = {
   durationMs: 920,
   pointIntervalMs: 155,
@@ -68,6 +78,8 @@ export class PausedCursorMimic {
   private returnStart: Point | null = null;
   private returnStartedAt = 0;
   private returnWaveDirection = 1;
+  private playStartedAt = 0;
+  private playPhase = 0;
   private lastPointer: Point | null = null;
   private trailDirection: Point = { x: -0.94, y: 0.34 };
   private velocity: Point = { x: 0, y: 0 };
@@ -141,6 +153,12 @@ export class PausedCursorMimic {
         if (this.hasDismissShake()) {
           this.startReturnAfterPause(0);
         }
+      } else if (this.mode === "play") {
+        if (this.pointer && distance(point, this.pointer) < 3) {
+          this.pointer = point;
+        } else {
+          this.resumeFollowing(point);
+        }
       } else if (this.mode === "sniff" && this.isPointNearStoryCursor(point, MIMIC_FOLLOW.reengageRadius)) {
         this.resumeFollowing(point);
       }
@@ -195,6 +213,8 @@ export class PausedCursorMimic {
     this.sniffAnchor = null;
     this.returnStart = null;
     this.returnStartedAt = 0;
+    this.playStartedAt = 0;
+    this.playPhase = 0;
     this.lastPointer = null;
     this.velocity = { x: 0, y: 0 };
     this.dismissSamples = [];
@@ -233,6 +253,18 @@ export class PausedCursorMimic {
       return;
     }
 
+    if (this.mode === "play") {
+      if (!this.pointer) {
+        this.startReturnAfterPause();
+        return;
+      }
+
+      this.updatePlayTarget(now);
+      if (this.target) this.cursor.mimicViewportPoint(this.target, MIMIC_PLAY.smoothing, this.pointer);
+      this.scheduleFollow();
+      return;
+    }
+
     if (this.mode === "return") {
       const home = this.getReturnHomePoint();
       const progress = clampUnit((now - this.returnStartedAt) / MIMIC_RETURN.durationMs);
@@ -260,7 +292,7 @@ export class PausedCursorMimic {
     }
 
     if (now - this.lastMoveAt > MIMIC_FOLLOW.idleTimeoutMs) {
-      this.stopMimicking();
+      this.startPlayfulIdle(now);
       return;
     }
 
@@ -306,11 +338,39 @@ export class PausedCursorMimic {
     this.lastPointer = point;
   }
 
+  private startPlayfulIdle(now: number): void {
+    if (!this.active || !this.pointer) return;
+
+    const cursorPoint = this.getCursorViewportPoint();
+
+    this.mode = "play";
+    this.playStartedAt = now;
+    this.playPhase = Math.atan2(cursorPoint.y - this.pointer.y, cursorPoint.x - this.pointer.x);
+    this.velocity = { x: 0, y: 0 };
+    this.dismissSamples = [];
+    this.scheduleFollow();
+  }
+
+  private updatePlayTarget(now: number): void {
+    if (!this.pointer) return;
+
+    const elapsed = now - this.playStartedAt;
+    const angle = this.playPhase + elapsed / MIMIC_PLAY.orbitMs * Math.PI * 2;
+    const bob = Math.sin(elapsed / MIMIC_PLAY.bobMs * Math.PI * 2);
+    const rawTarget = {
+      x: this.pointer.x + Math.cos(angle) * MIMIC_PLAY.radiusX,
+      y: this.pointer.y + Math.sin(angle * 1.28) * MIMIC_PLAY.radiusY + bob * MIMIC_PLAY.bobY,
+    };
+    this.target = getSafePlayTarget(rawTarget, this.pointer, MIMIC_PLAY.minPointerDistance, MIMIC_PLAY.viewportInset);
+  }
+
   private resumeFollowing(point: Point): void {
     this.mode = "follow";
     this.sniffAnchor = null;
     this.nextSniffAt = 0;
     this.sniffIndex = 0;
+    this.playStartedAt = 0;
+    this.playPhase = 0;
     this.returnAt = 0;
     this.lastPointer = point;
     this.updateFollowTarget(point);
@@ -327,6 +387,8 @@ export class PausedCursorMimic {
     this.sniffStartedAt = now;
     this.nextSniffAt = 0;
     this.sniffIndex = 0;
+    this.playStartedAt = 0;
+    this.playPhase = 0;
     this.pointer = null;
     this.velocity = { x: 0, y: 0 };
     this.dismissSamples = [];
@@ -375,6 +437,8 @@ export class PausedCursorMimic {
     this.lastPointer = null;
     this.returnStart = null;
     this.returnStartedAt = 0;
+    this.playStartedAt = 0;
+    this.playPhase = 0;
     this.velocity = { x: 0, y: 0 };
     this.dismissSamples = [];
     window.cancelAnimationFrame(this.frame);
@@ -428,6 +492,8 @@ export class PausedCursorMimic {
     this.sniffAnchor = null;
     this.returnStart = null;
     this.returnStartedAt = 0;
+    this.playStartedAt = 0;
+    this.playPhase = 0;
     this.lastPointer = null;
     this.velocity = { x: 0, y: 0 };
     this.dismissSamples = [];
@@ -565,8 +631,53 @@ function clampUnit(value: number): number {
   return Math.min(1, Math.max(0, value));
 }
 
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, value));
+}
+
 function easeInOutSine(value: number): number {
   return -(Math.cos(Math.PI * value) - 1) / 2;
+}
+
+function clampPointToViewport(point: Point, inset: number): Point {
+  return {
+    x: clamp(point.x, inset, window.innerWidth - inset),
+    y: clamp(point.y, inset, window.innerHeight - inset),
+  };
+}
+
+function getSafePlayTarget(rawTarget: Point, anchor: Point, minDistance: number, inset: number): Point {
+  const target = clampPointToViewport(keepAwayFromPoint(rawTarget, anchor, minDistance), inset);
+
+  if (distance(target, anchor) >= minDistance * 0.86) return target;
+
+  const centerDirection = {
+    x: window.innerWidth / 2 - anchor.x,
+    y: window.innerHeight / 2 - anchor.y,
+  };
+  const centerDistance = Math.hypot(centerDirection.x, centerDirection.y) || 1;
+
+  return clampPointToViewport({
+    x: anchor.x + centerDirection.x / centerDistance * minDistance,
+    y: anchor.y + centerDirection.y / centerDistance * minDistance,
+  }, inset);
+}
+
+function keepAwayFromPoint(point: Point, anchor: Point, minDistance: number): Point {
+  const dx = point.x - anchor.x;
+  const dy = point.y - anchor.y;
+  const length = Math.hypot(dx, dy);
+
+  if (length >= minDistance) return point;
+
+  const fallbackAngle = -Math.PI * 0.28;
+  const nx = length > 0.01 ? dx / length : Math.cos(fallbackAngle);
+  const ny = length > 0.01 ? dy / length : Math.sin(fallbackAngle);
+
+  return {
+    x: anchor.x + nx * minDistance,
+    y: anchor.y + ny * minDistance,
+  };
 }
 
 function distanceToRect(point: Point, rect: DOMRect): number {
