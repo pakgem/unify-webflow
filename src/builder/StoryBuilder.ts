@@ -1630,7 +1630,7 @@ export class StoryBuilder {
         const payload = await readJsonResponse(response);
 
         if (isRecord(payload) && payload.error === "not_found") {
-          this.setStatus("seeding database draft");
+          this.setStatus("seeding blob draft");
           this.loadingRemoteDraft = false;
           this.queueRemoteSave();
           return;
@@ -1656,7 +1656,7 @@ export class StoryBuilder {
       this.render();
       this.setStatus("draft loaded");
     } catch {
-      this.setStatus("database unavailable; using local draft");
+      this.setStatus("remote draft unavailable; using local draft");
     } finally {
       this.loadingRemoteDraft = false;
       if (this.pendingSaveAfterLoad) {
@@ -1691,6 +1691,7 @@ export class StoryBuilder {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
+          ...getDraftWriteHeaders(),
         },
         body: JSON.stringify({ stories: this.stories }),
       });
@@ -2578,6 +2579,20 @@ function isInteractiveTarget(target: Element | null): boolean {
 
 function isBuilderStepKind(value: string): value is BuilderStepKind {
   return value in STEP_KIND_LABELS;
+}
+
+function getDraftWriteHeaders(): Record<string, string> {
+  const token = getDraftWriteToken();
+
+  return token ? { "x-story-draft-token": token } : {};
+}
+
+function getDraftWriteToken(): string | null {
+  try {
+    return window.localStorage.getItem("storyDraftWriteToken");
+  } catch {
+    return null;
+  }
 }
 
 function createIcon(name: "copy" | "x" | "grip"): SVGSVGElement {

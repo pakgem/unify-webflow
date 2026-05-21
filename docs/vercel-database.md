@@ -1,25 +1,27 @@
-# Vercel database setup
+# Vercel Blob draft storage
 
-The homepage story draft loads and autosaves through `GET/PUT /api/story-draft`.
+The homepage story builder loads and autosaves through `GET/PUT /api/story-draft`.
 
 ## Production
 
-1. Create a Neon Postgres database from the Vercel Marketplace.
-2. Add `DATABASE_URL` to the Vercel project environment variables.
+1. Connect a Vercel Blob store to the project.
+2. Make sure Vercel has `BLOB_READ_WRITE_TOKEN` for Production, Preview, and Development. The Blob integration usually adds this automatically.
 3. Deploy normally. `vercel.json` uses `npm run build:app` so the demo page and API route deploy together.
 
-The first time the builder opens, it seeds the database with the current draft if no row exists yet. The API creates this table automatically:
+The draft is stored as a private JSON blob at `homepage-story-draft.json` by default. You can change that path with `STORY_DRAFT_BLOB_PATH`.
 
-```sql
-create table if not exists story_drafts (
-  id text primary key,
-  payload jsonb not null,
-  updated_at timestamptz not null default now()
-);
+## Write protection
+
+By default, the API accepts builder writes so the deployed editor works immediately. For a public deployment, set `STORY_DRAFT_WRITE_TOKEN` in Vercel. When it is set, `PUT/POST/PATCH /api/story-draft` require the same token in `x-story-draft-token` or `Authorization: Bearer ...`.
+
+For local browser editing against a protected deployment, set this once in devtools:
+
+```js
+localStorage.setItem("storyDraftWriteToken", "your-token");
 ```
 
 ## Local development
 
-`npm run dev` still uses Vite directly. That serves the page but not the Vercel API route, so the builder falls back to the local static draft.
+`npm run dev` still uses Vite directly. That serves the page but not the Vercel API route, so the builder falls back to the bundled story draft.
 
-Use `vercel dev` when you want to test persistence locally. Without `DATABASE_URL`, the API writes to `data/story-draft.local.json`, which is ignored by git.
+Use `vercel dev` when you want to test persistence locally. Without Blob env vars, the API writes to `data/story-draft.local.json`, which is ignored by git.
