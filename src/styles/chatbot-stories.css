@@ -3309,7 +3309,7 @@ body {
   justify-self: center;
   display: grid;
   gap: 24px;
-  width: min(1680px, calc(100vw - 36px));
+  width: min(var(--wa-window-width), calc(100vw - 36px));
   margin-top: 12px;
   padding-top: 58px;
   border-top: 1px solid var(--wa-line-10);
@@ -3317,9 +3317,9 @@ body {
 
 .wa-builder__header {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(260px, 430px);
-  gap: 28px;
-  align-items: end;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
 }
 
 .wa-builder__eyebrow {
@@ -3351,15 +3351,16 @@ body {
 }
 
 .wa-builder__tabs {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 8px;
 }
 
 .wa-builder-tab {
-  display: inline-grid;
+  display: grid;
   gap: 4px;
-  min-width: 168px;
+  width: 100%;
+  min-width: 0;
   padding: 12px 14px;
   border: 1px solid var(--wa-line-10);
   border-radius: var(--wa-radius-sm);
@@ -3395,8 +3396,8 @@ body {
 
 .wa-builder__layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(280px, 320px);
-  gap: 28px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 18px;
   align-items: start;
 }
 
@@ -3407,12 +3408,13 @@ body {
 }
 
 .wa-builder__add-rail {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 8px;
 }
 
 .wa-builder-add-button {
+  width: 100%;
   min-height: 34px;
   padding: 0 12px;
   border: 1px solid var(--wa-line-12);
@@ -3454,7 +3456,9 @@ body {
 }
 
 .wa-builder-step .wa-message {
-  max-width: min(88%, 760px);
+  width: 100%;
+  max-width: 100%;
+  justify-self: stretch;
 }
 
 .wa-builder-step[data-builder-kind="assistant"] .wa-message,
@@ -3467,7 +3471,7 @@ body {
 
 .wa-builder-step[data-builder-kind="user"],
 .wa-builder-step[data-builder-kind="file"] {
-  justify-items: end;
+  justify-items: stretch;
 }
 
 .wa-builder-step[data-builder-kind="component"] .wa-message,
@@ -4109,10 +4113,11 @@ body {
 }
 
 .wa-builder__side {
-  position: sticky;
-  top: 22px;
+  position: static;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 14px;
+  width: 100%;
   min-width: 0;
 }
 
@@ -4491,7 +4496,7 @@ body {
 
   .wa-builder__side {
     position: static;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
     align-items: start;
   }
 
@@ -4576,7 +4581,7 @@ body {
   }
 
   .wa-builder-step .wa-message {
-    max-width: 96%;
+    max-width: 100%;
   }
 
   .wa-builder-step[data-builder-kind="component"] .wa-message,
