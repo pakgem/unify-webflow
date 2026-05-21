@@ -1558,7 +1558,7 @@ export class ChatActor {
 
       section.dataset.sequenceLaunched = "true";
       button.dataset.launched = "true";
-      if (label) label.textContent = "Sequence kicked off";
+      if (label) label.textContent = "sequence kicked off";
     });
   }
 
@@ -3821,9 +3821,9 @@ export class ChatActor {
     kickoff.type = "button";
     kickoff.tabIndex = -1;
     kickoff.dataset.sequenceKickoff = config.id;
-    kickoff.setAttribute("aria-label", config.launchLabel ?? "Kick off sequence");
+    kickoff.setAttribute("aria-label", config.launchLabel ?? "kick off sequence");
     kickoffLabel.className = "wa-sequence-kickoff__label";
-    kickoffLabel.textContent = config.launchLabel ?? "Kick off sequence";
+    kickoffLabel.textContent = config.launchLabel ?? "kick off sequence";
     kickoffDetail.className = "wa-sequence-kickoff__detail";
     kickoffDetail.textContent = `Launch tailored touches for ${config.peopleCount}`;
     kickoff.append(kickoffLabel, kickoffDetail);
@@ -3902,7 +3902,7 @@ export class ChatActor {
   }
 
   private formatSequenceWaitLabel(days: number): string {
-    return `Wait ${days} ${days === 1 ? "day" : "days"}`;
+    return `wait ${days} ${days === 1 ? "day" : "days"}`;
   }
 
   private setActiveSequencePerson(section: HTMLElement, index: number): void {
@@ -4019,7 +4019,7 @@ export class ChatActor {
     const meta = card.querySelector<HTMLElement>("[data-sequence-copy-meta]");
     const subject = card.querySelector<HTMLElement>("[data-sequence-copy-subject]");
     const body = card.querySelector<HTMLElement>("[data-sequence-copy-body]");
-    const selectedLabel = selected?.querySelector<HTMLElement>(".wa-sequence-step__channel")?.textContent?.trim() ?? "Email";
+    const selectedLabel = selected?.querySelector<HTMLElement>(".wa-sequence-step__channel")?.textContent?.trim() ?? "email";
 
     steps.forEach((step) => {
       const active = step === selected;

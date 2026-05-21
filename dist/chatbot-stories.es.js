@@ -3006,7 +3006,7 @@ class fs {
   sequenceKickoff(e) {
     return w.timeline().call(() => {
       const t = this.findSequenceEngagement(e), a = t?.querySelector("[data-sequence-kickoff]"), i = a?.querySelector(".wa-sequence-kickoff__label");
-      !t || !a || (t.dataset.sequenceLaunched = "true", a.dataset.launched = "true", i && (i.textContent = "Sequence kicked off"));
+      !t || !a || (t.dataset.sequenceLaunched = "true", a.dataset.launched = "true", i && (i.textContent = "sequence kicked off"));
     });
   }
   prepareCsvDropArea(e = {}) {
@@ -4120,7 +4120,7 @@ class fs {
       o.append(m);
     });
     const d = document.createElement("button"), c = document.createElement("span"), u = document.createElement("span");
-    return d.className = "wa-sequence-kickoff", d.type = "button", d.tabIndex = -1, d.dataset.sequenceKickoff = e.id, d.setAttribute("aria-label", e.launchLabel ?? "Kick off sequence"), c.className = "wa-sequence-kickoff__label", c.textContent = e.launchLabel ?? "Kick off sequence", u.className = "wa-sequence-kickoff__detail", u.textContent = `Launch tailored touches for ${e.peopleCount}`, d.append(c, u), d.addEventListener("click", () => {
+    return d.className = "wa-sequence-kickoff", d.type = "button", d.tabIndex = -1, d.dataset.sequenceKickoff = e.id, d.setAttribute("aria-label", e.launchLabel ?? "kick off sequence"), c.className = "wa-sequence-kickoff__label", c.textContent = e.launchLabel ?? "kick off sequence", u.className = "wa-sequence-kickoff__detail", u.textContent = `Launch tailored touches for ${e.peopleCount}`, d.append(c, u), d.addEventListener("click", () => {
       this.sequenceKickoff(e.id).play();
     }), n ? t.append(...this.compactElements(i, s, r, d)) : t.append(i, r, o), t;
   }
@@ -4143,7 +4143,7 @@ class fs {
     return t >= a - 1 ? null : e.waitDays ?? ds[t] ?? 1;
   }
   formatSequenceWaitLabel(e) {
-    return `Wait ${e} ${e === 1 ? "day" : "days"}`;
+    return `wait ${e} ${e === 1 ? "day" : "days"}`;
   }
   setActiveSequencePerson(e, t) {
     const a = this.queryElements(e, "[data-sequence-card]"), i = this.queryElements(e, "[data-sequence-person-button]"), r = e.querySelector("[data-sequence-count]"), n = this.getSequenceDisplayCard(e), s = this.getSequenceTemplateCard(e, t);
@@ -4191,7 +4191,7 @@ class fs {
     }), e.dataset.activeSequenceIndex = String(i), this.selectSequenceStep(t, Math.min(r, Math.max(0, n.length - 1)));
   }
   selectSequenceStep(e, t) {
-    const a = this.queryElements(e, ".wa-sequence-step"), i = a.find((d) => Number(d.dataset.stepIndex) === t) ?? a[0], r = e.querySelector("[data-sequence-copy-meta]"), n = e.querySelector("[data-sequence-copy-subject]"), s = e.querySelector("[data-sequence-copy-body]"), o = i?.querySelector(".wa-sequence-step__channel")?.textContent?.trim() ?? "Email";
+    const a = this.queryElements(e, ".wa-sequence-step"), i = a.find((d) => Number(d.dataset.stepIndex) === t) ?? a[0], r = e.querySelector("[data-sequence-copy-meta]"), n = e.querySelector("[data-sequence-copy-subject]"), s = e.querySelector("[data-sequence-copy-body]"), o = i?.querySelector(".wa-sequence-step__channel")?.textContent?.trim() ?? "email";
     a.forEach((d) => {
       const c = d === i;
       d.dataset.stepSelected = String(c), d.dataset.stepOpen = String(c), d.setAttribute("aria-pressed", String(c));
@@ -5812,7 +5812,7 @@ function Ms(l, e) {
       },
       { kind: "cursor", text: "Cursor clicks page 2, then page 1, hovers the dialer icon, then clicks the email icon.", note: "Dialer tooltip reads “Start power dialing” with a “Coming soon” badge; email tooltip reads “Build outreach sequence.”" },
       { kind: "thinking", text: "Generating a sequence template from the company offering", note: "Template uses trigger, role-specific pain, proof, and a low-friction CTA." },
-      { kind: "thinking", text: "Researching companies and people 1/50", note: "Two progress tracks run simultaneously for account research and person research." },
+      { kind: "thinking", text: "researching companies and people 1/50", note: "two progress tracks run simultaneously for account research and person research." },
       {
         kind: "component",
         text: "Personalized sequence preview",
@@ -5902,7 +5902,7 @@ function Os() {
       {
         label: "Strategy two",
         title: "RevOps consolidation wedge",
-        summary: "Lead with a data-quality audit for teams already showing CRM cleanup pain, then turn the gaps into a consolidation case."
+        summary: "lead with a data-quality audit for teams already showing CRM cleanup pain, then turn the gaps into a consolidation case."
       },
       {
         label: "Strategy three",
@@ -6118,7 +6118,7 @@ function Fs() {
     signals: [
       { label: "Voice", value: "Plainspoken, specific, no inflated urgency" },
       { label: "CTA", value: "Low-friction question before calendar asks" },
-      { label: "Proof", value: "Lead with trigger + relevant customer pattern" },
+      { label: "proof", value: "lead with trigger + relevant customer pattern" },
       { label: "Guardrail", value: "Rejects weak ICP fit before drafting" }
     ],
     examples: [
@@ -6208,23 +6208,23 @@ function Gs() {
         name: "Maya Patel",
         company: "OrbitGrid",
         subject: "OrbitGrid’s pricing-page interest",
-        personalization: "Email → LinkedIn → email → call, tailored to pricing intent and RevOps hiring."
+        personalization: "email → linkedin → email → call, tailored to pricing intent and RevOps hiring."
       },
       {
         name: "Evan Brooks",
         company: "Northstar Dev",
         subject: "Northstar Dev’s integration-led growth",
-        personalization: "Email → LinkedIn → email → call, tailored to partner-fit account research."
+        personalization: "email → linkedin → email → call, tailored to partner-fit account research."
       },
       {
         name: "Clara Wong",
         company: "BrightLayer",
         subject: "BrightLayer’s case-study research",
-        personalization: "Email → LinkedIn → email → call, tailored to proof-seeking revenue leadership."
+        personalization: "email → linkedin → email → call, tailored to proof-seeking revenue leadership."
       }
     ],
     channels: [
-      { label: "Kick off sequence", detail: "Launch tailored touches for 50 people", badge: "" }
+      { label: "kick off sequence", detail: "launch tailored touches for 50 people", badge: "" }
     ]
   };
 }
@@ -6663,7 +6663,7 @@ const mo = [
     id: "revops-consolidation",
     label: "Strategy two",
     title: "RevOps consolidation wedge",
-    summary: "Lead with a data-quality audit for teams already showing CRM cleanup pain, then turn the gaps into a consolidation case."
+    summary: "lead with a data-quality audit for teams already showing CRM cleanup pain, then turn the gaps into a consolidation case."
   },
   {
     id: "pipeline-acceleration",
@@ -7052,7 +7052,7 @@ const mo = [
 }, xo = {
   id: "enriched-dev-tool-contacts",
   title: "Enriched contacts",
-  eyebrow: "Ready to engage",
+  eyebrow: "ready to engage",
   count: "3 contacts",
   variant: "enriched",
   columns: fo,
@@ -7203,7 +7203,7 @@ const mo = [
   signals: [
     { label: "Voice", value: "Plainspoken, specific, no inflated urgency" },
     { label: "CTA", value: "Low-friction question before calendar asks" },
-    { label: "Proof", value: "Lead with trigger + relevant customer pattern" },
+    { label: "proof", value: "lead with trigger + relevant customer pattern" },
     { label: "Guardrail", value: "Rejects weak ICP fit before drafting" }
   ],
   examples: [
@@ -7287,7 +7287,7 @@ const mo = [
   title: "Personalized sequence preview",
   subtitle: "Each visitor gets a channel plan based on company fit, page intent, and the person’s role.",
   peopleCount: "50 people",
-  launchLabel: "Kick off sequence",
+  launchLabel: "kick off sequence",
   sequences: [
     {
       name: "Maya Patel",
@@ -7298,23 +7298,23 @@ const mo = [
       personalization: "Maya viewed pricing after OrbitGrid added two RevOps roles, so the opener ties visitor intent to cleaner account research.",
       steps: [
         {
-          channel: "Email",
-          label: "Lead with the trigger",
+          channel: "email",
+          label: "lead with the trigger",
           body: "Mention the pricing visit and RevOps hiring pattern; ask if their team is evaluating ways to source better-fit accounts."
         },
         {
-          channel: "LinkedIn",
-          label: "Light proof",
+          channel: "linkedin",
+          label: "light proof",
           body: "Reference a similar sales team using Unify to turn inbound intent into researched outbound lists."
         },
         {
-          channel: "Email",
-          label: "Offer the play",
+          channel: "email",
+          label: "offer the play",
           body: "Send a short teardown of three accounts showing why they match OrbitGrid’s current motion."
         },
         {
-          channel: "Call",
-          label: "Use context",
+          channel: "call",
+          label: "use context",
           body: "Open with the pricing visit and ask whether pipeline quality or source coverage is the bigger gap."
         }
       ]
@@ -7328,23 +7328,23 @@ const mo = [
       personalization: "Evan came through integrations after Northstar Dev expanded sales leadership, so the sequence frames Unify as a way to find accounts already showing ecosystem fit.",
       steps: [
         {
-          channel: "Email",
-          label: "Anchor to integrations",
+          channel: "email",
+          label: "anchor to integrations",
           body: "Point to their integrations-page visit and the likely need to prioritize partner-fit accounts."
         },
         {
-          channel: "LinkedIn",
-          label: "Ask a narrow question",
+          channel: "linkedin",
+          label: "ask a narrow question",
           body: "Ask whether partner signals are already part of Northstar Dev’s outbound scoring."
         },
         {
-          channel: "Email",
-          label: "Show the workflow",
+          channel: "email",
+          label: "show the workflow",
           body: "Share how Unify can pull partner usage, firmographics, and contact data into one sequence-ready list."
         },
         {
-          channel: "Call",
-          label: "Reference the path",
+          channel: "call",
+          label: "reference the path",
           body: "Mention the integrations research and ask if sales is prioritizing ecosystem-led campaigns this quarter."
         }
       ]
@@ -7358,23 +7358,23 @@ const mo = [
       personalization: "Clara read a customer story, so the sequence mirrors the proof format and offers a concise account-selection playbook.",
       steps: [
         {
-          channel: "Email",
-          label: "Mirror the proof",
+          channel: "email",
+          label: "mirror the proof",
           body: "Reference the case study visit and connect it to finding more accounts that match the same buying pattern."
         },
         {
-          channel: "LinkedIn",
-          label: "Share a takeaway",
+          channel: "linkedin",
+          label: "share a takeaway",
           body: "Send one concise observation about BrightLayer’s likely expansion motion based on the page viewed."
         },
         {
-          channel: "Email",
-          label: "Personalized follow-up",
+          channel: "email",
+          label: "personalized follow-up",
           body: "Offer a mini list of 10 lookalike companies with the reason each one matches BrightLayer’s best-fit segment."
         },
         {
-          channel: "Call",
-          label: "Ask for fit",
+          channel: "call",
+          label: "ask for fit",
           body: "Ask whether revenue is looking for more accounts like the case-study customer or a new adjacent segment."
         }
       ]
@@ -7383,20 +7383,20 @@ const mo = [
   channels: []
 }, To = {
   id: "visitor-sequence-build",
-  title: "Building outbound sequence",
+  title: "building outbound sequence",
   subtitle: "Using Unify’s offering, visitor intent, and role-level context to draft the campaign.",
-  templateLabel: "Generating sequence template from company offering",
+  templateLabel: "generating sequence template from company offering",
   template: "Using Unify’s offering, visitor intent, role-specific pain, relevant proof, and a low-friction CTA.",
   total: 50,
   tracks: [
     {
       id: "companies",
-      label: "Researching companies",
+      label: "researching companies",
       detail: "Reading firmographics, page intent, recent hiring, and relevant account signals."
     },
     {
       id: "people",
-      label: "Researching people",
+      label: "researching people",
       detail: "Checking role, seniority, likely ownership, and channel-specific personalization angles."
     }
   ]
@@ -7633,7 +7633,7 @@ const mo = [
         mobile: { x: 0, y: 56 }
       });
       return yt(l, [
-        { kind: "status", text: "Waiting for context" },
+        { kind: "status", text: "waiting for context" },
         { kind: "custom", build: () => t.startFollow(), at: "+=0.04" },
         { kind: "custom", build: () => e.revealWhenCursorEnters(l.cursor), at: "<" },
         {
@@ -7731,8 +7731,8 @@ const mo = [
           text: "Show me 50 sales leaders that have recently visited my website.",
           duration: B.typeLong,
           sendLabel: "send-visitor-sales-list",
-          statusBefore: "Finding visitors",
-          statusAfter: "Building visitor list",
+          statusBefore: "finding visitors",
+          statusAfter: "building visitor list",
           fromEntry: !0
         },
         { kind: "dataTable", config: Io, at: "-=0.02" },
@@ -7744,7 +7744,7 @@ const mo = [
         },
         { kind: "cursorClick", at: "-=0.02" },
         { kind: "custom", build: () => l.chat.dataTablePage("website-visitors-sales", 2), at: "-=0.03" },
-        { kind: "status", text: "Ready to engage", at: "+=0.1" },
+        { kind: "status", text: "ready to engage", at: "+=0.1" },
         {
           kind: "custom",
           build: () => l.timeline().to({}, { duration: B.beat + 0.58 })
@@ -7766,7 +7766,7 @@ const mo = [
         { kind: "custom", build: () => l.chat.dataTableActionTooltip("website-visitors-sales", "email-sequence", !0) },
         { kind: "cursorClick", at: "+=0.18" },
         { kind: "custom", build: () => l.chat.dataTableActionTooltip("website-visitors-sales", "email-sequence", !1), at: "<+=0.02" },
-        { kind: "status", text: "Building outreach sequence", at: "<" },
+        { kind: "status", text: "building outreach sequence", at: "<" },
         { kind: "custom", build: () => l.chat.sequenceBuildThinking(To), at: "+=0.06" },
         { kind: "sequenceEngagement", config: Co, at: "-=0.02" },
         { kind: "custom", build: () => l.timeline().to({}, { duration: B.beat + 0.24 }), at: "+=0.04" },
@@ -7793,7 +7793,7 @@ const mo = [
         },
         { kind: "cursorClick", at: "-=0.02" },
         { kind: "custom", build: () => l.chat.sequenceKickoff("visitor-outreach-sequences"), at: "-=0.04" },
-        { kind: "status", text: "Sequence kicked off", at: "<" }
+        { kind: "status", text: "sequence kicked off", at: "<" }
       ]);
     }
   },
@@ -7816,7 +7816,7 @@ const mo = [
         mobile: { x: 0, y: 64 }
       });
       return yt(l, [
-        { kind: "status", text: "Waiting for CSV" },
+        { kind: "status", text: "waiting for CSV" },
         { kind: "custom", build: () => t.startFollow(), at: "+=0.04" },
         { kind: "custom", build: () => e.revealWhenCursorEnters(l.cursor), at: "<" },
         {

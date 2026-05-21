@@ -53,7 +53,7 @@ const GTM_STRATEGY_PLANS = [
     id: "revops-consolidation",
     label: "Strategy two",
     title: "RevOps consolidation wedge",
-    summary: "Lead with a data-quality audit for teams already showing CRM cleanup pain, then turn the gaps into a consolidation case.",
+    summary: "lead with a data-quality audit for teams already showing CRM cleanup pain, then turn the gaps into a consolidation case.",
   },
   {
     id: "pipeline-acceleration",
@@ -468,7 +468,7 @@ const DATA_MARKETPLACE_SOURCES = {
 const DATA_MARKETPLACE_ENRICHED_TABLE = {
   id: "enriched-dev-tool-contacts",
   title: "Enriched contacts",
-  eyebrow: "Ready to engage",
+  eyebrow: "ready to engage",
   count: "3 contacts",
   variant: "enriched",
   columns: DATA_MARKETPLACE_ENRICHED_COLUMNS,
@@ -623,7 +623,7 @@ const OUTREACH_STYLE_PROFILE = {
   signals: [
     { label: "Voice", value: "Plainspoken, specific, no inflated urgency" },
     { label: "CTA", value: "Low-friction question before calendar asks" },
-    { label: "Proof", value: "Lead with trigger + relevant customer pattern" },
+    { label: "proof", value: "lead with trigger + relevant customer pattern" },
     { label: "Guardrail", value: "Rejects weak ICP fit before drafting" },
   ],
   examples: [
@@ -750,7 +750,7 @@ const ENGAGEMENT_SEQUENCE_LAUNCH = {
   title: "Personalized sequence preview",
   subtitle: "Each visitor gets a channel plan based on company fit, page intent, and the person’s role.",
   peopleCount: "50 people",
-  launchLabel: "Kick off sequence",
+  launchLabel: "kick off sequence",
   sequences: [
     {
       name: "Maya Patel",
@@ -761,23 +761,23 @@ const ENGAGEMENT_SEQUENCE_LAUNCH = {
       personalization: "Maya viewed pricing after OrbitGrid added two RevOps roles, so the opener ties visitor intent to cleaner account research.",
       steps: [
         {
-          channel: "Email",
-          label: "Lead with the trigger",
+          channel: "email",
+          label: "lead with the trigger",
           body: "Mention the pricing visit and RevOps hiring pattern; ask if their team is evaluating ways to source better-fit accounts.",
         },
         {
-          channel: "LinkedIn",
-          label: "Light proof",
+          channel: "linkedin",
+          label: "light proof",
           body: "Reference a similar sales team using Unify to turn inbound intent into researched outbound lists.",
         },
         {
-          channel: "Email",
-          label: "Offer the play",
+          channel: "email",
+          label: "offer the play",
           body: "Send a short teardown of three accounts showing why they match OrbitGrid’s current motion.",
         },
         {
-          channel: "Call",
-          label: "Use context",
+          channel: "call",
+          label: "use context",
           body: "Open with the pricing visit and ask whether pipeline quality or source coverage is the bigger gap.",
         },
       ],
@@ -791,23 +791,23 @@ const ENGAGEMENT_SEQUENCE_LAUNCH = {
       personalization: "Evan came through integrations after Northstar Dev expanded sales leadership, so the sequence frames Unify as a way to find accounts already showing ecosystem fit.",
       steps: [
         {
-          channel: "Email",
-          label: "Anchor to integrations",
+          channel: "email",
+          label: "anchor to integrations",
           body: "Point to their integrations-page visit and the likely need to prioritize partner-fit accounts.",
         },
         {
-          channel: "LinkedIn",
-          label: "Ask a narrow question",
+          channel: "linkedin",
+          label: "ask a narrow question",
           body: "Ask whether partner signals are already part of Northstar Dev’s outbound scoring.",
         },
         {
-          channel: "Email",
-          label: "Show the workflow",
+          channel: "email",
+          label: "show the workflow",
           body: "Share how Unify can pull partner usage, firmographics, and contact data into one sequence-ready list.",
         },
         {
-          channel: "Call",
-          label: "Reference the path",
+          channel: "call",
+          label: "reference the path",
           body: "Mention the integrations research and ask if sales is prioritizing ecosystem-led campaigns this quarter.",
         },
       ],
@@ -821,23 +821,23 @@ const ENGAGEMENT_SEQUENCE_LAUNCH = {
       personalization: "Clara read a customer story, so the sequence mirrors the proof format and offers a concise account-selection playbook.",
       steps: [
         {
-          channel: "Email",
-          label: "Mirror the proof",
+          channel: "email",
+          label: "mirror the proof",
           body: "Reference the case study visit and connect it to finding more accounts that match the same buying pattern.",
         },
         {
-          channel: "LinkedIn",
-          label: "Share a takeaway",
+          channel: "linkedin",
+          label: "share a takeaway",
           body: "Send one concise observation about BrightLayer’s likely expansion motion based on the page viewed.",
         },
         {
-          channel: "Email",
-          label: "Personalized follow-up",
+          channel: "email",
+          label: "personalized follow-up",
           body: "Offer a mini list of 10 lookalike companies with the reason each one matches BrightLayer’s best-fit segment.",
         },
         {
-          channel: "Call",
-          label: "Ask for fit",
+          channel: "call",
+          label: "ask for fit",
           body: "Ask whether revenue is looking for more accounts like the case-study customer or a new adjacent segment.",
         },
       ],
@@ -848,20 +848,20 @@ const ENGAGEMENT_SEQUENCE_LAUNCH = {
 
 const ENGAGEMENT_SEQUENCE_THINKING = {
   id: "visitor-sequence-build",
-  title: "Building outbound sequence",
+  title: "building outbound sequence",
   subtitle: "Using Unify’s offering, visitor intent, and role-level context to draft the campaign.",
-  templateLabel: "Generating sequence template from company offering",
+  templateLabel: "generating sequence template from company offering",
   template: "Using Unify’s offering, visitor intent, role-specific pain, relevant proof, and a low-friction CTA.",
   total: 50,
   tracks: [
     {
       id: "companies",
-      label: "Researching companies",
+      label: "researching companies",
       detail: "Reading firmographics, page intent, recent hiring, and relevant account signals.",
     },
     {
       id: "people",
-      label: "Researching people",
+      label: "researching people",
       detail: "Checking role, seniority, likely ownership, and channel-specific personalization angles.",
     },
   ],
@@ -1128,7 +1128,7 @@ export const defaultStories: StoryDefinition[] = [
       });
 
       return buildStorySteps(ctx, [
-        { kind: "status", text: "Waiting for context" },
+        { kind: "status", text: "waiting for context" },
         { kind: "custom", build: () => cursorFile.startFollow(), at: "+=0.04" },
         { kind: "custom", build: () => dropArea.revealWhenCursorEnters(ctx.cursor), at: "<" },
         {
@@ -1231,8 +1231,8 @@ export const defaultStories: StoryDefinition[] = [
           text: "Show me 50 sales leaders that have recently visited my website.",
           duration: STORY_TIMING.typeLong,
           sendLabel: "send-visitor-sales-list",
-          statusBefore: "Finding visitors",
-          statusAfter: "Building visitor list",
+          statusBefore: "finding visitors",
+          statusAfter: "building visitor list",
           fromEntry: true,
         },
         { kind: "dataTable", config: WEBSITE_VISITOR_SALES_TABLE, at: "-=0.02" },
@@ -1244,7 +1244,7 @@ export const defaultStories: StoryDefinition[] = [
         },
         { kind: "cursorClick", at: "-=0.02" },
         { kind: "custom", build: () => ctx.chat.dataTablePage("website-visitors-sales", 2), at: "-=0.03" },
-        { kind: "status", text: "Ready to engage", at: "+=0.1" },
+        { kind: "status", text: "ready to engage", at: "+=0.1" },
         {
           kind: "custom",
           build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat + 0.58 }),
@@ -1266,7 +1266,7 @@ export const defaultStories: StoryDefinition[] = [
         { kind: "custom", build: () => ctx.chat.dataTableActionTooltip("website-visitors-sales", "email-sequence", true) },
         { kind: "cursorClick", at: "+=0.18" },
         { kind: "custom", build: () => ctx.chat.dataTableActionTooltip("website-visitors-sales", "email-sequence", false), at: "<+=0.02" },
-        { kind: "status", text: "Building outreach sequence", at: "<" },
+        { kind: "status", text: "building outreach sequence", at: "<" },
         { kind: "custom", build: () => ctx.chat.sequenceBuildThinking(ENGAGEMENT_SEQUENCE_THINKING), at: "+=0.06" },
         { kind: "sequenceEngagement", config: ENGAGEMENT_SEQUENCE_LAUNCH, at: "-=0.02" },
         { kind: "custom", build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat + 0.24 }), at: "+=0.04" },
@@ -1293,7 +1293,7 @@ export const defaultStories: StoryDefinition[] = [
         },
         { kind: "cursorClick", at: "-=0.02" },
         { kind: "custom", build: () => ctx.chat.sequenceKickoff("visitor-outreach-sequences"), at: "-=0.04" },
-        { kind: "status", text: "Sequence kicked off", at: "<" },
+        { kind: "status", text: "sequence kicked off", at: "<" },
       ]);
     },
   },
@@ -1319,7 +1319,7 @@ export const defaultStories: StoryDefinition[] = [
       });
 
       return buildStorySteps(ctx, [
-        { kind: "status", text: "Waiting for CSV" },
+        { kind: "status", text: "waiting for CSV" },
         { kind: "custom", build: () => cursorFile.startFollow(), at: "+=0.04" },
         { kind: "custom", build: () => dropArea.revealWhenCursorEnters(ctx.cursor), at: "<" },
         {

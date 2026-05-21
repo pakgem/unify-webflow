@@ -1765,7 +1765,7 @@ function createSeedSteps(storyId: string, fallbackSummary: string): BuilderStep[
       },
       { kind: "cursor", text: "Cursor clicks page 2, then page 1, hovers the dialer icon, then clicks the email icon.", note: "Dialer tooltip reads “Start power dialing” with a “Coming soon” badge; email tooltip reads “Build outreach sequence.”" },
       { kind: "thinking", text: "Generating a sequence template from the company offering", note: "Template uses trigger, role-specific pain, proof, and a low-friction CTA." },
-      { kind: "thinking", text: "Researching companies and people 1/50", note: "Two progress tracks run simultaneously for account research and person research." },
+      { kind: "thinking", text: "researching companies and people 1/50", note: "two progress tracks run simultaneously for account research and person research." },
       {
         kind: "component",
         text: "Personalized sequence preview",
@@ -1876,7 +1876,7 @@ function createStrategyComponent(): BuilderStrategyComponent {
       {
         label: "Strategy two",
         title: "RevOps consolidation wedge",
-        summary: "Lead with a data-quality audit for teams already showing CRM cleanup pain, then turn the gaps into a consolidation case.",
+        summary: "lead with a data-quality audit for teams already showing CRM cleanup pain, then turn the gaps into a consolidation case.",
       },
       {
         label: "Strategy three",
@@ -2096,7 +2096,7 @@ function createStyleProfileComponent(): BuilderStyleProfileComponent {
     signals: [
       { label: "Voice", value: "Plainspoken, specific, no inflated urgency" },
       { label: "CTA", value: "Low-friction question before calendar asks" },
-      { label: "Proof", value: "Lead with trigger + relevant customer pattern" },
+      { label: "proof", value: "lead with trigger + relevant customer pattern" },
       { label: "Guardrail", value: "Rejects weak ICP fit before drafting" },
     ],
     examples: [
@@ -2189,23 +2189,23 @@ function createSequenceEngagementComponent(): BuilderSequenceEngagementComponent
         name: "Maya Patel",
         company: "OrbitGrid",
         subject: "OrbitGrid’s pricing-page interest",
-        personalization: "Email → LinkedIn → email → call, tailored to pricing intent and RevOps hiring.",
+        personalization: "email → linkedin → email → call, tailored to pricing intent and RevOps hiring.",
       },
       {
         name: "Evan Brooks",
         company: "Northstar Dev",
         subject: "Northstar Dev’s integration-led growth",
-        personalization: "Email → LinkedIn → email → call, tailored to partner-fit account research.",
+        personalization: "email → linkedin → email → call, tailored to partner-fit account research.",
       },
       {
         name: "Clara Wong",
         company: "BrightLayer",
         subject: "BrightLayer’s case-study research",
-        personalization: "Email → LinkedIn → email → call, tailored to proof-seeking revenue leadership.",
+        personalization: "email → linkedin → email → call, tailored to proof-seeking revenue leadership.",
       },
     ],
     channels: [
-      { label: "Kick off sequence", detail: "Launch tailored touches for 50 people", badge: "" },
+      { label: "kick off sequence", detail: "launch tailored touches for 50 people", badge: "" },
     ],
   };
 }
