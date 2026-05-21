@@ -2094,7 +2094,7 @@ const ls = [
   threadSync: 0
   // thread padding follows the shell immediately
 }, Y = {
-  hiddenY: 18,
+  hiddenY: 86,
   hiddenScaleX: 0.84,
   hiddenScaleY: 0.68,
   contentShowY: 3,

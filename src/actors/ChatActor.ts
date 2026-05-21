@@ -196,7 +196,7 @@ const THINKING_STEP_FOLD = {
 /* --------------------------------------------------------------------------
    Composer Show/Hide Storyboard
 
-       0ms   hidden shell rests below position, width/height compressed
+       0ms   hidden shell rests below the browser edge, width/height compressed
        0ms   show: shell rises into place and expands to full size
       42ms   show: inner text/button finish settling into the shell
        0ms   hide: shell compresses and drifts downward as one object
@@ -209,7 +209,7 @@ const COMPOSER_TIMING = {
 };
 
 const COMPOSER_MOTION = {
-  hiddenY: 18,
+  hiddenY: 86,
   hiddenScaleX: 0.84,
   hiddenScaleY: 0.68,
   contentShowY: 3,
