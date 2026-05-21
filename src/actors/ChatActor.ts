@@ -281,9 +281,8 @@ const MARKETING_DATA_SOURCE_COLUMNS = [
   ["Web / SEO", "Relationships", "And more"],
 ];
 const MARKETING_DATA_GRID_ARTBOARD = {
-  width: 2048,
+  contentWidth: 1881,
   height: 1280,
-  fitInset: 2,
 };
 
 const STREAM_SCROLL_INTERVAL_MS = 96;
@@ -3362,11 +3361,20 @@ export class ChatActor {
 
   private setMarketingDataGridScale(section: HTMLElement): void {
     const rect = this.chatBody.getBoundingClientRect();
-    const widthScale = Math.max(0, rect.width - MARKETING_DATA_GRID_ARTBOARD.fitInset) / MARKETING_DATA_GRID_ARTBOARD.width;
-    const heightScale = Math.max(0, rect.height - MARKETING_DATA_GRID_ARTBOARD.fitInset) / MARKETING_DATA_GRID_ARTBOARD.height;
+    const styles = getComputedStyle(this.chatBody);
+    const gutterLeft = Number.parseFloat(styles.paddingLeft) || 0;
+    const gutterRight = Number.parseFloat(styles.paddingRight) || gutterLeft;
+    const widthScale = Math.max(0, rect.width - gutterLeft - gutterRight) / MARKETING_DATA_GRID_ARTBOARD.contentWidth;
+    const heightScale = Math.max(0, rect.height) / MARKETING_DATA_GRID_ARTBOARD.height;
     const scale = Math.min(widthScale || 1, heightScale || 1);
+    const artboardGutterLeft = scale > 0 ? gutterLeft / scale : 0;
+    const artboardGutterRight = scale > 0 ? gutterRight / scale : artboardGutterLeft;
+    const artboardWidth = MARKETING_DATA_GRID_ARTBOARD.contentWidth + artboardGutterLeft + artboardGutterRight;
 
     section.style.setProperty("--wa-data-grid-scale", String(scale));
+    section.style.setProperty("--wa-data-grid-artboard-width", `${artboardWidth}px`);
+    section.style.setProperty("--wa-data-grid-gutter-left", `${artboardGutterLeft}px`);
+    section.style.setProperty("--wa-data-grid-gutter-right", `${artboardGutterRight}px`);
   }
 
   private createMarketingDataSourceGroup(groupConfig: DataSourceGroup): HTMLElement {

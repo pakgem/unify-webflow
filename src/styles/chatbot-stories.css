@@ -2211,8 +2211,8 @@ body {
   z-index: 2;
   top: 0;
   bottom: 0;
-  left: calc(var(--wa-chat-x-padding) * -1);
-  width: calc(100% + (var(--wa-chat-x-padding) * 2));
+  left: 0;
+  width: 100%;
   max-width: none;
   padding: 0;
   overflow: visible;
@@ -2224,9 +2224,9 @@ body {
   grid-template-rows: auto auto;
   align-content: start;
   gap: 68px;
-  width: 2048px;
+  width: var(--wa-data-grid-artboard-width, 2048px);
   height: 1280px;
-  padding: 80px 87px 0;
+  padding: 80px var(--wa-data-grid-gutter-right, 87px) 0 var(--wa-data-grid-gutter-left, 87px);
   transform: scale(var(--wa-data-grid-scale, 0.2880859375));
   transform-origin: top left;
 }
