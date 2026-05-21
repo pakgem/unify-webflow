@@ -23,6 +23,7 @@ import {
   getDefaultThinkingDetail,
   getThinkingElapsedLabel,
 } from "../stories/thinkingText";
+import { addTimelineElapsedTimer } from "../motion/elapsedTimer";
 
 type PreparedResultCard = {
   el: HTMLElement;
@@ -410,6 +411,7 @@ export class ChatActor {
   private signupEmail: HTMLElement;
   private status: HTMLElement | null;
   private messagePool: HTMLElement[] = [];
+  private messageBodies = new WeakMap<HTMLElement, HTMLElement>();
   private cardPool: HTMLElement[] = [];
   private transientCleanups: Array<() => void> = [];
   private messageIndex = 0;
@@ -1442,43 +1444,36 @@ export class ChatActor {
     const trackItems = config.tracks.map((track, index) =>
       this.createSequenceThinkingStep(track.label, track.detail, index + 1, config.total),
     );
+    const allItems = [templateItem, ...trackItems];
     const elapsedLabel = this.getThinkingElapsed(3);
-    const thinking = this.claimThinkingMessage([templateItem, ...trackItems], elapsedLabel);
+    const thinking = this.claimThinkingMessage(allItems, elapsedLabel);
     const progress = { value: 1 };
-    const progressBars = trackItems
-      .map((item) => item.querySelector<HTMLElement>(".wa-sequence-thinking-progress__bar span"))
-      .filter((bar): bar is HTMLElement => Boolean(bar));
+    const progressTracks = trackItems.map((item) => ({
+      label: item.querySelector<HTMLElement>(".wa-sequence-thinking-progress__count"),
+      bar: item.querySelector<HTMLElement>(".wa-sequence-thinking-progress__bar span"),
+    }));
+    const progressBars = progressTracks.flatMap((track) => track.bar ? [track.bar] : []);
 
     thinking.message.querySelector<HTMLElement>(".wa-thinking-block")!.dataset.sequenceThinking = config.id;
-    gsap.set(thinking.header, { autoAlpha: 0, y: 5 });
-    gsap.set(thinking.steps, { display: "grid", autoAlpha: 1, y: 0 });
-    gsap.set([templateItem, ...trackItems], { autoAlpha: 0, y: 10, display: "none" });
-    gsap.set(progressBars, {
-      scaleX: 1 / Math.max(1, config.total),
-      transformOrigin: "left center",
-    });
 
     const tl = gsap.timeline()
-      .add(this.revealMessage(thinking.message))
-      .to(thinking.header, {
-        autoAlpha: 1,
-        y: 0,
-        duration: motionDuration(0.24),
-        ease: "power2.out",
+      .call(() => {
+        this.prepareThinkingMessage(thinking, allItems, 10);
+        gsap.set(progressBars, {
+          scaleX: 1 / Math.max(1, config.total),
+          transformOrigin: "left center",
+        });
       })
-      .add(this.streamThinkingHeader(thinking.header), "-=0.08")
+      .add(this.revealMessage(thinking.message))
+      .add(this.revealThinkingHeader(thinking, 0.24))
       .call(() => {
         templateItem.dataset.stepState = "current";
         gsap.set(templateItem, { display: "grid" });
-      })
-      .to(templateItem, {
-        autoAlpha: 1,
-        y: 0,
-        duration: motionDuration(0.26),
-        ease: "power2.out",
-      }, "<")
-      .add(this.streamThinkingStepLabel(templateItem), THINKING_STEP_STREAM.startOverlap)
-      .add(this.streamThinkingStepDetail(templateItem), "-=0.02")
+      });
+
+    this.addThinkingStepReveal(tl, templateItem, { position: "<" });
+
+    tl
       .to({}, { duration: motionDuration(0.54) })
       .add(this.foldThinkingStep(templateItem))
       .call(() => {
@@ -1495,12 +1490,7 @@ export class ChatActor {
         stagger: 0.04,
       }, "<");
 
-    trackItems.forEach((item, index) => {
-      tl.add(this.streamThinkingStepLabel(item), index === 0 ? THINKING_STEP_STREAM.startOverlap : "<");
-    });
-    trackItems.forEach((item, index) => {
-      tl.add(this.streamThinkingStepDetail(item), index === 0 ? "-=0.02" : "<");
-    });
+    this.addThinkingStepStreams(tl, trackItems);
 
     tl.to(progress, {
       value: config.total,
@@ -1510,10 +1500,7 @@ export class ChatActor {
         const current = Math.max(1, Math.round(progress.value));
         const ratio = current / Math.max(1, config.total);
 
-        trackItems.forEach((item) => {
-          const label = item.querySelector<HTMLElement>(".wa-sequence-thinking-progress__count");
-          const bar = item.querySelector<HTMLElement>(".wa-sequence-thinking-progress__bar span");
-
+        progressTracks.forEach(({ label, bar }) => {
           if (label) label.textContent = `${current}/${config.total}`;
           if (bar) gsap.set(bar, { scaleX: ratio });
         });
@@ -1527,9 +1514,7 @@ export class ChatActor {
     });
 
     tl.call(() => {
-      trackItems.forEach((item) => {
-        item.dataset.stepState = "complete";
-      });
+      this.markThinkingStepsComplete(trackItems);
       this.animateMessageScrollIntoView(thinking.message);
     });
     this.addThinkingElapsedTimer(tl, thinking.elapsed, elapsedLabel);
@@ -2088,68 +2073,61 @@ export class ChatActor {
   }
 
   private claimMessage(role: "user" | "assistant", text: string): HTMLElement {
-    const index = this.messageIndex;
-    const message = this.messagePool[index] ?? this.createMessage(index);
-    const body = message.querySelector<HTMLElement>("[data-message-body]");
+    const { message, body } = this.claimMessageShell(
+      role,
+      role,
+      role === "user" ? "right center" : "left center",
+    );
 
-    this.messageIndex += 1;
-    message.dataset.messageRole = role;
-    message.dataset.messageId = `${role}-${index}`;
-    this.resetMessageClasses(message);
-    message.classList.toggle("wa-message--first-active", index === 0);
-    message.style.display = "none";
-    if (body) {
-      delete body.dataset.streaming;
-      body.replaceChildren(document.createTextNode(text));
-    }
-
-    this.thread.append(message);
-    gsap.set(message, {
-      autoAlpha: 0,
-      y: 16,
-      scale: 0.985,
-      transformOrigin: role === "user" ? "right center" : "left center",
-    });
+    body.replaceChildren(document.createTextNode(text));
 
     return message;
   }
 
   private claimComponentMessage(kind: ComponentKind, content: HTMLElement): HTMLElement {
-    const index = this.messageIndex;
-    const message = this.messagePool[index] ?? this.createMessage(index);
-    const body = message.querySelector<HTMLElement>("[data-message-body]");
+    const { message, body } = this.claimMessageShell("assistant", "assistant-component", "left center");
 
-    this.messageIndex += 1;
-    message.dataset.messageRole = "assistant";
-    message.dataset.messageId = `assistant-component-${index}`;
-    this.resetMessageClasses(message);
-    message.classList.toggle("wa-message--first-active", index === 0);
     message.classList.add("wa-message--component", `wa-message--${kind}`);
-    message.style.display = "none";
-    if (body) {
-      delete body.dataset.streaming;
-      body.replaceChildren(content);
-    }
-
-    this.thread.append(message);
-    gsap.set(message, {
-      autoAlpha: 0,
-      y: 16,
-      scale: 0.985,
-      transformOrigin: "left center",
-    });
+    body.replaceChildren(content);
 
     return message;
   }
 
   private claimUserComponentMessage(kind: "file", content: HTMLElement): HTMLElement {
-    const message = this.claimMessage("user", "");
-    const body = message.querySelector<HTMLElement>("[data-message-body]");
+    const { message, body } = this.claimMessageShell("user", "user", "right center");
 
     message.classList.add("wa-message--component", `wa-message--${kind}`);
-    body?.replaceChildren(content);
+    body.replaceChildren(content);
 
     return message;
+  }
+
+  private claimMessageShell(
+    role: "user" | "assistant",
+    idPrefix: string,
+    transformOrigin: string,
+  ): { message: HTMLElement; body: HTMLElement; index: number } {
+    const index = this.messageIndex;
+    const message = this.messagePool[index] ?? this.createMessage(index);
+    const body = this.getMessageBody(message);
+
+    this.messageIndex += 1;
+    message.dataset.messageRole = role;
+    message.dataset.messageId = `${idPrefix}-${index}`;
+    this.resetMessageClasses(message);
+    message.classList.toggle("wa-message--first-active", index === 0);
+    message.style.display = "none";
+    delete body.dataset.streaming;
+    body.replaceChildren();
+    this.thread.append(message);
+    gsap.set(message, {
+      autoAlpha: 0,
+      y: 16,
+      scale: 0.985,
+      transformOrigin,
+    });
+
+    return { message, body, index };
   }
 
   private resetMessageClasses(message: HTMLElement): void {
@@ -2428,37 +2406,26 @@ export class ChatActor {
   }
 
   private streamThinkingHeader(thinkingHeader: HTMLElement): gsap.core.Timeline {
-    const title = thinkingHeader.querySelector<HTMLElement>(".wa-thinking__title");
-    const text = title?.dataset.fullText ?? title?.textContent ?? "";
-
-    if (!title || !text) return gsap.timeline();
-
-    return this.streamText(title, text, {
-      duration: this.getStreamDuration(text, THINKING_HEADER_STREAM),
-      targetForScroll: thinkingHeader.closest<HTMLElement>(".wa-message") ?? thinkingHeader,
-    });
+    return this.streamThinkingChild(thinkingHeader, ".wa-thinking__title", THINKING_HEADER_STREAM);
   }
 
   private streamThinkingStepLabel(item: HTMLElement): gsap.core.Timeline {
-    const label = item.querySelector<HTMLElement>(".wa-research-step__label");
-    const text = label?.dataset.fullText ?? label?.textContent ?? "";
-
-    if (!label || !text) return gsap.timeline();
-
-    return this.streamText(label, text, {
-      duration: this.getStreamDuration(text, THINKING_LABEL_STREAM),
-      targetForScroll: item.closest<HTMLElement>(".wa-message") ?? item,
-    });
+    return this.streamThinkingChild(item, ".wa-research-step__label", THINKING_LABEL_STREAM);
   }
 
   private streamThinkingStepDetail(item: HTMLElement): gsap.core.Timeline {
-    const detail = item.querySelector<HTMLElement>(".wa-research-step__detail");
-    const text = detail?.dataset.fullText ?? "";
-    if (!detail || !text) return gsap.timeline();
+    return this.streamThinkingChild(item, ".wa-research-step__detail", THINKING_STEP_STREAM);
+  }
 
-    return this.streamText(detail, text, {
-      duration: this.getStreamDuration(text, THINKING_STEP_STREAM),
-      targetForScroll: item.closest<HTMLElement>(".wa-message") ?? item,
+  private streamThinkingChild(root: HTMLElement, selector: string, timing: StreamTiming): gsap.core.Timeline {
+    const target = root.querySelector<HTMLElement>(selector);
+    const text = target?.dataset.fullText ?? target?.textContent ?? "";
+
+    if (!target || !text) return gsap.timeline();
+
+    return this.streamText(target, text, {
+      duration: this.getStreamDuration(text, timing),
+      targetForScroll: this.getMessageScrollTargetElement(root),
     });
   }
 
@@ -2516,8 +2483,75 @@ export class ChatActor {
       })
       .call(() => {
         item.dataset.stepState = "complete";
-        this.animateMessageScrollIntoView(item.closest<HTMLElement>(".wa-message") ?? item);
+        this.animateMessageScrollIntoView(this.getMessageScrollTargetElement(item));
       });
+  }
+
+  private getMessageScrollTargetElement(element: HTMLElement): HTMLElement {
+    return element.closest<HTMLElement>(".wa-message") ?? element;
+  }
+
+  private prepareThinkingMessage(
+    thinking: ClaimedThinkingMessage,
+    items: HTMLElement[],
+    itemStartY: number,
+  ): void {
+    items.forEach((item) => {
+      item.dataset.stepState = "pending";
+    });
+    gsap.set(thinking.header, { autoAlpha: 0, y: 5 });
+    gsap.set(thinking.steps, { display: "grid", autoAlpha: 1, y: 0 });
+    gsap.set(items, { autoAlpha: 0, y: itemStartY, display: "none" });
+  }
+
+  private revealThinkingHeader(thinking: ClaimedThinkingMessage, duration: number): gsap.core.Timeline {
+    return gsap.timeline()
+      .to(thinking.header, {
+        autoAlpha: 1,
+        y: 0,
+        duration: motionDuration(duration),
+        ease: "power2.out",
+      })
+      .add(this.streamThinkingHeader(thinking.header), "-=0.08");
+  }
+
+  private addThinkingStepReveal(
+    tl: gsap.core.Timeline,
+    item: HTMLElement,
+    options: { position?: string | number } = {},
+  ): gsap.core.Timeline {
+    return tl
+      .to(
+        item,
+        {
+          autoAlpha: 1,
+          y: 0,
+          duration: motionDuration(0.26),
+          ease: "power2.out",
+        },
+        options.position ?? "<",
+      )
+      .add(this.streamThinkingStepLabel(item), THINKING_STEP_STREAM.startOverlap)
+      .add(this.streamThinkingStepDetail(item), "-=0.02");
+  }
+
+  private createThinkingStepReveal(item: HTMLElement): gsap.core.Timeline {
+    return this.addThinkingStepReveal(gsap.timeline(), item, { position: 0 });
+  }
+
+  private addThinkingStepStreams(tl: gsap.core.Timeline, items: HTMLElement[]): void {
+    items.forEach((item, index) => {
+      tl.add(this.streamThinkingStepLabel(item), index === 0 ? THINKING_STEP_STREAM.startOverlap : "<");
+    });
+    items.forEach((item, index) => {
+      tl.add(this.streamThinkingStepDetail(item), index === 0 ? "-=0.02" : "<");
+    });
+  }
+
+  private markThinkingStepsComplete(items: HTMLElement[]): void {
+    items.forEach((item) => {
+      item.dataset.stepState = "complete";
+    });
   }
 
   private runThinkingSequence(thinkingState: NormalizedThinkingState, options: ThinkingSequenceOptions): gsap.core.Timeline {
@@ -2526,48 +2560,22 @@ export class ChatActor {
     const elapsedLabel = thinkingState.elapsed ?? this.getThinkingElapsed(thinkingState.items.length);
     const thinking = this.claimThinkingMessage(items, elapsedLabel, thinkingState.title);
 
-    tl.call(() => {
-      items.forEach((item) => {
-        item.dataset.stepState = "pending";
-      });
-      gsap.set(thinking.header, { autoAlpha: 0, y: 5 });
-      gsap.set(thinking.steps, { display: "grid", autoAlpha: 1, y: 0 });
-      gsap.set(items, { autoAlpha: 0, y: options.itemStartY, display: "none" });
-    })
+    tl.call(() => this.prepareThinkingMessage(thinking, items, options.itemStartY))
       .add(this.revealMessage(thinking.message))
-      .to(thinking.header, {
-        autoAlpha: 1,
-        y: 0,
-        duration: motionDuration(options.headerDuration),
-        ease: "power2.out",
-      })
-      .add(this.streamThinkingHeader(thinking.header), "-=0.08");
+      .add(this.revealThinkingHeader(thinking, options.headerDuration));
 
     thinkingState.items.forEach((_item, index) => {
       const item = items[index];
       const position = index === 0 ? "+=0" : `+=${options.hold}`;
 
       tl.call(() => this.activateThinkingStep(items, index), undefined, position)
-        .to(
-          item,
-          {
-            autoAlpha: 1,
-            y: 0,
-            duration: motionDuration(0.26),
-            ease: "power2.out",
-          },
-          "<",
-        )
-        .add(this.streamThinkingStepLabel(item), THINKING_STEP_STREAM.startOverlap)
-        .add(this.streamThinkingStepDetail(item), "-=0.02")
+        .add(this.createThinkingStepReveal(item), "<")
         .to({}, { duration: options.afterStepHold })
         .add(this.foldThinkingStep(item));
     });
 
     tl.call(() => {
-      items.forEach((item) => {
-        item.dataset.stepState = "complete";
-      });
+      this.markThinkingStepsComplete(items);
     }, undefined, `+=${options.finalHold}`);
     this.addThinkingElapsedTimer(tl, thinking.elapsed, elapsedLabel);
     return tl;
@@ -2635,80 +2643,7 @@ export class ChatActor {
   }
 
   private addThinkingElapsedTimer(tl: gsap.core.Timeline, elapsed: HTMLElement, finalLabel: string): void {
-    const finalSeconds = this.parseElapsedSeconds(finalLabel);
-
-    if (finalSeconds === null) {
-      elapsed.textContent = finalLabel;
-      return;
-    }
-
-    elapsed.textContent = "0s";
-
-    if (this.prefersReducedMotion || finalSeconds <= 0) {
-      elapsed.textContent = this.formatElapsedSeconds(finalSeconds);
-      return;
-    }
-
-    const duration = tl.duration();
-
-    if (duration <= 0) {
-      elapsed.textContent = this.formatElapsedSeconds(finalSeconds);
-      return;
-    }
-
-    const timer = { seconds: 0 };
-
-    tl.to(
-      timer,
-      {
-        seconds: finalSeconds,
-        duration,
-        ease: "none",
-        onUpdate: () => {
-          elapsed.textContent = this.formatElapsedSeconds(timer.seconds);
-        },
-        onComplete: () => {
-          elapsed.textContent = this.formatElapsedSeconds(finalSeconds);
-        },
-        onReverseComplete: () => {
-          elapsed.textContent = "0s";
-        },
-      },
-      0,
-    );
-  }
-
-  private parseElapsedSeconds(label: string): number | null {
-    const text = label.trim().toLowerCase();
-    const minuteMatch = text.match(/(\d+(?:\.\d+)?)\s*m/);
-    const secondMatch = text.match(/(\d+(?:\.\d+)?)\s*s/);
-    let totalSeconds = 0;
-    let hasElapsedUnit = false;
-
-    if (minuteMatch) {
-      totalSeconds += Number(minuteMatch[1]) * 60;
-      hasElapsedUnit = true;
-    }
-
-    if (secondMatch) {
-      totalSeconds += Number(secondMatch[1]);
-      hasElapsedUnit = true;
-    }
-
-    if (!hasElapsedUnit) {
-      const numericValue = Number(text);
-      return Number.isFinite(numericValue) ? Math.max(0, numericValue) : null;
-    }
-
-    return Number.isFinite(totalSeconds) ? Math.max(0, totalSeconds) : null;
-  }
-
-  private formatElapsedSeconds(value: number): string {
-    const totalSeconds = Math.max(0, Math.floor(value));
-    const minutes = Math.floor(totalSeconds / 60);
-    const seconds = totalSeconds % 60;
-
-    return minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`;
+    addTimelineElapsedTimer(tl, elapsed, finalLabel, { reducedMotion: this.prefersReducedMotion });
   }
 
   private createMessage(index: number): HTMLElement {
@@ -2725,8 +2660,20 @@ export class ChatActor {
 
     message.append(avatar, body);
     this.messagePool[index] = message;
+    this.messageBodies.set(message, body);
 
     return message;
+  }
+
+  private getMessageBody(message: HTMLElement): HTMLElement {
+    const cached = this.messageBodies.get(message);
+    if (cached) return cached;
+
+    const body = message.querySelector<HTMLElement>("[data-message-body]");
+    if (!body) throw new Error("ChatActor: message body missing");
+
+    this.messageBodies.set(message, body);
+    return body;
   }
 
   private createThinkingStep(itemConfig: NormalizedThinkingItem, index: number): HTMLElement {
