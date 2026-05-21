@@ -1204,17 +1204,17 @@ export const defaultStories: StoryDefinition[] = [
         '[data-data-table="website-visitors-sales"] [data-table-page-button="2"]',
         "center",
       );
-      const pageOneTarget = responsiveElementTarget(
-        '[data-data-table="website-visitors-sales"] [data-table-page-button="1"]',
-        "center",
-      );
       const powerDialerTarget = responsiveElementTarget(
         '[data-data-table="website-visitors-sales"] [data-table-action="power-dialer"]',
         "center",
+        { desktop: { x: 5, y: 0 }, tablet: { x: 4, y: 0 }, mobile: { x: 3, y: 0 } },
+        false,
       );
       const emailSequenceTarget = responsiveElementTarget(
         '[data-data-table="website-visitors-sales"] [data-table-action="email-sequence"]',
         "center",
+        {},
+        false,
       );
       const sequenceNextTarget = responsiveElementTarget(
         '[data-sequence-person-button="visitor-outreach-sequences:next"]',
@@ -1244,33 +1244,26 @@ export const defaultStories: StoryDefinition[] = [
         },
         { kind: "cursorClick", at: "-=0.02" },
         { kind: "custom", build: () => ctx.chat.dataTablePage("website-visitors-sales", 2), at: "-=0.03" },
+        { kind: "status", text: "Ready to engage", at: "+=0.1" },
         {
           kind: "custom",
-          build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat }),
+          build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat + 0.58 }),
         },
-        {
-          kind: "cursorMove",
-          target: pageOneTarget,
-          options: { mode: "pointer", intent: "click", speed: "normal", label: "return-visitor-page-1" },
-        },
-        { kind: "cursorClick", at: "-=0.02" },
-        { kind: "custom", build: () => ctx.chat.dataTablePage("website-visitors-sales", 1), at: "-=0.03" },
-        { kind: "status", text: "Ready to engage", at: "<" },
         {
           kind: "cursorMove",
           target: powerDialerTarget,
-          options: { mode: "pointer", intent: "hover", speed: "normal", label: "hover-power-dialer" },
-          at: "+=0.24",
+          options: { mode: "pointer", intent: "hover", speed: "slow", label: "hover-power-dialer" },
+          at: "+=0.42",
         },
-        { kind: "custom", build: () => ctx.chat.dataTableActionTooltip("website-visitors-sales", "power-dialer", true), at: "<+=0.04" },
+        { kind: "custom", build: () => ctx.chat.dataTableActionTooltip("website-visitors-sales", "power-dialer", true) },
         { kind: "custom", build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat + 1 }), at: "+=0.12" },
         { kind: "custom", build: () => ctx.chat.dataTableActionTooltip("website-visitors-sales", "power-dialer", false), at: "<" },
         {
           kind: "cursorMove",
           target: emailSequenceTarget,
-          options: { mode: "pointer", intent: "hover", speed: "normal", label: "hover-email-sequence" },
+          options: { mode: "pointer", intent: "hover", speed: "slow", label: "hover-email-sequence" },
         },
-        { kind: "custom", build: () => ctx.chat.dataTableActionTooltip("website-visitors-sales", "email-sequence", true), at: "<+=0.04" },
+        { kind: "custom", build: () => ctx.chat.dataTableActionTooltip("website-visitors-sales", "email-sequence", true) },
         { kind: "cursorClick", at: "+=0.18" },
         { kind: "custom", build: () => ctx.chat.dataTableActionTooltip("website-visitors-sales", "email-sequence", false), at: "<+=0.02" },
         { kind: "status", text: "Building outreach sequence", at: "<" },

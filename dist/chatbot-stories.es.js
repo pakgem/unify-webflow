@@ -17,7 +17,7 @@ var de = {
   duration: 0.5,
   overwrite: !1,
   delay: 0
-}, Da, J, q, ge = 1e8, R = 1 / ge, _a = Math.PI * 2, Lr = _a / 4, Fr = 0, zi = Math.sqrt, Hr = Math.cos, Wr = Math.sin, j = function(e) {
+}, Da, X, q, ge = 1e8, R = 1 / ge, _a = Math.PI * 2, Lr = _a / 4, Fr = 0, zi = Math.sqrt, Hr = Math.cos, Wr = Math.sin, j = function(e) {
   return typeof e == "string";
 }, H = function(e) {
   return typeof e == "function";
@@ -87,7 +87,7 @@ var de = {
 }, Wa = function(e) {
   return !!(e._initted || e._startAt || e.add);
 }, Yi = function(e, t, a, i) {
-  Ne.length && !J && Xt(), e.render(t, a, !!(J && t < 0 && Wa(e))), Ne.length && !J && Xt();
+  Ne.length && !X && Xt(), e.render(t, a, !!(X && t < 0 && Wa(e))), Ne.length && !X && Xt();
 }, ji = function(e) {
   var t = parseFloat(e);
   return (t || t === 0) && (e + "").match(Vr).length < 2 ? t : j(e) ? e.trim() : e;
@@ -147,7 +147,7 @@ var de = {
     t._dirty = 1, t.totalDuration(), t = t.parent;
   return e;
 }, va = function(e, t, a, i) {
-  return e._startAt && (J ? e._startAt.revert(Ut) : e.vars.immediateRender && !e.vars.autoRevert || e._startAt.render(t, !0, i));
+  return e._startAt && (X ? e._startAt.revert(Ut) : e.vars.immediateRender && !e.vars.autoRevert || e._startAt.render(t, !0, i));
 }, $r = function o(e) {
   return !e || e._ts && o(e.parent);
 }, ni = function(e) {
@@ -177,7 +177,7 @@ var de = {
 }, Zi = function(e, t, a, i, r) {
   if (Ua(e, t, r), !e._initted)
     return 1;
-  if (!a && e._pt && !J && (e._dur && e.vars.lazy !== !1 || !e._dur && e.vars.lazy) && Ui !== se.frame)
+  if (!a && e._pt && !X && (e._dur && e.vars.lazy !== !1 || !e._dur && e.vars.lazy) && Ui !== se.frame)
     return Ne.push(e), e._lazy = [r, i], 1;
 }, en = function o(e) {
   var t = e.parent;
@@ -187,12 +187,12 @@ var de = {
   return t === "isFromStart" || t === "isStart";
 }, tn = function(e, t, a, i) {
   var r = e.ratio, n = t < 0 || !t && (!e._start && en(e) && !(!e._initted && Aa(e)) || (e._ts < 0 || e._dp._ts < 0) && !Aa(e)) ? 0 : 1, s = e._rDelay, l = 0, d, c, u;
-  if (s && e._repeat && (l = qt(0, e._tDur, t), c = ut(l, s), e._yoyo && c & 1 && (n = 1 - n), c !== ut(e._tTime, s) && (r = 1 - n, e.vars.repeatRefresh && e._initted && e.invalidate())), n !== r || J || i || e._zTime === R || !t && e._zTime) {
+  if (s && e._repeat && (l = qt(0, e._tDur, t), c = ut(l, s), e._yoyo && c & 1 && (n = 1 - n), c !== ut(e._tTime, s) && (r = 1 - n, e.vars.repeatRefresh && e._initted && e.invalidate())), n !== r || X || i || e._zTime === R || !t && e._zTime) {
     if (!e._initted && Zi(e, t, i, a, l))
       return;
     for (u = e._zTime, e._zTime = t || (a ? R : 0), a || (a = t && !u), e.ratio = n, e._from && (n = 1 - n), e._time = 0, e._tTime = l, d = e._pt; d; )
       d.r(n, d.d), d = d._next;
-    t < 0 && va(e, t, a, !0), e._onUpdate && !a && oe(e, "onUpdate"), l && e._repeat && !a && e.parent && oe(e, "onRepeat"), (t >= e._tDur || t < 0) && e.ratio === n && (n && Oe(e, 1), !a && !J && (oe(e, n ? "onComplete" : "onReverseComplete", !0), e._prom && e._prom()));
+    t < 0 && va(e, t, a, !0), e._onUpdate && !a && oe(e, "onUpdate"), l && e._repeat && !a && e.parent && oe(e, "onRepeat"), (t >= e._tDur || t < 0) && e.ratio === n && (n && Oe(e, 1), !a && !X && (oe(e, n ? "onComplete" : "onReverseComplete", !0), e._prom && e._prom()));
   } else e._zTime || (e._zTime = t);
 }, an = function(e, t, a) {
   var i;
@@ -377,7 +377,7 @@ var de = {
   if (r)
     return l = i[t + "Params"], d = i.callbackScope || e, a && Ne.length && Xt(), s && (q = s), c = l ? r.apply(d, l) : r.call(d), q = n, c;
 }, xt = function(e) {
-  return Oe(e), e.scrollTrigger && e.scrollTrigger.kill(!!J), e.progress() < 1 && oe(e, "onInterrupt"), e;
+  return Oe(e), e.scrollTrigger && e.scrollTrigger.kill(!!X), e.progress() < 1 && oe(e, "onInterrupt"), e;
 }, st, sr = [], or = function(e) {
   if (e)
     if (e = !e.name && e.default || e, qa() || e.headless) {
@@ -673,8 +673,8 @@ var pr = function(e, t) {
     return i ? a && (!this._ts || this._repeat && this._time && this.totalProgress() < 1) ? this._tTime % (this._dur + this._rDelay) : this._ts ? Qt(i.rawTime(a), this) : this._tTime : this._tTime;
   }, e.revert = function(a) {
     a === void 0 && (a = Xr);
-    var i = J;
-    return J = a, Wa(this) && (this.timeline && this.timeline.revert(a), this.totalTime(-0.01, a.suppressEvents)), this.data !== "nested" && a.kill !== !1 && this.kill(), J = i, this;
+    var i = X;
+    return X = a, Wa(this) && (this.timeline && this.timeline.revert(a), this.totalTime(-0.01, a.suppressEvents)), this.data !== "nested" && a.kill !== !1 && this.kill(), X = i, this;
   }, e.globalTime = function(a) {
     for (var i = this, r = arguments.length ? a : i.rawTime(); i; )
       r = i._start + r / (Math.abs(i._ts) || 1), i = i._dp;
@@ -801,7 +801,7 @@ var $ = /* @__PURE__ */ (function(o) {
           if (g = m._prev, (m._act || E <= m._end) && m._ts && y !== m) {
             if (m.parent !== this)
               return this.render(i, r, n);
-            if (m.render(m._ts > 0 ? (E - m._start) * m._ts : (m._dirty ? m.totalDuration() : m._tDur) + (E - m._start) * m._ts, r, n || J && Wa(m)), p !== this._time || !this._ts && !b) {
+            if (m.render(m._ts > 0 ? (E - m._start) * m._ts : (m._dirty ? m.totalDuration() : m._tDur) + (E - m._start) * m._ts, r, n || X && Wa(m)), p !== this._time || !this._ts && !b) {
               y = 0, g && (c += this._zTime = E ? -R : R);
               break;
             }
@@ -985,7 +985,7 @@ var yn = function(e, t, a, i, r, n, s) {
           return oe(e, "onUpdate");
         },
         stagger: 0
-      }, n))), e._startAt._dp = 0, e._startAt._sat = e, t < 0 && (J || !s && !m) && e._startAt.revert(Ut), s && g && t <= 0 && a <= 0) {
+      }, n))), e._startAt._dp = 0, e._startAt._sat = e, t < 0 && (X || !s && !m) && e._startAt.revert(Ut), s && g && t <= 0 && a <= 0) {
         t && (e._zTime = t);
         return;
       }
@@ -1000,7 +1000,7 @@ var yn = function(e, t, a, i, r, n, s) {
         stagger: 0,
         parent: b
         //ensures that nested tweens that had a stagger are handled properly, like gsap.from(".class", {y: gsap.utils.wrap([-100,100]), stagger: 0.5})
-      }, C), W && (k[I.prop] = W), Oe(e._startAt = U.set(f, k)), e._startAt._dp = 0, e._startAt._sat = e, t < 0 && (J ? e._startAt.revert(Ut) : e._startAt.render(-1, !0)), e._zTime = t, !s)
+      }, C), W && (k[I.prop] = W), Oe(e._startAt = U.set(f, k)), e._startAt._dp = 0, e._startAt._sat = e, t < 0 && (X ? e._startAt.revert(Ut) : e._startAt.render(-1, !0)), e._zTime = t, !s)
         o(e._startAt, R, R);
       else if (!t)
         return;
@@ -1160,7 +1160,7 @@ var U = /* @__PURE__ */ (function(o) {
     return this._initted || Ua(this, d), c = this._ease(d / this._dur), vn(this, i, r, n, s, c, d, l) ? this.resetTo(i, r, n, s, 1) : (ia(this, 0), this.parent || Ji(this._dp, this, "_first", "_last", this._dp._sort ? "_start" : 0), this.render(0));
   }, t.kill = function(i, r) {
     if (r === void 0 && (r = "all"), !i && (!r || r === "all"))
-      return this._lazy = this._pt = 0, this.parent ? xt(this) : this.scrollTrigger && this.scrollTrigger.kill(!!J), this;
+      return this._lazy = this._pt = 0, this.parent ? xt(this) : this.scrollTrigger && this.scrollTrigger.kill(!!X), this;
     if (this.timeline) {
       var n = this.timeline.totalDuration();
       return this.timeline.killTweensOf(i, r, Ie && Ie.vars.overwrite !== !0)._first || xt(this), this.parent && n !== this.timeline.totalDuration() && pt(this, this._dur * this.timeline._tDur / n, 0, 1), this;
@@ -1509,7 +1509,7 @@ var Ze = [], Yt = {}, Mn = [], di = 0, Rn = 0, da = function(e) {
     getCache: Je,
     _removeLinkedListItem: ta,
     reverting: function() {
-      return J;
+      return X;
     },
     context: function(e) {
       return e && q && (q.data.push(e), e._ctx = q), q;
@@ -1566,7 +1566,7 @@ var Dn = function(e, t) {
   },
   render: function(e, t) {
     for (var a = t._pt; a; )
-      J ? a.set(a.t, a.p, a.b, a) : a.r(e, a.d), a = a._next;
+      X ? a.set(a.t, a.p, a.b, a) : a.r(e, a.d), a = a._next;
   }
 }, {
   name: "endArray",
@@ -6162,7 +6162,7 @@ const O = {
 function wa(o) {
   return typeof o == "number" ? { x: o, y: 0 } : o;
 }
-function X(o, e, t = {}, a = !0) {
+function Q(o, e, t = {}, a = !0) {
   return {
     desktop: { target: o, anchor: e, offset: wa(t.desktop), humanOffset: a },
     tablet: { target: o, anchor: e, offset: wa(t.tablet), humanOffset: a },
@@ -6170,16 +6170,16 @@ function X(o, e, t = {}, a = !0) {
   };
 }
 const Mi = {
-  hitGroundRunning: X("[data-chat-input]", "center", { desktop: -72, tablet: -68, mobile: -54 }),
-  dataMarketplace: X("[data-chat-input]", "center", { desktop: -54, tablet: -52, mobile: -44 }),
-  crmUpdate: X("[data-chat-input]", "center", { desktop: -42, tablet: -46, mobile: -36 }),
-  researchBrief: X("[data-chat-input]", "center", { desktop: -70, tablet: -62, mobile: -50 }),
-  supportResolution: X("[data-chat-input]", "center", { desktop: -62, tablet: -58, mobile: -46 })
-}, Vs = X("[data-signup-field]", "center", {
+  hitGroundRunning: Q("[data-chat-input]", "center", { desktop: -72, tablet: -68, mobile: -54 }),
+  dataMarketplace: Q("[data-chat-input]", "center", { desktop: -54, tablet: -52, mobile: -44 }),
+  crmUpdate: Q("[data-chat-input]", "center", { desktop: -42, tablet: -46, mobile: -36 }),
+  researchBrief: Q("[data-chat-input]", "center", { desktop: -70, tablet: -62, mobile: -50 }),
+  supportResolution: Q("[data-chat-input]", "center", { desktop: -62, tablet: -58, mobile: -46 })
+}, Vs = Q("[data-signup-field]", "center", {
   desktop: -74,
   tablet: -66,
   mobile: -48
-}), Ys = X("[data-send-button]", "center"), Za = {
+}), Ys = Q("[data-send-button]", "center"), Za = {
   desktop: {
     target: "[data-chat-shell]",
     anchor: "right",
@@ -6333,13 +6333,13 @@ function ao(o, e, t, a) {
     `[data-personalization-swipe-game="${Pe(t.id)}"]`
   );
   o.add(e.chat.personalizationSwipeGame(t), a), t.signals.forEach((r, n) => {
-    const s = `${i} [data-swipe-card="${Pe(r.id)}"]`, l = r.decision === "use" ? 1 : -1, d = r.decision === "use" ? "right" : "left", c = X(s, d, {
+    const s = `${i} [data-swipe-card="${Pe(r.id)}"]`, l = r.decision === "use" ? 1 : -1, d = r.decision === "use" ? "right" : "left", c = Q(s, d, {
       desktop: { x: l * 154, y: n % 2 === 0 ? -18 : 16 },
       tablet: { x: l * 132, y: n % 2 === 0 ? -14 : 14 },
       mobile: { x: l * 86, y: n % 2 === 0 ? -10 : 10 }
     }, !1);
     o.add(
-      e.cursor.moveTo(X(s, "center", {}, !1), {
+      e.cursor.moveTo(Q(s, "center", {}, !1), {
         intent: "hover",
         mode: "default",
         speed: n === 0 ? "normal" : "quick",
@@ -7459,7 +7459,7 @@ const co = [
       const e = o.chat.prepareCsvDropArea({
         title: "Drop business context files",
         detail: "Battle cards, playbooks, ICP notes, voice docs, and messaging context."
-      }), t = o.chat.prepareCursorFile("4 context files", o.cursor, "DOC"), a = X("[data-chat-shell]", "center", {
+      }), t = o.chat.prepareCursorFile("4 context files", o.cursor, "DOC"), a = Q("[data-chat-shell]", "center", {
         desktop: { x: 0, y: 74 },
         tablet: { x: 0, y: 64 },
         mobile: { x: 0, y: 56 }
@@ -7537,22 +7537,23 @@ const co = [
     entry: Mi.researchBrief,
     entryLeadTime: Ri,
     build: (o) => {
-      const e = X(
+      const e = Q(
         '[data-data-table="website-visitors-sales"] [data-table-page-button="2"]',
         "center"
-      ), t = X(
-        '[data-data-table="website-visitors-sales"] [data-table-page-button="1"]',
-        "center"
-      ), a = X(
+      ), t = Q(
         '[data-data-table="website-visitors-sales"] [data-table-action="power-dialer"]',
-        "center"
-      ), i = X(
+        "center",
+        { desktop: { x: 5, y: 0 }, tablet: { x: 4, y: 0 }, mobile: { x: 3, y: 0 } },
+        !1
+      ), a = Q(
         '[data-data-table="website-visitors-sales"] [data-table-action="email-sequence"]',
-        "center"
-      ), r = X(
+        "center",
+        {},
+        !1
+      ), i = Q(
         '[data-sequence-person-button="visitor-outreach-sequences:next"]',
         "center"
-      ), n = X(
+      ), r = Q(
         '[data-sequence-kickoff="visitor-outreach-sequences"]',
         "center"
       );
@@ -7575,33 +7576,26 @@ const co = [
         },
         { kind: "cursorClick", at: "-=0.02" },
         { kind: "custom", build: () => o.chat.dataTablePage("website-visitors-sales", 2), at: "-=0.03" },
+        { kind: "status", text: "Ready to engage", at: "+=0.1" },
         {
           kind: "custom",
-          build: () => o.timeline().to({}, { duration: O.beat })
+          build: () => o.timeline().to({}, { duration: O.beat + 0.58 })
         },
         {
           kind: "cursorMove",
           target: t,
-          options: { mode: "pointer", intent: "click", speed: "normal", label: "return-visitor-page-1" }
+          options: { mode: "pointer", intent: "hover", speed: "slow", label: "hover-power-dialer" },
+          at: "+=0.42"
         },
-        { kind: "cursorClick", at: "-=0.02" },
-        { kind: "custom", build: () => o.chat.dataTablePage("website-visitors-sales", 1), at: "-=0.03" },
-        { kind: "status", text: "Ready to engage", at: "<" },
-        {
-          kind: "cursorMove",
-          target: a,
-          options: { mode: "pointer", intent: "hover", speed: "normal", label: "hover-power-dialer" },
-          at: "+=0.24"
-        },
-        { kind: "custom", build: () => o.chat.dataTableActionTooltip("website-visitors-sales", "power-dialer", !0), at: "<+=0.04" },
+        { kind: "custom", build: () => o.chat.dataTableActionTooltip("website-visitors-sales", "power-dialer", !0) },
         { kind: "custom", build: () => o.timeline().to({}, { duration: O.beat + 1 }), at: "+=0.12" },
         { kind: "custom", build: () => o.chat.dataTableActionTooltip("website-visitors-sales", "power-dialer", !1), at: "<" },
         {
           kind: "cursorMove",
-          target: i,
-          options: { mode: "pointer", intent: "hover", speed: "normal", label: "hover-email-sequence" }
+          target: a,
+          options: { mode: "pointer", intent: "hover", speed: "slow", label: "hover-email-sequence" }
         },
-        { kind: "custom", build: () => o.chat.dataTableActionTooltip("website-visitors-sales", "email-sequence", !0), at: "<+=0.04" },
+        { kind: "custom", build: () => o.chat.dataTableActionTooltip("website-visitors-sales", "email-sequence", !0) },
         { kind: "cursorClick", at: "+=0.18" },
         { kind: "custom", build: () => o.chat.dataTableActionTooltip("website-visitors-sales", "email-sequence", !1), at: "<+=0.02" },
         { kind: "status", text: "Building outreach sequence", at: "<" },
@@ -7610,7 +7604,7 @@ const co = [
         { kind: "custom", build: () => o.timeline().to({}, { duration: O.beat + 0.24 }), at: "+=0.04" },
         {
           kind: "cursorMove",
-          target: r,
+          target: i,
           options: { mode: "pointer", intent: "click", speed: "normal", label: "preview-evan-sequence" }
         },
         { kind: "cursorClick", at: "-=0.02" },
@@ -7618,7 +7612,7 @@ const co = [
         { kind: "custom", build: () => o.timeline().to({}, { duration: O.beat + 0.24 }), at: "+=0.04" },
         {
           kind: "cursorMove",
-          target: r,
+          target: i,
           options: { mode: "pointer", intent: "click", speed: "normal", label: "preview-clara-sequence" }
         },
         { kind: "cursorClick", at: "-=0.02" },
@@ -7626,7 +7620,7 @@ const co = [
         { kind: "custom", build: () => o.timeline().to({}, { duration: O.beat + 0.28 }), at: "+=0.04" },
         {
           kind: "cursorMove",
-          target: n,
+          target: r,
           options: { mode: "pointer", intent: "click", speed: "normal", label: "kickoff-visitor-sequence" }
         },
         { kind: "cursorClick", at: "-=0.02" },
@@ -7648,7 +7642,7 @@ const co = [
     },
     entryLeadTime: 0.18,
     build: (o) => {
-      const e = o.chat.prepareCsvDropArea(), t = o.chat.prepareCursorFile("webinar_attendees.csv", o.cursor), a = X("[data-chat-shell]", "center", {
+      const e = o.chat.prepareCsvDropArea(), t = o.chat.prepareCursorFile("webinar_attendees.csv", o.cursor), a = Q("[data-chat-shell]", "center", {
         desktop: { x: 0, y: 82 },
         tablet: { x: 0, y: 72 },
         mobile: { x: 0, y: 64 }
@@ -7697,7 +7691,7 @@ const co = [
   minAverageSpeed: 0.54,
   minTravelToNetRatio: 2.55,
   maxNetDistance: 165
-}, Q = {
+}, J = {
   smoothing: 0.22,
   trailDistance: 60,
   minPointerDistance: 44,
@@ -7774,7 +7768,7 @@ class Eo {
     }
     if (this.active) {
       const a = performance.now();
-      this.mode === "follow" ? (this.updateFollowTarget(t), this.lastMoveAt = a, this.trackDismissShake(t, a), this.hasDismissShake() && this.startReturnAfterPause(0)) : this.mode === "sniff" && this.isPointNearStoryCursor(t, Q.reengageRadius) && this.resumeFollowing(t), this.scheduleFollow();
+      this.mode === "follow" ? (this.updateFollowTarget(t), this.lastMoveAt = a, this.trackDismissShake(t, a), this.hasDismissShake() && this.startReturnAfterPause(0)) : this.mode === "sniff" && this.isPointNearStoryCursor(t, J.reengageRadius) && this.resumeFollowing(t), this.scheduleFollow();
       return;
     }
     if (!this.isPointNearStoryCursor(t)) {
@@ -7820,11 +7814,11 @@ class Eo {
         this.startReturnAfterPause();
         return;
       }
-      if (e - this.lastMoveAt > Q.idleTimeoutMs) {
+      if (e - this.lastMoveAt > J.idleTimeoutMs) {
         this.stopMimicking();
         return;
       }
-      this.applyMomentum(e), this.cursor.mimicViewportPoint(this.target, Q.smoothing, this.pointer ?? this.target), this.scheduleFollow();
+      this.applyMomentum(e), this.cursor.mimicViewportPoint(this.target, J.smoothing, this.pointer ?? this.target), this.scheduleFollow();
     }
   };
   updateFollowTarget(e) {
@@ -7840,13 +7834,13 @@ class Eo {
       i > 1.5 && (this.trailDirection = {
         x: a.x / i,
         y: a.y / i
-      }, this.velocity = Ro(a, Q.maxMomentumStep));
+      }, this.velocity = Ro(a, J.maxMomentumStep));
     }
     const t = {
-      x: e.x - this.trailDirection.x * Q.trailDistance,
-      y: e.y - this.trailDirection.y * Q.trailDistance
+      x: e.x - this.trailDirection.x * J.trailDistance,
+      y: e.y - this.trailDirection.y * J.trailDistance
     };
-    it(e, t) < Q.minPointerDistance && (t.x = e.x - this.trailDirection.x * Q.minPointerDistance, t.y = e.y - this.trailDirection.y * Q.minPointerDistance), this.target = t, this.pointer = e, this.lastPointer = e;
+    it(e, t) < J.minPointerDistance && (t.x = e.x - this.trailDirection.x * J.minPointerDistance, t.y = e.y - this.trailDirection.y * J.minPointerDistance), this.target = t, this.pointer = e, this.lastPointer = e;
   }
   resumeFollowing(e) {
     this.mode = "follow", this.sniffAnchor = null, this.nextSniffAt = 0, this.sniffIndex = 0, this.returnAt = 0, this.lastPointer = e, this.updateFollowTarget(e), this.dismissSamples = [], this.lastMoveAt = performance.now();
@@ -7865,15 +7859,15 @@ class Eo {
     }, this.sniffIndex += 1, this.nextSniffAt = e + Wt.pointIntervalMs;
   }
   applyMomentum(e) {
-    !this.target || e - this.lastMoveAt < 48 || Math.hypot(this.velocity.x, this.velocity.y) < Q.minMomentum || (this.target = {
-      x: this.target.x + this.velocity.x * Q.momentumScale,
-      y: this.target.y + this.velocity.y * Q.momentumScale
+    !this.target || e - this.lastMoveAt < 48 || Math.hypot(this.velocity.x, this.velocity.y) < J.minMomentum || (this.target = {
+      x: this.target.x + this.velocity.x * J.momentumScale,
+      y: this.target.y + this.velocity.y * J.momentumScale
     }, this.velocity = {
-      x: this.velocity.x * Q.momentumDecay,
-      y: this.velocity.y * Q.momentumDecay
+      x: this.velocity.x * J.momentumDecay,
+      y: this.velocity.y * J.momentumDecay
     });
   }
-  startReturnAfterPause(e = Q.returnDelayMs) {
+  startReturnAfterPause(e = J.returnDelayMs) {
     this.active && (this.mode = "returnWait", this.target = null, this.pointer = null, this.lastPointer = null, this.returnStart = null, this.returnStartedAt = 0, this.velocity = { x: 0, y: 0 }, this.dismissSamples = [], window.cancelAnimationFrame(this.frame), this.frame = 0, this.returnAt = performance.now() + e, this.scheduleFollow());
   }
   beginReturn(e) {
@@ -7905,7 +7899,7 @@ class Eo {
       x: t.left + a.x,
       y: t.top + a.y
     };
-    return Mo(i, e) > Q.maxBrowserDistance;
+    return Mo(i, e) > J.maxBrowserDistance;
   }
   isPointNearStoryCursor(e, t = Ht.radius) {
     const a = this.root.getBoundingClientRect(), i = this.cursor.readPosition(), r = {
