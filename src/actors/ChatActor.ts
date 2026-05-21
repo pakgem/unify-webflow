@@ -193,12 +193,33 @@ const THINKING_STEP_FOLD = {
   duration: motionDuration(0.24),
 };
 
+/* --------------------------------------------------------------------------
+   Composer Show/Hide Storyboard
+
+       0ms   hidden shell rests below position, width/height compressed
+       0ms   show: shell rises into place and expands to full size
+      42ms   show: inner text/button finish settling into the shell
+       0ms   hide: shell compresses and drifts downward as one object
+     done   hidden shell is removed from pointer and accessibility flow
+   -------------------------------------------------------------------------- */
+
+const COMPOSER_TIMING = {
+  showContents: 0.042, // seconds after shell starts moving
+  threadSync: 0, // thread padding follows the shell immediately
+};
+
 const COMPOSER_MOTION = {
-  hiddenY: 0,
-  hiddenScaleX: 0.58,
-  hiddenScaleY: 0.58,
-  showDuration: motionDuration(0.3),
-  hideDuration: motionDuration(0.36),
+  hiddenY: 18,
+  hiddenScaleX: 0.84,
+  hiddenScaleY: 0.68,
+  contentShowY: 3,
+  contentHideY: 2,
+  showDuration: motionDuration(0.38),
+  hideDuration: motionDuration(0.34),
+  showEase: "back.out(0.72)",
+  hideEase: "power3.inOut",
+  contentEase: "power2.out",
+  origin: "center center",
   threadGap: 44,
 };
 
@@ -435,7 +456,7 @@ export class ChatActor {
     this.messageIndex = 0;
     this.cardIndex = 0;
     this.composerText.textContent = "";
-    gsap.killTweensOf([this.composer, this.composerText, this.thread]);
+    gsap.killTweensOf([this.composer, this.composerText, ...this.composerContents, this.thread]);
     this.setComposerFocusState(false);
     this.setComposerVisibleState(false);
     this.activeTablePageTimelines.forEach((timeline) => timeline.kill());
@@ -457,6 +478,7 @@ export class ChatActor {
       display: "",
     });
     gsap.set(this.composer, this.getComposerHiddenVars());
+    gsap.set(this.composerContents, this.getComposerContentsHiddenVars());
     gsap.set(this.composerText, { autoAlpha: 1, y: 0 });
 
     for (const message of this.messagePool) {
@@ -480,6 +502,7 @@ export class ChatActor {
     this.setComposerFocusState(false);
     this.setComposerVisibleState(false);
     gsap.set(this.composer, this.getComposerHiddenVars());
+    gsap.set(this.composerContents, this.getComposerContentsHiddenVars());
     gsap.set(this.composerText, { autoAlpha: 1, y: 0 });
   }
 
@@ -521,6 +544,7 @@ export class ChatActor {
       y: 34,
     });
     gsap.set(this.composer, this.getComposerHiddenVars());
+    gsap.set(this.composerContents, this.getComposerContentsHiddenVars());
     this.setComposerVisibleState(false);
   }
 
@@ -565,81 +589,95 @@ export class ChatActor {
   showComposer(): gsap.core.Timeline {
     const tl = gsap.timeline();
 
-    tl.to(this.composer, {
-      y: 0,
-      scaleX: 1,
-      scaleY: 1,
-      visibility: "visible",
-      duration: COMPOSER_MOTION.showDuration,
-      ease: "power3.out",
-      force3D: true,
-      overwrite: "auto",
-      onStart: () => {
-        this.setComposerVisibleState(true);
-        gsap.set(this.composerContents, {
-          visibility: "visible",
-          opacity: 1,
-          clearProps: "transform",
-        });
-        gsap.set(this.composer, {
-          display: "grid",
-          opacity: 1,
-          visibility: "visible",
-          transformOrigin: "center center",
-        });
-      },
-      onUpdate: () => {
-        if (!this.composerVisible) this.setComposerVisibleState(true);
-      },
-      onComplete: () => {
-        if (!this.composerVisible) this.setComposerVisibleState(true);
-      },
-    }).to(
-      this.thread,
-      {
-        paddingBottom: () => Math.max(CHAT_BOTTOM_CLEARANCE, this.getComposerThreadInset()),
+    tl
+      .set(this.composer, {
+        ...this.getComposerHiddenVars(),
+        display: "grid",
+        visibility: "visible",
+      })
+      .set(this.composerContents, {
+        visibility: "visible",
+        opacity: 1,
+        y: COMPOSER_MOTION.contentShowY,
+      })
+      .call(() => this.setComposerVisibleState(true))
+      .to(this.composer, {
+        y: 0,
+        scaleX: 1,
+        scaleY: 1,
         duration: COMPOSER_MOTION.showDuration,
-        ease: "power3.out",
+        ease: COMPOSER_MOTION.showEase,
+        force3D: true,
         overwrite: "auto",
-        onUpdate: () => this.pinThreadToBottom(),
-        onComplete: () => this.pinThreadToBottom(),
-      },
-      0,
-    );
+        onUpdate: () => {
+          if (!this.composerVisible) this.setComposerVisibleState(true);
+        },
+        onComplete: () => {
+          if (!this.composerVisible) this.setComposerVisibleState(true);
+        },
+      }, 0)
+      .to(this.composerContents, {
+        y: 0,
+        opacity: 1,
+        duration: motionDuration(0.24),
+        ease: COMPOSER_MOTION.contentEase,
+        overwrite: "auto",
+      }, COMPOSER_TIMING.showContents)
+      .to(
+        this.thread,
+        {
+          paddingBottom: () => Math.max(CHAT_BOTTOM_CLEARANCE, this.getComposerThreadInset()),
+          duration: COMPOSER_MOTION.showDuration,
+          ease: COMPOSER_MOTION.showEase,
+          overwrite: "auto",
+          onUpdate: () => this.pinThreadToBottom(),
+          onComplete: () => this.pinThreadToBottom(),
+        },
+        COMPOSER_TIMING.threadSync,
+      );
 
     return tl;
   }
 
   hideComposer(): gsap.core.Timeline {
-    return gsap.timeline().to(this.composer, {
-      y: COMPOSER_MOTION.hiddenY,
-      scaleX: COMPOSER_MOTION.hiddenScaleX,
-      scaleY: COMPOSER_MOTION.hiddenScaleY,
-      opacity: 1,
-      duration: COMPOSER_MOTION.hideDuration,
-      ease: "sine.inOut",
-      force3D: true,
-      overwrite: "auto",
-      onStart: () => {
-        this.setComposerFocusState(false);
-        this.setComposerVisibleState(false);
-      },
-      onComplete: () => {
-        gsap.set(this.composerContents, { visibility: "hidden" });
-        gsap.set(this.composer, { visibility: "hidden" });
-      },
-    }).to(
-      this.thread,
-      {
-        paddingBottom: CHAT_BOTTOM_CLEARANCE,
-        duration: COMPOSER_MOTION.hideDuration,
-        ease: "sine.inOut",
+    return gsap.timeline()
+      .to(this.composerContents, {
+        y: COMPOSER_MOTION.contentHideY,
+        opacity: 1,
+        duration: motionDuration(0.18),
+        ease: "power2.inOut",
         overwrite: "auto",
-        onUpdate: () => this.pinThreadToBottom(),
-        onComplete: () => this.pinThreadToBottom(),
-      },
-      0,
-    );
+      }, 0)
+      .to(this.composer, {
+        y: COMPOSER_MOTION.hiddenY,
+        scaleX: COMPOSER_MOTION.hiddenScaleX,
+        scaleY: COMPOSER_MOTION.hiddenScaleY,
+        opacity: 1,
+        duration: COMPOSER_MOTION.hideDuration,
+        ease: COMPOSER_MOTION.hideEase,
+        force3D: true,
+        overwrite: "auto",
+        onStart: () => {
+          this.setComposerFocusState(false);
+          this.setComposerVisibleState(false);
+        },
+        onComplete: () => {
+          gsap.set(this.composerContents, { visibility: "hidden" });
+          gsap.set(this.composer, { visibility: "hidden" });
+        },
+      }, 0)
+      .to(
+        this.thread,
+        {
+          paddingBottom: CHAT_BOTTOM_CLEARANCE,
+          duration: COMPOSER_MOTION.hideDuration,
+          ease: COMPOSER_MOTION.hideEase,
+          overwrite: "auto",
+          onUpdate: () => this.pinThreadToBottom(),
+          onComplete: () => this.pinThreadToBottom(),
+        },
+        0,
+      );
   }
 
   clearComposer(): gsap.core.Timeline {
@@ -667,7 +705,15 @@ export class ChatActor {
       scaleX: COMPOSER_MOTION.hiddenScaleX,
       scaleY: COMPOSER_MOTION.hiddenScaleY,
       display: "",
-      transformOrigin: "center center",
+      transformOrigin: COMPOSER_MOTION.origin,
+    };
+  }
+
+  private getComposerContentsHiddenVars(): gsap.TweenVars {
+    return {
+      visibility: "hidden",
+      opacity: 1,
+      y: COMPOSER_MOTION.contentHideY,
     };
   }
 
@@ -697,6 +743,7 @@ export class ChatActor {
         y: 34,
       })
       .set(this.composer, this.getComposerHiddenVars())
+      .set(this.composerContents, this.getComposerContentsHiddenVars())
       .call(() => this.setComposerVisibleState(false));
   }
 
@@ -741,6 +788,7 @@ export class ChatActor {
         SIGNUP_TRANSITION.threadOverlap,
       )
       .set(this.composer, this.getComposerHiddenVars())
+      .set(this.composerContents, this.getComposerContentsHiddenVars())
       .call(() => this.setComposerVisibleState(false));
   }
 
