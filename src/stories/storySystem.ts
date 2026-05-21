@@ -13,6 +13,8 @@ import type {
   SequenceEngagementConfig,
   StoryContext,
   StrategyPlanConfig,
+  ThinkingItemConfig,
+  ThinkingStateConfig,
 } from "../core/types";
 
 type TimelinePosition = string | number;
@@ -119,7 +121,11 @@ type ThinkingStep = {
   hold?: number;
   statusBefore?: string;
   at?: TimelinePosition;
-} & ({ label: string; steps?: never } | { steps: string[]; label?: never });
+} & (
+  | { label: string | ThinkingItemConfig; steps?: never; thinking?: never }
+  | { steps: Array<string | ThinkingItemConfig>; label?: never; thinking?: never }
+  | { thinking: ThinkingStateConfig; label?: never; steps?: never }
+);
 
 export const EXIT_TARGETS = {
   right: { target: "[data-chat-shell]", anchor: "right", outside: "right" },
@@ -201,10 +207,11 @@ function addStep(
       });
       return;
     case "thinking": {
-      const thinkingItems = getThinkingItems(step);
+      const thinkingState = getThinkingState(step);
+      const thinkingLabels = thinkingState.items.map((item) => item.label);
       if (step.statusBefore) tl.add(ctx.chat.setStatus(step.statusBefore), step.at);
-      tl.add(ctx.chat.thinkingState(thinkingItems, step.hold), step.statusBefore ? undefined : step.at);
-      addThinkingCursorMotion(tl, ctx, attention, step.hold, thinkingItems.length, thinkingItems.join("|"), stepIndex);
+      tl.add(ctx.chat.thinkingState(thinkingState, step.hold), step.statusBefore ? undefined : step.at);
+      addThinkingCursorMotion(tl, ctx, attention, step.hold, thinkingLabels.length, thinkingLabels.join("|"), stepIndex);
       return;
     }
     case "dataTable":
@@ -282,10 +289,15 @@ function addStep(
   }
 }
 
-function getThinkingItems(step: ThinkingStep): string[] {
-  if (Array.isArray(step.steps)) return step.steps;
+function getThinkingState(step: ThinkingStep): ThinkingStateConfig {
+  if ("thinking" in step && step.thinking) return step.thinking;
+  if (Array.isArray(step.steps)) return { items: step.steps.map(normalizeThinkingItem) };
 
-  return [step.label as string];
+  return { items: [normalizeThinkingItem(step.label ?? "")] };
+}
+
+function normalizeThinkingItem(item: string | ThinkingItemConfig): ThinkingItemConfig {
+  return typeof item === "string" ? { label: item } : item;
 }
 
 function addComponentWithAttention(

@@ -3626,6 +3626,47 @@ body {
   font-weight: var(--wa-chat-thinking-weight);
 }
 
+.wa-builder-thinking__header-input,
+.wa-builder-thinking__elapsed-input,
+.wa-builder-thinking__detail-input,
+.wa-builder-thinking__disclosure-input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  font: inherit;
+  letter-spacing: 0;
+  outline: 0;
+}
+
+.wa-builder-thinking__header-input {
+  min-width: 86px;
+}
+
+.wa-builder-thinking__elapsed-input {
+  width: 62px;
+}
+
+.wa-builder-thinking__detail-input {
+  color: var(--wa-color-muted);
+  font-size: inherit;
+  line-height: inherit;
+  font-weight: inherit;
+  resize: none;
+}
+
+.wa-builder-thinking__disclosure {
+  margin-top: 3px;
+}
+
+.wa-builder-thinking__disclosure-input {
+  color: var(--wa-color-muted);
+  font-size: 12px;
+  line-height: 1.1;
+  font-weight: 560;
+}
+
 .wa-builder-component-card {
   display: grid;
   width: 100%;
@@ -3646,6 +3687,7 @@ body {
 .wa-builder-component-card__title,
 .wa-builder-component-card__subtitle,
 .wa-builder-component-list__item,
+.wa-builder-table-editor__meta,
 .wa-builder-table-editor__cell,
 .wa-builder-strategy-editor input,
 .wa-builder-strategy-editor textarea,
@@ -3746,6 +3788,28 @@ body {
 .wa-builder-table-editor__row[data-header="true"] .wa-builder-table-editor__cell {
   color: var(--wa-color-muted);
   font-weight: 560;
+}
+
+.wa-builder-table-editor__meta {
+  min-height: 20px;
+  color: var(--wa-color-muted);
+  font-size: 12px;
+  line-height: 1.2;
+  font-weight: 480;
+}
+
+.wa-builder-table-editor__footer-fields {
+  display: grid;
+  gap: 8px;
+}
+
+.wa-builder-table-editor__action-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  overflow: hidden;
+  border: 1px solid var(--wa-line-08);
+  border-radius: var(--wa-radius-sm);
+  background: var(--wa-panel);
 }
 
 .wa-builder-strategy-editor {

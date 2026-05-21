@@ -1,4 +1,12 @@
 import type { StoryDefinition } from "../core/types";
+import {
+  DEFAULT_THINKING_COLLAPSED_DISCLOSURE,
+  DEFAULT_THINKING_DISCLOSURE,
+  DEFAULT_THINKING_TITLE,
+  createThinkingItems,
+  getDefaultThinkingDetail,
+  getThinkingElapsedLabel,
+} from "../stories/thinkingText";
 
 type BuilderStepKind =
   | "user"
@@ -12,8 +20,18 @@ type BuilderStepKind =
 type BuilderTableComponent = {
   kind: "table";
   title: string;
+  eyebrow?: string;
+  count?: string;
   columns: string[];
   rows: string[][];
+  actions?: Array<{
+    label: string;
+    tooltip: string;
+    badge: string;
+  }>;
+  pagination?: {
+    ranges: string[];
+  };
 };
 
 type BuilderStrategyComponent = {
@@ -101,11 +119,20 @@ type BuilderSequenceEngagementComponent = {
   title: string;
   subtitle: string;
   peopleCount: string;
+  launchLabel?: string;
   sequences: Array<{
     name: string;
     company: string;
+    title?: string;
+    signal?: string;
     subject: string;
     personalization: string;
+    steps?: Array<{
+      channel: string;
+      label: string;
+      body: string;
+      waitDays?: string;
+    }>;
   }>;
   channels: Array<{
     label: string;
@@ -132,12 +159,23 @@ type BuilderComponent =
   | BuilderSequenceEngagementComponent
   | BuilderGenericComponent;
 
+type BuilderThinkingState = {
+  title: string;
+  elapsed: string;
+  items: Array<{
+    label: string;
+    detail: string;
+    disclosure: string;
+  }>;
+};
+
 type BuilderStep = {
   id: string;
   kind: BuilderStepKind;
   text: string;
   note: string;
   component?: BuilderComponent;
+  thinking?: BuilderThinkingState;
 };
 
 type BuilderStory = {
@@ -177,6 +215,7 @@ const STEP_KIND_LABELS: Record<BuilderStepKind, string> = {
 const ADDABLE_STEP_KINDS: BuilderStepKind[] = ["user", "assistant", "thinking", "component", "cursor", "file"];
 const DEFAULT_DRAFT_ENDPOINT = "/api/story-draft";
 const DRAFT_SAVE_DEBOUNCE_MS = 800;
+const BUILDER_DRAFT_SCHEMA_VERSION = 2;
 
 export class StoryBuilder {
   private refs: StoryBuilderRefs | null = null;
@@ -194,7 +233,7 @@ export class StoryBuilder {
 
   constructor(
     private root: HTMLElement,
-    sourceStories: StoryDefinition[],
+    private sourceStories: StoryDefinition[],
     private options: StoryBuilderOptions = {},
   ) {
     this.stories = createBuilderStories(sourceStories);
@@ -275,6 +314,16 @@ export class StoryBuilder {
     });
 
     this.on(refs.thread, "input", (event) => {
+      const thinkingField = (event.target as Element | null)?.closest<
+        HTMLInputElement | HTMLTextAreaElement
+      >("[data-builder-thinking-field]");
+
+      if (thinkingField) {
+        this.handleThinkingInput(thinkingField);
+        if (thinkingField instanceof HTMLTextAreaElement) this.autoSize(thinkingField);
+        return;
+      }
+
       const componentField = (event.target as Element | null)?.closest<
         HTMLInputElement | HTMLTextAreaElement
       >("[data-builder-component-field]");
@@ -386,7 +435,7 @@ export class StoryBuilder {
     );
     refs.thread.replaceChildren(...nodes);
 
-    refs.thread.querySelectorAll<HTMLTextAreaElement>("[data-builder-step-field]").forEach((field) => {
+    refs.thread.querySelectorAll<HTMLTextAreaElement>("[data-builder-step-field], [data-builder-thinking-field]").forEach((field) => {
       this.autoSize(field);
     });
   }
@@ -451,7 +500,10 @@ export class StoryBuilder {
 
     if (!refs) return;
 
-    refs.export.value = JSON.stringify({ stories: this.stories }, null, 2);
+    refs.export.value = JSON.stringify({
+      schemaVersion: BUILDER_DRAFT_SCHEMA_VERSION,
+      stories: this.stories,
+    }, null, 2);
     this.autoSize(refs.export);
   }
 
@@ -584,6 +636,8 @@ export class StoryBuilder {
   }
 
   private createThinkingBody(step: BuilderStep, suppressHeader = false): HTMLElement {
+    step.thinking ??= createThinkingState(step.text, step.note);
+
     const block = document.createElement("div");
     block.className = "wa-thinking-block wa-builder-thinking";
 
@@ -596,37 +650,67 @@ export class StoryBuilder {
 
     const title = document.createElement("span");
     title.className = "wa-thinking__title";
-    title.textContent = "Thinking";
+    title.append(
+      this.createThinkingInput(step.id, "title", step.thinking.title, {
+        className: "wa-builder-thinking__header-input",
+      }),
+    );
 
     const elapsed = document.createElement("span");
     elapsed.className = "wa-thinking__elapsed";
-    elapsed.textContent = "4m 20s";
+    elapsed.append(
+      this.createThinkingInput(step.id, "elapsed", step.thinking.elapsed, {
+        className: "wa-builder-thinking__elapsed-input",
+      }),
+    );
 
     const steps = document.createElement("div");
     steps.className = "wa-research-steps";
 
-    const item = document.createElement("div");
-    item.className = "wa-research-step wa-builder-research-step";
-    item.dataset.stepState = "current";
+    step.thinking.items.forEach((thinkingItem, itemIndex) => {
+      const item = document.createElement("div");
+      item.className = "wa-research-step wa-builder-research-step";
+      item.dataset.stepState = "current";
 
-    const check = document.createElement("span");
-    check.className = "wa-research-step__check";
-    check.setAttribute("aria-hidden", "true");
+      const check = document.createElement("span");
+      check.className = "wa-research-step__check";
+      check.setAttribute("aria-hidden", "true");
 
-    const copy = document.createElement("div");
-    copy.className = "wa-research-step__body";
+      const copy = document.createElement("div");
+      copy.className = "wa-research-step__body";
 
-    const label = document.createElement("div");
-    label.className = "wa-research-step__label";
-    label.append(this.createInlineTextarea(step));
+      const label = document.createElement("div");
+      label.className = "wa-research-step__label";
+      label.append(
+        this.createThinkingField(step.id, "label", thinkingItem.label, {
+          itemIndex,
+          className: "wa-builder-step__textarea wa-builder-thinking__label-input",
+        }),
+      );
 
-    const detail = document.createElement("div");
-    detail.className = "wa-research-step__detail";
-    detail.textContent = step.note || "Add the evidence, source, or transformation this thinking step should reveal.";
+      const detail = document.createElement("div");
+      detail.className = "wa-research-step__detail";
+      detail.append(
+        this.createThinkingField(step.id, "detail", thinkingItem.detail, {
+          itemIndex,
+          className: "wa-builder-thinking__detail-input",
+        }),
+      );
 
-    copy.append(label, detail);
-    item.append(check, copy);
-    steps.append(item);
+      const disclosure = document.createElement("div");
+      disclosure.className = "wa-research-step__disclosure wa-builder-thinking__disclosure";
+      disclosure.append(
+        this.createThinkingInput(step.id, "disclosure", thinkingItem.disclosure, {
+          itemIndex,
+          className: "wa-builder-thinking__disclosure-input",
+        }),
+      );
+
+      copy.append(label, detail, disclosure);
+      item.append(check, copy);
+      steps.append(item);
+    });
+
     header.append(glyph, title, elapsed);
     if (suppressHeader) {
       block.dataset.thinkingHeaderSuppressed = "true";
@@ -698,6 +782,12 @@ export class StoryBuilder {
     const title = this.createComponentField(step.id, "title", component.title, {
       className: "wa-builder-component-card__title",
     });
+    const eyebrow = this.createComponentInput(step.id, "eyebrow", component.eyebrow ?? "", {
+      className: "wa-builder-table-editor__meta",
+    });
+    const count = this.createComponentInput(step.id, "count", component.count ?? "", {
+      className: "wa-builder-table-editor__meta",
+    });
 
     const table = document.createElement("div");
     table.className = "wa-builder-table-editor";
@@ -735,7 +825,39 @@ export class StoryBuilder {
       table.append(rowEl);
     });
 
-    content.append(label, title, table);
+    const footerFields = document.createElement("div");
+    footerFields.className = "wa-builder-table-editor__footer-fields";
+
+    component.actions?.forEach((action, itemIndex) => {
+      const actionRow = document.createElement("div");
+      actionRow.className = "wa-builder-table-editor__action-row";
+      actionRow.append(
+        this.createComponentInput(step.id, "actionLabel", action.label, {
+          itemIndex,
+          className: "wa-builder-table-editor__cell",
+        }),
+        this.createComponentInput(step.id, "actionTooltip", action.tooltip, {
+          itemIndex,
+          className: "wa-builder-table-editor__cell",
+        }),
+        this.createComponentInput(step.id, "actionBadge", action.badge, {
+          itemIndex,
+          className: "wa-builder-table-editor__cell",
+        }),
+      );
+      footerFields.append(actionRow);
+    });
+
+    component.pagination?.ranges.forEach((range, itemIndex) => {
+      footerFields.append(
+        this.createComponentInput(step.id, "pageRange", range, {
+          itemIndex,
+          className: "wa-builder-table-editor__meta",
+        }),
+      );
+    });
+
+    content.append(label, title, eyebrow, count, table, footerFields);
     card.append(content);
     return card;
   }
@@ -1070,6 +1192,9 @@ export class StoryBuilder {
     const peopleCount = this.createComponentInput(step.id, "peopleCount", component.peopleCount, {
       className: "wa-builder-sequence-editor__count",
     });
+    const launchLabel = this.createComponentInput(step.id, "launchLabel", component.launchLabel ?? "", {
+      className: "wa-builder-sequence-editor__count",
+    });
 
     const sequences = document.createElement("div");
     sequences.className = "wa-builder-sequence-editor";
@@ -1086,6 +1211,14 @@ export class StoryBuilder {
           itemIndex,
           className: "wa-builder-sequence-editor__company",
         }),
+        this.createComponentInput(step.id, "sequenceTitle", sequence.title ?? "", {
+          itemIndex,
+          className: "wa-builder-sequence-editor__company",
+        }),
+        this.createComponentInput(step.id, "sequenceSignal", sequence.signal ?? "", {
+          itemIndex,
+          className: "wa-builder-sequence-editor__subject",
+        }),
         this.createComponentInput(step.id, "sequenceSubject", sequence.subject, {
           itemIndex,
           className: "wa-builder-sequence-editor__subject",
@@ -1095,6 +1228,30 @@ export class StoryBuilder {
           className: "wa-builder-sequence-editor__personalization",
         }),
       );
+      sequence.steps?.forEach((sequenceStep, fieldIndex) => {
+        sequenceCard.append(
+          this.createComponentInput(step.id, "sequenceStepChannel", sequenceStep.channel, {
+            itemIndex,
+            fieldIndex,
+            className: "wa-builder-sequence-editor__subject",
+          }),
+          this.createComponentInput(step.id, "sequenceStepLabel", sequenceStep.label, {
+            itemIndex,
+            fieldIndex,
+            className: "wa-builder-sequence-editor__subject",
+          }),
+          this.createComponentField(step.id, "sequenceStepBody", sequenceStep.body, {
+            itemIndex,
+            fieldIndex,
+            className: "wa-builder-sequence-editor__personalization",
+          }),
+          this.createComponentInput(step.id, "sequenceStepWaitDays", sequenceStep.waitDays ?? "", {
+            itemIndex,
+            fieldIndex,
+            className: "wa-builder-sequence-editor__count",
+          }),
+        );
+      });
       sequences.append(sequenceCard);
     });
 
@@ -1121,7 +1278,7 @@ export class StoryBuilder {
       channels.append(channelCard);
     });
 
-    content.append(title, subtitle, peopleCount, sequences, channels);
+    content.append(title, subtitle, peopleCount, launchLabel, sequences, channels);
     return card;
   }
 
@@ -1139,6 +1296,46 @@ export class StoryBuilder {
     content.append(label);
     card.append(content);
     return card;
+  }
+
+  private createThinkingField(
+    stepId: string,
+    fieldName: string,
+    value: string,
+    options: {
+      itemIndex?: number;
+      className: string;
+    },
+  ): HTMLTextAreaElement {
+    const field = document.createElement("textarea");
+    field.className = options.className;
+    field.dataset.builderThinkingField = fieldName;
+    field.dataset.builderThinkingStep = stepId;
+    field.value = value;
+    field.rows = 1;
+    field.spellcheck = true;
+    if (options.itemIndex !== undefined) field.dataset.builderThinkingItem = String(options.itemIndex);
+    return field;
+  }
+
+  private createThinkingInput(
+    stepId: string,
+    fieldName: string,
+    value: string,
+    options: {
+      itemIndex?: number;
+      className: string;
+    },
+  ): HTMLInputElement {
+    const field = document.createElement("input");
+    field.className = options.className;
+    field.dataset.builderThinkingField = fieldName;
+    field.dataset.builderThinkingStep = stepId;
+    field.value = value;
+    field.type = "text";
+    field.spellcheck = true;
+    if (options.itemIndex !== undefined) field.dataset.builderThinkingItem = String(options.itemIndex);
+    return field;
   }
 
   private createComponentField(
@@ -1373,6 +1570,7 @@ export class StoryBuilder {
     if (!step) return;
 
     Object.assign(step, patch);
+    if (step.kind === "thinking") syncThinkingFromStep(step, patch);
     this.renderExport();
     this.emitChange("Draft updated", false);
 
@@ -1494,6 +1692,27 @@ export class StoryBuilder {
     });
   }
 
+  private handleThinkingInput(target: HTMLInputElement | HTMLTextAreaElement): void {
+    const stepId = target.dataset.builderThinkingStep;
+    const field = target.dataset.builderThinkingField;
+    const itemIndex = toIndex(target.dataset.builderThinkingItem);
+    const step = stepId ? this.activeStory.steps.find((candidate) => candidate.id === stepId) : null;
+
+    if (!step || !field) return;
+
+    step.thinking ??= createThinkingState(step.text, step.note);
+    updateThinkingValue(step.thinking, field, target.value, itemIndex);
+    syncStepFromThinking(step);
+
+    if (this.selectedStepId === step.id) {
+      this.syncPanelStepText(step.text);
+      this.syncPanelStepNote(step.note);
+    }
+
+    this.renderExport();
+    this.emitChange("Thinking updated", false);
+  }
+
   private handleComponentInput(target: HTMLInputElement | HTMLTextAreaElement): void {
     const stepId = target.dataset.builderComponentStep;
     const field = target.dataset.builderComponentField;
@@ -1540,13 +1759,18 @@ export class StoryBuilder {
 
     if (field === "step-text") {
       this.updateStep(this.selectedStep.id, { text: target.value }, { renderThread: false });
-      this.syncThreadStepText(this.selectedStep.id, target.value);
+      if (this.selectedStep.kind === "thinking") {
+        this.syncThreadThinking(this.selectedStep);
+      } else {
+        this.syncThreadStepText(this.selectedStep.id, target.value);
+      }
       this.autoSize(target as HTMLTextAreaElement);
       return;
     }
 
     if (field === "step-note") {
       this.updateStep(this.selectedStep.id, { note: target.value }, { renderThread: false });
+      if (this.selectedStep.kind === "thinking") this.syncThreadThinking(this.selectedStep);
       this.autoSize(target as HTMLTextAreaElement);
     }
   }
@@ -1582,12 +1806,44 @@ export class StoryBuilder {
     this.autoSize(field);
   }
 
+  private syncThreadThinking(step: BuilderStep): void {
+    const refs = this.refs;
+
+    if (!refs || !step.thinking) return;
+
+    refs.thread.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(
+      `[data-builder-thinking-step="${step.id}"]`,
+    ).forEach((field) => {
+      const fieldName = field.dataset.builderThinkingField;
+      const itemIndex = toIndex(field.dataset.builderThinkingItem);
+      const value = getThinkingValue(step.thinking!, fieldName, itemIndex);
+
+      if (value === null || field.value === value) return;
+
+      field.value = value;
+      if (field instanceof HTMLTextAreaElement) this.autoSize(field);
+    });
+  }
+
   private syncPanelStepText(value: string): void {
     const refs = this.refs;
 
     if (!refs) return;
 
     const field = refs.panel.querySelector<HTMLTextAreaElement>("[data-builder-panel-input='step-text']");
+
+    if (!field || field.value === value) return;
+
+    field.value = value;
+    this.autoSize(field);
+  }
+
+  private syncPanelStepNote(value: string): void {
+    const refs = this.refs;
+
+    if (!refs) return;
+
+    const field = refs.panel.querySelector<HTMLTextAreaElement>("[data-builder-panel-input='step-note']");
 
     if (!field || field.value === value) return;
 
@@ -1644,17 +1900,21 @@ export class StoryBuilder {
       }
 
       const payload = await response.json() as unknown;
-      const remoteStories = normalizeBuilderDraftPayload(payload);
+      const remoteDraft = normalizeBuilderDraftPayload(payload);
+      const remoteStories = remoteDraft?.stories;
 
-      if (!remoteStories?.length) {
+      if (!remoteDraft || !remoteStories?.length) {
         throw new Error("draft payload did not include stories");
       }
 
-      this.stories = remoteStories;
+      this.stories = remoteDraft.schemaVersion === BUILDER_DRAFT_SCHEMA_VERSION
+        ? remoteStories
+        : createBuilderStories(this.sourceStories);
       this.activeStoryIndex = Math.min(this.activeStoryIndex, Math.max(0, this.stories.length - 1));
       this.selectedStepId = this.activeStory.steps[0]?.id ?? null;
       this.render();
-      this.setStatus("draft loaded");
+      this.setStatus(remoteDraft.schemaVersion === BUILDER_DRAFT_SCHEMA_VERSION ? "draft loaded" : "draft upgraded");
+      if (remoteDraft.schemaVersion !== BUILDER_DRAFT_SCHEMA_VERSION) this.queueRemoteSave();
     } catch {
       this.setStatus("remote draft unavailable; using local draft");
     } finally {
@@ -1693,7 +1953,10 @@ export class StoryBuilder {
           "Content-Type": "application/json",
           ...getDraftWriteHeaders(),
         },
-        body: JSON.stringify({ stories: this.stories }),
+        body: JSON.stringify({
+          schemaVersion: BUILDER_DRAFT_SCHEMA_VERSION,
+          stories: this.stories,
+        }),
       });
 
       if (!response.ok) {
@@ -1753,10 +2016,14 @@ function createSeedSteps(storyId: string, fallbackSummary: string): BuilderStep[
     "hit-ground-running": [
       { kind: "status", text: "Sign up", note: "Start in the browser sign-up screen." },
       { kind: "user", text: "joel@acme.co", note: "Typed into the sign-up field." },
-      { kind: "thinking", text: "Researching the company profile", note: "Read site copy, metadata, category, and recent announcements." },
-      { kind: "thinking", text: "Learning the ICP and buyer roles", note: "Infer accounts, personas, and likely pains from public signals." },
-      { kind: "thinking", text: "Reading blog posts and careers pages", note: "Find positioning themes and current priorities." },
-      { kind: "assistant", text: "I found three go-to-market strategies worth testing first.", note: "" },
+      createThinkingStepSeed([
+        "Researching the company profile",
+        "Learning the ICP and buyer roles",
+        "Reading blog posts for positioning",
+        "Scanning careers pages for priorities",
+        "Mapping current GTM signals",
+      ]),
+      { kind: "assistant", text: "I found three GTM paths worth testing first.", note: "" },
       {
         kind: "component",
         text: "Three compact GTM strategy cards",
@@ -1766,30 +2033,35 @@ function createSeedSteps(storyId: string, fallbackSummary: string): BuilderStep[
     ],
     "data-marketplace": [
       { kind: "user", text: "Show me new hires at dev-tool companies with 50+ employees.", note: "" },
-      { kind: "thinking", text: "Searching hiring signals across data sources", note: "Companies, contacts, jobs, LinkedIn, funding, and technographics." },
+      createThinkingStepSeed(["Searching hiring signals, headcount, and company data"]),
       {
         kind: "component",
-        text: "Table: matching new hires",
+        text: "Table: New hires at dev-tool companies",
         note: "No chrome around the table.",
-        component: createPeopleTableComponent("Matching new hires", [
+        component: createPeopleTableComponent("New hires at dev-tool companies", [
           ["Jamie Chen", "Ramp", "VP of Sales"],
           ["Andre Park", "Ramp", "Head of Growth"],
           ["David Kim", "Ramp", "Head of Revenue"],
           ["Chandler Bree", "Square", "VP of Sales"],
           ["Ellen Nelle", "Square", "Growth Engineer"],
-        ]),
+          ["Chadley Dupre", "Square", "Head of Revops"],
+          ["Patrick Bateman", "Stripe", "COO"],
+          ["Miles Kibble III", "Stripe", "Head of Chaos"],
+          ["Natalie Dank", "Stripe", "Money Manager"],
+        ], { eyebrow: "Natural language search", count: "9 records" }),
       },
       { kind: "user", text: "Filter to the ones that have raised in the past three months.", note: "" },
-      { kind: "thinking", text: "Checking recent funding events", note: "Keep the earlier table visible above this transformation." },
+      createThinkingStepSeed(["Checking rounds announced since February 2026"]),
       {
         kind: "component",
-        text: "Table: recently funded matches",
+        text: "Table: Raised in the past three months",
         note: "A smaller table appears after the filter message.",
-        component: createPeopleTableComponent("Recently funded matches", [
+        component: createPeopleTableComponent("Raised in the past three months", [
           ["Jamie Chen", "Ramp", "VP of Sales"],
           ["Andre Park", "Ramp", "Head of Growth"],
           ["David Kim", "Ramp", "Head of Revenue"],
-        ]),
+          ["Patrick Bateman", "Stripe", "COO"],
+        ], { eyebrow: "Filtered results", count: "3 records" }),
       },
       { kind: "user", text: "Okay, enrich these contacts.", note: "" },
       {
@@ -1805,11 +2077,19 @@ function createSeedSteps(storyId: string, fallbackSummary: string): BuilderStep[
         component: {
           kind: "table",
           title: "Enriched contacts",
+          eyebrow: "ready to engage",
+          count: "3 contacts",
           columns: ["Name", "Company", "Title", "Email", "Number"],
           rows: [
             ["Jamie Chen", "Ramp", "VP of Sales", "jamie@ramp.com", "+1 (628) 240-2744"],
             ["Andre Park", "Ramp", "Head of Growth", "andre@ramp.com", "+1 (210) 555-2341"],
             ["David Kim", "Ramp", "Head of Revenue", "david@ramp.com", "+1 (628) 230-9962"],
+            ["Chandler Bree", "Square", "VP of Sales", "jamie@ramp.com", "+1 (628) 240-2744"],
+            ["Ellen Nelle", "Square", "Growth Engineer", "andre@ramp.com", "+1 (210) 555-2341"],
+            ["Chadley Dupre", "Square", "Head of Revops", "david@ramp.com", "+1 (628) 230-9962"],
+            ["Patrick Bateman", "Stripe", "COO", "jamie@ramp.com", "+1 (628) 240-2744"],
+            ["Miles Kibble III", "Stripe", "Head of Chaos", "andre@ramp.com", "+1 (210) 555-2341"],
+            ["Natalie Dank", "Stripe", "Money Manager", "david@ramp.com", "+1 (628) 230-9962"],
           ],
         },
       },
@@ -1827,9 +2107,12 @@ function createSeedSteps(storyId: string, fallbackSummary: string): BuilderStep[
         note: "Dragged in as a bundle before the agent learns the business.",
         component: createUploadedFilesComponent(),
       },
-      { kind: "thinking", text: "Reading battle cards and competitive traps", note: "Extract competitive positioning, landmines, and proof points." },
-      { kind: "thinking", text: "Extracting voice and tone rules", note: "Learn phrasing, CTA patterns, and words to avoid." },
-      { kind: "thinking", text: "Learning ICP disqualifiers", note: "Understand who the company should not sell to." },
+      createThinkingStepSeed([
+        "Reading battle cards and competitive traps",
+        "Extracting voice and tone rules",
+        "Learning ICP disqualifiers",
+        "Mapping playbook CTAs and objection handling",
+      ]),
       {
         kind: "component",
         text: "Learned outreach style",
@@ -1845,6 +2128,7 @@ function createSeedSteps(storyId: string, fallbackSummary: string): BuilderStep[
       { kind: "user", text: "Write a sequence for consumer fintech founders.", note: "This is intentionally outside the learned ICP." },
       { kind: "assistant", text: "Are you sure? this doesn't fit your ICP", note: "Guardrail response based on the uploaded context." },
       { kind: "user", text: "Okay, generate leads ranked by how personally connected they are to us.", note: "" },
+      createThinkingStepSeed(["Scoring shared schools, fields of study, mutual contacts, and warm signals"]),
       {
         kind: "component",
         text: "Ranked leads with proximity fields",
@@ -1856,9 +2140,9 @@ function createSeedSteps(storyId: string, fallbackSummary: string): BuilderStep[
       { kind: "user", text: "Show me 50 sales leaders that have recently visited my website.", note: "" },
       {
         kind: "component",
-        text: "Table: 50 recent website visitors",
+        text: "Table: Recent website visitors",
         note: "Shows 10 rows at a time with pagination, power dialer, and outreach sequence actions.",
-        component: createWebsiteVisitorTableComponent("50 recent website visitors", [
+        component: createWebsiteVisitorTableComponent("Recent website visitors", [
           ["Maya Patel", "OrbitGrid", "VP Sales", "12m ago", "Pricing page"],
           ["Evan Brooks", "Northstar Dev", "Head of Sales", "18m ago", "Integrations"],
           ["Clara Wong", "BrightLayer", "VP Revenue", "27m ago", "Case study"],
@@ -1869,11 +2153,31 @@ function createSeedSteps(storyId: string, fallbackSummary: string): BuilderStep[
           ["Sam Hollis", "Apollo", "VP Sales", "1h ago", "Comparison"],
           ["Rachel Cho", "Retool", "Head of Sales", "2h ago", "Pricing page"],
           ["Owen Lee", "Linear", "Sales Lead", "2h ago", "Demo page"],
+          ["Fatima Ali", "Vercel", "VP Sales", "2h ago", "Enterprise"],
+          ["Leo Martin", "Hex", "Head of Sales", "3h ago", "Blog"],
+          ["Priya Rao", "Census", "Sales Director", "3h ago", "Demo page"],
+          ["Jules Meyer", "Notion", "VP Sales", "4h ago", "Integrations"],
+          ["Marcus Reed", "Figma", "Revenue Lead", "4h ago", "Pricing page"],
+          ["Zoe Carter", "Rippling", "Head of Sales", "5h ago", "Case study"],
+          ["Liam Price", "Webflow", "VP Sales", "5h ago", "Security page"],
+          ["Sara Nelson", "Airtable", "Sales Lead", "6h ago", "Comparison"],
+          ["Noah Singh", "dbt Labs", "Head of Sales", "6h ago", "ROI calculator"],
+          ["Ava Garcia", "Gusto", "VP Revenue", "7h ago", "Demo page"],
         ]),
       },
-      { kind: "cursor", text: "Cursor clicks page 2, then page 1, hovers the dialer icon, then clicks the email icon.", note: "Dialer tooltip reads “Start power dialing” with a “Coming soon” badge; email tooltip reads “Build outreach sequence.”" },
-      { kind: "thinking", text: "Generating a sequence template from the company offering", note: "Template uses trigger, role-specific pain, proof, and a low-friction CTA." },
-      { kind: "thinking", text: "researching companies and people 1/50", note: "two progress tracks run simultaneously for account research and person research." },
+      { kind: "cursor", text: "Cursor clicks page 2, hovers the dialer icon, then clicks the email icon.", note: "Dialer tooltip reads “Start power dialing” with a “Coming soon” badge; email tooltip reads “Build outreach sequence.”" },
+      createThinkingStepSeed(
+        [
+          "generating sequence template from company offering",
+          "researching companies",
+          "researching people",
+        ],
+        {
+          "generating sequence template from company offering": "Using Unify’s offering, visitor intent, role-specific pain, relevant proof, and a low-friction CTA.",
+          "researching companies": "Reading firmographics, page intent, recent hiring, and relevant account signals.",
+          "researching people": "Checking role, seniority, likely ownership, and channel-specific personalization angles.",
+        },
+      ),
       {
         kind: "component",
         text: "Personalized sequence preview",
@@ -1884,24 +2188,33 @@ function createSeedSteps(storyId: string, fallbackSummary: string): BuilderStep[
     "csv-import-cleanup": [
       { kind: "cursor", text: "Cursor exits right and drags a CSV into the browser.", note: "Drop overlay appears as soon as the file enters." },
       { kind: "file", text: "webinar_attendees.csv", note: "File appears as a user-side message after release." },
-      { kind: "thinking", text: "Analyzing imported rows", note: "Parse headers, remove junk rows, and infer schema." },
-      { kind: "thinking", text: "Cleaning and normalizing contact fields", note: "Normalize email addresses, names, company fields, and duplicates." },
+      createThinkingStepSeed([
+        "Parsing webinar attendee CSV",
+        "Normalizing email addresses",
+        "Combining first and last name fields",
+        "Removing duplicates and empty rows",
+      ]),
+      { kind: "assistant", text: "I cleaned the attendee list and normalized the fields that matter for routing and follow-up.", note: "" },
       {
         kind: "component",
         text: "Clean attendee table",
         note: "Shows normalized emails and full names.",
         component: {
           kind: "table",
-          title: "Clean attendee table",
+          title: "Cleaned webinar attendees",
+          eyebrow: "CSV cleanup",
+          count: "6 normalized records",
           columns: ["Full name", "Email", "Company", "Status"],
           rows: [
-            ["Jamie Chen", "jamie@acme.co", "Acme", "Normalized"],
-            ["Andre Park", "andre@northstar.dev", "Northstar", "Deduped"],
-            ["David Kim", "david@brightlayer.io", "Brightlayer", "Validated"],
+            ["Maya Rodriguez", "maya.rodriguez@northstar.ai", "Northstar AI", "Normalized"],
+            ["Ethan Cho", "ethan.cho@clearbit.dev", "Clearbit", "Normalized"],
+            ["Priya Shah", "priya.shah@orbitgrid.com", "OrbitGrid", "Deduped"],
+            ["Lucas Meyer", "lucas.meyer@ramp.com", "Ramp", "Fixed case"],
+            ["Nina Kapoor", "nina.kapoor@mercury.com", "Mercury", "Filled name"],
+            ["Sam Hollis", "sam.hollis@apollo.io", "Apollo", "Normalized"],
           ],
         },
       },
-      { kind: "assistant", text: "The CSV is clean and ready to route into a campaign.", note: "" },
     ],
   };
 
@@ -1914,11 +2227,43 @@ function createSeedSteps(storyId: string, fallbackSummary: string): BuilderStep[
 }
 
 function createStep(kind: BuilderStepKind, text: string, note: string): BuilderStep {
-  return {
+  const step: BuilderStep = {
     id: createId("step"),
     kind,
     text,
     note,
+  };
+
+  if (kind === "thinking") step.thinking = createThinkingState(text, note);
+
+  return step;
+}
+
+function createThinkingState(text: string, note = ""): BuilderThinkingState {
+  const items = createThinkingItems([text || "Thinking"]).map((item, index) => ({
+    label: item.label,
+    detail: note || item.detail || getDefaultThinkingDetail(item.label, index),
+    disclosure: item.disclosure || (index === 0 ? DEFAULT_THINKING_DISCLOSURE : DEFAULT_THINKING_COLLAPSED_DISCLOSURE),
+  }));
+
+  return {
+    title: DEFAULT_THINKING_TITLE,
+    elapsed: getThinkingElapsedLabel(items.length),
+    items,
+  };
+}
+
+function createThinkingStateFromLabels(labels: string[], overrides: Record<string, string> = {}): BuilderThinkingState {
+  const items = createThinkingItems(labels).map((item, index) => ({
+    label: item.label,
+    detail: overrides[item.label] || item.detail || getDefaultThinkingDetail(item.label, index),
+    disclosure: item.disclosure || (index === 0 ? DEFAULT_THINKING_DISCLOSURE : DEFAULT_THINKING_COLLAPSED_DISCLOSURE),
+  }));
+
+  return {
+    title: DEFAULT_THINKING_TITLE,
+    elapsed: getThinkingElapsedLabel(items.length),
+    items,
   };
 }
 
@@ -1936,6 +2281,21 @@ function createDefaultStepText(kind: BuilderStepKind): string {
   return defaults[kind];
 }
 
+function createThinkingStepSeed(
+  labels: string[],
+  overrides: Record<string, string> = {},
+): Omit<BuilderStep, "id"> {
+  const thinking = createThinkingStateFromLabels(labels, overrides);
+  const firstItem = thinking.items[0];
+
+  return {
+    kind: "thinking",
+    text: firstItem?.label ?? "",
+    note: firstItem?.detail ?? "",
+    thinking,
+  };
+}
+
 function createFallbackComponent(title: string): BuilderComponent {
   return {
     kind: "generic",
@@ -1944,10 +2304,15 @@ function createFallbackComponent(title: string): BuilderComponent {
   };
 }
 
-function createPeopleTableComponent(title: string, rows: string[][]): BuilderTableComponent {
+function createPeopleTableComponent(
+  title: string,
+  rows: string[][],
+  options: Pick<BuilderTableComponent, "eyebrow" | "count"> = {},
+): BuilderTableComponent {
   return {
     kind: "table",
     title,
+    ...options,
     columns: ["Name", "Company", "Title"],
     rows,
   };
@@ -1966,8 +2331,25 @@ function createWebsiteVisitorTableComponent(title: string, rows: string[][]): Bu
   return {
     kind: "table",
     title,
+    eyebrow: "Visitor intent",
+    count: "50 sales leaders",
     columns: ["Name", "Company", "Title", "Last visit", "Signal"],
     rows,
+    actions: [
+      {
+        label: "Power dialer",
+        tooltip: "Start power dialing",
+        badge: "Coming soon",
+      },
+      {
+        label: "Create outreach sequence",
+        tooltip: "Build outreach sequence",
+        badge: "",
+      },
+    ],
+    pagination: {
+      ranges: ["1-10 of 50 people", "11-20 of 50 people"],
+    },
   };
 }
 
@@ -1998,16 +2380,24 @@ function createStrategyComponent(): BuilderStrategyComponent {
 function createEnrichmentComponent(): BuilderEnrichmentComponent {
   return {
     kind: "enrichment",
-    title: "I’m about to run an enrichment",
-    subtitle: "Up to 84 credits could be spent across 2 fields on 14 records.",
+    title: "Enriching",
+    subtitle: "4m 20s",
     fields: [
       {
-        title: "Business emails",
-        steps: ["Unify Data", "5-Step Waterfall", "FullEnrich", "ZeroBounce"],
+        title: "Work email",
+        steps: ["Apollo", "ZoomInfo"],
       },
       {
-        title: "Mobile phones",
-        steps: ["Unify Data", "5-Step Waterfall", "FullEnrich"],
+        title: "Mobile number",
+        steps: ["Apollo", "FullEnrich"],
+      },
+      {
+        title: "LinkedIn",
+        steps: ["Apollo", "ZoomInfo"],
+      },
+      {
+        title: "Title",
+        steps: ["Apollo", "ZoomInfo", "FullEnrich"],
       },
     ],
   };
@@ -2290,32 +2680,172 @@ function createSequenceEngagementComponent(): BuilderSequenceEngagementComponent
   return {
     kind: "sequenceEngagement",
     title: "Personalized sequence preview",
-    subtitle: "Each visitor gets a channel plan based on company fit, page intent, and role-level context.",
+    subtitle: "Each visitor gets a channel plan based on company fit, page intent, and the person’s role.",
     peopleCount: "50 people",
+    launchLabel: "kick off sequence",
     sequences: [
       {
         name: "Maya Patel",
         company: "OrbitGrid",
+        title: "VP Sales",
+        signal: "Pricing page",
         subject: "OrbitGrid’s pricing-page interest",
-        personalization: "email → linkedin → email → call, tailored to pricing intent and RevOps hiring.",
+        personalization: "Maya viewed pricing after OrbitGrid added two RevOps roles, so the opener ties visitor intent to cleaner account research.",
+        steps: [
+          {
+            channel: "email",
+            label: "lead with the trigger",
+            body: "Mention the pricing visit and RevOps hiring pattern; ask if their team is evaluating ways to source better-fit accounts.",
+            waitDays: "2",
+          },
+          {
+            channel: "linkedin",
+            label: "light proof",
+            body: "Reference a similar sales team using Unify to turn inbound intent into researched outbound lists.",
+            waitDays: "3",
+          },
+          {
+            channel: "email",
+            label: "offer the play",
+            body: "Send a short teardown of three accounts showing why they match OrbitGrid’s current motion.",
+            waitDays: "2",
+          },
+          {
+            channel: "call",
+            label: "use context",
+            body: "Open with the pricing visit and ask whether pipeline quality or source coverage is the bigger gap.",
+            waitDays: "",
+          },
+        ],
       },
       {
         name: "Evan Brooks",
         company: "Northstar Dev",
+        title: "Head of Sales",
+        signal: "Integrations",
         subject: "Northstar Dev’s integration-led growth",
-        personalization: "email → linkedin → email → call, tailored to partner-fit account research.",
+        personalization: "Evan came through integrations after Northstar Dev expanded sales leadership, so the sequence frames Unify as a way to find accounts already showing ecosystem fit.",
+        steps: [
+          {
+            channel: "email",
+            label: "anchor to integrations",
+            body: "Point to their integrations-page visit and the likely need to prioritize partner-fit accounts.",
+            waitDays: "2",
+          },
+          {
+            channel: "linkedin",
+            label: "ask a narrow question",
+            body: "Ask whether partner signals are already part of Northstar Dev’s outbound scoring.",
+            waitDays: "3",
+          },
+          {
+            channel: "email",
+            label: "show the workflow",
+            body: "Share how Unify can pull partner usage, firmographics, and contact data into one sequence-ready list.",
+            waitDays: "2",
+          },
+          {
+            channel: "call",
+            label: "reference the path",
+            body: "Mention the integrations research and ask if sales is prioritizing ecosystem-led campaigns this quarter.",
+            waitDays: "",
+          },
+        ],
       },
       {
         name: "Clara Wong",
         company: "BrightLayer",
+        title: "VP Revenue",
+        signal: "Case study",
         subject: "BrightLayer’s case-study research",
-        personalization: "email → linkedin → email → call, tailored to proof-seeking revenue leadership.",
+        personalization: "Clara read a customer story, so the sequence mirrors the proof format and offers a concise account-selection playbook.",
+        steps: [
+          {
+            channel: "email",
+            label: "mirror the proof",
+            body: "Reference the case study visit and connect it to finding more accounts that match the same buying pattern.",
+            waitDays: "2",
+          },
+          {
+            channel: "linkedin",
+            label: "share a takeaway",
+            body: "Send one concise observation about BrightLayer’s likely expansion motion based on the page viewed.",
+            waitDays: "3",
+          },
+          {
+            channel: "email",
+            label: "personalized follow-up",
+            body: "Offer a mini list of 10 lookalike companies with the reason each one matches BrightLayer’s best-fit segment.",
+            waitDays: "2",
+          },
+          {
+            channel: "call",
+            label: "ask for fit",
+            body: "Ask whether revenue is looking for more accounts like the case-study customer or a new adjacent segment.",
+            waitDays: "",
+          },
+        ],
       },
     ],
-    channels: [
-      { label: "kick off sequence", detail: "launch tailored touches for 50 people", badge: "" },
-    ],
+    channels: [],
   };
+}
+
+function updateThinkingValue(
+  thinking: BuilderThinkingState,
+  field: string,
+  value: string,
+  itemIndex: number | null,
+): void {
+  if (field === "title") thinking.title = value;
+  if (field === "elapsed") thinking.elapsed = value;
+
+  if (itemIndex === null) return;
+
+  const item = thinking.items[itemIndex];
+  if (!item) return;
+
+  if (field === "label") item.label = value;
+  if (field === "detail") item.detail = value;
+  if (field === "disclosure") item.disclosure = value;
+}
+
+function syncStepFromThinking(step: BuilderStep): void {
+  if (!step.thinking) return;
+
+  const firstItem = step.thinking.items[0];
+  step.text = firstItem?.label ?? "";
+  step.note = firstItem?.detail ?? "";
+}
+
+function syncThinkingFromStep(step: BuilderStep, patch: Partial<Pick<BuilderStep, "kind" | "text" | "note">>): void {
+  if (step.kind !== "thinking") return;
+
+  step.thinking ??= createThinkingState(step.text, step.note);
+  step.thinking.items[0] ??= {
+    label: step.text,
+    detail: step.note || getDefaultThinkingDetail(step.text, 0),
+    disclosure: DEFAULT_THINKING_DISCLOSURE,
+  };
+
+  if (patch.text !== undefined) step.thinking.items[0].label = patch.text;
+  if (patch.note !== undefined) step.thinking.items[0].detail = patch.note;
+}
+
+function getThinkingValue(thinking: BuilderThinkingState, field: string | undefined, itemIndex: number | null): string | null {
+  if (field === "title") return thinking.title;
+  if (field === "elapsed") return thinking.elapsed;
+
+  if (itemIndex === null) return null;
+
+  const item = thinking.items[itemIndex];
+  if (!item) return null;
+
+  if (field === "label") return item.label;
+  if (field === "detail") return item.detail;
+  if (field === "disclosure") return item.disclosure;
+
+  return null;
 }
 
 function updateComponentValue(
@@ -2406,14 +2936,25 @@ function updateComponentValue(
   if (component.kind === "sequenceEngagement") {
     if (field === "subtitle") component.subtitle = value;
     if (field === "peopleCount") component.peopleCount = value;
+    if (field === "launchLabel") component.launchLabel = value;
 
     if (indexes.itemIndex !== null) {
       const sequence = component.sequences[indexes.itemIndex];
       if (sequence) {
         if (field === "sequenceName") sequence.name = value;
         if (field === "sequenceCompany") sequence.company = value;
+        if (field === "sequenceTitle") sequence.title = value;
+        if (field === "sequenceSignal") sequence.signal = value;
         if (field === "sequenceSubject") sequence.subject = value;
         if (field === "sequencePersonalization") sequence.personalization = value;
+
+        const sequenceStep = indexes.fieldIndex !== null ? sequence.steps?.[indexes.fieldIndex] : null;
+        if (sequenceStep) {
+          if (field === "sequenceStepChannel") sequenceStep.channel = value;
+          if (field === "sequenceStepLabel") sequenceStep.label = value;
+          if (field === "sequenceStepBody") sequenceStep.body = value;
+          if (field === "sequenceStepWaitDays") sequenceStep.waitDays = value;
+        }
       }
 
       const channel = component.channels[indexes.itemIndex];
@@ -2426,6 +2967,9 @@ function updateComponentValue(
   }
 
   if (component.kind === "table") {
+    if (field === "eyebrow") component.eyebrow = value;
+    if (field === "count") component.count = value;
+
     if (field === "column" && indexes.columnIndex !== null) {
       component.columns[indexes.columnIndex] = value;
     }
@@ -2433,6 +2977,19 @@ function updateComponentValue(
     if (field === "cell" && indexes.rowIndex !== null && indexes.columnIndex !== null) {
       component.rows[indexes.rowIndex] ??= [];
       component.rows[indexes.rowIndex][indexes.columnIndex] = value;
+    }
+
+    if (indexes.itemIndex !== null) {
+      const action = component.actions?.[indexes.itemIndex];
+      if (action) {
+        if (field === "actionLabel") action.label = value;
+        if (field === "actionTooltip") action.tooltip = value;
+        if (field === "actionBadge") action.badge = value;
+      }
+
+      if (field === "pageRange" && component.pagination) {
+        component.pagination.ranges[indexes.itemIndex] = value;
+      }
     }
   }
 
@@ -2487,14 +3044,15 @@ function cloneComponent(component: BuilderComponent): BuilderComponent {
   return JSON.parse(JSON.stringify(component)) as BuilderComponent;
 }
 
-function normalizeBuilderDraftPayload(payload: unknown): BuilderStory[] | null {
+function normalizeBuilderDraftPayload(payload: unknown): { schemaVersion: number; stories: BuilderStory[] } | null {
   if (!isRecord(payload) || !Array.isArray(payload.stories)) return null;
 
+  const schemaVersion = typeof payload.schemaVersion === "number" ? payload.schemaVersion : 1;
   const stories = payload.stories
     .map((story) => normalizeBuilderStory(story))
     .filter((story): story is BuilderStory => Boolean(story));
 
-  return stories.length ? stories : null;
+  return stories.length ? { schemaVersion, stories } : null;
 }
 
 async function readJsonResponse(response: Response): Promise<unknown> {
@@ -2540,9 +3098,44 @@ function normalizeBuilderStep(step: unknown): BuilderStep | null {
     kind,
     text: text ?? "",
     note: note ?? "",
+    thinking: isRecord(step.thinking)
+      ? normalizeThinkingState(step.thinking, text ?? "", note ?? "")
+      : kind === "thinking"
+        ? createThinkingState(text ?? "", note ?? "")
+        : undefined,
     component: isRecord(step.component)
       ? JSON.parse(JSON.stringify(step.component)) as BuilderComponent
       : undefined,
+  };
+}
+
+function normalizeThinkingState(value: Record<string, unknown>, fallbackText: string, fallbackNote: string): BuilderThinkingState {
+  const rawItems = Array.isArray(value.items) ? value.items : [];
+  const items = rawItems
+    .map((item, index) => normalizeThinkingItem(item, index))
+    .filter((item): item is BuilderThinkingState["items"][number] => Boolean(item));
+
+  if (!items.length) return createThinkingState(fallbackText, fallbackNote);
+
+  return {
+    title: toStringValue(value.title) ?? DEFAULT_THINKING_TITLE,
+    elapsed: toStringValue(value.elapsed) ?? getThinkingElapsedLabel(items.length),
+    items,
+  };
+}
+
+function normalizeThinkingItem(item: unknown, index: number): BuilderThinkingState["items"][number] | null {
+  if (!isRecord(item)) return null;
+
+  const label = toStringValue(item.label);
+  if (!label) return null;
+
+  return {
+    label,
+    detail: toStringValue(item.detail) ?? getDefaultThinkingDetail(label, index),
+    disclosure:
+      toStringValue(item.disclosure) ??
+      (index === 0 ? DEFAULT_THINKING_DISCLOSURE : DEFAULT_THINKING_COLLAPSED_DISCLOSURE),
   };
 }
 

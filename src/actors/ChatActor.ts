@@ -13,8 +13,17 @@ import type {
   SequenceBuildThinkingConfig,
   SequenceEngagementConfig,
   StrategyPlanConfig,
+  ThinkingItemConfig,
+  ThinkingStateConfig,
   UploadedFileConfig,
 } from "../core/types";
+import {
+  DEFAULT_THINKING_COLLAPSED_DISCLOSURE,
+  DEFAULT_THINKING_DISCLOSURE,
+  DEFAULT_THINKING_TITLE,
+  getDefaultThinkingDetail,
+  getThinkingElapsedLabel,
+} from "../stories/thinkingText";
 
 type PreparedResultCard = {
   el: HTMLElement;
@@ -102,6 +111,13 @@ type ThinkingSequenceOptions = {
   headerDuration: number;
   afterStepHold: number;
   finalHold: number;
+};
+type ThinkingInput = string | ThinkingItemConfig | Array<string | ThinkingItemConfig> | ThinkingStateConfig;
+type NormalizedThinkingItem = Required<ThinkingItemConfig>;
+type NormalizedThinkingState = {
+  title: string;
+  elapsed?: string;
+  items: NormalizedThinkingItem[];
 };
 type StreamTiming = {
   charsPerSecond: number;
@@ -923,11 +939,11 @@ export class ChatActor {
     );
   }
 
-  thinkingState(labelOrSteps: string | string[], hold = 1.1): gsap.core.Timeline {
-    const steps = Array.isArray(labelOrSteps) ? labelOrSteps : [labelOrSteps];
-    const isSequence = steps.length > 1;
+  thinkingState(input: ThinkingInput, hold = 1.1): gsap.core.Timeline {
+    const thinking = this.normalizeThinkingInput(input);
+    const isSequence = thinking.items.length > 1;
 
-    return this.runThinkingSequence(steps, {
+    return this.runThinkingSequence(thinking, {
       hold,
       itemStartY: isSequence ? 10 : 6,
       headerDuration: isSequence ? 0.24 : 0.28,
@@ -2483,10 +2499,14 @@ export class ChatActor {
       });
   }
 
-  private runThinkingSequence(labels: string[], options: ThinkingSequenceOptions): gsap.core.Timeline {
+  private runThinkingSequence(thinkingState: NormalizedThinkingState, options: ThinkingSequenceOptions): gsap.core.Timeline {
     const tl = gsap.timeline();
-    const items = labels.map((label, index) => this.createThinkingStep(label, index));
-    const thinking = this.claimThinkingMessage(items, this.getThinkingElapsed(labels.length));
+    const items = thinkingState.items.map((item, index) => this.createThinkingStep(item, index));
+    const thinking = this.claimThinkingMessage(
+      items,
+      thinkingState.elapsed ?? this.getThinkingElapsed(thinkingState.items.length),
+      thinkingState.title,
+    );
 
     tl.call(() => {
       items.forEach((item) => {
@@ -2505,7 +2525,7 @@ export class ChatActor {
       })
       .add(this.streamThinkingHeader(thinking.header), "-=0.08");
 
-    labels.forEach((_label, index) => {
+    thinkingState.items.forEach((_item, index) => {
       const item = items[index];
       const position = index === 0 ? "+=0" : `+=${options.hold}`;
 
@@ -2553,7 +2573,7 @@ export class ChatActor {
     return Math.min(timing.maxDuration, Math.max(timing.minDuration, text.length / timing.charsPerSecond));
   }
 
-  private claimThinkingMessage(items: HTMLElement[], elapsedText: string): {
+  private claimThinkingMessage(items: HTMLElement[], elapsedText: string, titleText = DEFAULT_THINKING_TITLE): {
     message: HTMLElement;
     header: HTMLElement;
     steps: HTMLElement;
@@ -2570,7 +2590,7 @@ export class ChatActor {
 
     const title = document.createElement("span");
     title.className = "wa-thinking__title";
-    title.dataset.fullText = "Thinking";
+    title.dataset.fullText = titleText;
     title.textContent = "";
 
     const elapsed = document.createElement("span");
@@ -2610,7 +2630,7 @@ export class ChatActor {
     return message;
   }
 
-  private createThinkingStep(labelText: string, index: number): HTMLElement {
+  private createThinkingStep(itemConfig: NormalizedThinkingItem, index: number): HTMLElement {
     const item = document.createElement("div");
     item.className = "wa-research-step";
     item.dataset.researchStep = String(index);
@@ -2625,17 +2645,17 @@ export class ChatActor {
 
     const label = document.createElement("span");
     label.className = "wa-research-step__label";
-    label.dataset.fullText = labelText;
+    label.dataset.fullText = itemConfig.label;
     label.textContent = "";
 
     const detail = document.createElement("span");
     detail.className = "wa-research-step__detail";
-    detail.dataset.fullText = this.getThinkingDetail(labelText, index);
+    detail.dataset.fullText = itemConfig.detail;
     detail.textContent = "";
 
     const disclosure = document.createElement("span");
     disclosure.className = "wa-research-step__disclosure";
-    disclosure.textContent = index === 0 ? "Show more" : "Show less";
+    disclosure.textContent = itemConfig.disclosure;
 
     const chevron = document.createElement("span");
     chevron.className = "wa-research-step__chevron";
@@ -2647,28 +2667,50 @@ export class ChatActor {
   }
 
   private getThinkingDetail(labelText: string, index: number): string {
-    const label = labelText.toLowerCase();
-
-    if (label.includes("source") || label.includes("data")) return "Searching across company records, contact databases, technographics, commerce signals, and local business indexes to find matches.";
-    if (label.includes("company")) return "Reviewing public company information, website copy, firmographics, and recent external signals to understand the account context.";
-    if (label.includes("icp") || label.includes("buyer")) return "Mapping personas, buying committees, seniority, department ownership, and account-fit signals from the available evidence.";
-    if (label.includes("blog")) return "Reading launch notes, blog posts, category language, and positioning themes to infer the strongest outreach angles.";
-    if (label.includes("career") || label.includes("hiring")) return "Checking careers pages, new roles, team growth, and hiring language to understand near-term operating priorities.";
-    if (label.includes("gtm")) return "Connecting signal strength, audience fit, and likely urgency to decide which outbound motion is most likely to convert.";
-    if (label.includes("funding") || label.includes("round")) return "Reviewing recent funding announcements, raise dates, investor notes, and company updates from the past three months.";
-    if (label.includes("transcript") || label.includes("notes")) return "Extracting CRM fields, next steps, risk language, and owner context from the conversation transcript.";
-    if (label.includes("logs") || label.includes("auth")) return "Inspecting connector logs, authentication events, permission changes, and recent workspace activity.";
-    if (label.includes("account") || label.includes("signals")) return "Combining account history with public source changes and recent activity to prepare a concise research brief.";
-
-    return index % 2 === 0
-      ? "Inspecting relevant records, comparing source confidence, and filtering out low-quality matches before returning results."
-      : "Cross-checking the strongest evidence across sources so the final answer only includes useful, defensible results.";
+    return getDefaultThinkingDetail(labelText, index);
   }
 
   private getThinkingElapsed(stepCount: number): string {
-    if (stepCount <= 1) return "4m 12s";
-    if (stepCount <= 3) return "4m 20s";
-    return "4m 50s";
+    return getThinkingElapsedLabel(stepCount);
+  }
+
+  private normalizeThinkingInput(input: ThinkingInput): NormalizedThinkingState {
+    if (this.isThinkingStateConfig(input)) {
+      const items = input.items.map((item, index) => this.normalizeThinkingItem(item, index));
+      return {
+        title: input.title || DEFAULT_THINKING_TITLE,
+        elapsed: input.elapsed,
+        items: items.length ? items : [this.normalizeThinkingItem(DEFAULT_THINKING_TITLE, 0)],
+      };
+    }
+
+    const items = (Array.isArray(input) ? input : [input]).map((item, index) =>
+      this.normalizeThinkingItem(item, index),
+    );
+
+    return {
+      title: DEFAULT_THINKING_TITLE,
+      items: items.length ? items : [this.normalizeThinkingItem(DEFAULT_THINKING_TITLE, 0)],
+    };
+  }
+
+  private normalizeThinkingItem(item: string | ThinkingItemConfig, index: number): NormalizedThinkingItem {
+    const label = typeof item === "string" ? item : item.label;
+
+    return {
+      label,
+      detail: typeof item === "string" ? this.getThinkingDetail(label, index) : item.detail || this.getThinkingDetail(label, index),
+      disclosure:
+        typeof item === "string"
+          ? index === 0
+            ? DEFAULT_THINKING_DISCLOSURE
+            : DEFAULT_THINKING_COLLAPSED_DISCLOSURE
+          : item.disclosure || (index === 0 ? DEFAULT_THINKING_DISCLOSURE : DEFAULT_THINKING_COLLAPSED_DISCLOSURE),
+    };
+  }
+
+  private isThinkingStateConfig(input: ThinkingInput): input is ThinkingStateConfig {
+    return Boolean(input && typeof input === "object" && !Array.isArray(input) && "items" in input);
   }
 
   private createSectionHeader(
@@ -3852,11 +3894,16 @@ export class ChatActor {
     index: number,
     total?: number,
   ): HTMLElement {
-    const item = this.createThinkingStep(labelText, index);
+    const item = this.createThinkingStep(
+      {
+        label: labelText,
+        detail: detailText,
+        disclosure: index === 0 ? DEFAULT_THINKING_DISCLOSURE : DEFAULT_THINKING_COLLAPSED_DISCLOSURE,
+      },
+      index,
+    );
     const detail = item.querySelector<HTMLElement>(".wa-research-step__detail");
     const body = item.querySelector<HTMLElement>(".wa-research-step__body");
-
-    if (detail) detail.dataset.fullText = detailText;
 
     if (typeof total === "number" && body) {
       const progress = document.createElement("span");

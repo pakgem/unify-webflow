@@ -235,6 +235,18 @@ export type EnrichmentConfig = {
   }>;
 };
 
+export type ThinkingItemConfig = {
+  label: string;
+  detail?: string;
+  disclosure?: string;
+};
+
+export type ThinkingStateConfig = {
+  title?: string;
+  elapsed?: string;
+  items: ThinkingItemConfig[];
+};
+
 export type StoryDefinition = {
   id: string;
   label: string;
