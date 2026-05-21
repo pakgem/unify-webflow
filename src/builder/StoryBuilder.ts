@@ -188,6 +188,7 @@ export type BuilderStory = {
 type StoryBuilderRefs = {
   shell: HTMLElement;
   tabs: HTMLElement;
+  storyMeta: HTMLElement;
   thread: HTMLElement;
   panel: HTMLElement;
   export: HTMLTextAreaElement;
@@ -251,6 +252,7 @@ export class StoryBuilder {
     this.refs = {
       shell,
       tabs: this.required(shell, "[data-builder-tabs]"),
+      storyMeta: this.required(shell, "[data-builder-story-meta]"),
       thread: this.required(shell, "[data-builder-thread]"),
       panel: this.required(shell, "[data-builder-panel]"),
       export: this.required(shell, "[data-builder-export]"),
@@ -363,6 +365,14 @@ export class StoryBuilder {
       this.handlePanelInput(target);
     });
 
+    this.on(refs.storyMeta, "input", (event) => {
+      const target = event.target;
+
+      if (!(target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement)) return;
+
+      this.handlePanelInput(target);
+    });
+
     this.on(refs.panel, "change", (event) => {
       const target = event.target;
 
@@ -374,6 +384,7 @@ export class StoryBuilder {
 
   private render(): void {
     this.renderTabs();
+    this.renderStoryMeta();
     this.renderAddRail();
     this.renderThread();
     this.renderPanel();
@@ -406,6 +417,20 @@ export class StoryBuilder {
     });
 
     refs.tabs.replaceChildren(...tabs);
+  }
+
+  private renderStoryMeta(): void {
+    const refs = this.refs;
+
+    if (!refs) return;
+
+    const story = this.activeStory;
+
+    refs.storyMeta.replaceChildren(
+      this.createField("Story title", "input", "story-label", story.label),
+      this.createField("Story summary", "textarea", "story-summary", story.summary),
+    );
+    refs.storyMeta.querySelectorAll<HTMLTextAreaElement>("textarea").forEach((field) => this.autoSize(field));
   }
 
   private renderAddRail(): void {
@@ -446,18 +471,8 @@ export class StoryBuilder {
 
     if (!refs) return;
 
-    const story = this.activeStory;
     const selectedStep = this.selectedStep;
     const fragment = document.createDocumentFragment();
-
-    fragment.append(
-      this.createField("Story title", "input", "story-label", story.label),
-      this.createField("Story summary", "textarea", "story-summary", story.summary),
-    );
-
-    const divider = document.createElement("div");
-    divider.className = "wa-builder-panel__divider";
-    fragment.append(divider);
 
     if (selectedStep) {
       const kindField = document.createElement("label");

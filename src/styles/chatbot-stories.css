@@ -3364,17 +3364,17 @@ body {
 .wa-builder {
   position: relative;
   grid-column: 1 / -1;
-  justify-self: center;
+  justify-self: stretch;
   display: grid;
   gap: 24px;
-  width: min(var(--wa-window-width), calc(100vw - 36px));
+  width: 100%;
   margin-top: 12px;
   padding-top: 58px;
   border-top: 1px solid var(--wa-line-10);
 }
 
 .wa-builder__header {
-  display: grid;
+  display: none;
   grid-template-columns: minmax(0, 1fr);
   gap: 12px;
   align-items: start;
@@ -3410,7 +3410,7 @@ body {
 
 .wa-builder__tabs {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 8px;
 }
 
@@ -3454,9 +3454,17 @@ body {
 
 .wa-builder__layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 18px;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 3fr);
+  gap: 24px;
   align-items: start;
+}
+
+.wa-builder__story-meta {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+  width: 100%;
+  min-width: 0;
 }
 
 .wa-builder__workspace {
@@ -3467,7 +3475,7 @@ body {
 
 .wa-builder__add-rail {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 8px;
 }
 
@@ -3522,7 +3530,7 @@ body {
 .wa-builder-step[data-builder-kind="assistant"] .wa-message,
 .wa-builder-step[data-builder-kind="status"] .wa-message,
 .wa-builder-step[data-builder-kind="cursor"] .wa-message {
-  width: min(100%, 680px);
+  width: 100%;
   max-width: 100%;
   grid-template-columns: minmax(0, 1fr);
 }
@@ -3534,8 +3542,15 @@ body {
 
 .wa-builder-step[data-builder-kind="component"] .wa-message,
 .wa-builder-step[data-builder-kind="thinking"] .wa-message {
-  width: min(100%, 1080px);
+  width: 100%;
   max-width: 100%;
+}
+
+.wa-builder-step .wa-message__body,
+.wa-builder-step[data-builder-kind="user"] .wa-message__body,
+.wa-builder-step[data-builder-kind="file"] .wa-message__body {
+  width: 100%;
+  max-width: none;
 }
 
 .wa-builder-step[data-builder-kind="assistant"] .wa-message__body,
@@ -4171,12 +4186,17 @@ body {
 }
 
 .wa-builder__side {
-  position: static;
+  position: sticky;
+  top: 24px;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 14px;
   width: 100%;
   min-width: 0;
+}
+
+.wa-builder-export[hidden] {
+  display: none;
 }
 
 .wa-builder__panel,
@@ -4561,6 +4581,10 @@ body {
   .wa-builder__status {
     grid-column: 1 / -1;
   }
+
+  .wa-builder__add-rail {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 760px) {
@@ -4627,9 +4651,21 @@ body {
     font-size: 14px;
   }
 
+  .wa-builder__tabs {
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(172px, 1fr);
+    grid-template-columns: none;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
   .wa-builder-tab {
-    flex: 1 1 100%;
     min-width: 0;
+  }
+
+  .wa-builder__add-rail {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .wa-builder__thread {

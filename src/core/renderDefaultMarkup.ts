@@ -20,6 +20,7 @@ export function renderDefaultMarkup(root: HTMLElement, options: RenderDefaultMar
         </div>
 
         <div class="wa-builder__tabs" data-builder-tabs aria-label="Builder stories"></div>
+        <div class="wa-builder__story-meta" data-builder-story-meta aria-label="Story title and summary"></div>
 
         <div class="wa-builder__layout">
           <div class="wa-builder__workspace">
@@ -28,8 +29,8 @@ export function renderDefaultMarkup(root: HTMLElement, options: RenderDefaultMar
           </div>
 
           <aside class="wa-builder__side">
-            <div class="wa-builder__panel" data-builder-panel aria-label="Story inspector"></div>
-            <div class="wa-builder-export">
+            <div class="wa-builder__panel" data-builder-panel aria-label="Selected message inspector"></div>
+            <div class="wa-builder-export" hidden>
               <div class="wa-builder-export__header">
                 <span class="wa-builder-export__label">Story JSON</span>
                 <button class="wa-builder-export__copy" type="button" data-builder-copy-json aria-label="Copy story JSON">
