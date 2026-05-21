@@ -548,11 +548,18 @@ body {
   display: grid;
   align-content: center;
   justify-items: center;
-  gap: 22px;
+  gap: 20px;
   min-height: 0;
   padding-bottom: 0;
   color: var(--wa-ink);
   will-change: transform, opacity;
+}
+
+.wa-signup-scene__logo {
+  display: block;
+  width: clamp(70px, 8.4vw, 96px);
+  height: auto;
+  margin-bottom: 4px;
 }
 
 .wa-signup-scene__title {
