@@ -163,6 +163,7 @@ export type SequenceEngagementConfig = {
       channel: string;
       label: string;
       body: string;
+      waitDays?: number;
     }>;
   }>;
   channels: Array<{

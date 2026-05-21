@@ -138,6 +138,7 @@ const MESSAGE_KIND_CLASSES = [
 
 const MOTION_TIME_SCALE = 1.28;
 const motionDuration = (seconds: number): number => Number((seconds * MOTION_TIME_SCALE).toFixed(3));
+const SEQUENCE_WAIT_DAY_DEFAULTS = [2, 3, 2];
 
 const MESSAGE_SPRING = {
   duration: motionDuration(0.44),
@@ -1273,7 +1274,7 @@ export class ChatActor {
     return this.revealComponentItems(
       "sequence",
       panel,
-      ".wa-sequence-person-button, .wa-sequence-card, .wa-sequence-step, .wa-sequence-copy-panel, .wa-engage-channel, .wa-sequence-kickoff",
+      ".wa-sequence-person-button, .wa-sequence-card, .wa-sequence-step, .wa-sequence-wait, .wa-sequence-copy-panel, .wa-engage-channel, .wa-sequence-kickoff",
       COMPONENT_CHILD_REVEAL.stackCard,
     );
   }
@@ -3500,6 +3501,7 @@ export class ChatActor {
       const currentCopy = document.createElement("span");
       const currentName = document.createElement("strong");
       const currentMeta = document.createElement("span");
+      const actions = document.createElement("div");
       const next = document.createElement("button");
       const firstSequence = config.sequences[0];
 
@@ -3544,7 +3546,9 @@ export class ChatActor {
         this.sequencePerson(config.id, targetIndex).play();
       });
 
-      peopleNav.append(previous, current, next);
+      actions.className = "wa-sequence-person-actions";
+      actions.append(previous, next);
+      peopleNav.append(current, actions);
     }
 
     config.sequences.forEach((sequence, index) => {
@@ -3587,20 +3591,23 @@ export class ChatActor {
       personalization.className = "wa-sequence-card__personalization";
       personalization.textContent = sequence.personalization;
 
-      if (sequence.steps?.length) {
+      const sequenceSteps = sequence.steps;
+
+      if (sequenceSteps?.length) {
         const steps = document.createElement("div");
-        const selectedStep = sequence.steps[0];
+        const selectedStep = sequenceSteps[0];
         const copyPanel = document.createElement("div");
         const copyMeta = document.createElement("span");
         const copySubject = document.createElement("strong");
         const copyBody = document.createElement("p");
 
         steps.className = "wa-sequence-steps";
-        sequence.steps.forEach((step, stepIndex) => {
+        sequenceSteps.forEach((step, stepIndex) => {
           const stepEl = document.createElement("button");
           const channel = document.createElement("span");
           const copy = document.createElement("span");
           const stepLabel = document.createElement("strong");
+          const waitDays = this.getSequenceStepWaitDays(step, stepIndex, sequenceSteps.length);
 
           stepEl.className = "wa-sequence-step";
           stepEl.type = "button";
@@ -3615,6 +3622,10 @@ export class ChatActor {
           stepEl.dataset.stepTemplateLabel = step.label;
           stepEl.dataset.stepTemplateSubject = stepIndex === 0 ? sequence.subject : step.label;
           stepEl.dataset.stepTemplateBody = this.getSequenceStepCopy(sequence, step);
+          if (waitDays) {
+            stepEl.dataset.waitDays = String(waitDays);
+            stepEl.dataset.stepTemplateWaitDays = String(waitDays);
+          }
           stepEl.setAttribute("aria-pressed", String(stepIndex === 0));
           stepEl.addEventListener("click", () => {
             this.selectSequenceStep(card, stepIndex);
@@ -3626,6 +3637,10 @@ export class ChatActor {
           copy.append(stepLabel);
           stepEl.append(channel, copy);
           steps.append(stepEl);
+
+          if (waitDays) {
+            steps.append(this.createSequenceWaitRow(waitDays, stepIndex));
+          }
         });
 
         copyPanel.className = "wa-sequence-copy-panel";
@@ -3744,6 +3759,34 @@ export class ChatActor {
       .find((section) => section.dataset.sequenceEngagement === sequenceId) ?? null;
   }
 
+  private createSequenceWaitRow(waitDays: number, index: number): HTMLElement {
+    const wait = document.createElement("div");
+    const label = document.createElement("span");
+
+    wait.className = "wa-sequence-wait";
+    wait.dataset.sequenceWaitIndex = String(index);
+    wait.dataset.waitDays = String(waitDays);
+    label.className = "wa-sequence-wait__label";
+    label.textContent = this.formatSequenceWaitLabel(waitDays);
+    wait.append(label);
+
+    return wait;
+  }
+
+  private getSequenceStepWaitDays(
+    step: NonNullable<SequenceEngagementConfig["sequences"][number]["steps"]>[number],
+    index: number,
+    totalSteps: number,
+  ): number | null {
+    if (index >= totalSteps - 1) return null;
+
+    return step.waitDays ?? SEQUENCE_WAIT_DAY_DEFAULTS[index] ?? 1;
+  }
+
+  private formatSequenceWaitLabel(days: number): string {
+    return `Wait ${days} ${days === 1 ? "day" : "days"}`;
+  }
+
   private setActiveSequencePerson(section: HTMLElement, index: number): void {
     const cards = this.queryElements(section, "[data-sequence-card]");
     const buttons = this.queryElements(section, "[data-sequence-person-button]");
@@ -3813,6 +3856,7 @@ export class ChatActor {
   ): void {
     const selectedIndex = this.getSelectedSequenceStepIndex(displayCard);
     const displaySteps = this.queryElements(displayCard, ".wa-sequence-step");
+    const displayWaits = this.queryElements(displayCard, ".wa-sequence-wait");
     const templateSteps = this.queryElements(templateCard, ".wa-sequence-step");
 
     displayCard.dataset.sequenceName =
@@ -3830,8 +3874,21 @@ export class ChatActor {
       step.dataset.channel = templateStep.dataset.channel ?? "";
       step.dataset.stepSubject = templateStep.dataset.stepTemplateSubject ?? templateStep.dataset.stepSubject ?? "";
       step.dataset.stepBody = templateStep.dataset.stepTemplateBody ?? templateStep.dataset.stepBody ?? "";
+      step.dataset.waitDays = templateStep.dataset.stepTemplateWaitDays ?? templateStep.dataset.waitDays ?? "";
       if (channel) channel.textContent = templateStep.dataset.stepTemplateChannel ?? channel.textContent;
       if (label) label.textContent = templateStep.dataset.stepTemplateLabel ?? label.textContent;
+
+      const wait = displayWaits[stepIndex];
+      const waitDays = Number(step.dataset.waitDays);
+      const waitLabel = wait?.querySelector<HTMLElement>(".wa-sequence-wait__label");
+
+      if (wait) {
+        wait.style.display = Number.isFinite(waitDays) && waitDays > 0 ? "grid" : "none";
+        wait.dataset.waitDays = String(waitDays);
+      }
+      if (waitLabel && Number.isFinite(waitDays) && waitDays > 0) {
+        waitLabel.textContent = this.formatSequenceWaitLabel(waitDays);
+      }
     });
 
     section.dataset.activeSequenceIndex = String(index);

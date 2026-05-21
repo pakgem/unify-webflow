@@ -2722,10 +2722,16 @@ body {
 
 .wa-sequence-people {
   display: grid;
-  grid-template-columns: 24px minmax(0, 1fr) 24px;
-  gap: 7px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
   align-items: center;
   max-width: 340px;
+}
+
+.wa-sequence-person-actions {
+  display: inline-flex;
+  gap: 5px;
+  justify-self: end;
 }
 
 .wa-sequence-person-button {
@@ -2960,6 +2966,34 @@ body {
 
 .wa-sequence-step[data-step-open="false"] .wa-sequence-step__copy span {
   display: none;
+}
+
+.wa-sequence-wait {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  gap: 7px;
+  align-items: center;
+  min-height: 18px;
+  padding: 0 8px;
+  color: var(--wa-color-muted);
+  font-size: 8.5px;
+  line-height: 1;
+  font-weight: 560;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.wa-sequence-wait::before {
+  content: "";
+  justify-self: center;
+  width: 1px;
+  height: 14px;
+  border-radius: 999px;
+  background: var(--wa-line-10);
+}
+
+.wa-sequence-wait__label {
+  white-space: nowrap;
 }
 
 .wa-sequence-copy-panel {
@@ -4638,6 +4672,16 @@ body {
   .wa-sequence-step__channel {
     justify-self: start;
     padding: 0 8px;
+  }
+
+  .wa-sequence-wait {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 16px;
+    padding: 0 8px;
+  }
+
+  .wa-sequence-wait::before {
+    display: none;
   }
 
   .wa-sequence-person-button {
