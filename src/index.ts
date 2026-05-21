@@ -6,7 +6,12 @@ import styles from "./styles/chatbot-stories.css?inline";
 const STYLE_ID = "chatbot-stories-styles";
 
 function injectStyles(): void {
-  if (document.getElementById(STYLE_ID)) return;
+  const existing = document.getElementById(STYLE_ID);
+
+  if (existing instanceof HTMLStyleElement) {
+    if (existing.textContent !== styles) existing.textContent = styles;
+    return;
+  }
 
   const style = document.createElement("style");
   style.id = STYLE_ID;
@@ -53,6 +58,8 @@ if (typeof window !== "undefined") {
   window.ChatbotStories = api;
 
   const autoInit = () => {
+    if (document.querySelector("[data-chatbot-stories][data-auto-init]")) injectStyles();
+
     document.querySelectorAll<HTMLElement>("[data-chatbot-stories][data-auto-init]").forEach((root) => {
       if (root.dataset.chatbotStoriesMounted) return;
       root.dataset.chatbotStoriesMounted = "true";
@@ -65,4 +72,10 @@ if (typeof window !== "undefined") {
   } else {
     autoInit();
   }
+}
+
+if (import.meta.hot) {
+  import.meta.hot.accept(() => {
+    window.location.reload();
+  });
 }

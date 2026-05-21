@@ -280,6 +280,11 @@ const MARKETING_DATA_SOURCE_COLUMNS = [
   ["Enrichment", "Company / Fundraising", "Tech Stack"],
   ["Web / SEO", "Relationships", "And more"],
 ];
+const MARKETING_DATA_GRID_ARTBOARD = {
+  width: 2048,
+  height: 1280,
+  fitInset: 2,
+};
 
 const STREAM_SCROLL_INTERVAL_MS = 96;
 const TRANSIENT_ELEMENT_SELECTOR = ".wa-cursor-file, .wa-file-landing-clone, .wa-csv-drop";
@@ -3325,12 +3330,14 @@ export class ChatActor {
 
   private createMarketingDataSourcesGrid(config: DataSourceGridConfig): HTMLElement {
     const section = this.createDataSourcesGrid(config);
+    const scaler = document.createElement("div");
     const groupedList = document.createElement("div");
     const header = section.querySelector<HTMLElement>(".wa-data-source-grid__header");
     const groups = this.groupDataSources(config.sources);
 
     section.classList.add("wa-data-source-grid--marketing");
     section.dataset.marketingDataSourcesGrid = config.id;
+    scaler.className = "wa-data-source-grid__scale";
     groupedList.className = "wa-data-source-grid__groups";
 
     MARKETING_DATA_SOURCE_COLUMNS.forEach((columnCategories) => {
@@ -3347,8 +3354,19 @@ export class ChatActor {
       groupedList.append(column);
     });
 
-    section.replaceChildren(...this.compactElements(header, groupedList));
+    scaler.replaceChildren(...this.compactElements(header, groupedList));
+    section.replaceChildren(scaler);
+    this.setMarketingDataGridScale(section);
     return section;
+  }
+
+  private setMarketingDataGridScale(section: HTMLElement): void {
+    const rect = this.chatBody.getBoundingClientRect();
+    const widthScale = Math.max(0, rect.width - MARKETING_DATA_GRID_ARTBOARD.fitInset) / MARKETING_DATA_GRID_ARTBOARD.width;
+    const heightScale = Math.max(0, rect.height - MARKETING_DATA_GRID_ARTBOARD.fitInset) / MARKETING_DATA_GRID_ARTBOARD.height;
+    const scale = Math.min(widthScale || 1, heightScale || 1);
+
+    section.style.setProperty("--wa-data-grid-scale", String(scale));
   }
 
   private createMarketingDataSourceGroup(groupConfig: DataSourceGroup): HTMLElement {
@@ -3361,6 +3379,7 @@ export class ChatActor {
     label.className = "wa-data-source-group__title";
     label.textContent = groupConfig.category;
     list.className = "wa-data-source-grid__list";
+    list.classList.add(`wa-data-source-grid__list--count-${groupConfig.sources.length}`);
 
     groupConfig.sources.forEach((source) => {
       list.append(this.createDataVendorLogo(source));
