@@ -3060,7 +3060,7 @@ body {
   display: grid;
   gap: 3px;
   justify-items: start;
-  justify-self: start;
+  justify-self: end;
   width: auto;
   min-width: 0;
   min-height: 36px;
