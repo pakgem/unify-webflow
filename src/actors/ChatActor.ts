@@ -67,6 +67,12 @@ type FileLandingClone = {
   setBackgroundColor: (value: string) => void;
   setBorderColor: (value: string) => void;
 };
+type ComposerFrame = {
+  left: number;
+  bottom: number;
+  width: number;
+  height: number;
+};
 
 type DropAreaOptions = {
   title?: string;
@@ -196,22 +202,23 @@ const THINKING_STEP_FOLD = {
 /* --------------------------------------------------------------------------
    Composer Show/Hide Storyboard
 
-       0ms   hidden shell rests in place, width/height compressed
-       0ms   show: shell expands from center to full size
+       0ms   hidden shell is a compact centered pill
+       0ms   show: pill frame morphs to full input dimensions
        0ms   chat reserves final composer clearance
-       0ms   hide: shell compresses from center without moving below window
+       0ms   hide: full input morphs back to compact centered pill
      done   hidden shell is removed from pointer and accessibility flow
    -------------------------------------------------------------------------- */
 
 const COMPOSER_MOTION = {
-  hiddenY: 0,
-  hiddenScaleX: 0.64,
-  hiddenScaleY: 0.28,
-  showDuration: motionDuration(0.34),
-  hideDuration: motionDuration(0.3),
-  showEase: "power3.out",
-  hideEase: "power3.inOut",
-  origin: "center center",
+  compactWidth: 96,
+  compactHeight: 30,
+  showDuration: motionDuration(0.42),
+  hideDuration: motionDuration(0.36),
+  contentShowDelay: motionDuration(0.1),
+  contentHideDuration: motionDuration(0.1),
+  showEase: "expo.out",
+  hideEase: "power4.inOut",
+  contentEase: "power2.out",
   threadGap: 44,
 };
 
@@ -580,27 +587,37 @@ export class ChatActor {
 
   showComposer(): gsap.core.Timeline {
     const tl = gsap.timeline();
+    const fullFrame = this.measureComposerFullFrame();
+    const compactFrame = this.getComposerCompactFrame(fullFrame);
 
     tl
       .set(this.composer, {
         ...this.getComposerHiddenVars(),
         display: "grid",
         visibility: "visible",
+        left: compactFrame.left,
+        right: "auto",
+        bottom: compactFrame.bottom,
+        width: compactFrame.width,
+        height: compactFrame.height,
+        minHeight: compactFrame.height,
       })
       .set(this.composerContents, {
         visibility: "visible",
-        opacity: 1,
+        opacity: 0,
         y: 0,
       })
       .call(() => this.setComposerVisibleState(true))
       .set(this.thread, {
-        paddingBottom: () => Math.max(CHAT_BOTTOM_CLEARANCE, this.getComposerThreadInset()),
+        paddingBottom: () => Math.max(CHAT_BOTTOM_CLEARANCE, this.getComposerThreadInsetForFrame(fullFrame)),
       }, 0)
       .call(() => this.pinThreadToBottom(), undefined, 0)
       .to(this.composer, {
-        y: 0,
-        scaleX: 1,
-        scaleY: 1,
+        left: fullFrame.left,
+        bottom: fullFrame.bottom,
+        width: fullFrame.width,
+        height: fullFrame.height,
+        minHeight: fullFrame.height,
         duration: COMPOSER_MOTION.showDuration,
         ease: COMPOSER_MOTION.showEase,
         force3D: true,
@@ -610,19 +627,48 @@ export class ChatActor {
         },
         onComplete: () => {
           if (!this.composerVisible) this.setComposerVisibleState(true);
+          gsap.set(this.composer, { clearProps: "left,right,bottom,width,height,minHeight" });
         },
       }, 0)
+      .to(this.composerContents, {
+        opacity: 1,
+        duration: motionDuration(0.18),
+        ease: COMPOSER_MOTION.contentEase,
+        overwrite: "auto",
+      }, COMPOSER_MOTION.contentShowDelay)
       .call(() => this.pinThreadToBottom());
 
     return tl;
   }
 
   hideComposer(): gsap.core.Timeline {
+    const fullFrame = this.measureComposerFullFrame();
+    const compactFrame = this.getComposerCompactFrame(fullFrame);
+
     return gsap.timeline()
+      .set(this.composer, {
+        left: fullFrame.left,
+        right: "auto",
+        bottom: fullFrame.bottom,
+        width: fullFrame.width,
+        height: fullFrame.height,
+        minHeight: fullFrame.height,
+        y: 0,
+        scaleX: 1,
+        scaleY: 1,
+      })
+      .to(this.composerContents, {
+        opacity: 0,
+        duration: COMPOSER_MOTION.contentHideDuration,
+        ease: "power2.out",
+        overwrite: "auto",
+      }, 0)
       .to(this.composer, {
-        y: COMPOSER_MOTION.hiddenY,
-        scaleX: COMPOSER_MOTION.hiddenScaleX,
-        scaleY: COMPOSER_MOTION.hiddenScaleY,
+        left: compactFrame.left,
+        bottom: compactFrame.bottom,
+        width: compactFrame.width,
+        height: compactFrame.height,
+        minHeight: compactFrame.height,
         opacity: 1,
         duration: COMPOSER_MOTION.hideDuration,
         ease: COMPOSER_MOTION.hideEase,
@@ -634,7 +680,10 @@ export class ChatActor {
         },
         onComplete: () => {
           gsap.set(this.composerContents, { visibility: "hidden" });
-          gsap.set(this.composer, { visibility: "hidden" });
+          gsap.set(this.composer, {
+            visibility: "hidden",
+            clearProps: "left,right,bottom,width,height,minHeight",
+          });
           gsap.set(this.thread, { paddingBottom: CHAT_BOTTOM_CLEARANCE });
           this.pinThreadToBottom();
         },
@@ -662,28 +711,59 @@ export class ChatActor {
     return {
       opacity: 1,
       visibility: "hidden",
-      y: COMPOSER_MOTION.hiddenY,
-      scaleX: COMPOSER_MOTION.hiddenScaleX,
-      scaleY: COMPOSER_MOTION.hiddenScaleY,
+      y: 0,
+      scaleX: 1,
+      scaleY: 1,
       display: "",
-      transformOrigin: COMPOSER_MOTION.origin,
+      left: "",
+      right: "",
+      bottom: "",
+      width: "",
+      height: "",
+      minHeight: "",
     };
   }
 
   private getComposerContentsHiddenVars(): gsap.TweenVars {
     return {
       visibility: "hidden",
-      opacity: 1,
+      opacity: 0,
       y: 0,
     };
   }
 
-  private getComposerThreadInset(): number {
-    const composerTop = this.composer.offsetTop;
+  private getComposerThreadInsetForFrame(frame: ComposerFrame): number {
+    const composerTop = this.chatShell.clientHeight - frame.bottom - frame.height;
     const threadBottom = this.thread.offsetTop + this.thread.clientHeight;
     const overlap = Math.max(0, threadBottom - composerTop);
 
     return Math.ceil(overlap + COMPOSER_MOTION.threadGap);
+  }
+
+  private measureComposerFullFrame(): ComposerFrame {
+    gsap.set(this.composer, { clearProps: "left,right,bottom,width,height,minHeight" });
+
+    const shellRect = this.chatShell.getBoundingClientRect();
+    const composerRect = this.composer.getBoundingClientRect();
+
+    return {
+      left: composerRect.left - shellRect.left,
+      bottom: shellRect.bottom - composerRect.bottom,
+      width: composerRect.width,
+      height: composerRect.height,
+    };
+  }
+
+  private getComposerCompactFrame(frame: ComposerFrame): ComposerFrame {
+    const width = Math.min(COMPOSER_MOTION.compactWidth, frame.width);
+    const height = Math.min(COMPOSER_MOTION.compactHeight, frame.height);
+
+    return {
+      left: frame.left + (frame.width - width) / 2,
+      bottom: frame.bottom + (frame.height - height) / 2,
+      width,
+      height,
+    };
   }
 
   showSignup(email = ""): gsap.core.Timeline {

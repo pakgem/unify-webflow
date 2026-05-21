@@ -3133,7 +3133,7 @@ body {
   gap: 10px;
   align-items: center;
   height: var(--wa-composer-height);
-  min-height: var(--wa-composer-height);
+  min-height: 0;
   padding: 6px 8px 6px 18px;
   margin: 0;
   overflow: hidden;
@@ -4900,7 +4900,7 @@ body {
 
   .wa-composer {
     grid-template-columns: minmax(0, 1fr) var(--wa-composer-send-size);
-    min-height: var(--wa-composer-height);
+    height: var(--wa-composer-height);
     padding: 6px 8px 6px 15px;
   }
 
