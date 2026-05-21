@@ -2202,23 +2202,23 @@ body {
 .wa-data-source-grid--marketing {
   position: absolute;
   z-index: 2;
-  inset: calc(var(--wa-chat-top-fade) - 6px) 34px 28px;
+  inset: calc(var(--wa-chat-top-fade) - 8px) 26px 24px;
   align-content: start;
   width: auto;
   max-width: none;
-  gap: 22px;
+  gap: 16px;
   padding: 0;
   overflow: visible;
   pointer-events: none;
 }
 
 .wa-data-source-grid--marketing .wa-data-source-grid__header {
-  gap: 6px;
+  gap: 5px;
   max-width: 460px;
 }
 
 .wa-data-source-grid--marketing .wa-data-source-grid__title {
-  font-size: 22px;
+  font-size: 19px;
   line-height: 1.05;
   font-weight: 540;
 }
@@ -2237,10 +2237,15 @@ body {
   min-width: 0;
 }
 
+.wa-data-source-grid--marketing .wa-data-source-grid__groups {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 13px 20px;
+}
+
 .wa-data-source-group {
   display: grid;
   align-content: start;
-  gap: 10px;
+  gap: 7px;
   min-width: 0;
 }
 
@@ -2256,17 +2261,21 @@ body {
 
 .wa-data-source-grid--marketing .wa-data-source-grid__list {
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px 18px;
+  gap: 8px 12px;
 }
 
 .wa-data-vendor-logo {
   display: inline-flex;
   align-items: center;
   min-width: 0;
-  min-height: 28px;
+  min-height: 24px;
   color: var(--wa-ink);
   opacity: 0.86;
   will-change: transform, opacity;
+}
+
+.wa-data-vendor-logo--image {
+  opacity: 0.92;
 }
 
 .wa-data-vendor-logo__mark {
@@ -2274,12 +2283,21 @@ body {
   max-width: 100%;
   overflow: hidden;
   color: currentColor;
-  font-size: 18px;
+  font-size: 13px;
   line-height: 1;
   font-weight: 560;
   letter-spacing: 0;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.wa-data-vendor-logo__image {
+  display: block;
+  width: min(100%, 96px);
+  max-height: 18px;
+  object-fit: contain;
+  object-position: left center;
+  user-select: none;
 }
 
 .wa-mini-game,
@@ -4467,6 +4485,41 @@ body {
   .wa-result-grid.has-strategy-plans {
     grid-template-columns: minmax(0, 1fr);
     gap: 7px;
+  }
+
+  .wa-data-source-grid--marketing {
+    inset: calc(var(--wa-chat-top-fade) - 8px) 16px 18px;
+    gap: 12px;
+  }
+
+  .wa-data-source-grid--marketing .wa-data-source-grid__title {
+    font-size: 16px;
+  }
+
+  .wa-data-source-grid--marketing .wa-data-source-grid__subtitle {
+    font-size: 10.5px;
+  }
+
+  .wa-data-source-grid--marketing .wa-data-source-grid__groups {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 12px;
+  }
+
+  .wa-data-source-grid--marketing .wa-data-source-grid__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px 8px;
+  }
+
+  .wa-data-vendor-logo {
+    min-height: 20px;
+  }
+
+  .wa-data-vendor-logo__image {
+    max-height: 14px;
+  }
+
+  .wa-data-vendor-logo__mark {
+    font-size: 10.5px;
   }
 
   .wa-data-source-grid__list,

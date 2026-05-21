@@ -3180,9 +3180,20 @@ export class ChatActor {
     logo.dataset.vendorLogo = source.id;
     logo.title = source.detail;
 
-    const mark = document.createElement("span");
-    mark.className = "wa-data-vendor-logo__mark";
-    mark.textContent = source.name;
+    const mark = source.logoSrc ? document.createElement("img") : document.createElement("span");
+
+    if (source.logoSrc && mark instanceof HTMLImageElement) {
+      logo.classList.add("wa-data-vendor-logo--image");
+      mark.className = "wa-data-vendor-logo__image";
+      mark.alt = source.name;
+      mark.decoding = "async";
+      mark.draggable = false;
+      mark.loading = "lazy";
+      mark.src = source.logoSrc;
+    } else {
+      mark.className = "wa-data-vendor-logo__mark";
+      mark.textContent = source.name;
+    }
 
     logo.append(mark);
     return logo;

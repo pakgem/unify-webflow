@@ -44,6 +44,7 @@ type BuilderDataSourcesComponent = {
     category?: string;
     name: string;
     detail: string;
+    logoSrc?: string;
   }>;
 };
 
@@ -1911,44 +1912,164 @@ function createDataSourcesComponent(): BuilderDataSourcesComponent {
     subtitle: "Unify routes each search across the right partner sources for the job.",
     sources: [
       {
-        category: "People and contacts",
-        name: "Apollo",
-        detail: "Contacts, roles, emails, and outbound-ready people data.",
+        category: "Core Data (on-prem)",
+        name: "5x5",
+        detail: "On-premise company and contact datasets.",
+        logoSrc: "/data-logos/5x5.svg",
       },
       {
-        category: "People and contacts",
-        name: "ZoomInfo",
-        detail: "Verified B2B contact and account coverage.",
+        category: "Core Data (on-prem)",
+        name: "PDL",
+        detail: "People and company records for core B2B coverage.",
+        logoSrc: "/data-logos/PDL.png",
       },
       {
-        category: "Company intelligence",
-        name: "Crunchbase",
-        detail: "Funding rounds, investor signals, and company growth events.",
+        category: "Core Data (on-prem)",
+        name: "MixRank",
+        detail: "Company, app, and advertising intelligence.",
+        logoSrc: "/data-logos/MixRank.png",
       },
       {
-        category: "Company intelligence",
-        name: "LinkedIn",
-        detail: "Hiring movement, role changes, headcount, and profile signals.",
+        category: "Web Intent",
+        name: "Snitcher",
+        detail: "Website visitor identification and account intent.",
+        logoSrc: "/data-logos/Snitcher.svg",
       },
       {
-        category: "Commerce and local",
+        category: "Web Intent",
+        name: "Demandbase",
+        detail: "Account identification and intent signals.",
+        logoSrc: "/data-logos/Demandbase.svg",
+      },
+      {
+        category: "Enrichment Waterfall",
+        name: "Waterfall.io",
+        detail: "Waterfall orchestration for enrichment coverage.",
+        logoSrc: "/data-logos/Waterfall.svg",
+      },
+      {
+        category: "Enrichment Waterfall",
+        name: "FullEnrich",
+        detail: "Email and phone enrichment across multiple providers.",
+      },
+      {
+        category: "CRM",
+        name: "Salesforce",
+        detail: "CRM account, contact, and activity data.",
+        logoSrc: "/data-logos/Salesforce.svg",
+      },
+      {
+        category: "CRM",
+        name: "HubSpot",
+        detail: "CRM, marketing, and sales engagement records.",
+        logoSrc: "/data-logos/HubSpot.png",
+      },
+      {
+        category: "Product Analytics",
+        name: "PostHog",
+        detail: "Product events, usage, and conversion behavior.",
+        logoSrc: "/data-logos/PostHog.svg",
+      },
+      {
+        category: "Product Analytics",
+        name: "Segment",
+        detail: "Customer event pipelines and audience traits.",
+        logoSrc: "/data-logos/Segment.svg",
+      },
+      {
+        category: "Company / Fundraising",
+        name: "Harmonic",
+        detail: "Startup company signals, growth, and fundraising data.",
+        logoSrc: "/data-logos/Harmonic.svg",
+      },
+      {
+        category: "Company / Fundraising",
+        name: "Ocean.io",
+        detail: "Company lookalikes, segments, and account discovery.",
+        logoSrc: "/data-logos/Ocean_io.svg",
+      },
+      {
+        category: "SMB Data",
+        name: "OpenMart",
+        detail: "Small business discovery and merchant data.",
+        logoSrc: "/data-logos/OpenMart.svg",
+      },
+      {
+        category: "Ecommerce",
         name: "Store Leads",
         detail: "E-commerce stores, platforms, categories, and growth signals.",
+        logoSrc: "/data-logos/Store_Leads.png",
       },
       {
-        category: "Commerce and local",
-        name: "Google Business Profile",
-        detail: "Local business categories, locations, ratings, and presence.",
+        category: "Ad Intelligence",
+        name: "Adyntel",
+        detail: "Ad spend, messaging, and competitive advertising signals.",
+        logoSrc: "/data-logos/Adyntel.png",
       },
       {
-        category: "Technographics and enrichment",
+        category: "Ad Intelligence",
+        name: "Adbeat",
+        detail: "Digital ad creatives, publishers, and campaign intelligence.",
+        logoSrc: "/data-logos/Adbeat.svg",
+      },
+      {
+        category: "Ad Intelligence",
+        name: "UpRiver",
+        detail: "Ad strategy and competitive demand generation signals.",
+        logoSrc: "/data-logos/UpRiver.svg",
+      },
+      {
+        category: "Web / SEO",
+        name: "SE Ranking",
+        detail: "Search visibility, keyword, and competitor SEO data.",
+      },
+      {
+        category: "Web / SEO",
+        name: "Serpstat",
+        detail: "SEO, PPC, and content intelligence.",
+        logoSrc: "/data-logos/Serpstat.svg",
+      },
+      {
+        category: "Tech Stack",
+        name: "Theirstack",
+        detail: "Technology install, job-posting, and stack signals.",
+        logoSrc: "/data-logos/Theirstack.webp",
+      },
+      {
+        category: "Tech Stack",
         name: "BuiltWith",
         detail: "Installed tools, web stack, pixels, and infrastructure data.",
+        logoSrc: "/data-logos/BuiltWith.png",
       },
       {
-        category: "Technographics and enrichment",
-        name: "FullEnrich",
-        detail: "Waterfall enrichment for emails, phones, and missing fields.",
+        category: "Tech Stack",
+        name: "PredictLeads",
+        detail: "Hiring, technology, product, and business event signals.",
+        logoSrc: "/data-logos/PredictLeads.png",
+      },
+      {
+        category: "Social Signals",
+        name: "Trigify",
+        detail: "Social buying signals and engagement events.",
+        logoSrc: "/data-logos/Trigify.svg",
+      },
+      {
+        category: "Network & Relationships",
+        name: "The Swarm",
+        detail: "Network, relationship, and warm-introduction context.",
+        logoSrc: "/data-logos/The_Swarm.svg",
+      },
+      {
+        category: "Other Tools",
+        name: "BuyerCaddy",
+        detail: "Buyer tracking and sales workflow support.",
+        logoSrc: "/data-logos/BuyerCaddy.png",
+      },
+      {
+        category: "Other Tools",
+        name: "ZeroBounce",
+        detail: "Email validation and deliverability checks.",
+        logoSrc: "/data-logos/ZeroBounce.png",
       },
     ],
   };
