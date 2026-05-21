@@ -1,0 +1,670 @@
+import type { gsap } from "gsap";
+import type {
+  DataSourceGridConfig,
+  DataTableConfig,
+  EnrichmentConfig,
+  OutreachStyleProfileConfig,
+  PersonalizationSwipeGameConfig,
+  ProximityLeadListConfig,
+  SequenceEngagementConfig,
+  StoryContext,
+  StoryDefinition,
+  StrategyPlanConfig,
+  ThinkingStateConfig,
+  UploadedFileConfig,
+} from "../core/types";
+import {
+  CHAT_INPUT_TARGETS,
+  EXIT_TARGETS,
+  INPUT_ENTRY_LEAD_TIME,
+  SIGNUP_EMAIL_TARGET,
+  SIGNUP_ENTRY_LEAD_TIME,
+  STORY_TIMING,
+  buildStorySteps,
+  exitStory,
+  responsiveElementTarget,
+  type StoryStep,
+} from "../stories/storySystem";
+import type {
+  BuilderComponent,
+  BuilderEnrichmentComponent,
+  BuilderSequenceEngagementComponent,
+  BuilderStep,
+  BuilderStory,
+  BuilderTableComponent,
+  BuilderThinkingState,
+  BuilderUploadedFilesComponent,
+} from "./StoryBuilder";
+
+type ComponentStep = BuilderStep & { component: BuilderComponent };
+
+export function createStoriesFromBuilderDraft(
+  builderStories: BuilderStory[],
+  baseStories: StoryDefinition[],
+): StoryDefinition[] {
+  const builderById = new Map(builderStories.map((story) => [story.id, story]));
+
+  return baseStories.map((baseStory) => {
+    const builderStory = builderById.get(baseStory.id);
+    return builderStory ? createStoryFromBuilderStory(builderStory, baseStory) : baseStory;
+  });
+}
+
+function createStoryFromBuilderStory(builderStory: BuilderStory, baseStory: StoryDefinition): StoryDefinition {
+  return {
+    ...baseStory,
+    label: builderStory.label,
+    navLabel: builderStory.label,
+    navDescription: builderStory.summary || baseStory.navDescription,
+    summary: builderStory.summary || baseStory.summary,
+    entry: getRuntimeEntry(builderStory.id, baseStory),
+    entryLeadTime: getRuntimeEntryLeadTime(builderStory.id, baseStory),
+    prepare: builderStory.id === "hit-ground-running" ? (ctx) => ctx.chat.prepareSignup() : baseStory.prepare,
+    build: (ctx) => buildBuilderStory(ctx, builderStory, baseStory),
+  };
+}
+
+function getRuntimeEntry(storyId: string, baseStory: StoryDefinition): StoryDefinition["entry"] {
+  if (storyId === "hit-ground-running") return SIGNUP_EMAIL_TARGET;
+  if (storyId === "data-marketplace") return CHAT_INPUT_TARGETS.dataMarketplace;
+  if (storyId === "research-brief") return CHAT_INPUT_TARGETS.researchBrief;
+  return baseStory.entry;
+}
+
+function getRuntimeEntryLeadTime(storyId: string, baseStory: StoryDefinition): number | undefined {
+  if (storyId === "hit-ground-running") return SIGNUP_ENTRY_LEAD_TIME;
+  if (storyId === "data-marketplace" || storyId === "research-brief") return INPUT_ENTRY_LEAD_TIME;
+  return baseStory.entryLeadTime;
+}
+
+function buildBuilderStory(
+  ctx: StoryContext,
+  builderStory: BuilderStory,
+  baseStory: StoryDefinition,
+): gsap.core.Timeline {
+  if (builderStory.id === "hit-ground-running") return buildHitGroundRunningStory(ctx, builderStory);
+  if (builderStory.id === "crm-update") return buildContextLearningStory(ctx, builderStory);
+  if (builderStory.id === "research-brief") return buildEngagementStory(ctx, builderStory);
+  if (builderStory.id === "csv-import-cleanup") return buildCsvCleanupStory(ctx, builderStory);
+
+  const steps = createGenericStorySteps(builderStory);
+  if (!steps.length) return baseStory.build(ctx);
+
+  return buildStorySteps(ctx, [...steps, exitStory(EXIT_TARGETS.bottomRight, "+=0.18")]);
+}
+
+function buildHitGroundRunningStory(ctx: StoryContext, story: BuilderStory): gsap.core.Timeline {
+  const statusStep = firstStep(story, "status");
+  const userStep = firstStep(story, "user");
+  const thinkingStep = firstStep(story, "thinking");
+  const assistantStep = firstStep(story, "assistant");
+  const strategyStep = firstComponent(story, "strategyCards");
+
+  return buildStorySteps(ctx, [
+    { kind: "status", text: statusStep?.text || "Sign up" },
+    { kind: "cursorClick", nextMode: "text", at: "-=0.04" },
+    { kind: "typeSignupEmail", email: userStep?.text || "joel@acme.co", duration: STORY_TIMING.typeShort },
+    { kind: "status", text: "Building workspace", at: "-=0.16" },
+    { kind: "transitionSignupToChat", at: `+=${STORY_TIMING.beat}` },
+    ...(thinkingStep ? [{ kind: "status" as const, text: thinkingStep.text || "Researching", at: "<" }] : []),
+    ...(thinkingStep ? [toThinkingStoryStep(thinkingStep, { hold: 0.46, at: "+=0.04" })] : []),
+    ...(assistantStep ? [{ kind: "assistant" as const, text: assistantStep.text }] : []),
+    ...(strategyStep ? [{ kind: "status" as const, text: "Game plans ready", at: "<" }] : []),
+    ...(strategyStep ? [{ kind: "strategyPlans" as const, plans: toStrategyPlans(strategyStep.component), at: "-=0.08" }] : []),
+    exitStory(EXIT_TARGETS.right, "+=0.18"),
+  ]);
+}
+
+function buildContextLearningStory(ctx: StoryContext, story: BuilderStory): gsap.core.Timeline {
+  const uploadedFilesStep = firstComponent(story, "uploadedFiles");
+  const steps: StoryStep[] = [];
+
+  if (uploadedFilesStep) {
+    const files = toUploadedFiles(uploadedFilesStep.component);
+    const dropArea = ctx.chat.prepareCsvDropArea({
+      title: uploadedFilesStep.component.title,
+      detail: files.map((file) => file.name).join(", "),
+    });
+    const cursorLabel = files.length > 1 ? `${files.length} context files` : files[0]?.name ?? uploadedFilesStep.text;
+    const cursorFile = ctx.chat.prepareCursorFile(cursorLabel, ctx.cursor, files[0]?.type ?? "DOC");
+    const dropTarget = responsiveElementTarget("[data-chat-shell]", "center", {
+      desktop: { x: 0, y: 74 },
+      tablet: { x: 0, y: 64 },
+      mobile: { x: 0, y: 56 },
+    });
+
+    steps.push(
+      { kind: "status" as const, text: "waiting for context" },
+      { kind: "custom" as const, build: () => cursorFile.startFollow(), at: "+=0.04" },
+      { kind: "custom" as const, build: () => dropArea.revealWhenCursorEnters(ctx.cursor), at: "<" },
+      {
+        kind: "cursorDrag" as const,
+        target: dropTarget,
+        options: { mode: "drag" as const, speed: "slow" as const, releaseHold: 0.34, label: "drag-context-files" },
+        at: "<+=0.1",
+      },
+      { kind: "custom" as const, build: () => dropArea.activate(), at: "<+=0.02" },
+      { kind: "custom" as const, build: () => dropArea.complete(), at: "-=0.18" },
+      { kind: "custom" as const, build: () => cursorFile.landAsUploadedFiles(files), at: "<" },
+    );
+  }
+
+  for (const step of story.steps) {
+    if (step === uploadedFilesStep) continue;
+    appendRuntimeStep(steps, story.id, step);
+  }
+
+  steps.push(exitStory(EXIT_TARGETS.bottomRight, "+=0.16"));
+  return buildStorySteps(ctx, steps);
+}
+
+function buildEngagementStory(ctx: StoryContext, story: BuilderStory): gsap.core.Timeline {
+  const promptStep = firstStep(story, "user");
+  const tableStep = firstComponent(story, "table");
+  const thinkingStep = firstStep(story, "thinking");
+  const sequenceStep = firstComponent(story, "sequenceEngagement");
+  const tableConfig = tableStep ? toDataTable(tableStep.component, "website-visitors-sales") : null;
+  const sequenceConfig = sequenceStep ? toSequenceEngagement(sequenceStep.component, "visitor-outreach-sequences") : null;
+  const steps: StoryStep[] = [];
+
+  if (promptStep) {
+    steps.push({
+      kind: "prompt" as const,
+      text: promptStep.text,
+      duration: getTypingDuration(promptStep.text),
+      sendLabel: "send-visitor-sales-list",
+      statusBefore: "finding visitors",
+      statusAfter: "building visitor list",
+      fromEntry: true,
+    });
+  }
+
+  if (tableConfig) steps.push({ kind: "dataTable" as const, config: tableConfig, at: "-=0.02" });
+
+  if (tableConfig?.pagination && tableConfig.pagination.pages.length > 1) {
+    const pageTwoTarget = responsiveElementTarget(
+      '[data-data-table="website-visitors-sales"] [data-table-page-button="2"]',
+      "center",
+    );
+    const powerDialerTarget = responsiveElementTarget(
+      '[data-data-table="website-visitors-sales"] [data-table-action="power-dialer"]',
+      "center",
+      { desktop: { x: 5, y: 0 }, tablet: { x: 4, y: 0 }, mobile: { x: 3, y: 0 } },
+      false,
+    );
+    const emailSequenceTarget = responsiveElementTarget(
+      '[data-data-table="website-visitors-sales"] [data-table-action="email-sequence"]',
+      "center",
+      {},
+      false,
+    );
+
+    steps.push(
+      {
+        kind: "cursorMove" as const,
+        target: pageTwoTarget,
+        options: { mode: "pointer" as const, intent: "click" as const, speed: "normal" as const, label: "open-visitor-page-2" },
+        at: "+=0.2",
+      },
+      { kind: "cursorClick" as const, at: "-=0.02" },
+      { kind: "custom" as const, build: () => ctx.chat.dataTablePage("website-visitors-sales", 2), at: "-=0.03" },
+      { kind: "status" as const, text: "ready to engage", at: "+=0.1" },
+      { kind: "custom" as const, build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat + 0.58 }) },
+      {
+        kind: "cursorMove" as const,
+        target: powerDialerTarget,
+        options: { mode: "pointer" as const, intent: "hover" as const, speed: "slow" as const, label: "hover-power-dialer" },
+        at: "+=0.42",
+      },
+      { kind: "custom" as const, build: () => ctx.chat.dataTableActionTooltip("website-visitors-sales", "power-dialer", true) },
+      { kind: "custom" as const, build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat + 1 }), at: "+=0.12" },
+      { kind: "custom" as const, build: () => ctx.chat.dataTableActionTooltip("website-visitors-sales", "power-dialer", false), at: "<" },
+      {
+        kind: "cursorMove" as const,
+        target: emailSequenceTarget,
+        options: { mode: "pointer" as const, intent: "hover" as const, speed: "slow" as const, label: "hover-email-sequence" },
+      },
+      { kind: "custom" as const, build: () => ctx.chat.dataTableActionTooltip("website-visitors-sales", "email-sequence", true) },
+      { kind: "cursorClick" as const, at: "+=0.18" },
+      { kind: "custom" as const, build: () => ctx.chat.dataTableActionTooltip("website-visitors-sales", "email-sequence", false), at: "<+=0.02" },
+      { kind: "status" as const, text: "building outreach sequence", at: "<" },
+    );
+  }
+
+  if (thinkingStep) steps.push(toThinkingStoryStep(thinkingStep, { hold: STORY_TIMING.thinkingMedium, at: "+=0.06" }));
+
+  if (sequenceConfig) {
+    const sequenceNextTarget = responsiveElementTarget(
+      '[data-sequence-person-button="visitor-outreach-sequences:next"]',
+      "center",
+    );
+    const sequenceKickoffTarget = responsiveElementTarget(
+      '[data-sequence-kickoff="visitor-outreach-sequences"]',
+      "center",
+    );
+
+    steps.push(
+      { kind: "sequenceEngagement" as const, config: sequenceConfig, at: "-=0.02" },
+      { kind: "custom" as const, build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat + 0.24 }), at: "+=0.04" },
+      {
+        kind: "cursorMove" as const,
+        target: sequenceNextTarget,
+        options: { mode: "pointer" as const, intent: "click" as const, speed: "normal" as const, label: "preview-second-sequence" },
+      },
+      { kind: "cursorClick" as const, at: "-=0.02" },
+      { kind: "custom" as const, build: () => ctx.chat.sequencePerson("visitor-outreach-sequences", 1), at: "-=0.03" },
+      { kind: "custom" as const, build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat + 0.24 }), at: "+=0.04" },
+      {
+        kind: "cursorMove" as const,
+        target: sequenceNextTarget,
+        options: { mode: "pointer" as const, intent: "click" as const, speed: "normal" as const, label: "preview-third-sequence" },
+      },
+      { kind: "cursorClick" as const, at: "-=0.02" },
+      { kind: "custom" as const, build: () => ctx.chat.sequencePerson("visitor-outreach-sequences", 2), at: "-=0.03" },
+      { kind: "custom" as const, build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat + 0.28 }), at: "+=0.04" },
+      {
+        kind: "cursorMove" as const,
+        target: sequenceKickoffTarget,
+        options: { mode: "pointer" as const, intent: "click" as const, speed: "normal" as const, label: "kickoff-visitor-sequence" },
+      },
+      { kind: "cursorClick" as const, at: "-=0.02" },
+      { kind: "custom" as const, build: () => ctx.chat.sequenceKickoff("visitor-outreach-sequences"), at: "-=0.04" },
+      { kind: "status" as const, text: "sequence kicked off", at: "<" },
+    );
+  }
+
+  return buildStorySteps(ctx, steps);
+}
+
+function buildCsvCleanupStory(ctx: StoryContext, story: BuilderStory): gsap.core.Timeline {
+  const fileStep = firstStep(story, "file");
+  const thinkingStep = firstStep(story, "thinking");
+  const assistantStep = firstStep(story, "assistant");
+  const tableStep = firstComponent(story, "table");
+  const fileName = fileStep?.text || "webinar_attendees.csv";
+  const fileDetail = fileStep?.note || "CSV uploaded";
+  const dropArea = ctx.chat.prepareCsvDropArea();
+  const cursorFile = ctx.chat.prepareCursorFile(fileName, ctx.cursor);
+  const dropTarget = responsiveElementTarget("[data-chat-shell]", "center", {
+    desktop: { x: 0, y: 82 },
+    tablet: { x: 0, y: 72 },
+    mobile: { x: 0, y: 64 },
+  });
+
+  return buildStorySteps(ctx, [
+    { kind: "status", text: "waiting for CSV" },
+    { kind: "custom", build: () => cursorFile.startFollow(), at: "+=0.04" },
+    { kind: "custom", build: () => dropArea.revealWhenCursorEnters(ctx.cursor), at: "<" },
+    {
+      kind: "cursorDrag",
+      target: dropTarget,
+      options: { mode: "drag", speed: "slow", releaseHold: 0.46, label: "drag-webinar-csv" },
+      at: "<+=0.1",
+    },
+    { kind: "custom", build: () => dropArea.activate(), at: "<+=0.02" },
+    { kind: "custom", build: () => dropArea.complete(), at: "-=0.24" },
+    { kind: "custom", build: () => cursorFile.landAsUploadedFile(fileName, fileDetail), at: "<" },
+    { kind: "status", text: "Cleaning CSV", at: "<" },
+    ...(thinkingStep ? [toThinkingStoryStep(thinkingStep, { hold: 0.34, at: `+=${STORY_TIMING.beat}` })] : []),
+    ...(assistantStep ? [{ kind: "assistant" as const, text: assistantStep.text }] : []),
+    ...(tableStep ? [{ kind: "dataTable" as const, config: toDataTable(tableStep.component, "cleaned-webinar-attendees"), at: "-=0.04" }] : []),
+    exitStory(EXIT_TARGETS.bottomRight, "+=0.18"),
+  ]);
+}
+
+function createGenericStorySteps(story: BuilderStory): StoryStep[] {
+  const steps: StoryStep[] = [];
+  let promptIndex = 0;
+
+  for (const step of story.steps) {
+    promptIndex += step.kind === "user" ? 1 : 0;
+    appendRuntimeStep(steps, story.id, step, promptIndex === 1);
+  }
+
+  return steps;
+}
+
+function appendRuntimeStep(
+  steps: StoryStep[],
+  storyId: string,
+  step: BuilderStep,
+  fromEntry = false,
+): void {
+  if (step.kind === "status" && step.text) {
+    steps.push({ kind: "status", text: step.text });
+    return;
+  }
+
+  if (step.kind === "user" && step.text) {
+    steps.push({
+      kind: "prompt",
+      text: step.text,
+      duration: getTypingDuration(step.text),
+      sendLabel: `send-${slugId(storyId)}-${steps.length}`,
+      fromEntry,
+      statusAfter: step.note || undefined,
+      at: fromEntry ? undefined : `+=${STORY_TIMING.beat}`,
+    });
+    return;
+  }
+
+  if (step.kind === "assistant" && step.text) {
+    steps.push({ kind: "assistant", text: step.text, at: "+=0.08" });
+    return;
+  }
+
+  if (step.kind === "thinking") {
+    steps.push(toThinkingStoryStep(step, { hold: STORY_TIMING.thinkingMedium }));
+    return;
+  }
+
+  if (step.kind === "file" && step.text) {
+    steps.push({ kind: "custom", build: (ctx: StoryContext) => ctx.chat.uploadedFileMessage(step.text, step.note || "uploaded") });
+    return;
+  }
+
+  if (step.kind !== "component" || !step.component) return;
+
+  appendComponentRuntimeStep(steps, storyId, step as ComponentStep);
+}
+
+function appendComponentRuntimeStep(
+  steps: StoryStep[],
+  storyId: string,
+  step: ComponentStep,
+): void {
+  const component = step.component;
+
+  if (component.kind === "table") {
+    steps.push({ kind: "dataTable", config: toDataTable(component, `${storyId}-${step.id}`), at: "-=0.04" });
+    return;
+  }
+
+  if (component.kind === "strategyCards") {
+    steps.push({ kind: "strategyPlans", plans: toStrategyPlans(component), at: "-=0.04" });
+    return;
+  }
+
+  if (component.kind === "enrichment") {
+    steps.push({ kind: "enrichmentPanel", config: toEnrichment(component), at: "+=0.12" });
+    return;
+  }
+
+  if (component.kind === "dataSources") {
+    const config = toDataSources(component);
+    steps.push({
+      kind: storyId === "data-marketplace" ? "marketingDataSourcesGrid" : "dataSourcesGrid",
+      config,
+      at: storyId === "data-marketplace" ? "+=0.44" : "-=0.04",
+    });
+    return;
+  }
+
+  if (component.kind === "uploadedFiles") {
+    steps.push({ kind: "custom", build: (ctx: StoryContext) => ctx.chat.uploadedFilesMessage(toUploadedFiles(component)), at: "-=0.04" });
+    return;
+  }
+
+  if (component.kind === "styleProfile") {
+    steps.push({ kind: "custom", build: (ctx: StoryContext) => ctx.chat.outreachStyleProfile(toStyleProfile(component)), at: "-=0.02" });
+    return;
+  }
+
+  if (component.kind === "proximityList") {
+    steps.push({ kind: "custom", build: (ctx: StoryContext) => ctx.chat.proximityLeadList(toProximityList(component)), at: "-=0.04" });
+    return;
+  }
+
+  if (component.kind === "personalizationSwipeGame") {
+    steps.push({ kind: "personalizationSwipeGame", config: toPersonalizationSwipe(component), at: "+=0.06" });
+    return;
+  }
+
+  if (component.kind === "sequenceEngagement") {
+    steps.push({ kind: "sequenceEngagement", config: toSequenceEngagement(component, `${storyId}-${step.id}`), at: "-=0.02" });
+    return;
+  }
+
+  steps.push({ kind: "assistant", text: [component.title, ...component.items].filter(Boolean).join("\n") });
+}
+
+function toThinkingStoryStep(
+  step: BuilderStep,
+  options: { hold?: number; at?: string | number } = {},
+) {
+  return {
+    kind: "thinking" as const,
+    thinking: toThinkingState(step.thinking, step.text, step.note),
+    hold: options.hold,
+    at: options.at,
+  };
+}
+
+function toThinkingState(
+  thinking: BuilderThinkingState | undefined,
+  fallbackText: string,
+  fallbackNote: string,
+): ThinkingStateConfig {
+  if (thinking?.items.length) {
+    return {
+      title: thinking.title,
+      elapsed: thinking.elapsed,
+      items: thinking.items.map((item) => ({
+        label: item.label,
+        detail: item.detail,
+        disclosure: item.disclosure,
+      })),
+    };
+  }
+
+  return {
+    items: [
+      {
+        label: fallbackText || "Thinking",
+        detail: fallbackNote || undefined,
+      },
+    ],
+  };
+}
+
+function toDataTable(component: BuilderTableComponent, fallbackId: string): DataTableConfig {
+  const columns = component.columns.map((label, index) => ({
+    key: slugId(label || `column-${index + 1}`),
+    label: label || `Column ${index + 1}`,
+  }));
+  const rows = component.rows.map((row, rowIndex) => toDataTableRow(row, columns, rowIndex));
+  const pageSize = Math.min(10, rows.length || 10);
+  const pages = component.pagination?.ranges.map((range, pageIndex) => ({
+    page: pageIndex + 1,
+    range,
+    rows: rows.slice(pageIndex * pageSize, (pageIndex + 1) * pageSize),
+  })).filter((page) => page.rows.length) ?? [];
+
+  return {
+    id: fallbackId === "website-visitors-sales" ? fallbackId : slugId(component.title || fallbackId),
+    title: component.title,
+    eyebrow: component.eyebrow,
+    count: component.count,
+    variant: inferTableVariant(component),
+    columns,
+    rows: pages[0]?.rows ?? rows,
+    actions: component.actions?.map(toDataTableAction),
+    pagination: pages.length > 1
+      ? {
+          pageSize,
+          totalRows: inferTotalRows(component, rows.length),
+          activePage: 1,
+          pages,
+        }
+      : undefined,
+  };
+}
+
+function toDataTableRow(
+  row: string[],
+  columns: DataTableConfig["columns"],
+  rowIndex: number,
+): DataTableConfig["rows"][number] {
+  const values: Record<string, string> = {};
+
+  columns.forEach((column, columnIndex) => {
+    values[column.key] = row[columnIndex] ?? "";
+  });
+
+  return {
+    id: `${slugId(row[0] || "row")}-${rowIndex + 1}`,
+    values,
+  };
+}
+
+function toDataTableAction(action: NonNullable<BuilderTableComponent["actions"]>[number]): NonNullable<DataTableConfig["actions"]>[number] {
+  const id = action.label.toLowerCase().includes("dial") ? "power-dialer" : "email-sequence";
+
+  return {
+    id,
+    label: action.label,
+    icon: id === "power-dialer" ? "dialer" : "email",
+    tooltip: action.tooltip,
+    badge: action.badge || undefined,
+  };
+}
+
+function toStrategyPlans(component: Extract<BuilderComponent, { kind: "strategyCards" }>): StrategyPlanConfig[] {
+  return component.cards.map((card, index) => ({
+    id: slugId(card.label || card.title || `strategy-${index + 1}`),
+    label: card.label,
+    title: card.title,
+    summary: card.summary,
+  }));
+}
+
+function toEnrichment(component: BuilderEnrichmentComponent): EnrichmentConfig {
+  return {
+    id: slugId(component.title || "enrichment"),
+    title: component.title,
+    subtitle: component.subtitle,
+    modeLabel: "Balanced",
+    fields: component.fields,
+  };
+}
+
+function toDataSources(component: Extract<BuilderComponent, { kind: "dataSources" }>): DataSourceGridConfig {
+  return {
+    id: slugId(component.title || "data-sources"),
+    title: component.title,
+    subtitle: component.subtitle,
+    sources: component.sources.map((source, index) => ({
+      id: slugId(source.name || `source-${index + 1}`),
+      category: source.category,
+      name: source.name,
+      detail: source.detail,
+      logoSrc: source.logoSrc,
+    })),
+  };
+}
+
+function toUploadedFiles(component: BuilderUploadedFilesComponent): UploadedFileConfig[] {
+  return component.files.map((file) => ({
+    name: file.name,
+    detail: file.detail,
+    type: file.type,
+  }));
+}
+
+function toStyleProfile(component: Extract<BuilderComponent, { kind: "styleProfile" }>): OutreachStyleProfileConfig {
+  return {
+    id: slugId(component.title || "style-profile"),
+    title: component.title,
+    subtitle: component.subtitle,
+    signals: component.signals,
+    examples: component.examples,
+  };
+}
+
+function toProximityList(component: Extract<BuilderComponent, { kind: "proximityList" }>): ProximityLeadListConfig {
+  return {
+    id: slugId(component.title || "proximity-list"),
+    title: component.title,
+    subtitle: component.subtitle,
+    leads: component.leads,
+  };
+}
+
+function toPersonalizationSwipe(component: Extract<BuilderComponent, { kind: "personalizationSwipeGame" }>): PersonalizationSwipeGameConfig {
+  return {
+    id: slugId(component.title || "personalization-swipe"),
+    title: component.title,
+    subtitle: component.subtitle,
+    prompt: component.prompt,
+    labels: { avoid: "avoid", use: "use" },
+    completeLabel: "personalization rules learned",
+    signals: component.signals.map((signal, index) => ({
+      id: slugId(signal.label || `signal-${index + 1}`),
+      label: signal.label,
+      detail: signal.detail,
+      decision: signal.decision,
+    })),
+  };
+}
+
+function toSequenceEngagement(
+  component: BuilderSequenceEngagementComponent,
+  fallbackId: string,
+): SequenceEngagementConfig {
+  return {
+    id: fallbackId,
+    title: component.title,
+    subtitle: component.subtitle,
+    peopleCount: component.peopleCount,
+    launchLabel: component.launchLabel,
+    sequences: component.sequences.map((sequence) => ({
+      ...sequence,
+      steps: sequence.steps?.map((step) => ({
+        ...step,
+        waitDays: step.waitDays ? Number(step.waitDays) : undefined,
+      })),
+    })),
+    channels: component.channels.map((channel) => ({
+      label: channel.label,
+      detail: channel.detail,
+      badge: channel.badge || undefined,
+    })),
+  };
+}
+
+function firstStep(story: BuilderStory, kind: BuilderStep["kind"]): BuilderStep | undefined {
+  return story.steps.find((step) => step.kind === kind);
+}
+
+function firstComponent<K extends BuilderComponent["kind"]>(
+  story: BuilderStory,
+  kind: K,
+): (BuilderStep & { component: Extract<BuilderComponent, { kind: K }> }) | undefined {
+  return story.steps.find((step): step is BuilderStep & { component: Extract<BuilderComponent, { kind: K }> } =>
+    step.kind === "component" && step.component?.kind === kind
+  );
+}
+
+function getTypingDuration(text: string): number {
+  if (text.length > 72) return STORY_TIMING.typeLong;
+  if (text.length > 38) return STORY_TIMING.typeMedium;
+  return STORY_TIMING.typeShort;
+}
+
+function inferTableVariant(component: BuilderTableComponent): DataTableConfig["variant"] {
+  const text = `${component.title} ${component.eyebrow ?? ""}`.toLowerCase();
+  if (text.includes("enrich")) return "enriched";
+  if (text.includes("filter") || text.includes("raised")) return "filtered";
+  return undefined;
+}
+
+function inferTotalRows(component: BuilderTableComponent, fallback: number): number {
+  const ranges = component.pagination?.ranges ?? [];
+  const lastRange = ranges[ranges.length - 1];
+  const match = lastRange?.match(/of\s+(\d+)/i);
+  return match ? Number(match[1]) : fallback;
+}
+
+function slugId(value: string): string {
+  return value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "item";
+}

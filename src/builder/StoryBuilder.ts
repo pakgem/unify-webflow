@@ -8,7 +8,7 @@ import {
   getThinkingElapsedLabel,
 } from "../stories/thinkingText";
 
-type BuilderStepKind =
+export type BuilderStepKind =
   | "user"
   | "assistant"
   | "thinking"
@@ -17,7 +17,7 @@ type BuilderStepKind =
   | "status"
   | "file";
 
-type BuilderTableComponent = {
+export type BuilderTableComponent = {
   kind: "table";
   title: string;
   eyebrow?: string;
@@ -34,7 +34,7 @@ type BuilderTableComponent = {
   };
 };
 
-type BuilderStrategyComponent = {
+export type BuilderStrategyComponent = {
   kind: "strategyCards";
   title: string;
   cards: Array<{
@@ -44,7 +44,7 @@ type BuilderStrategyComponent = {
   }>;
 };
 
-type BuilderEnrichmentComponent = {
+export type BuilderEnrichmentComponent = {
   kind: "enrichment";
   title: string;
   subtitle: string;
@@ -54,7 +54,7 @@ type BuilderEnrichmentComponent = {
   }>;
 };
 
-type BuilderDataSourcesComponent = {
+export type BuilderDataSourcesComponent = {
   kind: "dataSources";
   title: string;
   subtitle: string;
@@ -66,7 +66,7 @@ type BuilderDataSourcesComponent = {
   }>;
 };
 
-type BuilderUploadedFilesComponent = {
+export type BuilderUploadedFilesComponent = {
   kind: "uploadedFiles";
   title: string;
   files: Array<{
@@ -76,7 +76,7 @@ type BuilderUploadedFilesComponent = {
   }>;
 };
 
-type BuilderStyleProfileComponent = {
+export type BuilderStyleProfileComponent = {
   kind: "styleProfile";
   title: string;
   subtitle: string;
@@ -87,7 +87,7 @@ type BuilderStyleProfileComponent = {
   examples: string[];
 };
 
-type BuilderProximityListComponent = {
+export type BuilderProximityListComponent = {
   kind: "proximityList";
   title: string;
   subtitle: string;
@@ -102,7 +102,7 @@ type BuilderProximityListComponent = {
   }>;
 };
 
-type BuilderPersonalizationSwipeComponent = {
+export type BuilderPersonalizationSwipeComponent = {
   kind: "personalizationSwipeGame";
   title: string;
   subtitle: string;
@@ -114,7 +114,7 @@ type BuilderPersonalizationSwipeComponent = {
   }>;
 };
 
-type BuilderSequenceEngagementComponent = {
+export type BuilderSequenceEngagementComponent = {
   kind: "sequenceEngagement";
   title: string;
   subtitle: string;
@@ -141,13 +141,13 @@ type BuilderSequenceEngagementComponent = {
   }>;
 };
 
-type BuilderGenericComponent = {
+export type BuilderGenericComponent = {
   kind: "generic";
   title: string;
   items: string[];
 };
 
-type BuilderComponent =
+export type BuilderComponent =
   | BuilderTableComponent
   | BuilderStrategyComponent
   | BuilderEnrichmentComponent
@@ -159,7 +159,7 @@ type BuilderComponent =
   | BuilderSequenceEngagementComponent
   | BuilderGenericComponent;
 
-type BuilderThinkingState = {
+export type BuilderThinkingState = {
   title: string;
   elapsed: string;
   items: Array<{
@@ -169,7 +169,7 @@ type BuilderThinkingState = {
   }>;
 };
 
-type BuilderStep = {
+export type BuilderStep = {
   id: string;
   kind: BuilderStepKind;
   text: string;
@@ -178,7 +178,7 @@ type BuilderStep = {
   thinking?: BuilderThinkingState;
 };
 
-type BuilderStory = {
+export type BuilderStory = {
   id: string;
   label: string;
   summary: string;
@@ -198,6 +198,7 @@ type StoryBuilderRefs = {
 
 type StoryBuilderOptions = {
   onStorySelect?: (storyId: string) => void;
+  onStoriesChange?: (stories: BuilderStory[], options?: { source?: "load" | "edit" }) => void;
   draftEndpoint?: string | false;
   draftAutoSave?: boolean;
 };
@@ -215,7 +216,7 @@ const STEP_KIND_LABELS: Record<BuilderStepKind, string> = {
 const ADDABLE_STEP_KINDS: BuilderStepKind[] = ["user", "assistant", "thinking", "component", "cursor", "file"];
 const DEFAULT_DRAFT_ENDPOINT = "/api/story-draft";
 const DRAFT_SAVE_DEBOUNCE_MS = 800;
-const BUILDER_DRAFT_SCHEMA_VERSION = 3;
+export const BUILDER_DRAFT_SCHEMA_VERSION = 3;
 
 export class StoryBuilder {
   private refs: StoryBuilderRefs | null = null;
@@ -1857,6 +1858,7 @@ export class StoryBuilder {
     if (!refs) return;
 
     if (updateStatus) this.setStatus(status);
+    this.options.onStoriesChange?.(this.stories, { source: "edit" });
     refs.shell.dispatchEvent(
       new CustomEvent("chatbot-story-builder:change", {
         bubbles: true,
@@ -1914,6 +1916,7 @@ export class StoryBuilder {
       this.selectedStepId = this.activeStory.steps[0]?.id ?? null;
       this.render();
       this.setStatus(remoteDraft.schemaVersion === BUILDER_DRAFT_SCHEMA_VERSION ? "draft loaded" : "draft upgraded");
+      this.options.onStoriesChange?.(this.stories, { source: "load" });
       if (remoteDraft.schemaVersion !== BUILDER_DRAFT_SCHEMA_VERSION) this.queueRemoteSave();
     } catch {
       this.setStatus("remote draft unavailable; using local draft");
@@ -3052,7 +3055,7 @@ function cloneComponent(component: BuilderComponent): BuilderComponent {
   return JSON.parse(JSON.stringify(component)) as BuilderComponent;
 }
 
-function normalizeBuilderDraftPayload(payload: unknown): { schemaVersion: number; stories: BuilderStory[] } | null {
+export function normalizeBuilderDraftPayload(payload: unknown): { schemaVersion: number; stories: BuilderStory[] } | null {
   if (!isRecord(payload) || !Array.isArray(payload.stories)) return null;
 
   const schemaVersion = typeof payload.schemaVersion === "number" ? payload.schemaVersion : 1;

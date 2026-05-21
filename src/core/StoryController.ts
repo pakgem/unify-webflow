@@ -38,6 +38,7 @@ export class StoryController implements ChatbotStoriesInstance {
   private resumeButton: HTMLButtonElement | null = null;
   private playing = false;
   private historyPaused = false;
+  private storyTabListeners: Array<() => void> = [];
 
   constructor(
     private root: HTMLElement,
@@ -152,6 +153,38 @@ export class StoryController implements ChatbotStoriesInstance {
     this.goTo(previousIndex);
   }
 
+  updateStories(stories: StoryDefinition[], options: { restartActive?: boolean } = {}): void {
+    if (!stories.length) return;
+
+    const activeStoryId = this.stories[this.activeIndex]?.id;
+    const previousStories = this.stories;
+    const progressByStory = new Map(this.stories.map((story, index) => [story.id, this.storyProgress[index] ?? 0]));
+    const startPoint = this.cursor.getPosition();
+    const wasPlaying = this.playing;
+    const shouldRenderTabs = didStoryTabsChange(previousStories, stories);
+
+    this.stories = stories;
+    this.storyProgress = this.stories.map((story) => progressByStory.get(story.id) ?? 0);
+    this.activeIndex = Math.max(0, this.resolveStoryIndex(activeStoryId ?? this.stories[0].id));
+    if (shouldRenderTabs) this.renderStoryTabs();
+
+    if (options.restartActive) {
+      this.stopTimeline();
+      this.setHistoryPaused(false);
+      this.activeTimeline = this.buildTimeline(this.activeIndex, startPoint);
+      this.activeTimeline.progress(0);
+      this.playing = wasPlaying || this.options.autoplay;
+      this.updateStoryMeta();
+      this.updateProgress();
+      this.updatePlayButton();
+      if (this.playing) this.activeTimeline.play();
+      return;
+    }
+
+    this.updateStoryMeta();
+    this.updateAllTabProgress();
+  }
+
   goTo(story: number | string): void {
     const nextIndex = this.resolveStoryIndex(story);
 
@@ -181,6 +214,7 @@ export class StoryController implements ChatbotStoriesInstance {
     this.pausedCursorMimic?.destroy();
     this.resizeObserver?.disconnect();
     window.clearTimeout(this.resizeTimer);
+    this.clearStoryTabListeners();
 
     for (const remove of this.listeners) remove();
     this.listeners = [];
@@ -323,14 +357,7 @@ export class StoryController implements ChatbotStoriesInstance {
   }
 
   private attachControls(): void {
-    const tabs = this.root.querySelector<HTMLElement>("[data-story-tabs]");
-
-    if (tabs) {
-      this.storyTabButtons = this.stories.map((story, index) => this.createStoryTab(story, index));
-      tabs.replaceChildren(
-        ...this.storyTabButtons,
-      );
-    }
+    this.renderStoryTabs();
 
     this.scrubber = this.root.querySelector<HTMLInputElement>("[data-story-scrubber]");
     this.playButton = this.root.querySelector<HTMLButtonElement>("[data-toggle-play]");
@@ -362,7 +389,7 @@ export class StoryController implements ChatbotStoriesInstance {
     button.setAttribute("aria-pressed", "false");
     const handleClick = () => this.goTo(index);
     button.addEventListener("click", handleClick);
-    this.listeners.push(() => button.removeEventListener("click", handleClick));
+    this.storyTabListeners.push(() => button.removeEventListener("click", handleClick));
 
     const marker = document.createElement("span");
     marker.className = "wa-story-tab__marker";
@@ -386,6 +413,26 @@ export class StoryController implements ChatbotStoriesInstance {
 
     button.append(marker, body);
     return button;
+  }
+
+  private renderStoryTabs(): void {
+    const tabs = this.root.querySelector<HTMLElement>("[data-story-tabs]");
+
+    this.clearStoryTabListeners();
+
+    if (!tabs) {
+      this.storyTabButtons = [];
+      return;
+    }
+
+    this.storyTabButtons = this.stories.map((story, index) => this.createStoryTab(story, index));
+    tabs.replaceChildren(...this.storyTabButtons);
+    this.updateAllTabProgress();
+  }
+
+  private clearStoryTabListeners(): void {
+    for (const remove of this.storyTabListeners) remove();
+    this.storyTabListeners = [];
   }
 
   private attachChatHistoryScroll(): void {
@@ -558,4 +605,20 @@ function clamp(value: number, min: number, max: number): number {
 
 function clampProgress(value: number): number {
   return clamp(value, 0, 1);
+}
+
+function didStoryTabsChange(previous: StoryDefinition[], next: StoryDefinition[]): boolean {
+  if (previous.length !== next.length) return true;
+
+  return next.some((story, index) => {
+    const prior = previous[index];
+
+    return (
+      !prior ||
+      prior.id !== story.id ||
+      prior.label !== story.label ||
+      prior.navLabel !== story.navLabel ||
+      prior.navDescription !== story.navDescription
+    );
+  });
 }
