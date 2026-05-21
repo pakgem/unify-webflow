@@ -227,6 +227,15 @@ const COMPOSER_MOTION = {
 const COMPOSER_FRAME_PROPS =
   "left,right,bottom,width,height,minHeight,paddingTop,paddingRight,paddingBottom,paddingLeft,borderWidth,gap";
 
+const COMPOSER_BOX_RESET_VARS: gsap.TweenVars = {
+  paddingTop: "",
+  paddingRight: "",
+  paddingBottom: "",
+  paddingLeft: "",
+  borderWidth: "",
+  gap: "",
+};
+
 const SIGNUP_TRANSITION = {
   scrollOutRatio: 0.74,
   minScrollOut: 280,
@@ -598,6 +607,7 @@ export class ChatActor {
     tl
       .set(this.composer, {
         ...this.getComposerHiddenVars(),
+        ...COMPOSER_BOX_RESET_VARS,
         display: "grid",
         visibility: "visible",
         left: compactFrame.left,
@@ -652,12 +662,7 @@ export class ChatActor {
 
     return gsap.timeline()
       .set(this.composer, {
-        paddingTop: "",
-        paddingRight: "",
-        paddingBottom: "",
-        paddingLeft: "",
-        borderWidth: "",
-        gap: "",
+        ...COMPOSER_BOX_RESET_VARS,
         left: fullFrame.left,
         right: "auto",
         bottom: fullFrame.bottom,
@@ -738,6 +743,7 @@ export class ChatActor {
       width: "",
       height: "",
       minHeight: "",
+      ...COMPOSER_BOX_RESET_VARS,
     };
   }
 
