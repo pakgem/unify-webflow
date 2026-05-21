@@ -205,24 +205,27 @@ const THINKING_STEP_FOLD = {
        0ms   hidden shell is a compact centered pill
        0ms   show: pill frame morphs to full input dimensions
        0ms   chat reserves final composer clearance
-       0ms   hide: full input morphs back to compact centered pill
+       0ms   hide: full input collapses through the compact pill into its center
      done   hidden shell is removed from pointer and accessibility flow
    -------------------------------------------------------------------------- */
 
 const COMPOSER_MOTION = {
   compactWidth: 96,
   compactHeight: 30,
+  collapsedWidth: 0,
+  collapsedHeight: 0,
   showDuration: motionDuration(0.42),
-  hideDuration: motionDuration(0.36),
+  hideDuration: motionDuration(0.32),
   contentShowDelay: motionDuration(0.1),
   contentHideDuration: motionDuration(0.1),
   showEase: "expo.out",
-  hideEase: "power4.inOut",
+  hideEase: "power3.in",
   contentEase: "power2.out",
   threadGap: 44,
 };
 
-const COMPOSER_FRAME_PROPS = "left,right,bottom,width,height,minHeight";
+const COMPOSER_FRAME_PROPS =
+  "left,right,bottom,width,height,minHeight,paddingTop,paddingRight,paddingBottom,paddingLeft,borderWidth,gap";
 
 const SIGNUP_TRANSITION = {
   scrollOutRatio: 0.74,
@@ -645,10 +648,16 @@ export class ChatActor {
 
   hideComposer(): gsap.core.Timeline {
     const fullFrame = this.measureComposerFullFrame();
-    const compactFrame = this.getComposerCompactFrame(fullFrame);
+    const collapsedFrame = this.getComposerCollapsedFrame(fullFrame);
 
     return gsap.timeline()
       .set(this.composer, {
+        paddingTop: "",
+        paddingRight: "",
+        paddingBottom: "",
+        paddingLeft: "",
+        borderWidth: "",
+        gap: "",
         left: fullFrame.left,
         right: "auto",
         bottom: fullFrame.bottom,
@@ -666,11 +675,17 @@ export class ChatActor {
         overwrite: "auto",
       }, 0)
       .to(this.composer, {
-        left: compactFrame.left,
-        bottom: compactFrame.bottom,
-        width: compactFrame.width,
-        height: compactFrame.height,
-        minHeight: compactFrame.height,
+        left: collapsedFrame.left,
+        bottom: collapsedFrame.bottom,
+        width: collapsedFrame.width,
+        height: collapsedFrame.height,
+        minHeight: collapsedFrame.height,
+        paddingTop: 0,
+        paddingRight: 0,
+        paddingBottom: 0,
+        paddingLeft: 0,
+        borderWidth: 0,
+        gap: 0,
         opacity: 1,
         duration: COMPOSER_MOTION.hideDuration,
         ease: COMPOSER_MOTION.hideEase,
@@ -759,6 +774,18 @@ export class ChatActor {
   private getComposerCompactFrame(frame: ComposerFrame): ComposerFrame {
     const width = Math.min(COMPOSER_MOTION.compactWidth, frame.width);
     const height = Math.min(COMPOSER_MOTION.compactHeight, frame.height);
+
+    return {
+      left: frame.left + (frame.width - width) / 2,
+      bottom: frame.bottom + (frame.height - height) / 2,
+      width,
+      height,
+    };
+  }
+
+  private getComposerCollapsedFrame(frame: ComposerFrame): ComposerFrame {
+    const width = COMPOSER_MOTION.collapsedWidth;
+    const height = COMPOSER_MOTION.collapsedHeight;
 
     return {
       left: frame.left + (frame.width - width) / 2,
