@@ -1272,7 +1272,7 @@ export class ChatActor {
     return this.revealComponentItems(
       "sequence",
       panel,
-      ".wa-sequence-person-button, .wa-sequence-card, .wa-sequence-step, .wa-engage-channel, .wa-sequence-kickoff",
+      ".wa-sequence-person-button, .wa-sequence-card, .wa-sequence-step, .wa-sequence-copy-panel, .wa-engage-channel, .wa-sequence-kickoff",
       COMPONENT_CHILD_REVEAL.stackCard,
     );
   }
@@ -3543,6 +3543,8 @@ export class ChatActor {
       card.dataset.sequenceCard = `${config.id}:${index}`;
       card.dataset.sequenceIndex = String(index);
       card.dataset.active = String(index === 0);
+      card.dataset.sequenceName = sequence.name;
+      card.dataset.sequenceMeta = [sequence.title, sequence.company].filter(Boolean).join(", ");
       if (index !== 0) {
         card.style.display = "none";
         gsap.set(card, { autoAlpha: 0, y: 8 });
@@ -3573,32 +3575,58 @@ export class ChatActor {
       personalization.className = "wa-sequence-card__personalization";
       personalization.textContent = sequence.personalization;
 
-      card.append(top, subject, personalization);
-
       if (sequence.steps?.length) {
         const steps = document.createElement("div");
+        const selectedStep = sequence.steps[0];
+        const copyPanel = document.createElement("div");
+        const copyMeta = document.createElement("span");
+        const copySubject = document.createElement("strong");
+        const copyBody = document.createElement("p");
 
         steps.className = "wa-sequence-steps";
         sequence.steps.forEach((step, stepIndex) => {
-          const stepEl = document.createElement("div");
+          const stepEl = document.createElement("button");
           const channel = document.createElement("span");
           const copy = document.createElement("span");
           const stepLabel = document.createElement("strong");
-          const body = document.createElement("span");
 
           stepEl.className = "wa-sequence-step";
+          stepEl.type = "button";
+          stepEl.tabIndex = -1;
+          stepEl.dataset.stepIndex = String(stepIndex);
           stepEl.dataset.stepOpen = String(stepIndex === 0);
+          stepEl.dataset.stepSelected = String(stepIndex === 0);
           stepEl.dataset.channel = this.slugChannelName(step.channel);
+          stepEl.dataset.stepSubject = stepIndex === 0 ? sequence.subject : step.label;
+          stepEl.dataset.stepBody = this.getSequenceStepCopy(sequence, step);
+          stepEl.setAttribute("aria-pressed", String(stepIndex === 0));
+          stepEl.addEventListener("click", () => {
+            this.selectSequenceStep(card, stepIndex);
+          });
           channel.className = "wa-sequence-step__channel";
           channel.textContent = step.channel;
           copy.className = "wa-sequence-step__copy";
           stepLabel.textContent = step.label;
-          body.textContent = step.body;
-          copy.append(stepLabel, body);
+          copy.append(stepLabel);
           stepEl.append(channel, copy);
           steps.append(stepEl);
         });
-        card.append(steps);
+
+        copyPanel.className = "wa-sequence-copy-panel";
+        copyPanel.dataset.sequenceCopyPanel = "";
+        copyMeta.className = "wa-sequence-copy-panel__meta";
+        copyMeta.dataset.sequenceCopyMeta = "";
+        copyMeta.textContent = selectedStep ? `${selectedStep.channel} 1` : "Email";
+        copySubject.className = "wa-sequence-copy-panel__subject";
+        copySubject.dataset.sequenceCopySubject = "";
+        copySubject.textContent = sequence.subject;
+        copyBody.className = "wa-sequence-copy-panel__body";
+        copyBody.dataset.sequenceCopyBody = "";
+        copyBody.textContent = selectedStep ? this.getSequenceStepCopy(sequence, selectedStep) : sequence.personalization;
+        copyPanel.append(copyMeta, copySubject, copyBody);
+        card.append(steps, copyPanel);
+      } else {
+        card.append(top, subject, personalization);
       }
 
       sequences.append(card);
@@ -3725,11 +3753,54 @@ export class ChatActor {
     return `${index + 1}/${total}`;
   }
 
+  private selectSequenceStep(card: HTMLElement, index: number): void {
+    const steps = this.queryElements(card, ".wa-sequence-step");
+    const selected = steps.find((step) => Number(step.dataset.stepIndex) === index) ?? steps[0];
+    const meta = card.querySelector<HTMLElement>("[data-sequence-copy-meta]");
+    const subject = card.querySelector<HTMLElement>("[data-sequence-copy-subject]");
+    const body = card.querySelector<HTMLElement>("[data-sequence-copy-body]");
+    const selectedLabel = selected?.querySelector<HTMLElement>(".wa-sequence-step__channel")?.textContent?.trim() ?? "Email";
+
+    steps.forEach((step) => {
+      const active = step === selected;
+
+      step.dataset.stepSelected = String(active);
+      step.dataset.stepOpen = String(active);
+      step.setAttribute("aria-pressed", String(active));
+    });
+
+    if (meta) meta.textContent = `${selectedLabel} ${index + 1}`;
+    if (subject) subject.textContent = selected?.dataset.stepSubject ?? "";
+    if (body) body.textContent = selected?.dataset.stepBody ?? "";
+  }
+
+  private getSequenceStepCopy(
+    sequence: SequenceEngagementConfig["sequences"][number],
+    step: NonNullable<SequenceEngagementConfig["sequences"][number]["steps"]>[number],
+  ): string {
+    const firstName = sequence.name.split(" ")[0] ?? sequence.name;
+
+    if (this.slugChannelName(step.channel) !== "email") return step.body;
+
+    return [
+      `Hi ${firstName},`,
+      sequence.personalization,
+      step.body,
+      "Worth sending over a quick example?",
+    ].join("\n\n");
+  }
+
   private updateSequencePersonIdentity(section: HTMLElement, index: number): void {
     const card = this.queryElements(section, "[data-sequence-card]")
       .find((candidate) => Number(candidate.dataset.sequenceIndex) === index);
-    const name = card?.querySelector<HTMLElement>(".wa-sequence-card__identity strong")?.textContent ?? "";
-    const meta = card?.querySelector<HTMLElement>(".wa-sequence-card__identity span")?.textContent ?? "";
+    const name =
+      card?.dataset.sequenceName ??
+      card?.querySelector<HTMLElement>(".wa-sequence-card__identity strong")?.textContent ??
+      "";
+    const meta =
+      card?.dataset.sequenceMeta ??
+      card?.querySelector<HTMLElement>(".wa-sequence-card__identity span")?.textContent ??
+      "";
     const avatar = section.querySelector<HTMLElement>(".wa-sequence-person-current__avatar");
     const avatarText = avatar?.querySelector<HTMLElement>("span");
     const currentName = section.querySelector<HTMLElement>(".wa-sequence-person-current__copy strong");
