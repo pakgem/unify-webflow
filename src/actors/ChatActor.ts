@@ -1,6 +1,5 @@
 import { gsap } from "gsap";
 import type { CursorActor } from "./CursorActor";
-import { getDataLogoOpticalScale } from "../assets/dataLogoOpticalSizing";
 import type {
   DataSourceGridConfig,
   DataTableConfig,
@@ -275,6 +274,12 @@ const MARKETING_PAGE_MOTION = {
   revealEase: "power3.inOut",
   cardDuration: motionDuration(0.28),
 };
+const MARKETING_DATA_SOURCE_COLUMNS = [
+  ["CRM", "Core Data", "Ad Intelligence"],
+  ["Web Intent", "Product Analytics", "SMB Data", "Ecommerce"],
+  ["Enrichment", "Company / Fundraising", "Tech Stack"],
+  ["Web / SEO", "Relationships", "And more"],
+];
 
 const STREAM_SCROLL_INTERVAL_MS = 96;
 const TRANSIENT_ELEMENT_SELECTOR = ".wa-cursor-file, .wa-file-landing-clone, .wa-csv-drop";
@@ -3322,31 +3327,47 @@ export class ChatActor {
     const section = this.createDataSourcesGrid(config);
     const groupedList = document.createElement("div");
     const header = section.querySelector<HTMLElement>(".wa-data-source-grid__header");
+    const groups = this.groupDataSources(config.sources);
 
     section.classList.add("wa-data-source-grid--marketing");
     section.dataset.marketingDataSourcesGrid = config.id;
     groupedList.className = "wa-data-source-grid__groups";
 
-    for (const groupConfig of this.groupDataSources(config.sources)) {
-      const group = document.createElement("section");
-      const label = document.createElement("h4");
-      const list = document.createElement("div");
+    MARKETING_DATA_SOURCE_COLUMNS.forEach((columnCategories) => {
+      const column = document.createElement("div");
+      column.className = "wa-data-source-grid__column";
 
-      group.className = "wa-data-source-group";
-      label.className = "wa-data-source-group__title";
-      label.textContent = groupConfig.category;
-      list.className = "wa-data-source-grid__list";
+      columnCategories.forEach((category) => {
+        const groupConfig = groups.find((group) => group.category === category);
+        if (!groupConfig) return;
 
-      groupConfig.sources.forEach((source) => {
-        list.append(this.createDataVendorLogo(source));
+        column.append(this.createMarketingDataSourceGroup(groupConfig));
       });
 
-      group.append(label, list);
-      groupedList.append(group);
-    }
+      groupedList.append(column);
+    });
 
     section.replaceChildren(...this.compactElements(header, groupedList));
     return section;
+  }
+
+  private createMarketingDataSourceGroup(groupConfig: DataSourceGroup): HTMLElement {
+    const group = document.createElement("section");
+    const label = document.createElement("h4");
+    const list = document.createElement("div");
+
+    group.className = "wa-data-source-group";
+    group.dataset.sourceGroup = this.slugChannelName(groupConfig.category);
+    label.className = "wa-data-source-group__title";
+    label.textContent = groupConfig.category;
+    list.className = "wa-data-source-grid__list";
+
+    groupConfig.sources.forEach((source) => {
+      list.append(this.createDataVendorLogo(source));
+    });
+
+    group.append(label, list);
+    return group;
   }
 
   private createDataVendorLogo(source: DataSourceGridConfig["sources"][number]): HTMLElement {
@@ -3354,7 +3375,7 @@ export class ChatActor {
     logo.className = "wa-data-vendor-logo";
     logo.dataset.vendorLogo = source.id;
     logo.title = source.detail;
-    logo.style.setProperty("--wa-logo-optical-scale", String(source.logoScale ?? getDataLogoOpticalScale(source.id)));
+    logo.style.setProperty("--wa-logo-scale", String(source.logoScale ?? 1));
 
     const mark = source.logoSrc ? document.createElement("img") : document.createElement("span");
 
