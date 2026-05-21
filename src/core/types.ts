@@ -90,6 +90,7 @@ export type DataSourceGridConfig = {
     detail: string;
     category?: string;
     logoSrc?: string;
+    logoScale?: number;
   }>;
 };
 

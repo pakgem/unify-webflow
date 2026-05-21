@@ -2297,6 +2297,8 @@ body {
   text-align: center;
   text-overflow: ellipsis;
   white-space: nowrap;
+  transform: scale(var(--wa-logo-optical-scale, 1));
+  transform-origin: center;
 }
 
 .wa-data-vendor-logo__image {
@@ -2305,6 +2307,8 @@ body {
   height: 100%;
   object-fit: contain;
   object-position: center;
+  transform: scale(var(--wa-logo-optical-scale, 1));
+  transform-origin: center;
   user-select: none;
 }
 

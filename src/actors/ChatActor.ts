@@ -1,5 +1,6 @@
 import { gsap } from "gsap";
 import type { CursorActor } from "./CursorActor";
+import { getDataLogoOpticalScale } from "../assets/dataLogoOpticalSizing";
 import type {
   DataSourceGridConfig,
   DataTableConfig,
@@ -3179,6 +3180,7 @@ export class ChatActor {
     logo.className = "wa-data-vendor-logo";
     logo.dataset.vendorLogo = source.id;
     logo.title = source.detail;
+    logo.style.setProperty("--wa-logo-optical-scale", String(source.logoScale ?? getDataLogoOpticalScale(source.id)));
 
     const mark = source.logoSrc ? document.createElement("img") : document.createElement("span");
 
