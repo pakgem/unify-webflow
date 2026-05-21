@@ -41,6 +41,7 @@ export default async function handler(request, response) {
 
       const draft = {
         id: DRAFT_ID,
+        schemaVersion: typeof body.schemaVersion === "number" ? body.schemaVersion : undefined,
         stories: body.stories,
         updatedAt: new Date().toISOString(),
       };
@@ -74,6 +75,7 @@ async function readDraft() {
     return isDraftPayload(payload)
       ? {
           id: DRAFT_ID,
+          schemaVersion: payload.schemaVersion,
           stories: payload.stories,
           updatedAt: payload.updatedAt || result.blob.uploadedAt.toISOString(),
         }
@@ -115,6 +117,7 @@ async function readLocalDraft() {
 
     return isDraftPayload(draft) ? {
       id: DRAFT_ID,
+      schemaVersion: draft.schemaVersion,
       stories: draft.stories,
       updatedAt: draft.updatedAt || null,
     } : null;
