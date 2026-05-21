@@ -1908,7 +1908,7 @@ function createEnrichmentComponent(): BuilderEnrichmentComponent {
 function createDataSourcesComponent(): BuilderDataSourcesComponent {
   return {
     kind: "dataSources",
-    title: "Specific vendors by data area",
+    title: "Ask complex questions across diverse data sets",
     subtitle: "Unify routes each search across the right partner sources for the job.",
     sources: [
       {

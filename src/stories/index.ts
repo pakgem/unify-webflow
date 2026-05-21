@@ -272,7 +272,7 @@ const DATA_MARKETPLACE_ENRICHMENT = {
 
 const DATA_MARKETPLACE_SOURCES = {
   id: "data-marketplace-sources",
-  title: "Specific vendors by data area",
+  title: "Ask complex questions across diverse data sets",
   subtitle: "Unify routes each search across the right partner sources for the job.",
   sources: [
     {
