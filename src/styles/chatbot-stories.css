@@ -3149,7 +3149,7 @@ body {
   transition:
     border-color 140ms ease,
     box-shadow 140ms ease;
-  will-change: transform;
+  will-change: left, bottom, width, height;
 }
 
 .wa-composer[data-visible="false"] {
