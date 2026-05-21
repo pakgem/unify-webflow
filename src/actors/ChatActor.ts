@@ -196,29 +196,21 @@ const THINKING_STEP_FOLD = {
 /* --------------------------------------------------------------------------
    Composer Show/Hide Storyboard
 
-       0ms   hidden shell rests below the browser edge, width/height compressed
-       0ms   show: shell rises into place and expands to full size
-      42ms   show: inner text/button finish settling into the shell
-       0ms   hide: shell compresses and drifts downward as one object
+       0ms   hidden shell rests in place, width/height compressed
+       0ms   show: shell expands from center to full size
+       0ms   chat reserves final composer clearance
+       0ms   hide: shell compresses from center without moving below window
      done   hidden shell is removed from pointer and accessibility flow
    -------------------------------------------------------------------------- */
 
-const COMPOSER_TIMING = {
-  showContents: 0.042, // seconds after shell starts moving
-  threadSync: 0, // thread padding follows the shell immediately
-};
-
 const COMPOSER_MOTION = {
-  hiddenY: 86,
-  hiddenScaleX: 0.84,
-  hiddenScaleY: 0.68,
-  contentShowY: 3,
-  contentHideY: 2,
-  showDuration: motionDuration(0.38),
-  hideDuration: motionDuration(0.34),
-  showEase: "back.out(0.72)",
+  hiddenY: 0,
+  hiddenScaleX: 0.64,
+  hiddenScaleY: 0.28,
+  showDuration: motionDuration(0.34),
+  hideDuration: motionDuration(0.3),
+  showEase: "power3.out",
   hideEase: "power3.inOut",
-  contentEase: "power2.out",
   origin: "center center",
   threadGap: 44,
 };
@@ -598,9 +590,13 @@ export class ChatActor {
       .set(this.composerContents, {
         visibility: "visible",
         opacity: 1,
-        y: COMPOSER_MOTION.contentShowY,
+        y: 0,
       })
       .call(() => this.setComposerVisibleState(true))
+      .set(this.thread, {
+        paddingBottom: () => Math.max(CHAT_BOTTOM_CLEARANCE, this.getComposerThreadInset()),
+      }, 0)
+      .call(() => this.pinThreadToBottom(), undefined, 0)
       .to(this.composer, {
         y: 0,
         scaleX: 1,
@@ -616,38 +612,13 @@ export class ChatActor {
           if (!this.composerVisible) this.setComposerVisibleState(true);
         },
       }, 0)
-      .to(this.composerContents, {
-        y: 0,
-        opacity: 1,
-        duration: motionDuration(0.24),
-        ease: COMPOSER_MOTION.contentEase,
-        overwrite: "auto",
-      }, COMPOSER_TIMING.showContents)
-      .to(
-        this.thread,
-        {
-          paddingBottom: () => Math.max(CHAT_BOTTOM_CLEARANCE, this.getComposerThreadInset()),
-          duration: COMPOSER_MOTION.showDuration,
-          ease: COMPOSER_MOTION.showEase,
-          overwrite: "auto",
-          onUpdate: () => this.pinThreadToBottom(),
-          onComplete: () => this.pinThreadToBottom(),
-        },
-        COMPOSER_TIMING.threadSync,
-      );
+      .call(() => this.pinThreadToBottom());
 
     return tl;
   }
 
   hideComposer(): gsap.core.Timeline {
     return gsap.timeline()
-      .to(this.composerContents, {
-        y: COMPOSER_MOTION.contentHideY,
-        opacity: 1,
-        duration: motionDuration(0.18),
-        ease: "power2.inOut",
-        overwrite: "auto",
-      }, 0)
       .to(this.composer, {
         y: COMPOSER_MOTION.hiddenY,
         scaleX: COMPOSER_MOTION.hiddenScaleX,
@@ -664,20 +635,10 @@ export class ChatActor {
         onComplete: () => {
           gsap.set(this.composerContents, { visibility: "hidden" });
           gsap.set(this.composer, { visibility: "hidden" });
+          gsap.set(this.thread, { paddingBottom: CHAT_BOTTOM_CLEARANCE });
+          this.pinThreadToBottom();
         },
-      }, 0)
-      .to(
-        this.thread,
-        {
-          paddingBottom: CHAT_BOTTOM_CLEARANCE,
-          duration: COMPOSER_MOTION.hideDuration,
-          ease: COMPOSER_MOTION.hideEase,
-          overwrite: "auto",
-          onUpdate: () => this.pinThreadToBottom(),
-          onComplete: () => this.pinThreadToBottom(),
-        },
-        0,
-      );
+      }, 0);
   }
 
   clearComposer(): gsap.core.Timeline {
@@ -713,14 +674,14 @@ export class ChatActor {
     return {
       visibility: "hidden",
       opacity: 1,
-      y: COMPOSER_MOTION.contentHideY,
+      y: 0,
     };
   }
 
   private getComposerThreadInset(): number {
-    const composerRect = this.composer.getBoundingClientRect();
-    const threadRect = this.thread.getBoundingClientRect();
-    const overlap = Math.max(0, threadRect.bottom - composerRect.top);
+    const composerTop = this.composer.offsetTop;
+    const threadBottom = this.thread.offsetTop + this.thread.clientHeight;
+    const overlap = Math.max(0, threadBottom - composerTop);
 
     return Math.ceil(overlap + COMPOSER_MOTION.threadGap);
   }
