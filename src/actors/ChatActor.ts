@@ -118,6 +118,12 @@ type NormalizedThinkingState = {
   elapsed?: string;
   items: NormalizedThinkingItem[];
 };
+type ClaimedThinkingMessage = {
+  message: HTMLElement;
+  header: HTMLElement;
+  elapsed: HTMLElement;
+  steps: HTMLElement;
+};
 type StreamTiming = {
   charsPerSecond: number;
   minDuration: number;
@@ -1133,8 +1139,11 @@ export class ChatActor {
 
   enrichmentPanel(config: EnrichmentConfig): gsap.core.Timeline {
     const panel = this.createEnrichmentPanel(config);
+    const tl = this.revealComponentItems("enrichment", panel, ".wa-waterfall-row", COMPONENT_CHILD_REVEAL.waterfallRow);
+    const elapsed = panel.querySelector<HTMLElement>(".wa-thinking__elapsed");
 
-    return this.revealComponentItems("enrichment", panel, ".wa-waterfall-row", COMPONENT_CHILD_REVEAL.waterfallRow);
+    if (elapsed) this.addThinkingElapsedTimer(tl, elapsed, elapsed.dataset.elapsedTarget ?? "4m 20s");
+    return tl;
   }
 
   strategyPlans(plans: StrategyPlanConfig[]): gsap.core.Timeline {
@@ -1433,7 +1442,8 @@ export class ChatActor {
     const trackItems = config.tracks.map((track, index) =>
       this.createSequenceThinkingStep(track.label, track.detail, index + 1, config.total),
     );
-    const thinking = this.claimThinkingMessage([templateItem, ...trackItems], this.getThinkingElapsed(3));
+    const elapsedLabel = this.getThinkingElapsed(3);
+    const thinking = this.claimThinkingMessage([templateItem, ...trackItems], elapsedLabel);
     const progress = { value: 1 };
     const progressBars = trackItems
       .map((item) => item.querySelector<HTMLElement>(".wa-sequence-thinking-progress__bar span"))
@@ -1516,12 +1526,14 @@ export class ChatActor {
       tl.add(this.foldThinkingStep(item), index === 0 ? undefined : "<");
     });
 
-    return tl.call(() => {
+    tl.call(() => {
       trackItems.forEach((item) => {
         item.dataset.stepState = "complete";
       });
       this.animateMessageScrollIntoView(thinking.message);
     });
+    this.addThinkingElapsedTimer(tl, thinking.elapsed, elapsedLabel);
+    return tl;
   }
 
   sequencePerson(sequenceId: string, index: number): gsap.core.Timeline {
@@ -2511,11 +2523,8 @@ export class ChatActor {
   private runThinkingSequence(thinkingState: NormalizedThinkingState, options: ThinkingSequenceOptions): gsap.core.Timeline {
     const tl = gsap.timeline();
     const items = thinkingState.items.map((item, index) => this.createThinkingStep(item, index));
-    const thinking = this.claimThinkingMessage(
-      items,
-      thinkingState.elapsed ?? this.getThinkingElapsed(thinkingState.items.length),
-      thinkingState.title,
-    );
+    const elapsedLabel = thinkingState.elapsed ?? this.getThinkingElapsed(thinkingState.items.length);
+    const thinking = this.claimThinkingMessage(items, elapsedLabel, thinkingState.title);
 
     tl.call(() => {
       items.forEach((item) => {
@@ -2555,11 +2564,13 @@ export class ChatActor {
         .add(this.foldThinkingStep(item));
     });
 
-    return tl.call(() => {
+    tl.call(() => {
       items.forEach((item) => {
         item.dataset.stepState = "complete";
       });
     }, undefined, `+=${options.finalHold}`);
+    this.addThinkingElapsedTimer(tl, thinking.elapsed, elapsedLabel);
+    return tl;
   }
 
   private activateThinkingStep(items: HTMLElement[], activeIndex: number): void {
@@ -2582,11 +2593,11 @@ export class ChatActor {
     return Math.min(timing.maxDuration, Math.max(timing.minDuration, text.length / timing.charsPerSecond));
   }
 
-  private claimThinkingMessage(items: HTMLElement[], elapsedText: string, titleText = DEFAULT_THINKING_TITLE): {
-    message: HTMLElement;
-    header: HTMLElement;
-    steps: HTMLElement;
-  } {
+  private claimThinkingMessage(
+    items: HTMLElement[],
+    elapsedText: string,
+    titleText = DEFAULT_THINKING_TITLE,
+  ): ClaimedThinkingMessage {
     const content = document.createElement("div");
     content.className = "wa-thinking-block";
 
@@ -2604,7 +2615,8 @@ export class ChatActor {
 
     const elapsed = document.createElement("span");
     elapsed.className = "wa-thinking__elapsed";
-    elapsed.textContent = elapsedText;
+    elapsed.dataset.elapsedTarget = elapsedText;
+    elapsed.textContent = "0s";
 
     const steps = document.createElement("div");
     steps.className = "wa-research-steps";
@@ -2617,8 +2629,86 @@ export class ChatActor {
     return {
       message: this.claimComponentMessage("thinking", content),
       header,
+      elapsed,
       steps,
     };
+  }
+
+  private addThinkingElapsedTimer(tl: gsap.core.Timeline, elapsed: HTMLElement, finalLabel: string): void {
+    const finalSeconds = this.parseElapsedSeconds(finalLabel);
+
+    if (finalSeconds === null) {
+      elapsed.textContent = finalLabel;
+      return;
+    }
+
+    elapsed.textContent = "0s";
+
+    if (this.prefersReducedMotion || finalSeconds <= 0) {
+      elapsed.textContent = this.formatElapsedSeconds(finalSeconds);
+      return;
+    }
+
+    const duration = tl.duration();
+
+    if (duration <= 0) {
+      elapsed.textContent = this.formatElapsedSeconds(finalSeconds);
+      return;
+    }
+
+    const timer = { seconds: 0 };
+
+    tl.to(
+      timer,
+      {
+        seconds: finalSeconds,
+        duration,
+        ease: "none",
+        onUpdate: () => {
+          elapsed.textContent = this.formatElapsedSeconds(timer.seconds);
+        },
+        onComplete: () => {
+          elapsed.textContent = this.formatElapsedSeconds(finalSeconds);
+        },
+        onReverseComplete: () => {
+          elapsed.textContent = "0s";
+        },
+      },
+      0,
+    );
+  }
+
+  private parseElapsedSeconds(label: string): number | null {
+    const text = label.trim().toLowerCase();
+    const minuteMatch = text.match(/(\d+(?:\.\d+)?)\s*m/);
+    const secondMatch = text.match(/(\d+(?:\.\d+)?)\s*s/);
+    let totalSeconds = 0;
+    let hasElapsedUnit = false;
+
+    if (minuteMatch) {
+      totalSeconds += Number(minuteMatch[1]) * 60;
+      hasElapsedUnit = true;
+    }
+
+    if (secondMatch) {
+      totalSeconds += Number(secondMatch[1]);
+      hasElapsedUnit = true;
+    }
+
+    if (!hasElapsedUnit) {
+      const numericValue = Number(text);
+      return Number.isFinite(numericValue) ? Math.max(0, numericValue) : null;
+    }
+
+    return Number.isFinite(totalSeconds) ? Math.max(0, totalSeconds) : null;
+  }
+
+  private formatElapsedSeconds(value: number): string {
+    const totalSeconds = Math.max(0, Math.floor(value));
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+
+    return minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`;
   }
 
   private createMessage(index: number): HTMLElement {
@@ -3220,7 +3310,8 @@ export class ChatActor {
 
     const elapsed = document.createElement("span");
     elapsed.className = "wa-thinking__elapsed";
-    elapsed.textContent = "4m 20s";
+    elapsed.dataset.elapsedTarget = "4m 20s";
+    elapsed.textContent = "0s";
 
     header.append(icon, title, elapsed);
 
