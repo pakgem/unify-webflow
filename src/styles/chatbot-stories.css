@@ -112,8 +112,8 @@ body {
   --wa-chat-message-weight: 430;
   --wa-chat-thinking-weight: 440;
   --wa-chat-detail-weight: 410;
-  --wa-composer-side-inset: 18px;
-  --wa-composer-bottom-outset: 0px;
+  --wa-composer-side-inset: -21px;
+  --wa-composer-bottom-outset: -21px;
   --wa-composer-height: 128px;
   --wa-composer-send-size: 38px;
   --wa-history-resume-height: 42px;
@@ -3586,13 +3586,15 @@ body {
 }
 
 .wa-composer__chevron {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  margin-top: -4px;
-  border-right: 2px solid currentColor;
-  border-bottom: 2px solid currentColor;
-  transform: rotate(45deg);
+  display: block;
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .wa-composer__send {
@@ -3602,16 +3604,26 @@ body {
   width: var(--wa-composer-send-size);
   min-width: var(--wa-composer-send-size);
   height: var(--wa-composer-send-size);
-  padding: 0 0 2px;
+  padding: 0;
   border: 0;
   border-radius: 999px;
   color: var(--wa-color-inverse);
   background: var(--wa-color-dark-surface);
-  font-size: 22px;
   line-height: 1;
-  font-weight: 380;
   cursor: default;
   white-space: nowrap;
+}
+
+.wa-composer__send-icon {
+  display: block;
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .wa-composer__placeholder:empty ~ .wa-composer__controls .wa-composer__send {
@@ -5178,8 +5190,8 @@ body {
   .wa-section {
     --wa-chat-x-padding: 6px;
     --wa-chat-first-entry-offset: 28px;
-    --wa-composer-side-inset: 10px;
-    --wa-composer-bottom-outset: 0px;
+    --wa-composer-side-inset: -21px;
+    --wa-composer-bottom-outset: -21px;
     --wa-composer-height: 106px;
     --wa-composer-send-size: 34px;
     --wa-history-resume-height: 40px;
@@ -5665,19 +5677,11 @@ body {
     font-size: 12px;
   }
 
-  .wa-composer__chevron {
-    width: 6px;
-    height: 6px;
-    margin-top: -3px;
-    border-right-width: 1.5px;
-    border-bottom-width: 1.5px;
-  }
-
   .wa-composer__send {
     width: var(--wa-composer-send-size);
     min-width: var(--wa-composer-send-size);
     height: var(--wa-composer-send-size);
-    padding: 0 0 2px;
+    padding: 0;
   }
 }
 

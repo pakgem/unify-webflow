@@ -113,10 +113,24 @@ export function renderDefaultMarkup(root: HTMLElement, options: RenderDefaultMar
             <div class="wa-composer" data-chat-input>
               <span class="wa-composer__placeholder" data-composer-text></span>
               <div class="wa-composer__controls">
-                <span class="wa-composer__select" aria-hidden="true">GPT 5.5<span class="wa-composer__chevron"></span></span>
-                <span class="wa-composer__select" aria-hidden="true">High<span class="wa-composer__chevron"></span></span>
+                <span class="wa-composer__select" aria-hidden="true">
+                  GPT 5.5
+                  <svg class="wa-composer__chevron" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M6 9l6 6l6 -6"></path>
+                  </svg>
+                </span>
+                <span class="wa-composer__select" aria-hidden="true">
+                  High
+                  <svg class="wa-composer__chevron" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M6 9l6 6l6 -6"></path>
+                  </svg>
+                </span>
                 <button class="wa-composer__send" type="button" data-send-button aria-label="Send message">
-                  ↑
+                  <svg class="wa-composer__send-icon" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M12 5l0 14"></path>
+                    <path d="M18 11l-6 -6"></path>
+                    <path d="M6 11l6 -6"></path>
+                  </svg>
                 </button>
               </div>
             </div>
