@@ -3540,14 +3540,6 @@ body {
   pointer-events: none;
 }
 
-.wa-composer[data-focused="true"] {
-  border-color: var(--wa-orange);
-  box-shadow:
-    0 48px 88px rgba(5, 5, 4, 0.34),
-    0 18px 38px rgba(5, 5, 4, 0.18),
-    0 1px 0 rgba(255, 255, 255, 0.74) inset;
-}
-
 .wa-composer__placeholder {
   display: flex;
   grid-row: 1;
