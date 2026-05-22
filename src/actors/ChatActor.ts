@@ -181,6 +181,7 @@ const SEQUENCE_WAIT_DAY_DEFAULTS = [2, 3, 2];
 const MAILBOX_CONNECT_MOTION = {
   pressDuration: motionDuration(0.09),
   releaseDuration: motionDuration(0.2),
+  successHoldDuration: motionDuration(0.12),
   learningRevealDuration: motionDuration(0.34),
   detailSwapDuration: 0.16,
   readyPopUpDuration: 0.12,
@@ -1438,6 +1439,13 @@ export class ChatActor {
         duration: MAILBOX_CONNECT_MOTION.releaseDuration,
         ease: "back.out(2.6)",
       })
+      .call(() => {
+        section.dataset.mailboxState = "connected";
+        button.disabled = true;
+        button.removeAttribute("aria-busy");
+        button.setAttribute("aria-label", button.dataset.mailboxConnectedLabel ?? "Gmail");
+      })
+      .to({}, { duration: MAILBOX_CONNECT_MOTION.successHoldDuration })
       .set(learning, { display: "grid", height: "auto" }, "-=0.04")
       .fromTo(
         learning,
@@ -1577,13 +1585,7 @@ export class ChatActor {
       );
     }
 
-    tl.to({}, { duration: MAILBOX_CONNECT_MOTION.settleHold })
-      .call(() => {
-        section.dataset.mailboxState = "connected";
-        button.disabled = true;
-        button.removeAttribute("aria-busy");
-        button.setAttribute("aria-label", button.dataset.mailboxConnectedLabel ?? "Gmail Connected");
-      });
+    tl.to({}, { duration: MAILBOX_CONNECT_MOTION.settleHold });
 
     return tl;
   }
@@ -3948,15 +3950,15 @@ export class ChatActor {
     const gmailButton = this.createMailboxProviderButton({
       id: config.id,
       icon: "gmail",
-      label: config.ctaLabel ?? "Gmail",
+      label: normalizeMailboxProviderButtonLabel("gmail", config.ctaLabel),
       loadingLabel: config.loadingLabel ?? "connecting",
-      connectedLabel: config.status ?? "Gmail Connected",
+      connectedLabel: normalizeMailboxProviderButtonLabel("gmail", config.status, "connected"),
       isPrimary: true,
     });
 
     const outlookButton = this.createMailboxProviderButton({
       icon: "outlook",
-      label: config.secondaryCtaLabel ?? "Outlook",
+      label: normalizeMailboxProviderButtonLabel("outlook", config.secondaryCtaLabel),
     });
 
     actions.append(gmailButton, outlookButton);
@@ -4013,7 +4015,7 @@ export class ChatActor {
     if (options.isPrimary && options.id) {
       button.dataset.mailboxConnect = options.id;
       button.dataset.mailboxLoadingLabel = options.loadingLabel ?? "connecting";
-      button.dataset.mailboxConnectedLabel = options.connectedLabel ?? "Gmail Connected";
+      button.dataset.mailboxConnectedLabel = options.connectedLabel ?? "Gmail";
     }
 
     const icon = this.createMailboxProviderIcon(options.icon);
@@ -4041,7 +4043,7 @@ export class ChatActor {
       connectedLabel.className = "wa-mailbox-connection__button-label";
       connectedLabel.dataset.mailboxButtonLabel = "connected";
       connectedLabel.setAttribute("aria-hidden", "true");
-      connectedLabel.textContent = options.connectedLabel ?? "Gmail Connected";
+      connectedLabel.textContent = options.connectedLabel ?? "Gmail";
 
       labelStack.append(loadingLabel, connectedLabel);
     }
@@ -4981,6 +4983,30 @@ function slugForAnimation(value: string): string {
 
 function svgToDataUri(svg: string): string {
   return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+}
+
+function normalizeMailboxProviderButtonLabel(
+  provider: MailboxConnectorProvider,
+  value?: string,
+  state: "idle" | "connected" = "idle",
+): string {
+  const fallback = provider === "gmail" ? "Gmail" : "Outlook";
+  const normalized = value?.trim();
+  if (!normalized) return fallback;
+
+  const providerLabel = fallback.toLowerCase();
+  const lower = normalized.toLowerCase().replace(/\s+/g, " ");
+  const providerStates = new Set([
+    providerLabel,
+    `connect ${providerLabel}`,
+    `${providerLabel} connected`,
+    `connected ${providerLabel}`,
+  ]);
+
+  if (providerStates.has(lower)) return fallback;
+  if (state === "connected" && lower === "connected") return fallback;
+
+  return normalized;
 }
 
 function mailboxThumbprintSegmentProgress(index: number, percent: number): number {

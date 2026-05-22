@@ -631,7 +631,7 @@ const GMAIL_MAILBOX_CONNECTION = {
   subtitle: "Unify will recent emails, replies, and meeting context to learn how you actually communicate",
   provider: "Gmail",
   account: "joel@unifygtm.com",
-  status: "Gmail Connected",
+  status: "Gmail",
   ctaLabel: "Gmail",
   secondaryCtaLabel: "Outlook",
   loadingLabel: "connecting",
