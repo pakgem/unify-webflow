@@ -641,7 +641,7 @@ body {
   max-height: none;
   padding-bottom: var(--wa-chat-bottom-clearance);
   overflow: hidden;
-  overscroll-behavior: contain;
+  overscroll-behavior: auto;
 }
 
 .wa-thread > .wa-message:first-child,

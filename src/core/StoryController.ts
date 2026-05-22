@@ -608,9 +608,15 @@ export class StoryController implements ChatbotStoriesInstance {
 
       if (!canScrollThread) return;
 
+      const remainingPageDelta = Math.max(0, pixelDelta - (maxScroll - thread.scrollTop));
+
       event.preventDefault();
       this.pauseForChatHistory();
       thread.scrollTop = nextScroll;
+
+      if (remainingPageDelta >= CHAT_HISTORY_SCROLL.minPixelDelta) {
+        window.scrollBy({ top: remainingPageDelta, left: 0, behavior: "auto" });
+      }
     };
 
     el.addEventListener("wheel", handler, { passive: false });
