@@ -110,8 +110,8 @@ body {
   --wa-ai-message-max-width: 540px;
   --wa-user-message-max-width: 360px;
   --wa-chat-message-weight: 430;
-  --wa-chat-thinking-weight: 440;
-  --wa-chat-detail-weight: 410;
+  --wa-chat-thinking-weight: 400;
+  --wa-chat-detail-weight: 400;
   --wa-composer-side-inset: -21px;
   --wa-composer-bottom-outset: -21px;
   --wa-composer-height: 128px;
@@ -776,13 +776,13 @@ body {
   grid-template-columns: 12px auto auto;
   align-items: center;
   justify-content: start;
-  gap: 6px;
+  gap: 8px;
   justify-self: start;
   min-height: 18px;
   padding: 0;
   color: #57544f;
   background: transparent;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1;
   font-weight: var(--wa-chat-thinking-weight);
   will-change: transform, opacity;
@@ -811,8 +811,8 @@ body {
 .wa-thinking__elapsed {
   margin-left: 5px;
   color: #8e8a83;
-  font-size: 11px;
-  font-weight: 480;
+  font-size: 14px;
+  font-weight: var(--wa-chat-thinking-weight);
 }
 
 .wa-research-steps {
@@ -822,7 +822,7 @@ body {
   gap: 11px;
   max-height: none;
   overflow: visible;
-  padding: 1px 0 0 3px;
+  padding: 1px 0 0;
 }
 
 .wa-research-steps::before {
@@ -830,7 +830,7 @@ body {
   position: absolute;
   top: 9px;
   bottom: 9px;
-  left: 8px;
+  left: 6px;
   width: 1px;
   background: #e4ded6;
 }
@@ -839,7 +839,7 @@ body {
   --wa-step-progress: 0;
   position: relative;
   display: grid;
-  grid-template-columns: 13px minmax(0, 1fr) 9px;
+  grid-template-columns: 12px minmax(0, 1fr) 9px;
   align-content: start;
   gap: 8px;
   align-items: start;
@@ -848,7 +848,7 @@ body {
   padding: 0;
   color: #56534f;
   background: transparent;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.24;
   font-weight: var(--wa-chat-thinking-weight);
   will-change: transform, opacity;
@@ -925,7 +925,7 @@ body {
 .wa-research-step__label {
   min-width: 0;
   color: #55514d;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.18;
   font-weight: var(--wa-chat-thinking-weight);
   overflow: hidden;
@@ -938,7 +938,7 @@ body {
   min-width: 0;
   overflow: hidden;
   color: #86817a;
-  font-size: 11px;
+  font-size: 14px;
   line-height: 1.28;
   font-weight: var(--wa-chat-detail-weight);
   white-space: normal;
@@ -1035,7 +1035,7 @@ body {
   gap: 3px;
   margin-top: 2px;
   color: #7f7a73;
-  font-size: 10px;
+  font-size: 14px;
   line-height: 1;
   font-weight: var(--wa-chat-detail-weight);
 }
@@ -1831,7 +1831,7 @@ body {
 .wa-enrichment-panel__header {
   display: inline-grid;
   grid-template-columns: 12px auto auto;
-  gap: 6px;
+  gap: 8px;
   align-items: center;
   justify-content: start;
   min-height: 18px;
@@ -1839,16 +1839,16 @@ body {
   border: 0;
   color: #57544f;
   background: transparent;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1;
-  font-weight: 520;
+  font-weight: var(--wa-chat-thinking-weight);
 }
 
 .wa-waterfall-rows {
   position: relative;
   display: grid;
   gap: 9px;
-  padding: 1px 0 0 3px;
+  padding: 1px 0 0;
 }
 
 .wa-waterfall-rows::before {
@@ -1856,7 +1856,7 @@ body {
   position: absolute;
   top: 9px;
   bottom: 9px;
-  left: 8px;
+  left: 6px;
   width: 1px;
   background: #e4ded6;
 }
@@ -1864,14 +1864,14 @@ body {
 .wa-waterfall-row {
   position: relative;
   display: grid;
-  grid-template-columns: 13px auto minmax(0, 1fr);
+  grid-template-columns: 12px auto minmax(0, 1fr);
   gap: 8px;
   align-items: center;
   min-height: 27px;
   color: #56534f;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1;
-  font-weight: 500;
+  font-weight: var(--wa-chat-thinking-weight);
   white-space: nowrap;
   will-change: transform, opacity;
 }
@@ -5367,17 +5367,17 @@ body {
   }
 
   .wa-research-step {
-    min-height: 52px;
-    gap: 7px;
+    min-height: 64px;
+    gap: 8px;
     padding-left: 0;
   }
 
   .wa-research-step__label {
-    font-size: 12px;
+    font-size: 14px;
   }
 
   .wa-research-step__detail {
-    font-size: 10px;
+    font-size: 14px;
   }
 
   .wa-result-grid.has-strategy-plans {
@@ -5599,9 +5599,9 @@ body {
 
   .wa-enrichment-panel__header {
     grid-template-columns: 12px auto auto;
-    gap: 6px;
+    gap: 8px;
     padding: 0;
-    font-size: 12px;
+    font-size: 14px;
   }
 
   .wa-waterfall-rows {
@@ -5609,10 +5609,10 @@ body {
   }
 
   .wa-waterfall-row {
-    grid-template-columns: 13px minmax(82px, auto) minmax(0, 1fr);
-    gap: 6px;
-    min-height: 24px;
-    font-size: 11px;
+    grid-template-columns: 12px minmax(82px, auto) minmax(0, 1fr);
+    gap: 8px;
+    min-height: 27px;
+    font-size: 14px;
   }
 
   .wa-waterfall-chip {
