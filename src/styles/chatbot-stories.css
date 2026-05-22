@@ -119,6 +119,8 @@ body {
   --wa-history-resume-height: 42px;
   --wa-cursor-default-width: 14px;
   --wa-cursor-default-height: 23px;
+  --wa-loading-logo-width: 26px;
+  --wa-loading-logo-height: 20px;
 
   /* Type tokens */
   --wa-title-size: clamp(38px, 3vw, 54px);
@@ -772,6 +774,11 @@ body {
   background-image: radial-gradient(circle at center, currentColor 1.1px, transparent 1.2px);
   background-position: 0 0;
   background-size: 4px 4px;
+}
+
+.wa-chat-shell .wa-thinking__glyph {
+  opacity: 1;
+  background-image: none;
 }
 
 .wa-thinking__title {
@@ -4617,7 +4624,103 @@ body {
 }
 
 /* --------------------------------------------------------------------------
-   8. Animated Cursor
+   8. Persistent Loading Logo
+   -------------------------------------------------------------------------- */
+
+.wa-loading-logo,
+.wa-loading-logo-shadow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 19;
+  width: 1px;
+  height: 1px;
+  color: var(--wa-orange);
+  pointer-events: none;
+  transform: translate3d(0, 0, 0);
+  transform-origin: 0 0;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+}
+
+.wa-loading-logo__body,
+.wa-loading-logo-shadow__body {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: inline-grid;
+  place-items: center;
+  width: var(--wa-loading-logo-width);
+  height: var(--wa-loading-logo-height);
+  transform: translate3d(-50%, -50%, 0);
+  transform-origin: center;
+  backface-visibility: hidden;
+}
+
+.wa-loading-logo__body::before,
+.wa-loading-logo__body::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+
+.wa-loading-logo__body::before {
+  inset: 0;
+  border-radius: 999px;
+  background: rgba(242, 59, 10, 0.1);
+  opacity: 0;
+  transform: scale(0.78);
+}
+
+.wa-loading-logo__body::after {
+  right: 1px;
+  bottom: 0;
+  width: 5px;
+  height: 8px;
+  border-right: 1.5px solid var(--wa-color-positive);
+  border-bottom: 1.5px solid var(--wa-color-positive);
+  opacity: 0;
+  transform: translate3d(1px, -1px, 0) rotate(40deg) scale(0.7);
+  transform-origin: center;
+}
+
+.wa-loading-logo__mark {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 18px;
+  height: 11px;
+  overflow: visible;
+}
+
+.wa-loading-logo[data-logo-mode="thinking"] .wa-loading-logo__body::before {
+  animation: wa-loading-logo-pulse 980ms ease-in-out infinite;
+}
+
+.wa-loading-logo[data-logo-mode="thinking"] .wa-loading-logo__mark {
+  animation: wa-loading-logo-breathe 980ms ease-in-out infinite;
+}
+
+.wa-loading-logo[data-logo-mode="done"] .wa-loading-logo__body::after {
+  opacity: 1;
+  transform: translate3d(1px, -1px, 0) rotate(40deg) scale(1);
+  transition:
+    opacity 120ms ease,
+    transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.wa-loading-logo-shadow {
+  z-index: 18;
+  color: var(--wa-orange);
+  filter: saturate(0.82);
+}
+
+.wa-loading-logo-shadow__body {
+  opacity: 0.58;
+}
+
+/* --------------------------------------------------------------------------
+   9. Animated Cursor
    -------------------------------------------------------------------------- */
 
 .wa-cursor {
@@ -4769,6 +4872,30 @@ body {
   64% {
     animation-timing-function: cubic-bezier(0.2, 0, 0.24, 1);
     transform: translate3d(-0.2px, 0, 0) rotate(-8.5deg) skewX(-1.5deg);
+  }
+}
+
+@keyframes wa-loading-logo-pulse {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0.78);
+  }
+
+  42% {
+    opacity: 1;
+    transform: scale(1.12);
+  }
+}
+
+@keyframes wa-loading-logo-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  48% {
+    transform: scale(1.08);
   }
 }
 

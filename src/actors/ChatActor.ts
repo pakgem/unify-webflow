@@ -1,9 +1,11 @@
 import { gsap } from "gsap";
 import type { CursorActor } from "./CursorActor";
+import type { LogoActor } from "./LogoActor";
 import type {
   DataSourceGridConfig,
   DataTableConfig,
   EnrichmentConfig,
+  LoadingLogoMode,
   MailboxConnectionConfig,
   OutreachStyleProfileConfig,
   PersonalizationSwipeDecision,
@@ -113,6 +115,9 @@ type ThinkingSequenceOptions = {
   headerDuration: number;
   afterStepHold: number;
   finalHold: number;
+};
+type ChatActorOptions = {
+  logo?: LogoActor;
 };
 type ThinkingInput = string | ThinkingItemConfig | Array<string | ThinkingItemConfig> | ThinkingStateConfig;
 type NormalizedThinkingItem = Required<ThinkingItemConfig>;
@@ -270,6 +275,13 @@ const THINKING_STEP_FOLD = {
   duration: motionDuration(0.24),
 };
 
+const SEQUENCE_THINKING_LOGO = {
+  templateHold: motionDuration(0.54),
+  progressDuration: motionDuration(3.9),
+  progressLogoSwitchAt: 1.65,
+  finalHold: motionDuration(0.34),
+};
+
 /* --------------------------------------------------------------------------
    Composer Show/Hide Storyboard
 
@@ -342,7 +354,7 @@ const MARKETING_DATA_GRID_ARTBOARD = {
 };
 
 const STREAM_SCROLL_INTERVAL_MS = 96;
-const TRANSIENT_ELEMENT_SELECTOR = ".wa-cursor-file, .wa-file-landing-clone, .wa-csv-drop";
+const TRANSIENT_ELEMENT_SELECTOR = ".wa-cursor-file, .wa-file-landing-clone, .wa-csv-drop, .wa-loading-logo-shadow";
 const MARKETING_PANEL_SELECTOR = "[data-marketing-data-sources-grid]";
 const CURSOR_FILE_ENTRY = {
   offscreenMargin: 96,
@@ -515,7 +527,10 @@ export class ChatActor {
     });
   };
 
-  constructor(private root: HTMLElement) {
+  constructor(
+    private root: HTMLElement,
+    private options: ChatActorOptions = {},
+  ) {
     this.chatShell = this.required("[data-chat-shell]");
     this.chatBody = this.required(".wa-chat-shell__body");
     this.thread = this.required("[data-chat-thread]");
@@ -1192,8 +1207,15 @@ export class ChatActor {
     const panel = this.createEnrichmentPanel(config);
     const tl = this.revealComponentItems("enrichment", panel, ".wa-waterfall-row", COMPONENT_CHILD_REVEAL.waterfallRow);
     const elapsed = panel.querySelector<HTMLElement>(".wa-thinking__elapsed");
+    const glyph = panel.querySelector<HTMLElement>(".wa-thinking__glyph");
 
     if (elapsed) this.addThinkingElapsedTimer(tl, elapsed, elapsed.dataset.elapsedTarget ?? "4m 20s");
+    tl.add(this.options.logo?.moveToElement(glyph, {
+      mode: "thinking",
+      shadow: true,
+      label: `enrichment-${config.id}`,
+    }) ?? gsap.timeline(), 0);
+    tl.add(this.setLogoMode("done"));
     return tl;
   }
 
@@ -1639,15 +1661,18 @@ export class ChatActor {
       })
       .add(this.revealMessage(thinking.message))
       .add(this.revealThinkingHeader(thinking, 0.24))
+      .add(this.moveLogoToThinkingHeader(thinking, "sequence-build"), "<")
       .call(() => {
         templateItem.dataset.stepState = "current";
         gsap.set(templateItem, { display: "grid" });
       });
 
+    tl.add(this.moveLogoToThinkingStep(templateItem, 0, config.templateLabel), "<");
     this.addThinkingStepReveal(tl, templateItem, { position: "<" });
 
     tl
-      .to({}, { duration: motionDuration(0.54) })
+      .to({}, { duration: SEQUENCE_THINKING_LOGO.templateHold })
+      .add(this.setLogoMode("done"))
       .add(this.foldThinkingStep(templateItem))
       .call(() => {
         trackItems.forEach((item) => {
@@ -1655,6 +1680,7 @@ export class ChatActor {
           gsap.set(item, { display: "grid" });
         });
       }, undefined, "+=0.1")
+      .add(this.moveLogoToThinkingStep(trackItems[0], 1, config.tracks[0]?.label ?? "researching"), "<")
       .to(trackItems, {
         autoAlpha: 1,
         y: 0,
@@ -1667,7 +1693,7 @@ export class ChatActor {
 
     tl.to(progress, {
       value: config.total,
-      duration: motionDuration(3.9),
+      duration: SEQUENCE_THINKING_LOGO.progressDuration,
       ease: "power1.inOut",
       onUpdate: () => {
         const current = Math.max(1, Math.round(progress.value));
@@ -1680,7 +1706,11 @@ export class ChatActor {
         this.requestMessageScroll(thinking.message);
       },
     }, "+=0.14")
-      .to({}, { duration: motionDuration(0.34) });
+      .add(
+        this.moveLogoToThinkingStep(trackItems[1] ?? trackItems[0], 2, config.tracks[1]?.label ?? "researching"),
+        `<+=${SEQUENCE_THINKING_LOGO.progressLogoSwitchAt}`,
+      )
+      .to({}, { duration: SEQUENCE_THINKING_LOGO.finalHold });
 
     trackItems.forEach((item, index) => {
       tl.add(this.foldThinkingStep(item), index === 0 ? undefined : "<");
@@ -1688,6 +1718,7 @@ export class ChatActor {
 
     tl.call(() => {
       this.markThinkingStepsComplete(trackItems);
+      this.options.logo?.setMode("done");
       this.animateMessageScrollIntoView(thinking.message);
     });
     this.addThinkingElapsedTimer(tl, thinking.elapsed, elapsedLabel);
@@ -2735,15 +2766,18 @@ export class ChatActor {
 
     tl.call(() => this.prepareThinkingMessage(thinking, items, options.itemStartY))
       .add(this.revealMessage(thinking.message))
-      .add(this.revealThinkingHeader(thinking, options.headerDuration));
+      .add(this.revealThinkingHeader(thinking, options.headerDuration))
+      .add(this.moveLogoToThinkingHeader(thinking, thinkingState.title), "<");
 
     thinkingState.items.forEach((_item, index) => {
       const item = items[index];
       const position = index === 0 ? "+=0" : `+=${options.hold}`;
 
       tl.call(() => this.activateThinkingStep(items, index), undefined, position)
+        .add(this.moveLogoToThinkingStep(item, index, thinkingState.items[index]?.label ?? "thinking"), "<")
         .add(this.createThinkingStepReveal(item), "<")
         .to({}, { duration: options.afterStepHold })
+        .add(this.setLogoMode("done"))
         .add(this.foldThinkingStep(item));
     });
 
@@ -2817,6 +2851,32 @@ export class ChatActor {
 
   private addThinkingElapsedTimer(tl: gsap.core.Timeline, elapsed: HTMLElement, finalLabel: string): void {
     addTimelineElapsedTimer(tl, elapsed, finalLabel, { reducedMotion: this.prefersReducedMotion });
+  }
+
+  private moveLogoToThinkingHeader(thinking: ClaimedThinkingMessage, label: string): gsap.core.Timeline {
+    const target = thinking.header.querySelector<HTMLElement>(".wa-thinking__glyph");
+
+    return this.options.logo?.moveToElement(target, {
+      mode: "thinking",
+      shadow: true,
+      label: `thinking-header-${slugForAnimation(label)}`,
+      offset: { x: 0, y: 0 },
+    }) ?? gsap.timeline();
+  }
+
+  private moveLogoToThinkingStep(item: HTMLElement | null | undefined, index: number, label: string): gsap.core.Timeline {
+    const target = item?.querySelector<HTMLElement>(".wa-research-step__check") ?? null;
+
+    return this.options.logo?.moveToElement(target, {
+      mode: "thinking",
+      shadow: index > 0,
+      label: `thinking-step-${index}-${slugForAnimation(label)}`,
+      offset: { x: 0, y: 0 },
+    }) ?? gsap.timeline();
+  }
+
+  private setLogoMode(mode: LoadingLogoMode): gsap.core.Timeline {
+    return this.options.logo?.modeTo(mode) ?? gsap.timeline();
   }
 
   private createMessage(index: number): HTMLElement {
@@ -4744,6 +4804,14 @@ function clampUnit(value: number): number {
 function smoothstep(value: number): number {
   const t = clampUnit(value);
   return t * t * (3 - 2 * t);
+}
+
+function slugForAnimation(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 42) || "item";
 }
 
 function mailboxThumbprintSegmentProgress(index: number, percent: number): number {

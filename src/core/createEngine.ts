@@ -1,5 +1,6 @@
 import { ChatActor } from "../actors/ChatActor";
 import { CursorActor } from "../actors/CursorActor";
+import { LogoActor } from "../actors/LogoActor";
 import {
   BUILDER_DRAFT_SCHEMA_VERSION,
   StoryBuilder,
@@ -18,15 +19,15 @@ export function createEngine(root: HTMLElement, config: ChatbotStoriesConfig = {
 
   const stories = config.stories?.length ? config.stories : defaultStories;
   const draftEndpoint = config.builderDraftEndpoint ?? "/api/story-draft";
+  const reducedMotion =
+    config.reducedMotion ??
+    window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ??
+    false;
   const resolver = new TargetResolver(root);
-  const chat = new ChatActor(root);
-  const cursor = new CursorActor(root, resolver, {
-    reducedMotion:
-      config.reducedMotion ??
-      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ??
-      false,
-  });
-  const controller = new StoryController(root, stories, resolver, cursor, chat, {
+  const logo = new LogoActor(root, resolver, { reducedMotion });
+  const chat = new ChatActor(root, { logo });
+  const cursor = new CursorActor(root, resolver, { reducedMotion });
+  const controller = new StoryController(root, stories, resolver, cursor, logo, chat, {
     autoplay: config.autoplay ?? true,
     loop: config.loop ?? true,
     autoAdvanceDelay: config.autoAdvanceDelay ?? 3.2,
@@ -65,6 +66,7 @@ export function createEngine(root: HTMLElement, config: ChatbotStoriesConfig = {
       destroy();
       chat.destroy();
       cursor.destroy();
+      logo.destroy();
     },
   };
 }

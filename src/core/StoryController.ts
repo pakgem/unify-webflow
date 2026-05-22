@@ -1,6 +1,7 @@
 import { gsap } from "gsap";
 import type { ChatActor, DataTablePageRestore } from "../actors/ChatActor";
 import type { CursorActor } from "../actors/CursorActor";
+import type { LogoActor } from "../actors/LogoActor";
 import { PausedCursorMimic } from "./PausedCursorMimic";
 import type {
   ChatbotStoriesConfig,
@@ -45,6 +46,7 @@ export class StoryController implements ChatbotStoriesInstance {
     private stories: StoryDefinition[],
     private resolver: TargetResolver,
     private cursor: CursorActor,
+    private logo: LogoActor,
     private chat: ChatActor,
     private options: ControllerOptions,
   ) {
@@ -235,12 +237,14 @@ export class StoryController implements ChatbotStoriesInstance {
     this.chat.reset();
     this.resolver.refresh();
     this.cursor.beginBuild(startPoint, story.id);
+    this.logo.beginBuild(story.id);
 
     const ctx: StoryContext = {
       root: this.root,
       story,
       resolver: this.resolver,
       cursor: this.cursor,
+      logo: this.logo,
       chat: this.chat,
       timeline: () => gsap.timeline(),
     };
@@ -280,6 +284,7 @@ export class StoryController implements ChatbotStoriesInstance {
     this.activeTimeline?.kill();
     this.activeTimeline = null;
     this.cursor.resetInteraction();
+    this.logo.resetInteraction();
   }
 
   private handleComplete(): void {
