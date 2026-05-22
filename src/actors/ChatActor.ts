@@ -180,6 +180,7 @@ const MAILBOX_CONNECT_MOTION = {
   releaseDuration: motionDuration(0.2),
   learningRevealDuration: motionDuration(0.34),
   thumbprintDuration: motionDuration(1.22),
+  thumbprintEndPercent: 70,
   settleHold: motionDuration(0.24),
 };
 const MAILBOX_THUMBPRINT_FILL_STARTS = [
@@ -1445,7 +1446,7 @@ export class ChatActor {
         thumbprintProgress,
         { value: 0 },
         {
-          value: 100,
+          value: MAILBOX_CONNECT_MOTION.thumbprintEndPercent,
           duration: MAILBOX_CONNECT_MOTION.thumbprintDuration,
           ease: "sine.inOut",
           onUpdate: () => this.updateMailboxThumbprintFill(thumbprintFillPaths, thumbprintProgress.value),
@@ -1456,7 +1457,7 @@ export class ChatActor {
         progressFill,
         { scaleX: 0, transformOrigin: "left center" },
         {
-          scaleX: 1,
+          scaleX: MAILBOX_CONNECT_MOTION.thumbprintEndPercent / 100,
           duration: MAILBOX_CONNECT_MOTION.thumbprintDuration,
           ease: "sine.inOut",
         },
