@@ -1287,6 +1287,11 @@ body {
   justify-items: end;
 }
 
+.wa-uploaded-files[data-uploaded-file-count="4"] {
+  width: min(520px, calc(100vw - 72px));
+  max-width: 100%;
+}
+
 .wa-uploaded-files__summary {
   color: #716d66;
   font-size: 10.5px;
@@ -1301,6 +1306,7 @@ body {
 }
 
 .wa-uploaded-files[data-uploaded-file-count="4"] .wa-uploaded-files__list {
+  width: 100%;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   justify-items: stretch;
 }
