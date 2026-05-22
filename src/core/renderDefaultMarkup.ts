@@ -112,9 +112,13 @@ export function renderDefaultMarkup(root: HTMLElement, options: RenderDefaultMar
 
             <div class="wa-composer" data-chat-input>
               <span class="wa-composer__placeholder" data-composer-text></span>
-              <button class="wa-composer__send" type="button" data-send-button aria-label="Send message">
-                ↑
-              </button>
+              <div class="wa-composer__controls">
+                <span class="wa-composer__select" aria-hidden="true">GPT 5.5<span class="wa-composer__chevron"></span></span>
+                <span class="wa-composer__select" aria-hidden="true">High<span class="wa-composer__chevron"></span></span>
+                <button class="wa-composer__send" type="button" data-send-button aria-label="Send message">
+                  ↑
+                </button>
+              </div>
             </div>
 
             <button class="wa-history-resume" type="button" data-history-resume aria-hidden="true" tabindex="-1">

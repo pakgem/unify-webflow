@@ -112,10 +112,10 @@ body {
   --wa-chat-message-weight: 430;
   --wa-chat-thinking-weight: 440;
   --wa-chat-detail-weight: 410;
-  --wa-composer-outset-x: 34px;
-  --wa-composer-bottom-outset: 24px;
-  --wa-composer-height: 56px;
-  --wa-composer-send-size: 40px;
+  --wa-composer-side-inset: 18px;
+  --wa-composer-bottom-outset: 0px;
+  --wa-composer-height: 128px;
+  --wa-composer-send-size: 38px;
   --wa-history-resume-height: 42px;
   --wa-cursor-default-width: 14px;
   --wa-cursor-default-height: 23px;
@@ -3498,24 +3498,26 @@ body {
 
 .wa-composer {
   position: absolute;
-  right: calc(var(--wa-chat-x-padding) - var(--wa-composer-outset-x));
+  right: var(--wa-composer-side-inset);
   bottom: var(--wa-composer-bottom-outset);
-  left: calc(var(--wa-chat-x-padding) - var(--wa-composer-outset-x));
+  left: var(--wa-composer-side-inset);
   z-index: 3;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) var(--wa-composer-send-size);
-  gap: 10px;
-  align-items: center;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: stretch;
   height: var(--wa-composer-height);
   min-height: 0;
-  padding: 6px 8px 6px 18px;
+  padding: 24px;
   margin: 0;
   overflow: hidden;
   border: 1px solid var(--wa-color-input-line);
-  border-radius: 999px;
+  border-radius: 17px;
   background: var(--wa-panel);
   box-shadow:
-    0 18px 34px rgba(23, 23, 20, 0.12),
+    0 48px 88px rgba(5, 5, 4, 0.34),
+    0 18px 38px rgba(5, 5, 4, 0.18),
     0 1px 0 rgba(255, 255, 255, 0.74) inset;
   transform-origin: center center;
   contain: layout paint style;
@@ -3533,30 +3535,64 @@ body {
 .wa-composer[data-focused="true"] {
   border-color: var(--wa-orange);
   box-shadow:
-    0 18px 34px rgba(23, 23, 20, 0.12),
+    0 48px 88px rgba(5, 5, 4, 0.34),
+    0 18px 38px rgba(5, 5, 4, 0.18),
     0 1px 0 rgba(255, 255, 255, 0.74) inset;
 }
 
 .wa-composer__placeholder {
   display: flex;
-  align-items: center;
+  grid-row: 1;
+  align-items: flex-start;
+  align-self: start;
   min-width: 0;
-  min-height: 38px;
+  min-height: 28px;
   padding: 0;
   overflow: hidden;
   border: 0;
   border-radius: 0;
   color: var(--wa-ink);
   background: transparent;
-  font-size: 14px;
-  font-weight: 460;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  font-size: 18px;
+  line-height: 1.18;
+  font-weight: 410;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .wa-composer__placeholder:empty::before {
-  content: "Ask the assistant...";
+  content: "Ask anything...";
   color: var(--wa-placeholder);
+}
+
+.wa-composer__controls {
+  display: inline-flex;
+  grid-row: 2;
+  align-items: center;
+  justify-self: end;
+  gap: 24px;
+  min-width: 0;
+}
+
+.wa-composer__select {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #74726a;
+  font-size: 16px;
+  line-height: 1;
+  font-weight: 410;
+  white-space: nowrap;
+}
+
+.wa-composer__chevron {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-top: -4px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
 }
 
 .wa-composer__send {
@@ -3571,11 +3607,15 @@ body {
   border-radius: 999px;
   color: var(--wa-color-inverse);
   background: var(--wa-color-dark-surface);
-  font-size: 18px;
+  font-size: 22px;
   line-height: 1;
-  font-weight: 680;
+  font-weight: 380;
   cursor: default;
   white-space: nowrap;
+}
+
+.wa-composer__placeholder:empty ~ .wa-composer__controls .wa-composer__send {
+  background: #aaa89e;
 }
 
 .wa-history-resume {
@@ -5138,10 +5178,10 @@ body {
   .wa-section {
     --wa-chat-x-padding: 6px;
     --wa-chat-first-entry-offset: 28px;
-    --wa-composer-outset-x: 14px;
-    --wa-composer-bottom-outset: 18px;
-    --wa-composer-height: 50px;
-    --wa-composer-send-size: 36px;
+    --wa-composer-side-inset: 10px;
+    --wa-composer-bottom-outset: 0px;
+    --wa-composer-height: 106px;
+    --wa-composer-send-size: 34px;
     --wa-history-resume-height: 40px;
     padding: 54px 18px 72px;
   }
@@ -5605,14 +5645,32 @@ body {
   }
 
   .wa-composer {
-    grid-template-columns: minmax(0, 1fr) var(--wa-composer-send-size);
+    grid-template-columns: minmax(0, 1fr);
     height: var(--wa-composer-height);
-    padding: 6px 8px 6px 15px;
+    padding: 17px 16px;
+    border-radius: 15px;
   }
 
   .wa-composer__placeholder {
-    min-height: 34px;
-    font-size: 13px;
+    min-height: 22px;
+    font-size: 15px;
+  }
+
+  .wa-composer__controls {
+    gap: 14px;
+  }
+
+  .wa-composer__select {
+    gap: 6px;
+    font-size: 12px;
+  }
+
+  .wa-composer__chevron {
+    width: 6px;
+    height: 6px;
+    margin-top: -3px;
+    border-right-width: 1.5px;
+    border-bottom-width: 1.5px;
   }
 
   .wa-composer__send {
