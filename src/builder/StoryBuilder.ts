@@ -113,6 +113,7 @@ export type BuilderProximityListComponent = {
     proximity: string;
     personalization: string;
     score: string;
+    avatarUrl?: string;
   }>;
 };
 
@@ -139,6 +140,7 @@ export type BuilderSequenceEngagementComponent = {
     company: string;
     title?: string;
     signal?: string;
+    avatarUrl?: string;
     subject: string;
     personalization: string;
     steps?: Array<{

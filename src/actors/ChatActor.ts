@@ -27,6 +27,7 @@ import {
   getThinkingElapsedLabel,
 } from "../stories/thinkingText";
 import { addTimelineElapsedTimer } from "../motion/elapsedTimer";
+import { getProfilePhotoUrl } from "../assets/profilePhotos";
 
 type PreparedResultCard = {
   el: HTMLElement;
@@ -3448,18 +3449,7 @@ export class ChatActor {
     const avatar = document.createElement("span");
     avatar.className = "wa-data-table-person__avatar";
     avatar.dataset.avatarTone = values.avatarTone ?? "1";
-
-    if (values.avatarUrl) {
-      const img = document.createElement("img");
-      img.alt = "";
-      img.decoding = "async";
-      img.loading = "lazy";
-      img.referrerPolicy = "no-referrer";
-      img.src = values.avatarUrl;
-      avatar.append(img);
-    } else {
-      avatar.textContent = values.avatar ?? this.getInitials(name);
-    }
+    this.setProfileAvatar(avatar, name, values.avatarUrl, values.avatar);
 
     const source = document.createElement("span");
     source.className = "wa-data-table-person__source";
@@ -3482,6 +3472,37 @@ export class ChatActor {
       .slice(0, 2)
       .map((part) => part[0]?.toUpperCase() ?? "")
       .join("");
+  }
+
+  private setProfileAvatar(
+    avatar: HTMLElement,
+    name: string,
+    explicitUrl?: string,
+    fallbackText?: string,
+  ): void {
+    const avatarUrl = getProfilePhotoUrl(name, explicitUrl);
+
+    avatar.replaceChildren();
+    avatar.dataset.hasPhoto = String(Boolean(avatarUrl));
+
+    if (!avatarUrl) {
+      avatar.textContent = fallbackText ?? this.getInitials(name);
+      return;
+    }
+
+    const img = document.createElement("img");
+
+    img.alt = "";
+    img.decoding = "async";
+    img.loading = "lazy";
+    img.referrerPolicy = "no-referrer";
+    img.src = avatarUrl;
+    img.addEventListener("error", () => {
+      if (!avatar.contains(img)) return;
+      avatar.dataset.hasPhoto = "false";
+      avatar.textContent = fallbackText ?? this.getInitials(name);
+    }, { once: true });
+    avatar.append(img);
   }
 
   private createEnrichmentPanel(config: EnrichmentConfig): HTMLElement {
@@ -3969,6 +3990,7 @@ export class ChatActor {
           connection: this.formatLeadConnection(lead),
           source: "signal",
           avatarTone: lead.rank,
+          avatarUrl: lead.avatarUrl ?? "",
           score: lead.score,
         },
       })),
@@ -4139,7 +4161,6 @@ export class ChatActor {
       const previous = document.createElement("button");
       const current = document.createElement("div");
       const avatar = document.createElement("span");
-      const avatarText = document.createElement("span");
       const currentCopy = document.createElement("span");
       const currentName = document.createElement("strong");
       const currentMeta = document.createElement("span");
@@ -4165,8 +4186,7 @@ export class ChatActor {
       current.className = "wa-sequence-person-current";
       avatar.className = "wa-sequence-person-current__avatar";
       avatar.dataset.avatarTone = "1";
-      avatarText.textContent = this.getInitials(firstSequence?.name ?? "");
-      avatar.append(avatarText);
+      this.setProfileAvatar(avatar, firstSequence?.name ?? "", firstSequence?.avatarUrl);
       currentCopy.className = "wa-sequence-person-current__copy";
       currentName.textContent = firstSequence?.name ?? "";
       currentMeta.textContent = [firstSequence?.title, firstSequence?.company].filter(Boolean).join(", ");
@@ -4203,6 +4223,7 @@ export class ChatActor {
       card.dataset.sequenceMeta = [sequence.title, sequence.company].filter(Boolean).join(", ");
       card.dataset.sequenceTemplateName = sequence.name;
       card.dataset.sequenceTemplateMeta = [sequence.title, sequence.company].filter(Boolean).join(", ");
+      card.dataset.sequenceTemplateAvatarUrl = sequence.avatarUrl ?? "";
       if (index !== 0) {
         card.style.display = "none";
         gsap.set(card, { autoAlpha: 0, y: 8 });
@@ -4485,7 +4506,7 @@ export class ChatActor {
 
   private getSequenceTransitionTargets(section: HTMLElement, card: HTMLElement): HTMLElement[] {
     return this.compactElements(
-      section.querySelector<HTMLElement>(".wa-sequence-person-current__avatar span"),
+      section.querySelector<HTMLElement>(".wa-sequence-person-current__avatar"),
       section.querySelector<HTMLElement>(".wa-sequence-person-current__copy strong"),
       section.querySelector<HTMLElement>(".wa-sequence-person-current__copy span"),
       ...this.queryElements(card, ".wa-sequence-step__copy strong"),
@@ -4591,13 +4612,13 @@ export class ChatActor {
       card?.dataset.sequenceMeta ??
       card?.querySelector<HTMLElement>(".wa-sequence-card__identity span")?.textContent ??
       "";
+    const avatarUrl = card?.dataset.sequenceTemplateAvatarUrl;
     const avatar = section.querySelector<HTMLElement>(".wa-sequence-person-current__avatar");
-    const avatarText = avatar?.querySelector<HTMLElement>("span");
     const currentName = section.querySelector<HTMLElement>(".wa-sequence-person-current__copy strong");
     const currentMeta = section.querySelector<HTMLElement>(".wa-sequence-person-current__copy span");
 
     if (avatar) avatar.dataset.avatarTone = String((index % 6) + 1);
-    if (avatarText) avatarText.textContent = this.getInitials(name);
+    if (avatar) this.setProfileAvatar(avatar, name, avatarUrl);
     if (currentName) currentName.textContent = name;
     if (currentMeta) currentMeta.textContent = meta;
   }

@@ -139,6 +139,7 @@ export type ProximityLeadListConfig = {
     proximity: string;
     personalization: string;
     score: string;
+    avatarUrl?: string;
   }>;
 };
 
@@ -173,6 +174,7 @@ export type SequenceEngagementConfig = {
     company: string;
     title?: string;
     signal?: string;
+    avatarUrl?: string;
     subject: string;
     personalization: string;
     steps?: Array<{
