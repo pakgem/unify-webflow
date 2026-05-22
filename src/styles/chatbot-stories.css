@@ -3509,7 +3509,7 @@ body {
   align-items: stretch;
   height: var(--wa-composer-height);
   min-height: 0;
-  padding: 24px;
+  padding: 24px 12px 12px 24px;
   margin: 0;
   overflow: hidden;
   border: 1px solid var(--wa-color-input-line);
@@ -3570,16 +3570,16 @@ body {
   grid-row: 2;
   align-items: center;
   justify-self: end;
-  gap: 24px;
+  gap: 18px;
   min-width: 0;
 }
 
 .wa-composer__select {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 5px;
   color: #74726a;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1;
   font-weight: 410;
   white-space: nowrap;
@@ -5659,7 +5659,7 @@ body {
   .wa-composer {
     grid-template-columns: minmax(0, 1fr);
     height: var(--wa-composer-height);
-    padding: 17px 16px;
+    padding: 16px 10px 10px 16px;
     border-radius: 15px;
   }
 
@@ -5669,12 +5669,12 @@ body {
   }
 
   .wa-composer__controls {
-    gap: 14px;
+    gap: 10px;
   }
 
   .wa-composer__select {
-    gap: 6px;
-    font-size: 12px;
+    gap: 4px;
+    font-size: 11px;
   }
 
   .wa-composer__send {
