@@ -1277,6 +1277,17 @@ body {
   justify-items: end;
 }
 
+.wa-uploaded-files[data-uploaded-file-count="4"] .wa-uploaded-files__list {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  justify-items: stretch;
+}
+
+.wa-uploaded-files[data-uploaded-file-count="4"] .wa-uploaded-file {
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+}
+
 .wa-data-table {
   display: grid;
   gap: 0;

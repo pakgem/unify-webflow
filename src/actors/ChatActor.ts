@@ -2596,6 +2596,7 @@ export class ChatActor {
   private createUploadedFiles(files: UploadedFileConfig[]): HTMLElement {
     const stack = document.createElement("div");
     stack.className = "wa-uploaded-files";
+    stack.dataset.uploadedFileCount = String(files.length);
 
     const list = document.createElement("div");
     list.className = "wa-uploaded-files__list";
