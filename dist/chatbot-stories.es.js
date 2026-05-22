@@ -2101,8 +2101,8 @@ const Zo = [
   pressDuration: T(0.09),
   releaseDuration: T(0.2),
   learningRevealDuration: T(0.34),
-  thumbprintDuration: T(1.22),
-  thumbprintEndPercent: 70,
+  thumbprintDuration: T(1.85),
+  thumbprintEndPercent: 85,
   settleHold: T(0.24)
 }, as = [
   82,

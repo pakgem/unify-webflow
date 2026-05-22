@@ -179,8 +179,8 @@ const MAILBOX_CONNECT_MOTION = {
   pressDuration: motionDuration(0.09),
   releaseDuration: motionDuration(0.2),
   learningRevealDuration: motionDuration(0.34),
-  thumbprintDuration: motionDuration(1.22),
-  thumbprintEndPercent: 70,
+  thumbprintDuration: motionDuration(1.85),
+  thumbprintEndPercent: 85,
   settleHold: motionDuration(0.24),
 };
 const MAILBOX_THUMBPRINT_FILL_STARTS = [
