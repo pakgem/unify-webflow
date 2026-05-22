@@ -170,6 +170,25 @@ const MESSAGE_KIND_CLASSES = [
 const MOTION_TIME_SCALE = 1.28;
 const motionDuration = (seconds: number): number => Number((seconds * MOTION_TIME_SCALE).toFixed(3));
 const SEQUENCE_WAIT_DAY_DEFAULTS = [2, 3, 2];
+const MAILBOX_CONNECT_MOTION = {
+  pressDuration: motionDuration(0.09),
+  releaseDuration: motionDuration(0.2),
+  learningRevealDuration: motionDuration(0.34),
+  thumbprintDuration: motionDuration(1.22),
+  settleHold: motionDuration(0.24),
+};
+const MAILBOX_THUMBPRINT_PATHS = [
+  "M32 9.8c-10.5 0-19 8.5-19 19",
+  "M20.1 29.2c0-6.6 5.3-11.9 11.9-11.9s11.9 5.3 11.9 11.9",
+  "M10.1 36.8c-1.4-11.4 6.9-21.8 18.3-23.1 9.4-1.1 18.2 4.5 21.2 13.4",
+  "M17.3 47.6c3.4-3.4 5.2-8.1 5.2-13v-4.9c0-5.2 4.2-9.4 9.4-9.4s9.4 4.2 9.4 9.4v3.8",
+  "M27.7 54.4c1.7-3.7 2.6-7.8 2.6-11.9V29.8c0-1 .8-1.8 1.8-1.8s1.8.8 1.8 1.8v12.7c0 4.2.9 8.3 2.6 12.1",
+  "M41.9 49.3c-1-3-1.6-6.2-1.6-9.4V30",
+  "M16 35.6c0 7.9-2.8 12.7-5.7 16",
+  "M48.7 36.8c.2 6.4 1.9 11.1 5.3 15",
+  "M23.8 58.3c2.3-3.5 3.9-7.2 4.8-11.2",
+  "M38.4 58.3c-1.2-2.9-2-5.9-2.5-9.1",
+];
 
 const MESSAGE_SPRING = {
   duration: motionDuration(0.44),
@@ -1296,8 +1315,7 @@ export class ChatActor {
     const connection = this.createMailboxConnection(config);
     const revealTargets = this.compactElements(
       connection.querySelector<HTMLElement>(".wa-mailbox-connection__header"),
-      connection.querySelector<HTMLElement>(".wa-mailbox-connection__account"),
-      ...this.queryElements(connection, ".wa-mailbox-connection__signal"),
+      connection.querySelector<HTMLElement>(".wa-mailbox-connection__button"),
     );
 
     return this.revealComponentItems("mailbox", connection, revealTargets, {
@@ -1312,6 +1330,104 @@ export class ChatActor {
       },
       position: "-=0.2",
     });
+  }
+
+  connectMailbox(connectionId: string): gsap.core.Timeline {
+    const section = this.root.querySelector<HTMLElement>(
+      `[data-mailbox-connection="${this.escapeSelectorValue(connectionId)}"]`,
+    );
+    const button = section?.querySelector<HTMLButtonElement>("[data-mailbox-connect]");
+    const learning = section?.querySelector<HTMLElement>("[data-mailbox-learning]");
+    const thumbprintFill = section?.querySelector<SVGRectElement>("[data-mailbox-thumbprint-fill]");
+    const progressFill = section?.querySelector<HTMLElement>("[data-mailbox-learning-progress]");
+    const title = section?.querySelector<HTMLElement>(".wa-mailbox-learning__title");
+    const detail = section?.querySelector<HTMLElement>(".wa-mailbox-learning__detail");
+    const signals = section ? this.queryElements(section, ".wa-mailbox-connection__signal") : [];
+    const tl = gsap.timeline();
+
+    if (!section || !button || !learning || !thumbprintFill || !progressFill) return tl;
+
+    tl.call(() => {
+      section.dataset.mailboxState = "loading";
+      button.disabled = true;
+      button.setAttribute("aria-busy", "true");
+      button.setAttribute("aria-label", button.dataset.mailboxLoadingLabel ?? "connecting");
+    })
+      .to(button, {
+        scale: 0.985,
+        duration: MAILBOX_CONNECT_MOTION.pressDuration,
+        ease: "power2.out",
+      })
+      .to(button, {
+        scale: 1,
+        duration: MAILBOX_CONNECT_MOTION.releaseDuration,
+        ease: "back.out(2.6)",
+      })
+      .set(learning, { display: "grid", height: "auto" }, "-=0.04")
+      .fromTo(
+        learning,
+        { autoAlpha: 0, y: 8, scale: 0.992 },
+        {
+          autoAlpha: 1,
+          y: 0,
+          scale: 1,
+          duration: MAILBOX_CONNECT_MOTION.learningRevealDuration,
+          ease: "power2.out",
+        },
+        "-=0.02",
+      )
+      .fromTo(
+        this.compactElements(title, detail),
+        { autoAlpha: 0, y: 5 },
+        {
+          autoAlpha: 1,
+          y: 0,
+          duration: motionDuration(0.22),
+          ease: "power2.out",
+          stagger: 0.04,
+        },
+        "<+=0.07",
+      )
+      .fromTo(
+        thumbprintFill,
+        { attr: { y: 64, height: 0 } },
+        {
+          attr: { y: 0, height: 64 },
+          duration: MAILBOX_CONNECT_MOTION.thumbprintDuration,
+          ease: "sine.inOut",
+        },
+        "-=0.04",
+      )
+      .fromTo(
+        progressFill,
+        { scaleX: 0, transformOrigin: "left center" },
+        {
+          scaleX: 1,
+          duration: MAILBOX_CONNECT_MOTION.thumbprintDuration,
+          ease: "sine.inOut",
+        },
+        "<",
+      )
+      .to(
+        signals,
+        {
+          autoAlpha: 1,
+          y: 0,
+          duration: motionDuration(0.18),
+          ease: "power2.out",
+          stagger: 0.035,
+        },
+        "<+=0.38",
+      )
+      .to({}, { duration: MAILBOX_CONNECT_MOTION.settleHold })
+      .call(() => {
+        section.dataset.mailboxState = "connected";
+        button.disabled = false;
+        button.removeAttribute("aria-busy");
+        button.setAttribute("aria-label", button.dataset.mailboxConnectedLabel ?? "connected");
+      });
+
+    return tl;
   }
 
   personalizationSwipeGame(config: PersonalizationSwipeGameConfig): gsap.core.Timeline {
@@ -3573,6 +3689,7 @@ export class ChatActor {
     const section = document.createElement("section");
     section.className = "wa-mailbox-connection";
     section.dataset.mailboxConnection = config.id;
+    section.dataset.mailboxState = "idle";
 
     const header = document.createElement("div");
     header.className = "wa-mailbox-connection__header";
@@ -3597,22 +3714,43 @@ export class ChatActor {
       copy.append(title);
     }
 
-    const status = document.createElement("span");
-    status.className = "wa-mailbox-connection__status";
-    status.textContent = config.status ?? "connected";
-
-    header.append(mark, copy, status);
-
-    const account = document.createElement("div");
-    account.className = "wa-mailbox-connection__account";
-
     const provider = document.createElement("span");
+    provider.className = "wa-mailbox-connection__provider";
     provider.textContent = config.provider;
 
-    const email = document.createElement("strong");
-    email.textContent = config.account;
+    header.append(mark, copy, provider);
 
-    account.append(provider, email);
+    const button = document.createElement("button");
+    button.className = "wa-mailbox-connection__button";
+    button.type = "button";
+    button.dataset.mailboxConnect = config.id;
+    button.dataset.mailboxLoadingLabel = config.loadingLabel ?? "connecting";
+    button.dataset.mailboxConnectedLabel = config.status ?? "connected";
+    button.setAttribute("aria-label", config.ctaLabel ?? "connect mailbox");
+
+    const idleLabel = document.createElement("span");
+    idleLabel.className = "wa-mailbox-connection__button-label";
+    idleLabel.dataset.mailboxButtonLabel = "idle";
+    idleLabel.setAttribute("aria-hidden", "true");
+    idleLabel.textContent = config.ctaLabel ?? "connect mailbox";
+
+    const loadingLabel = document.createElement("span");
+    loadingLabel.className = "wa-mailbox-connection__button-label";
+    loadingLabel.dataset.mailboxButtonLabel = "loading";
+    loadingLabel.setAttribute("aria-hidden", "true");
+    loadingLabel.textContent = config.loadingLabel ?? "connecting";
+
+    const connectedLabel = document.createElement("span");
+    connectedLabel.className = "wa-mailbox-connection__button-label";
+    connectedLabel.dataset.mailboxButtonLabel = "connected";
+    connectedLabel.setAttribute("aria-hidden", "true");
+    connectedLabel.textContent = config.status ?? "connected";
+
+    const spinner = document.createElement("span");
+    spinner.className = "wa-mailbox-connection__spinner";
+    spinner.setAttribute("aria-hidden", "true");
+
+    button.append(idleLabel, loadingLabel, connectedLabel, spinner);
 
     const signals = document.createElement("div");
     signals.className = "wa-mailbox-connection__signals";
@@ -3623,8 +3761,85 @@ export class ChatActor {
       signals.append(signal);
     });
 
-    section.append(header, account, signals);
+    const learning = document.createElement("div");
+    learning.className = "wa-mailbox-learning";
+    learning.dataset.mailboxLearning = "";
+
+    const thumbprint = this.createMailboxThumbprint(config.id);
+
+    const learningCopy = document.createElement("div");
+    learningCopy.className = "wa-mailbox-learning__copy";
+
+    const learningTitle = document.createElement("h4");
+    learningTitle.className = "wa-mailbox-learning__title";
+    learningTitle.textContent = config.learningTitle ?? "learning your voice";
+
+    const learningDetail = document.createElement("p");
+    learningDetail.className = "wa-mailbox-learning__detail";
+    learningDetail.textContent =
+      config.learningDetail ??
+      "Scanning recent sent mail for tone, pacing, CTA patterns, and how you handle objections.";
+
+    learningCopy.append(learningTitle, learningDetail);
+
+    const progress = document.createElement("div");
+    progress.className = "wa-mailbox-learning__progress";
+    const progressFill = document.createElement("span");
+    progressFill.dataset.mailboxLearningProgress = "";
+    progress.append(progressFill);
+
+    learning.append(thumbprint, learningCopy, progress);
+
+    section.append(header, button, learning, signals);
     return section;
+  }
+
+  private createMailboxThumbprint(id: string): SVGSVGElement {
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    const clipId = `wa-mailbox-thumbprint-${id}`;
+    svg.classList.add("wa-mailbox-thumbprint");
+    svg.setAttribute("viewBox", "0 0 64 64");
+    svg.setAttribute("aria-hidden", "true");
+    svg.setAttribute("focusable", "false");
+
+    const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+    const clipPath = document.createElementNS("http://www.w3.org/2000/svg", "clipPath");
+    clipPath.setAttribute("id", clipId);
+    clipPath.setAttribute("clipPathUnits", "userSpaceOnUse");
+
+    const clipRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    clipRect.dataset.mailboxThumbprintFill = "";
+    clipRect.setAttribute("x", "0");
+    clipRect.setAttribute("y", "64");
+    clipRect.setAttribute("width", "64");
+    clipRect.setAttribute("height", "0");
+
+    clipPath.append(clipRect);
+    defs.append(clipPath);
+    svg.append(defs);
+    svg.append(
+      this.createMailboxThumbprintGroup("wa-mailbox-thumbprint__base"),
+      this.createMailboxThumbprintGroup("wa-mailbox-thumbprint__fill", `url(#${clipId})`),
+    );
+
+    return svg;
+  }
+
+  private createMailboxThumbprintGroup(className: string, clipPath?: string): SVGGElement {
+    const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    group.classList.add(className);
+    if (clipPath) group.setAttribute("clip-path", clipPath);
+
+    MAILBOX_THUMBPRINT_PATHS.forEach((pathData) => {
+      const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      path.setAttribute("d", pathData);
+      path.setAttribute("fill", "none");
+      path.setAttribute("stroke-linecap", "round");
+      path.setAttribute("stroke-linejoin", "round");
+      group.append(path);
+    });
+
+    return group;
   }
 
   private createProximityLeadList(config: ProximityLeadListConfig): HTMLElement {

@@ -83,6 +83,10 @@ export type BuilderMailboxConnectionComponent = {
   provider: string;
   account: string;
   status: string;
+  ctaLabel: string;
+  loadingLabel: string;
+  learningTitle: string;
+  learningDetail: string;
   signals: string[];
 };
 
@@ -1092,6 +1096,22 @@ export class StoryBuilder {
         className: "wa-builder-mailbox-editor__status",
       }),
     );
+    const cta = document.createElement("div");
+    cta.className = "wa-builder-mailbox-editor__cta";
+    cta.append(
+      this.createComponentInput(step.id, "mailboxCtaLabel", component.ctaLabel, {
+        className: "wa-builder-mailbox-editor__button-label",
+      }),
+      this.createComponentInput(step.id, "mailboxLoadingLabel", component.loadingLabel, {
+        className: "wa-builder-mailbox-editor__button-label",
+      }),
+    );
+    const learningTitle = this.createComponentInput(step.id, "mailboxLearningTitle", component.learningTitle, {
+      className: "wa-builder-mailbox-editor__learning-title",
+    });
+    const learningDetail = this.createComponentField(step.id, "mailboxLearningDetail", component.learningDetail, {
+      className: "wa-builder-mailbox-editor__learning-detail",
+    });
 
     const signals = document.createElement("div");
     signals.className = "wa-builder-mailbox-editor__signals";
@@ -1104,7 +1124,7 @@ export class StoryBuilder {
       );
     });
 
-    content.append(title, subtitle, meta, signals);
+    content.append(title, subtitle, meta, cta, learningTitle, learningDetail, signals);
     return card;
   }
 
@@ -2676,6 +2696,10 @@ function createMailboxConnectionComponent(): BuilderMailboxConnectionComponent {
     provider: "Gmail",
     account: "joel@unifygtm.com",
     status: "connected",
+    ctaLabel: "connect mailbox",
+    loadingLabel: "connecting",
+    learningTitle: "learning your voice",
+    learningDetail: "Scanning recent sent mail for tone, pacing, CTA patterns, and how you handle objections.",
     signals: ["sent emails", "reply patterns", "calendar context", "signature and tone"],
   };
 }
@@ -2987,6 +3011,10 @@ function updateComponentValue(
     if (field === "mailboxProvider") component.provider = value;
     if (field === "mailboxAccount") component.account = value;
     if (field === "mailboxStatus") component.status = value;
+    if (field === "mailboxCtaLabel") component.ctaLabel = value;
+    if (field === "mailboxLoadingLabel") component.loadingLabel = value;
+    if (field === "mailboxLearningTitle") component.learningTitle = value;
+    if (field === "mailboxLearningDetail") component.learningDetail = value;
 
     if (field === "mailboxSignal" && indexes.itemIndex !== null) {
       component.signals[indexes.itemIndex] = value;

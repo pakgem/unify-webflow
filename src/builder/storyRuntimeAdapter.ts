@@ -123,14 +123,7 @@ function buildContextLearningStory(ctx: StoryContext, story: BuilderStory): gsap
   const steps: StoryStep[] = [];
 
   if (mailboxStep) {
-    steps.push(
-      { kind: "status" as const, text: "connecting mailbox" },
-      {
-        kind: "custom" as const,
-        build: (ctx: StoryContext) => ctx.chat.mailboxConnection(toMailboxConnection(mailboxStep.component)),
-        at: "+=0.04",
-      },
-    );
+    appendMailboxConnectionFlow(steps, toMailboxConnection(mailboxStep.component));
   }
 
   if (uploadedFilesStep) {
@@ -420,7 +413,7 @@ function appendComponentRuntimeStep(
   }
 
   if (component.kind === "mailboxConnection") {
-    steps.push({ kind: "custom", build: (ctx: StoryContext) => ctx.chat.mailboxConnection(toMailboxConnection(component)), at: "-=0.04" });
+    appendMailboxConnectionFlow(steps, toMailboxConnection(component));
     return;
   }
 
@@ -598,8 +591,62 @@ function toMailboxConnection(component: BuilderMailboxConnectionComponent): Mail
     provider: component.provider,
     account: component.account,
     status: component.status,
+    ctaLabel: component.ctaLabel,
+    loadingLabel: component.loadingLabel,
+    learningTitle: component.learningTitle,
+    learningDetail: component.learningDetail,
     signals: component.signals,
   };
+}
+
+function appendMailboxConnectionFlow(steps: StoryStep[], config: MailboxConnectionConfig): void {
+  const buttonTarget = responsiveElementTarget(
+    `[data-mailbox-connect="${config.id}"]`,
+    "center",
+    {
+      desktop: { x: 2, y: 0 },
+      tablet: { x: 1, y: 0 },
+      mobile: { x: 0, y: 0 },
+    },
+    false,
+  );
+
+  steps.push(
+    { kind: "status" as const, text: "connect mailbox" },
+    {
+      kind: "custom" as const,
+      build: (ctx: StoryContext) => ctx.chat.mailboxConnection(config),
+      at: "+=0.04",
+    },
+    {
+      kind: "custom" as const,
+      build: (ctx: StoryContext) =>
+        ctx.cursor.scanAcross(`[data-mailbox-connection="${config.id}"]`, {
+          label: `mailbox-cta-skim-${config.id}`,
+          duration: 0.68,
+        }),
+      at: "+=0.16",
+    },
+    {
+      kind: "cursorMove" as const,
+      target: buttonTarget,
+      options: {
+        mode: "pointer" as const,
+        intent: "hover" as const,
+        speed: "normal" as const,
+        overshoot: false,
+        settle: true,
+        label: `mailbox-connect-${config.id}`,
+      },
+      at: "+=0.08",
+    },
+    { kind: "cursorClick" as const, at: "-=0.02" },
+    {
+      kind: "custom" as const,
+      build: (ctx: StoryContext) => ctx.chat.connectMailbox(config.id),
+      at: "<+=0.08",
+    },
+  );
 }
 
 function toStyleProfile(component: Extract<BuilderComponent, { kind: "styleProfile" }>): OutreachStyleProfileConfig {

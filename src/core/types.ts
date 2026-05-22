@@ -107,6 +107,10 @@ export type MailboxConnectionConfig = {
   provider: string;
   account: string;
   status?: string;
+  ctaLabel?: string;
+  loadingLabel?: string;
+  learningTitle?: string;
+  learningDetail?: string;
   signals: string[];
 };
 

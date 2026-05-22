@@ -632,6 +632,10 @@ const GMAIL_MAILBOX_CONNECTION = {
   provider: "Gmail",
   account: "joel@unifygtm.com",
   status: "connected",
+  ctaLabel: "connect mailbox",
+  loadingLabel: "connecting",
+  learningTitle: "learning your voice",
+  learningDetail: "Scanning recent sent mail for tone, pacing, CTA patterns, and how you handle objections.",
   signals: ["sent emails", "reply patterns", "calendar context", "signature and tone"],
 } satisfies MailboxConnectionConfig;
 
@@ -1108,6 +1112,16 @@ export const defaultStories: StoryDefinition[] = [
         detail: "Battle cards, playbooks, ICP notes, voice docs, and messaging context.",
       });
       const cursorFile = ctx.chat.prepareCursorFile("4 context files", ctx.cursor, "DOC");
+      const mailboxButtonTarget = responsiveElementTarget(
+        `[data-mailbox-connect="${GMAIL_MAILBOX_CONNECTION.id}"]`,
+        "center",
+        {
+          desktop: { x: 2, y: 0 },
+          tablet: { x: 1, y: 0 },
+          mobile: { x: 0, y: 0 },
+        },
+        false,
+      );
       const dropTarget = responsiveElementTarget("[data-chat-shell]", "center", {
         desktop: { x: 0, y: 74 },
         tablet: { x: 0, y: 64 },
@@ -1115,8 +1129,32 @@ export const defaultStories: StoryDefinition[] = [
       });
 
       return buildStorySteps(ctx, [
-        { kind: "status", text: "connecting mailbox" },
+        { kind: "status", text: "connect mailbox" },
         { kind: "custom", build: () => ctx.chat.mailboxConnection(GMAIL_MAILBOX_CONNECTION), at: "+=0.04" },
+        {
+          kind: "custom",
+          build: () =>
+            ctx.cursor.scanAcross(`[data-mailbox-connection="${GMAIL_MAILBOX_CONNECTION.id}"]`, {
+              label: `mailbox-cta-skim-${GMAIL_MAILBOX_CONNECTION.id}`,
+              duration: 0.68,
+            }),
+          at: "+=0.16",
+        },
+        {
+          kind: "cursorMove",
+          target: mailboxButtonTarget,
+          options: {
+            mode: "pointer",
+            intent: "hover",
+            speed: "normal",
+            overshoot: false,
+            settle: true,
+            label: `mailbox-connect-${GMAIL_MAILBOX_CONNECTION.id}`,
+          },
+          at: "+=0.08",
+        },
+        { kind: "cursorClick", at: "-=0.02" },
+        { kind: "custom", build: () => ctx.chat.connectMailbox(GMAIL_MAILBOX_CONNECTION.id), at: "<+=0.08" },
         { kind: "status", text: "waiting for context", at: `+=${STORY_TIMING.beat}` },
         { kind: "custom", build: () => cursorFile.startFollow(), at: "+=0.04" },
         { kind: "custom", build: () => dropArea.revealWhenCursorEnters(ctx.cursor), at: "<" },
