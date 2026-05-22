@@ -2673,7 +2673,7 @@ body {
   place-items: center;
   width: 44px;
   height: 44px;
-  background: #f0efea;
+  background: transparent;
 }
 
 .wa-mailbox-learning__title {

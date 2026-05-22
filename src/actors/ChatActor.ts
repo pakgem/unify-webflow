@@ -181,7 +181,7 @@ const MAILBOX_CONNECT_MOTION = {
   releaseDuration: motionDuration(0.2),
   learningRevealDuration: motionDuration(0.34),
   thumbprintDuration: motionDuration(1.85),
-  thumbprintEndPercent: 85,
+  thumbprintEndPercent: 100,
   settleHold: motionDuration(0.24),
 };
 const MAILBOX_THUMBPRINT_FILL_STARTS = [
