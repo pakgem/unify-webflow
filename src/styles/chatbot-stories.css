@@ -2586,6 +2586,7 @@ body {
 }
 
 .wa-mailbox-connection__button:disabled {
+  opacity: 1;
   pointer-events: none;
 }
 
@@ -2593,6 +2594,8 @@ body {
   display: block;
   width: 20px;
   height: 20px;
+  flex-shrink: 0;
+  object-fit: contain;
 }
 
 .wa-mailbox-connection__button-copy {

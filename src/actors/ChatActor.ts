@@ -28,6 +28,8 @@ import {
 } from "../stories/thinkingText";
 import { addTimelineElapsedTimer } from "../motion/elapsedTimer";
 import { getProfilePhotoUrl } from "../assets/profilePhotos";
+import gmailConnectorIconSvg from "../assets/email-connectors/gmail.svg?raw";
+import outlookConnectorIconSvg from "../assets/email-connectors/outlook.svg?raw";
 
 type PreparedResultCard = {
   el: HTMLElement;
@@ -184,6 +186,10 @@ const MAILBOX_CONNECT_MOTION = {
   thumbprintEndPercent: 100,
   settleHold: motionDuration(0.24),
 };
+const MAILBOX_CONNECTOR_ICON_SRC = {
+  gmail: svgToDataUri(gmailConnectorIconSvg),
+  outlook: svgToDataUri(outlookConnectorIconSvg),
+} satisfies Record<MailboxConnectorProvider, string>;
 const MAILBOX_THUMBPRINT_FILL_STARTS = [
   82,
   86,
@@ -350,6 +356,7 @@ const MARKETING_DATA_SOURCE_COLUMNS = [
   ["Enrichment", "Company / Fundraising", "Tech Stack"],
   ["Web / SEO", "Relationships", "And more"],
 ];
+type MailboxConnectorProvider = "gmail" | "outlook";
 const MARKETING_DATA_GRID_ARTBOARD = {
   contentWidth: 1881,
   height: 1280,
@@ -1478,9 +1485,9 @@ export class ChatActor {
     tl.to({}, { duration: MAILBOX_CONNECT_MOTION.settleHold })
       .call(() => {
         section.dataset.mailboxState = "connected";
-        button.disabled = false;
+        button.disabled = true;
         button.removeAttribute("aria-busy");
-        button.setAttribute("aria-label", button.dataset.mailboxConnectedLabel ?? "connected");
+        button.setAttribute("aria-label", button.dataset.mailboxConnectedLabel ?? "Gmail Connected");
       });
 
     return tl;
@@ -3846,15 +3853,15 @@ export class ChatActor {
     const gmailButton = this.createMailboxProviderButton({
       id: config.id,
       icon: "gmail",
-      label: config.ctaLabel ?? "Connect Gmail",
+      label: config.ctaLabel ?? "Gmail",
       loadingLabel: config.loadingLabel ?? "connecting",
-      connectedLabel: config.status ?? "connected",
+      connectedLabel: config.status ?? "Gmail Connected",
       isPrimary: true,
     });
 
     const outlookButton = this.createMailboxProviderButton({
       icon: "outlook",
-      label: config.secondaryCtaLabel ?? "Connect Outlook",
+      label: config.secondaryCtaLabel ?? "Outlook",
     });
 
     actions.append(gmailButton, outlookButton);
@@ -3890,7 +3897,7 @@ export class ChatActor {
 
   private createMailboxProviderButton(options: {
     id?: string;
-    icon: "gmail" | "outlook";
+    icon: MailboxConnectorProvider;
     label: string;
     loadingLabel?: string;
     connectedLabel?: string;
@@ -3904,7 +3911,7 @@ export class ChatActor {
     if (options.isPrimary && options.id) {
       button.dataset.mailboxConnect = options.id;
       button.dataset.mailboxLoadingLabel = options.loadingLabel ?? "connecting";
-      button.dataset.mailboxConnectedLabel = options.connectedLabel ?? "connected";
+      button.dataset.mailboxConnectedLabel = options.connectedLabel ?? "Gmail Connected";
     }
 
     const icon = this.createMailboxProviderIcon(options.icon);
@@ -3932,7 +3939,7 @@ export class ChatActor {
       connectedLabel.className = "wa-mailbox-connection__button-label";
       connectedLabel.dataset.mailboxButtonLabel = "connected";
       connectedLabel.setAttribute("aria-hidden", "true");
-      connectedLabel.textContent = options.connectedLabel ?? "connected";
+      connectedLabel.textContent = options.connectedLabel ?? "Gmail Connected";
 
       labelStack.append(loadingLabel, connectedLabel);
     }
@@ -3945,37 +3952,15 @@ export class ChatActor {
     return button;
   }
 
-  private createMailboxProviderIcon(provider: "gmail" | "outlook"): SVGSVGElement {
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.classList.add("wa-mailbox-connection__provider-icon");
-    svg.setAttribute("viewBox", provider === "gmail" ? "0 0 32 32" : "0 0 32 32");
-    svg.setAttribute("aria-hidden", "true");
-    svg.setAttribute("focusable", "false");
-
-    const paths =
-      provider === "gmail"
-        ? [
-            ["M4 8.5 16 17.4 28 8.5V25a2 2 0 0 1-2 2h-4V15.4l-6 4.4-6-4.4V27H6a2 2 0 0 1-2-2V8.5Z", "#4285F4"],
-            ["M4 8.5 10 13v14H6a2 2 0 0 1-2-2V8.5Z", "#34A853"],
-            ["M22 13 28 8.5V25a2 2 0 0 1-2 2h-4V13Z", "#FBBC04"],
-            ["M4 8.5 7.2 6.1a2 2 0 0 1 2.4 0L16 10.8l6.4-4.7a2 2 0 0 1 2.4 0L28 8.5 16 17.4 4 8.5Z", "#EA4335"],
-          ]
-        : [
-            ["M14 7.2h12a2 2 0 0 1 2 2v13.6a2 2 0 0 1-2 2H14V7.2Z", "#28A8EA"],
-            ["M14 9.2h12L20 15.8l-6-6.6Z", "#50D9FF"],
-            ["M14 24.8h12l-7-7-5 4.4v2.6Z", "#0078D4"],
-            ["M5 11.2 17 9v14L5 20.8V11.2Z", "#2468D7"],
-            ["M7.8 15.9c0-2.2 1.3-3.9 3.2-3.9s3.2 1.7 3.2 3.9-1.3 3.9-3.2 3.9-3.2-1.7-3.2-3.9Zm2 0c0 1.2.5 2.1 1.2 2.1s1.2-.9 1.2-2.1-.5-2.1-1.2-2.1-1.2.9-1.2 2.1Z", "#fff"],
-          ];
-
-    paths.forEach(([d, fill]) => {
-      const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-      path.setAttribute("d", d);
-      path.setAttribute("fill", fill);
-      svg.append(path);
-    });
-
-    return svg;
+  private createMailboxProviderIcon(provider: MailboxConnectorProvider): HTMLImageElement {
+    const image = document.createElement("img");
+    image.className = "wa-mailbox-connection__provider-icon";
+    image.src = MAILBOX_CONNECTOR_ICON_SRC[provider];
+    image.alt = "";
+    image.decoding = "async";
+    image.loading = "eager";
+    image.setAttribute("aria-hidden", "true");
+    return image;
   }
 
   private createMailboxThumbprint(id: string): SVGSVGElement {
@@ -4890,6 +4875,10 @@ function slugForAnimation(value: string): string {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "")
     .slice(0, 42) || "item";
+}
+
+function svgToDataUri(svg: string): string {
+  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
 }
 
 function mailboxThumbprintSegmentProgress(index: number, percent: number): number {

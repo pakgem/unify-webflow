@@ -7,6 +7,7 @@ import type {
   OutreachStyleProfileConfig,
   PersonalizationSwipeGameConfig,
   ProximityLeadListConfig,
+  ResponsiveTarget,
   SequenceEngagementConfig,
   StoryContext,
   StoryDefinition,
@@ -39,6 +40,12 @@ import type {
 } from "./StoryBuilder";
 
 type ComponentStep = BuilderStep & { component: BuilderComponent };
+
+const CONTEXT_FILE_PICKUP_TARGET = {
+  desktop: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 180, y: -74 }, humanOffset: false },
+  tablet: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 144, y: -58 }, humanOffset: false },
+  mobile: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 96, y: -42 }, humanOffset: false },
+} satisfies ResponsiveTarget;
 
 export function createStoriesFromBuilderDraft(
   builderStories: BuilderStory[],
@@ -142,7 +149,20 @@ function buildContextLearningStory(ctx: StoryContext, story: BuilderStory): gsap
 
     steps.push(
       { kind: "status" as const, text: "waiting for context" },
-      { kind: "custom" as const, build: () => cursorFile.startFollow(), at: "+=0.04" },
+      {
+        kind: "cursorMove" as const,
+        target: CONTEXT_FILE_PICKUP_TARGET,
+        options: {
+          mode: "default" as const,
+          intent: "exit" as const,
+          speed: "slow" as const,
+          overshoot: false,
+          settle: true,
+          label: "context-file-pickup",
+        },
+        at: "+=0.08",
+      },
+      { kind: "custom" as const, build: () => cursorFile.startFollow(), at: "-=0.04" },
       { kind: "custom" as const, build: () => dropArea.revealWhenCursorEnters(ctx.cursor), at: "<" },
       {
         kind: "cursorDrag" as const,

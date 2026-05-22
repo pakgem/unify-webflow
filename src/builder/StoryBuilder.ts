@@ -1105,7 +1105,7 @@ export class StoryBuilder {
       this.createComponentInput(step.id, "mailboxCtaLabel", component.ctaLabel, {
         className: "wa-builder-mailbox-editor__button-label",
       }),
-      this.createComponentInput(step.id, "mailboxSecondaryCtaLabel", component.secondaryCtaLabel ?? "Connect Outlook", {
+      this.createComponentInput(step.id, "mailboxSecondaryCtaLabel", component.secondaryCtaLabel ?? "Outlook", {
         className: "wa-builder-mailbox-editor__button-label",
       }),
       this.createComponentInput(step.id, "mailboxLoadingLabel", component.loadingLabel, {
@@ -2701,9 +2701,9 @@ function createMailboxConnectionComponent(): BuilderMailboxConnectionComponent {
     subtitle: "Unify will recent emails, replies, and meeting context to learn how you actually communicate",
     provider: "Gmail",
     account: "joel@unifygtm.com",
-    status: "connected",
-    ctaLabel: "Connect Gmail",
-    secondaryCtaLabel: "Connect Outlook",
+    status: "Gmail Connected",
+    ctaLabel: "Gmail",
+    secondaryCtaLabel: "Outlook",
     loadingLabel: "connecting",
     learningTitle: "Learning your style",
     learningDetail: "Analyzing vocabulary...",

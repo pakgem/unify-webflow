@@ -631,9 +631,9 @@ const GMAIL_MAILBOX_CONNECTION = {
   subtitle: "Unify will recent emails, replies, and meeting context to learn how you actually communicate",
   provider: "Gmail",
   account: "joel@unifygtm.com",
-  status: "connected",
-  ctaLabel: "Connect Gmail",
-  secondaryCtaLabel: "Connect Outlook",
+  status: "Gmail Connected",
+  ctaLabel: "Gmail",
+  secondaryCtaLabel: "Outlook",
   loadingLabel: "connecting",
   learningTitle: "Learning your style",
   learningDetail: "Analyzing vocabulary...",
@@ -1107,9 +1107,9 @@ export const defaultStories: StoryDefinition[] = [
     eyebrow: "Context learning",
     summary: "The assistant learns your sales context, protects ICP fit, and ranks leads by relationship proximity.",
     entry: {
-      desktop: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 270, y: -68 } },
-      tablet: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 224, y: -54 } },
-      mobile: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 172, y: -42 } },
+      desktop: { target: "[data-chat-shell]", anchor: "right", offset: { x: -58, y: -150 } },
+      tablet: { target: "[data-chat-shell]", anchor: "right", offset: { x: -52, y: -132 } },
+      mobile: { target: "[data-chat-shell]", anchor: "right", offset: { x: -42, y: -104 } },
     } satisfies ResponsiveTarget,
     entryLeadTime: 0.18,
     build: (ctx) => {
@@ -1128,6 +1128,11 @@ export const defaultStories: StoryDefinition[] = [
         },
         false,
       );
+      const contextFilePickupTarget = {
+        desktop: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 180, y: -74 }, humanOffset: false },
+        tablet: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 144, y: -58 }, humanOffset: false },
+        mobile: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 96, y: -42 }, humanOffset: false },
+      } satisfies ResponsiveTarget;
       const dropTarget = responsiveElementTarget("[data-chat-shell]", "center", {
         desktop: { x: 0, y: 74 },
         tablet: { x: 0, y: 64 },
@@ -1162,7 +1167,20 @@ export const defaultStories: StoryDefinition[] = [
         { kind: "cursorClick", at: "-=0.02" },
         { kind: "custom", build: () => ctx.chat.connectMailbox(GMAIL_MAILBOX_CONNECTION.id), at: "<+=0.08" },
         { kind: "status", text: "waiting for context", at: `+=${STORY_TIMING.beat}` },
-        { kind: "custom", build: () => cursorFile.startFollow(), at: "+=0.04" },
+        {
+          kind: "cursorMove",
+          target: contextFilePickupTarget,
+          options: {
+            mode: "default",
+            intent: "exit",
+            speed: "slow",
+            overshoot: false,
+            settle: true,
+            label: "context-file-pickup",
+          },
+          at: "+=0.08",
+        },
+        { kind: "custom", build: () => cursorFile.startFollow(), at: "-=0.04" },
         { kind: "custom", build: () => dropArea.revealWhenCursorEnters(ctx.cursor), at: "<" },
         {
           kind: "cursorDrag",
