@@ -106,7 +106,7 @@ body {
   --wa-chat-entry-gap: 16px;
   --wa-chat-top-fade: 56px;
   --wa-chat-bottom-clearance: 110px;
-  --wa-chat-first-entry-offset: calc(var(--wa-chat-top-fade) + 18px);
+  --wa-chat-first-entry-offset: calc(var(--wa-chat-top-fade) - 32px);
   --wa-ai-message-max-width: 540px;
   --wa-user-message-max-width: 360px;
   --wa-chat-message-weight: 430;
@@ -4875,7 +4875,7 @@ body {
 @media (max-width: 760px) {
   .wa-section {
     --wa-chat-x-padding: 6px;
-    --wa-chat-first-entry-offset: calc(var(--wa-chat-top-fade) + 12px);
+    --wa-chat-first-entry-offset: calc(var(--wa-chat-top-fade) - 38px);
     --wa-composer-outset-x: 14px;
     --wa-composer-bottom-outset: 18px;
     --wa-composer-height: 50px;
