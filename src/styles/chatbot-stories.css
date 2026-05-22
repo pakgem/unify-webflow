@@ -110,6 +110,7 @@ body {
   --wa-ai-message-max-width: 540px;
   --wa-user-message-max-width: 360px;
   --wa-chat-message-weight: 430;
+  --wa-chat-thinking-header-weight: 430;
   --wa-chat-thinking-weight: 400;
   --wa-chat-detail-weight: 400;
   --wa-composer-side-inset: -21px;
@@ -785,7 +786,7 @@ body {
   background: transparent;
   font-size: 14px;
   line-height: 1;
-  font-weight: var(--wa-chat-thinking-weight);
+  font-weight: var(--wa-chat-thinking-header-weight);
   will-change: transform, opacity;
 }
 
@@ -1842,7 +1843,7 @@ body {
   background: transparent;
   font-size: 14px;
   line-height: 1;
-  font-weight: var(--wa-chat-thinking-weight);
+  font-weight: var(--wa-chat-thinking-header-weight);
 }
 
 .wa-waterfall-rows {
