@@ -627,15 +627,16 @@ const AGENT_CONTEXT_FILES = [
 
 const GMAIL_MAILBOX_CONNECTION = {
   id: "gmail-mailbox-connection",
-  title: "Connect Gmail mailbox",
-  subtitle: "Unify reads recent sent mail, replies, and meeting context to learn how you actually communicate.",
+  title: "Connect a mailbox",
+  subtitle: "Unify will recent emails, replies, and meeting context to learn how you actually communicate",
   provider: "Gmail",
   account: "joel@unifygtm.com",
   status: "connected",
-  ctaLabel: "connect mailbox",
+  ctaLabel: "Connect Gmail",
+  secondaryCtaLabel: "Connect Outlook",
   loadingLabel: "connecting",
-  learningTitle: "learning your voice",
-  learningDetail: "Scanning recent sent mail for tone, pacing, CTA patterns, and how you handle objections.",
+  learningTitle: "Learning your style",
+  learningDetail: "Analyzing vocabulary...",
   signals: ["sent emails", "reply patterns", "calendar context", "signature and tone"],
 } satisfies MailboxConnectionConfig;
 

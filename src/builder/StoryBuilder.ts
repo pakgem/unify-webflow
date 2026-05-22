@@ -84,6 +84,7 @@ export type BuilderMailboxConnectionComponent = {
   account: string;
   status: string;
   ctaLabel: string;
+  secondaryCtaLabel?: string;
   loadingLabel: string;
   learningTitle: string;
   learningDetail: string;
@@ -1102,6 +1103,9 @@ export class StoryBuilder {
     cta.className = "wa-builder-mailbox-editor__cta";
     cta.append(
       this.createComponentInput(step.id, "mailboxCtaLabel", component.ctaLabel, {
+        className: "wa-builder-mailbox-editor__button-label",
+      }),
+      this.createComponentInput(step.id, "mailboxSecondaryCtaLabel", component.secondaryCtaLabel ?? "Connect Outlook", {
         className: "wa-builder-mailbox-editor__button-label",
       }),
       this.createComponentInput(step.id, "mailboxLoadingLabel", component.loadingLabel, {
@@ -2199,7 +2203,7 @@ function createSeedSteps(storyId: string, fallbackSummary: string): BuilderStep[
     "crm-update": [
       {
         kind: "component",
-        text: "Connect Gmail mailbox",
+        text: "Connect a mailbox",
         note: "Mailbox connection happens before the business context files are dragged in.",
         component: createMailboxConnectionComponent(),
       },
@@ -2693,15 +2697,16 @@ function createUploadedFilesComponent(): BuilderUploadedFilesComponent {
 function createMailboxConnectionComponent(): BuilderMailboxConnectionComponent {
   return {
     kind: "mailboxConnection",
-    title: "Connect Gmail mailbox",
-    subtitle: "Unify reads recent sent mail, replies, and meeting context to learn how you actually communicate.",
+    title: "Connect a mailbox",
+    subtitle: "Unify will recent emails, replies, and meeting context to learn how you actually communicate",
     provider: "Gmail",
     account: "joel@unifygtm.com",
     status: "connected",
-    ctaLabel: "connect mailbox",
+    ctaLabel: "Connect Gmail",
+    secondaryCtaLabel: "Connect Outlook",
     loadingLabel: "connecting",
-    learningTitle: "learning your voice",
-    learningDetail: "Scanning recent sent mail for tone, pacing, CTA patterns, and how you handle objections.",
+    learningTitle: "Learning your style",
+    learningDetail: "Analyzing vocabulary...",
     signals: ["sent emails", "reply patterns", "calendar context", "signature and tone"],
   };
 }
@@ -3014,6 +3019,7 @@ function updateComponentValue(
     if (field === "mailboxAccount") component.account = value;
     if (field === "mailboxStatus") component.status = value;
     if (field === "mailboxCtaLabel") component.ctaLabel = value;
+    if (field === "mailboxSecondaryCtaLabel") component.secondaryCtaLabel = value;
     if (field === "mailboxLoadingLabel") component.loadingLabel = value;
     if (field === "mailboxLearningTitle") component.learningTitle = value;
     if (field === "mailboxLearningDetail") component.learningDetail = value;

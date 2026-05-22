@@ -110,6 +110,7 @@ export type MailboxConnectionConfig = {
   account: string;
   status?: string;
   ctaLabel?: string;
+  secondaryCtaLabel?: string;
   loadingLabel?: string;
   learningTitle?: string;
   learningDetail?: string;

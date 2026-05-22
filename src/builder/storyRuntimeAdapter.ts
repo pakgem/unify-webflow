@@ -592,6 +592,7 @@ function toMailboxConnection(component: BuilderMailboxConnectionComponent): Mail
     account: component.account,
     status: component.status,
     ctaLabel: component.ctaLabel,
+    secondaryCtaLabel: component.secondaryCtaLabel,
     loadingLabel: component.loadingLabel,
     learningTitle: component.learningTitle,
     learningDetail: component.learningDetail,

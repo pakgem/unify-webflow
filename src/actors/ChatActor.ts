@@ -1362,8 +1362,7 @@ export class ChatActor {
   mailboxConnection(config: MailboxConnectionConfig): gsap.core.Timeline {
     const connection = this.createMailboxConnection(config);
     const revealTargets = this.compactElements(
-      connection.querySelector<HTMLElement>(".wa-mailbox-connection__header"),
-      connection.querySelector<HTMLElement>(".wa-mailbox-connection__button"),
+      connection.querySelector<HTMLElement>(".wa-mailbox-connection__card"),
     );
 
     return this.revealComponentItems("mailbox", connection, revealTargets, {
@@ -1460,8 +1459,10 @@ export class ChatActor {
           ease: "sine.inOut",
         },
         "<",
-      )
-      .to(
+      );
+
+    if (signals.length) {
+      tl.to(
         signals,
         {
           autoAlpha: 1,
@@ -1471,8 +1472,10 @@ export class ChatActor {
           stagger: 0.035,
         },
         "<+=0.38",
-      )
-      .to({}, { duration: MAILBOX_CONNECT_MOTION.settleHold })
+      );
+    }
+
+    tl.to({}, { duration: MAILBOX_CONNECT_MOTION.settleHold })
       .call(() => {
         section.dataset.mailboxState = "connected";
         button.disabled = false;
@@ -3818,12 +3821,8 @@ export class ChatActor {
     section.dataset.mailboxConnection = config.id;
     section.dataset.mailboxState = "idle";
 
-    const header = document.createElement("div");
-    header.className = "wa-mailbox-connection__header";
-
-    const mark = document.createElement("span");
-    mark.className = "wa-mailbox-connection__mark";
-    mark.setAttribute("aria-hidden", "true");
+    const card = document.createElement("div");
+    card.className = "wa-mailbox-connection__card";
 
     const copy = document.createElement("span");
     copy.className = "wa-mailbox-connection__copy";
@@ -3841,73 +3840,41 @@ export class ChatActor {
       copy.append(title);
     }
 
-    const provider = document.createElement("span");
-    provider.className = "wa-mailbox-connection__provider";
-    provider.textContent = config.provider;
+    const actions = document.createElement("div");
+    actions.className = "wa-mailbox-connection__actions";
 
-    header.append(mark, copy, provider);
-
-    const button = document.createElement("button");
-    button.className = "wa-mailbox-connection__button";
-    button.type = "button";
-    button.dataset.mailboxConnect = config.id;
-    button.dataset.mailboxLoadingLabel = config.loadingLabel ?? "connecting";
-    button.dataset.mailboxConnectedLabel = config.status ?? "connected";
-    button.setAttribute("aria-label", config.ctaLabel ?? "connect mailbox");
-
-    const idleLabel = document.createElement("span");
-    idleLabel.className = "wa-mailbox-connection__button-label";
-    idleLabel.dataset.mailboxButtonLabel = "idle";
-    idleLabel.setAttribute("aria-hidden", "true");
-    idleLabel.textContent = config.ctaLabel ?? "connect mailbox";
-
-    const loadingLabel = document.createElement("span");
-    loadingLabel.className = "wa-mailbox-connection__button-label";
-    loadingLabel.dataset.mailboxButtonLabel = "loading";
-    loadingLabel.setAttribute("aria-hidden", "true");
-    loadingLabel.textContent = config.loadingLabel ?? "connecting";
-
-    const connectedLabel = document.createElement("span");
-    connectedLabel.className = "wa-mailbox-connection__button-label";
-    connectedLabel.dataset.mailboxButtonLabel = "connected";
-    connectedLabel.setAttribute("aria-hidden", "true");
-    connectedLabel.textContent = config.status ?? "connected";
-
-    const spinner = document.createElement("span");
-    spinner.className = "wa-mailbox-connection__spinner";
-    spinner.setAttribute("aria-hidden", "true");
-
-    button.append(idleLabel, loadingLabel, connectedLabel, spinner);
-
-    const signals = document.createElement("div");
-    signals.className = "wa-mailbox-connection__signals";
-    config.signals.forEach((signalText) => {
-      const signal = document.createElement("span");
-      signal.className = "wa-mailbox-connection__signal";
-      signal.textContent = signalText;
-      signals.append(signal);
+    const gmailButton = this.createMailboxProviderButton({
+      id: config.id,
+      icon: "gmail",
+      label: config.ctaLabel ?? "Connect Gmail",
+      loadingLabel: config.loadingLabel ?? "connecting",
+      connectedLabel: config.status ?? "connected",
+      isPrimary: true,
     });
+
+    const outlookButton = this.createMailboxProviderButton({
+      icon: "outlook",
+      label: config.secondaryCtaLabel ?? "Connect Outlook",
+    });
+
+    actions.append(gmailButton, outlookButton);
+    card.append(copy, actions);
 
     const learning = document.createElement("div");
     learning.className = "wa-mailbox-learning";
     learning.dataset.mailboxLearning = "";
 
-    const thumbprint = this.createMailboxThumbprint(config.id);
-
-    const learningCopy = document.createElement("div");
-    learningCopy.className = "wa-mailbox-learning__copy";
+    const thumbprintFrame = document.createElement("div");
+    thumbprintFrame.className = "wa-mailbox-learning__thumbprint";
+    thumbprintFrame.append(this.createMailboxThumbprint(config.id));
 
     const learningTitle = document.createElement("h4");
     learningTitle.className = "wa-mailbox-learning__title";
-    learningTitle.textContent = config.learningTitle ?? "learning your voice";
+    learningTitle.textContent = config.learningTitle ?? "Learning your style";
 
     const learningDetail = document.createElement("p");
     learningDetail.className = "wa-mailbox-learning__detail";
-    learningDetail.textContent =
-      config.learningDetail ??
-      "Scanning recent sent mail for tone, pacing, CTA patterns, and how you handle objections.";
-
-    learningCopy.append(learningTitle, learningDetail);
+    learningDetail.textContent = config.learningDetail ?? "Analyzing vocabulary...";
 
     const progress = document.createElement("div");
     progress.className = "wa-mailbox-learning__progress";
@@ -3915,10 +3882,100 @@ export class ChatActor {
     progressFill.dataset.mailboxLearningProgress = "";
     progress.append(progressFill);
 
-    learning.append(thumbprint, learningCopy, progress);
+    learning.append(thumbprintFrame, learningTitle, progress, learningDetail);
 
-    section.append(header, button, learning, signals);
+    section.append(card, learning);
     return section;
+  }
+
+  private createMailboxProviderButton(options: {
+    id?: string;
+    icon: "gmail" | "outlook";
+    label: string;
+    loadingLabel?: string;
+    connectedLabel?: string;
+    isPrimary?: boolean;
+  }): HTMLButtonElement {
+    const button = document.createElement("button");
+    button.className = "wa-mailbox-connection__button";
+    button.type = "button";
+    button.setAttribute("aria-label", options.label);
+
+    if (options.isPrimary && options.id) {
+      button.dataset.mailboxConnect = options.id;
+      button.dataset.mailboxLoadingLabel = options.loadingLabel ?? "connecting";
+      button.dataset.mailboxConnectedLabel = options.connectedLabel ?? "connected";
+    }
+
+    const icon = this.createMailboxProviderIcon(options.icon);
+    const labelStack = document.createElement("span");
+    labelStack.className = "wa-mailbox-connection__button-copy";
+
+    const idleLabel = document.createElement("span");
+    idleLabel.className = options.isPrimary ? "wa-mailbox-connection__button-label" : "wa-mailbox-connection__provider-label";
+    if (options.isPrimary) {
+      idleLabel.dataset.mailboxButtonLabel = "idle";
+      idleLabel.setAttribute("aria-hidden", "true");
+    }
+    idleLabel.textContent = options.label;
+
+    labelStack.append(idleLabel);
+
+    if (options.isPrimary) {
+      const loadingLabel = document.createElement("span");
+      loadingLabel.className = "wa-mailbox-connection__button-label";
+      loadingLabel.dataset.mailboxButtonLabel = "loading";
+      loadingLabel.setAttribute("aria-hidden", "true");
+      loadingLabel.textContent = options.loadingLabel ?? "connecting";
+
+      const connectedLabel = document.createElement("span");
+      connectedLabel.className = "wa-mailbox-connection__button-label";
+      connectedLabel.dataset.mailboxButtonLabel = "connected";
+      connectedLabel.setAttribute("aria-hidden", "true");
+      connectedLabel.textContent = options.connectedLabel ?? "connected";
+
+      labelStack.append(loadingLabel, connectedLabel);
+    }
+
+    const spinner = document.createElement("span");
+    spinner.className = "wa-mailbox-connection__spinner";
+    spinner.setAttribute("aria-hidden", "true");
+
+    button.append(icon, labelStack, spinner);
+    return button;
+  }
+
+  private createMailboxProviderIcon(provider: "gmail" | "outlook"): SVGSVGElement {
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.classList.add("wa-mailbox-connection__provider-icon");
+    svg.setAttribute("viewBox", provider === "gmail" ? "0 0 32 32" : "0 0 32 32");
+    svg.setAttribute("aria-hidden", "true");
+    svg.setAttribute("focusable", "false");
+
+    const paths =
+      provider === "gmail"
+        ? [
+            ["M4 8.5 16 17.4 28 8.5V25a2 2 0 0 1-2 2h-4V15.4l-6 4.4-6-4.4V27H6a2 2 0 0 1-2-2V8.5Z", "#4285F4"],
+            ["M4 8.5 10 13v14H6a2 2 0 0 1-2-2V8.5Z", "#34A853"],
+            ["M22 13 28 8.5V25a2 2 0 0 1-2 2h-4V13Z", "#FBBC04"],
+            ["M4 8.5 7.2 6.1a2 2 0 0 1 2.4 0L16 10.8l6.4-4.7a2 2 0 0 1 2.4 0L28 8.5 16 17.4 4 8.5Z", "#EA4335"],
+          ]
+        : [
+            ["M14 7.2h12a2 2 0 0 1 2 2v13.6a2 2 0 0 1-2 2H14V7.2Z", "#28A8EA"],
+            ["M14 9.2h12L20 15.8l-6-6.6Z", "#50D9FF"],
+            ["M14 24.8h12l-7-7-5 4.4v2.6Z", "#0078D4"],
+            ["M5 11.2 17 9v14L5 20.8V11.2Z", "#2468D7"],
+            ["M7.8 15.9c0-2.2 1.3-3.9 3.2-3.9s3.2 1.7 3.2 3.9-1.3 3.9-3.2 3.9-3.2-1.7-3.2-3.9Zm2 0c0 1.2.5 2.1 1.2 2.1s1.2-.9 1.2-2.1-.5-2.1-1.2-2.1-1.2.9-1.2 2.1Z", "#fff"],
+          ];
+
+    paths.forEach(([d, fill]) => {
+      const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      path.setAttribute("d", d);
+      path.setAttribute("fill", fill);
+      svg.append(path);
+    });
+
+    return svg;
   }
 
   private createMailboxThumbprint(id: string): SVGSVGElement {
