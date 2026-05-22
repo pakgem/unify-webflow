@@ -4708,7 +4708,7 @@ body {
 }
 
 .wa-loading-logo__body::before,
-.wa-loading-logo__body::after {
+.wa-loading-logo-shadow__body::before {
   content: "";
   position: absolute;
   pointer-events: none;
@@ -4720,18 +4720,6 @@ body {
   background: rgba(242, 59, 10, 0.1);
   opacity: 0;
   transform: scale(0.78);
-}
-
-.wa-loading-logo__body::after {
-  right: 1px;
-  bottom: 0;
-  width: 5px;
-  height: 8px;
-  border-right: 1.5px solid var(--wa-color-positive);
-  border-bottom: 1.5px solid var(--wa-color-positive);
-  opacity: 0;
-  transform: translate3d(1px, -1px, 0) rotate(40deg) scale(0.7);
-  transform-origin: center;
 }
 
 .wa-loading-logo__mark {
@@ -4751,14 +4739,6 @@ body {
   animation: wa-loading-logo-breathe 980ms ease-in-out infinite;
 }
 
-.wa-loading-logo[data-logo-mode="done"] .wa-loading-logo__body::after {
-  opacity: 1;
-  transform: translate3d(1px, -1px, 0) rotate(40deg) scale(1);
-  transition:
-    opacity 120ms ease,
-    transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-
 .wa-loading-logo-shadow {
   z-index: 18;
   color: var(--wa-orange);
@@ -4767,6 +4747,18 @@ body {
 
 .wa-loading-logo-shadow__body {
   opacity: 0.58;
+}
+
+.wa-loading-logo-shadow__body::before {
+  width: 10px;
+  height: 10px;
+  border: 1.5px solid currentColor;
+  border-radius: 999px;
+  background: rgba(242, 59, 10, 0.08);
+}
+
+.wa-loading-logo-shadow__body .wa-loading-logo__mark {
+  display: none;
 }
 
 /* --------------------------------------------------------------------------
