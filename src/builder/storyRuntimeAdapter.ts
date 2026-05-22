@@ -225,7 +225,7 @@ function buildEngagementStory(ctx: StoryContext, story: BuilderStory): gsap.core
       },
       { kind: "custom" as const, build: () => ctx.chat.dataTableActionTooltip("website-visitors-sales", "power-dialer", true) },
       { kind: "custom" as const, build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat + 1 }), at: "+=0.12" },
-      { kind: "custom" as const, build: () => ctx.chat.dataTableActionTooltip("website-visitors-sales", "power-dialer", false), at: "<" },
+      { kind: "custom" as const, build: () => ctx.chat.dataTableActionTooltip("website-visitors-sales", "power-dialer", false) },
       {
         kind: "cursorMove" as const,
         target: emailSequenceTarget,

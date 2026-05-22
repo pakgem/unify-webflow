@@ -1273,7 +1273,7 @@ export const defaultStories: StoryDefinition[] = [
         },
         { kind: "custom", build: () => ctx.chat.dataTableActionTooltip("website-visitors-sales", "power-dialer", true) },
         { kind: "custom", build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat + 1 }), at: "+=0.12" },
-        { kind: "custom", build: () => ctx.chat.dataTableActionTooltip("website-visitors-sales", "power-dialer", false), at: "<" },
+        { kind: "custom", build: () => ctx.chat.dataTableActionTooltip("website-visitors-sales", "power-dialer", false) },
         {
           kind: "cursorMove",
           target: emailSequenceTarget,

@@ -7629,7 +7629,7 @@ function vl(n, e) {
       },
       { kind: "custom", build: () => n.chat.dataTableActionTooltip("website-visitors-sales", "power-dialer", !0) },
       { kind: "custom", build: () => n.timeline().to({}, { duration: M.beat + 1 }), at: "+=0.12" },
-      { kind: "custom", build: () => n.chat.dataTableActionTooltip("website-visitors-sales", "power-dialer", !1), at: "<" },
+      { kind: "custom", build: () => n.chat.dataTableActionTooltip("website-visitors-sales", "power-dialer", !1) },
       {
         kind: "cursorMove",
         target: u,
@@ -9167,7 +9167,7 @@ const Ll = [
         },
         { kind: "custom", build: () => n.chat.dataTableActionTooltip("website-visitors-sales", "power-dialer", !0) },
         { kind: "custom", build: () => n.timeline().to({}, { duration: M.beat + 1 }), at: "+=0.12" },
-        { kind: "custom", build: () => n.chat.dataTableActionTooltip("website-visitors-sales", "power-dialer", !1), at: "<" },
+        { kind: "custom", build: () => n.chat.dataTableActionTooltip("website-visitors-sales", "power-dialer", !1) },
         {
           kind: "cursorMove",
           target: a,
