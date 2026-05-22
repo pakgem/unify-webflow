@@ -2631,19 +2631,20 @@ body {
   width: 40px;
   height: 40px;
   overflow: visible;
+  color: var(--wa-ink);
 }
 
 .wa-mailbox-thumbprint__base path,
 .wa-mailbox-thumbprint__fill path {
-  stroke-width: 3.25;
+  stroke-width: 6;
 }
 
 .wa-mailbox-thumbprint__base path {
-  stroke: rgba(33, 31, 29, 0.16);
+  stroke: color-mix(in srgb, currentColor 18%, transparent);
 }
 
 .wa-mailbox-thumbprint__fill path {
-  stroke: var(--wa-color-accent);
+  stroke: currentColor;
 }
 
 .wa-mailbox-learning__progress {

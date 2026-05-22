@@ -177,18 +177,45 @@ const MAILBOX_CONNECT_MOTION = {
   thumbprintDuration: motionDuration(1.22),
   settleHold: motionDuration(0.24),
 };
+const MAILBOX_THUMBPRINT_FILL_STARTS = [
+  82,
+  86,
+  94,
+  74,
+  76,
+  90,
+  68,
+  70,
+  46,
+  18,
+  12,
+  8,
+  28,
+  54,
+  38,
+  0,
+  4,
+] as const;
+const MAILBOX_THUMBPRINT_SHORT_STROKES = new Set([5, 8, 10, 16]);
 const MAILBOX_THUMBPRINT_PATHS = [
-  "M32 9.8c-10.5 0-19 8.5-19 19",
-  "M20.1 29.2c0-6.6 5.3-11.9 11.9-11.9s11.9 5.3 11.9 11.9",
-  "M10.1 36.8c-1.4-11.4 6.9-21.8 18.3-23.1 9.4-1.1 18.2 4.5 21.2 13.4",
-  "M17.3 47.6c3.4-3.4 5.2-8.1 5.2-13v-4.9c0-5.2 4.2-9.4 9.4-9.4s9.4 4.2 9.4 9.4v3.8",
-  "M27.7 54.4c1.7-3.7 2.6-7.8 2.6-11.9V29.8c0-1 .8-1.8 1.8-1.8s1.8.8 1.8 1.8v12.7c0 4.2.9 8.3 2.6 12.1",
-  "M41.9 49.3c-1-3-1.6-6.2-1.6-9.4V30",
-  "M16 35.6c0 7.9-2.8 12.7-5.7 16",
-  "M48.7 36.8c.2 6.4 1.9 11.1 5.3 15",
-  "M23.8 58.3c2.3-3.5 3.9-7.2 4.8-11.2",
-  "M38.4 58.3c-1.2-2.9-2-5.9-2.5-9.1",
-];
+  "M9.62137 135.631C9.62137 135.631 -4.10678 106.019 7.70875 69.6796",
+  "M11.3787 60.2136C11.3787 60.2136 34.0777 2.91262 102.427 2.91262",
+  "M197.058 103.718C197.058 103.718 200.942 20.068 113.252 3.7767",
+  "M19.5631 158.35C21.2233 151.262 23.0582 140.369 22.3107 127.116C21.7184 116.583 20.0097 113.913 19.5145 104.777C19.2621 100.029 18.5437 83.4757 26.4951 65.9126C34.9709 47.1845 49.0971 36.6311 56.398 31.9612",
+  "M66.1456 26.6117C71.4369 24.1359 96.4369 13.1262 126.097 23.0971C153.777 32.3981 167.068 53.7573 170.777 60.3301C177.078 71.4757 179.175 85.0583 181.252 95.932C182.883 104.495 183.68 111.757 184.087 116.922",
+  "M184.427 150.524C184.515 142.883 184.602 135.243 184.699 127.602",
+  "M30.6699 171.767C33.8641 164.67 37.8835 153.573 38.5923 139.67C39.3107 125.777 36.0777 121.699 35.7961 107.32C35.5631 95.5631 35.233 78.5534 45.5728 62.8738C58.4369 43.3689 79.8253 38.0291 85.602 36.8155C101.301 33.4951 114.262 36.7864 120.437 38.8058",
+  "M129.709 42.7379C136.136 46.2524 146.456 53.0777 154.252 65.2136C160.437 74.8447 162.097 83.2524 165.194 98.9515C166.748 106.845 169.301 122.456 168.689 142.699C168.282 156.039 166.621 167.204 165.029 175.35",
+  "M43.165 182.466C44.8738 178.65 46.5728 174.388 48.1456 169.699C49.6602 165.184 50.8349 160.922 51.7476 156.981",
+  "M54.1068 146.456C54.6699 142.476 55.2718 136.388 54.8932 128.971C54.4951 121.262 53.3592 118.146 52.5631 110.359C51.7184 102.019 51.0194 95.1553 52.5631 87.7864C55.9126 71.7573 67.9806 62.1845 69.7864 60.7961C82.5631 50.9515 96.1942 50.9612 100.039 51.0194C111.505 51.2039 119.767 55.4078 122.379 56.835C131.981 62.0971 137.282 69.3495 139.583 72.9612",
+  "M88.7087 199.709C89.8447 196.689 90.9903 193.67 92.1262 190.641C93.2816 187.573 94.4272 184.515 95.5728 181.456",
+  "M105.913 199.777C108.777 192.884 111.67 184.68 114 175.282C116.466 165.34 117.767 156.282 118.417 148.524",
+  "M124.214 196.961C127.447 188.175 130.951 176.689 133.311 162.951C136.252 145.816 136.068 132.913 135.874 122.233C135.388 96.6602 131.485 89.068 129.825 86.1651C127.748 82.5243 123.583 75.4466 114.932 71.0388C106.845 66.9223 99.2136 67.3592 97.0097 67.5437C91.9806 67.9806 88.0582 69.4951 85.6019 70.6602",
+  "M144.515 188.553C148.485 174.864 152.505 155.534 152.388 132.233C152.291 112.165 149.175 95.2427 145.854 82.6019",
+  "M77.6602 76.1553C73.8544 79.6117 68.8738 85.2524 67.2233 93.1456C65.4466 101.621 68.7087 107.049 70.4854 118.282C72.1359 128.767 71.2913 136.621 70.2524 146.204C69.1748 156.126 66.1553 171.942 56.5631 190.359",
+  "M71.9224 196.039C76.0777 187.456 80.7088 175.825 83.7476 161.553C85.7767 152.019 88.4078 139.67 87.0097 125.252C86.4758 119.748 86.233 114.223 85.6117 108.728C84.4758 98.699 83.6214 95.9418 85.3787 92.2039C87.5728 87.5243 92.5437 84.0874 97.9418 83.3592C105.107 82.3981 111.67 86.4078 114.466 91.2718C114.913 92.0485 115.398 93.0874 116.563 99.6505C117.583 105.417 118.126 108.476 118.66 114.311C119.184 120.039 119.651 127.816 119.505 137.311",
+  "M98.1747 172.204C100.495 161.476 102.466 148.019 102.592 132.466C102.709 118.631 101.34 106.495 99.5631 96.5437",
+] as const;
 
 const MESSAGE_SPRING = {
   duration: motionDuration(0.44),
@@ -1338,20 +1365,24 @@ export class ChatActor {
     );
     const button = section?.querySelector<HTMLButtonElement>("[data-mailbox-connect]");
     const learning = section?.querySelector<HTMLElement>("[data-mailbox-learning]");
-    const thumbprintFill = section?.querySelector<SVGRectElement>("[data-mailbox-thumbprint-fill]");
+    const thumbprintFillPaths = section
+      ? Array.from(section.querySelectorAll<SVGPathElement>("[data-mailbox-thumbprint-path]"))
+      : [];
     const progressFill = section?.querySelector<HTMLElement>("[data-mailbox-learning-progress]");
     const title = section?.querySelector<HTMLElement>(".wa-mailbox-learning__title");
     const detail = section?.querySelector<HTMLElement>(".wa-mailbox-learning__detail");
     const signals = section ? this.queryElements(section, ".wa-mailbox-connection__signal") : [];
     const tl = gsap.timeline();
 
-    if (!section || !button || !learning || !thumbprintFill || !progressFill) return tl;
+    if (!section || !button || !learning || !thumbprintFillPaths.length || !progressFill) return tl;
+    const thumbprintProgress = { value: 0 };
 
     tl.call(() => {
       section.dataset.mailboxState = "loading";
       button.disabled = true;
       button.setAttribute("aria-busy", "true");
       button.setAttribute("aria-label", button.dataset.mailboxLoadingLabel ?? "connecting");
+      this.updateMailboxThumbprintFill(thumbprintFillPaths, 0);
     })
       .to(button, {
         scale: 0.985,
@@ -1389,12 +1420,13 @@ export class ChatActor {
         "<+=0.07",
       )
       .fromTo(
-        thumbprintFill,
-        { attr: { y: 64, height: 0 } },
+        thumbprintProgress,
+        { value: 0 },
         {
-          attr: { y: 0, height: 64 },
+          value: 100,
           duration: MAILBOX_CONNECT_MOTION.thumbprintDuration,
           ease: "sine.inOut",
+          onUpdate: () => this.updateMailboxThumbprintFill(thumbprintFillPaths, thumbprintProgress.value),
         },
         "-=0.04",
       )
@@ -3796,50 +3828,52 @@ export class ChatActor {
 
   private createMailboxThumbprint(id: string): SVGSVGElement {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    const clipId = `wa-mailbox-thumbprint-${id}`;
     svg.classList.add("wa-mailbox-thumbprint");
-    svg.setAttribute("viewBox", "0 0 64 64");
+    svg.dataset.mailboxThumbprint = id;
+    svg.setAttribute("viewBox", "0 0 200 203");
     svg.setAttribute("aria-hidden", "true");
     svg.setAttribute("focusable", "false");
 
-    const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
-    const clipPath = document.createElementNS("http://www.w3.org/2000/svg", "clipPath");
-    clipPath.setAttribute("id", clipId);
-    clipPath.setAttribute("clipPathUnits", "userSpaceOnUse");
-
-    const clipRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-    clipRect.dataset.mailboxThumbprintFill = "";
-    clipRect.setAttribute("x", "0");
-    clipRect.setAttribute("y", "64");
-    clipRect.setAttribute("width", "64");
-    clipRect.setAttribute("height", "0");
-
-    clipPath.append(clipRect);
-    defs.append(clipPath);
-    svg.append(defs);
     svg.append(
       this.createMailboxThumbprintGroup("wa-mailbox-thumbprint__base"),
-      this.createMailboxThumbprintGroup("wa-mailbox-thumbprint__fill", `url(#${clipId})`),
+      this.createMailboxThumbprintGroup("wa-mailbox-thumbprint__fill", true),
     );
 
     return svg;
   }
 
-  private createMailboxThumbprintGroup(className: string, clipPath?: string): SVGGElement {
+  private createMailboxThumbprintGroup(className: string, isFill = false): SVGGElement {
     const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
     group.classList.add(className);
-    if (clipPath) group.setAttribute("clip-path", clipPath);
 
-    MAILBOX_THUMBPRINT_PATHS.forEach((pathData) => {
+    MAILBOX_THUMBPRINT_PATHS.forEach((pathData, index) => {
       const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
       path.setAttribute("d", pathData);
       path.setAttribute("fill", "none");
       path.setAttribute("stroke-linecap", "round");
-      path.setAttribute("stroke-linejoin", "round");
+      path.setAttribute("stroke-miterlimit", "10");
+      if (isFill) {
+        path.dataset.mailboxThumbprintPath = String(index);
+        path.setAttribute("pathLength", "100");
+        path.setAttribute("stroke-dasharray", "0 100");
+        path.setAttribute("stroke-dashoffset", "0");
+      }
       group.append(path);
     });
 
     return group;
+  }
+
+  private updateMailboxThumbprintFill(paths: SVGPathElement[], percent: number): void {
+    paths.forEach((path, index) => {
+      const amount = mailboxThumbprintSegmentProgress(index, percent);
+      if (amount <= 0) {
+        path.setAttribute("stroke-dasharray", "0 100");
+        return;
+      }
+
+      path.setAttribute("stroke-dasharray", amount >= 100 ? "100 0" : `${amount} 100`);
+    });
   }
 
   private createProximityLeadList(config: ProximityLeadListConfig): HTMLElement {
@@ -4705,4 +4739,21 @@ export class ChatActor {
 
 function clampUnit(value: number): number {
   return Math.min(1, Math.max(0, value));
+}
+
+function smoothstep(value: number): number {
+  const t = clampUnit(value);
+  return t * t * (3 - 2 * t);
+}
+
+function mailboxThumbprintSegmentProgress(index: number, percent: number): number {
+  const start = MAILBOX_THUMBPRINT_FILL_STARTS[index] ?? 0;
+  const duration = 24 + ((index * 11) % 8);
+  const end = Math.min(100, start + duration);
+  const eased = smoothstep((percent - start) / (end - start));
+
+  if (eased <= 0) return 0;
+
+  const minVisible = MAILBOX_THUMBPRINT_SHORT_STROKES.has(index) ? 20 : 12;
+  return Math.round(minVisible + eased * (100 - minVisible));
 }
