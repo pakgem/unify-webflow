@@ -182,10 +182,18 @@ const MAILBOX_CONNECT_MOTION = {
   pressDuration: motionDuration(0.09),
   releaseDuration: motionDuration(0.2),
   learningRevealDuration: motionDuration(0.34),
-  thumbprintDuration: motionDuration(1.85),
-  thumbprintEndPercent: 100,
+  detailSwapDuration: 0.16,
+  readyPopUpDuration: 0.12,
+  readyPopSettleDuration: 0.22,
   settleHold: motionDuration(0.24),
 };
+const MAILBOX_LEARNING_TITLE = "Learning your style";
+const MAILBOX_LEARNING_READY_TITLE = "Ready to mimic your voice";
+const MAILBOX_LEARNING_STAGES = [
+  { detail: "Analyzing vocabulary", progress: 31, duration: 1.05, hold: 0.38 },
+  { detail: "Investigating wins", progress: 64, duration: 1.2, hold: 0.46 },
+  { detail: "Figuring out your voice", progress: 100, duration: 1.15, hold: 0.76 },
+] as const;
 const MAILBOX_CONNECTOR_ICON_SRC = {
   gmail: svgToDataUri(gmailConnectorIconSvg),
   outlook: svgToDataUri(outlookConnectorIconSvg),
@@ -1397,19 +1405,28 @@ export class ChatActor {
       : [];
     const progressFill = section?.querySelector<HTMLElement>("[data-mailbox-learning-progress]");
     const title = section?.querySelector<HTMLElement>(".wa-mailbox-learning__title");
+    const titleText = section?.querySelector<HTMLElement>("[data-mailbox-learning-title-text]") ?? title;
+    const titleChevron = section?.querySelector<HTMLElement>("[data-mailbox-learning-ready-chevron]");
     const detail = section?.querySelector<HTMLElement>(".wa-mailbox-learning__detail");
+    const thumbprintFrame = section?.querySelector<HTMLElement>(".wa-mailbox-learning__thumbprint");
     const signals = section ? this.queryElements(section, ".wa-mailbox-connection__signal") : [];
     const tl = gsap.timeline();
 
-    if (!section || !button || !learning || !thumbprintFillPaths.length || !progressFill) return tl;
+    if (!section || !button || !learning || !titleText || !detail || !thumbprintFrame || !thumbprintFillPaths.length || !progressFill) return tl;
     const thumbprintProgress = { value: 0 };
 
     tl.call(() => {
       section.dataset.mailboxState = "loading";
+      learning.dataset.mailboxLearningState = "loading";
       button.disabled = true;
       button.setAttribute("aria-busy", "true");
       button.setAttribute("aria-label", button.dataset.mailboxLoadingLabel ?? "connecting");
+      titleText.textContent = MAILBOX_LEARNING_TITLE;
+      detail.textContent = MAILBOX_LEARNING_STAGES[0].detail;
       this.updateMailboxThumbprintFill(thumbprintFillPaths, 0);
+      gsap.set(progressFill, { scaleX: 0, transformOrigin: "left center" });
+      gsap.set(thumbprintFrame, { scale: 1, transformOrigin: "center center" });
+      gsap.set(this.compactElements(titleChevron), { autoAlpha: 0, y: -1, scale: 0.9 });
     })
       .to(button, {
         scale: 0.985,
@@ -1435,7 +1452,7 @@ export class ChatActor {
         "-=0.02",
       )
       .fromTo(
-        this.compactElements(title, detail),
+        this.compactElements(titleText, detail),
         { autoAlpha: 0, y: 5 },
         {
           autoAlpha: 1,
@@ -1445,28 +1462,106 @@ export class ChatActor {
           stagger: 0.04,
         },
         "<+=0.07",
-      )
-      .fromTo(
+      );
+
+    MAILBOX_LEARNING_STAGES.forEach((stage, index) => {
+      if (index > 0) {
+        tl.to(detail, {
+          autoAlpha: 0,
+          y: -3,
+          duration: MAILBOX_CONNECT_MOTION.detailSwapDuration,
+          ease: "power1.in",
+        })
+          .call(() => {
+            detail.textContent = stage.detail;
+          })
+          .fromTo(
+            detail,
+            { autoAlpha: 0, y: 4 },
+            {
+              autoAlpha: 1,
+              y: 0,
+              duration: MAILBOX_CONNECT_MOTION.detailSwapDuration,
+              ease: "power2.out",
+            },
+          );
+      }
+
+      tl.to(
         thumbprintProgress,
-        { value: 0 },
         {
-          value: MAILBOX_CONNECT_MOTION.thumbprintEndPercent,
-          duration: MAILBOX_CONNECT_MOTION.thumbprintDuration,
-          ease: "sine.inOut",
+          value: stage.progress,
+          duration: stage.duration,
+          ease: "power2.inOut",
           onUpdate: () => this.updateMailboxThumbprintFill(thumbprintFillPaths, thumbprintProgress.value),
         },
-        "-=0.04",
+        index === 0 ? "-=0.04" : undefined,
+      )
+        .to(
+          progressFill,
+          {
+            scaleX: stage.progress / 100,
+            duration: stage.duration,
+            ease: "power2.inOut",
+          },
+          "<",
+        )
+        .to({}, { duration: stage.hold });
+    });
+
+    tl.to(detail, {
+      autoAlpha: 0,
+      y: -3,
+      duration: MAILBOX_CONNECT_MOTION.detailSwapDuration,
+      ease: "power1.in",
+    })
+      .to(titleText, {
+        autoAlpha: 0,
+        y: -3,
+        duration: MAILBOX_CONNECT_MOTION.detailSwapDuration,
+        ease: "power1.in",
+      }, "<")
+      .call(() => {
+        learning.dataset.mailboxLearningState = "ready";
+        titleText.textContent = MAILBOX_LEARNING_READY_TITLE;
+        detail.textContent = "";
+      })
+      .fromTo(
+        titleText,
+        { autoAlpha: 0, y: 4 },
+        {
+          autoAlpha: 1,
+          y: 0,
+          duration: MAILBOX_CONNECT_MOTION.detailSwapDuration,
+          ease: "power2.out",
+        },
       )
       .fromTo(
-        progressFill,
-        { scaleX: 0, transformOrigin: "left center" },
+        this.compactElements(titleChevron),
+        { autoAlpha: 0, y: -1, scale: 0.9 },
         {
-          scaleX: MAILBOX_CONNECT_MOTION.thumbprintEndPercent / 100,
-          duration: MAILBOX_CONNECT_MOTION.thumbprintDuration,
-          ease: "sine.inOut",
+          autoAlpha: 1,
+          y: 0,
+          scale: 1,
+          duration: MAILBOX_CONNECT_MOTION.detailSwapDuration,
+          ease: "power2.out",
         },
         "<",
-      );
+      )
+      .to(
+        thumbprintFrame,
+        {
+          scale: 1.16,
+          duration: MAILBOX_CONNECT_MOTION.readyPopUpDuration,
+          ease: "power2.out",
+        },
+        "<",
+      )
+      .to(thumbprintFrame, {
+        scale: 1,
+        duration: MAILBOX_CONNECT_MOTION.readyPopSettleDuration,
+        ease: "back.out(3)",
+      });
 
     if (signals.length) {
       tl.to(
@@ -3877,11 +3972,18 @@ export class ChatActor {
 
     const learningTitle = document.createElement("h4");
     learningTitle.className = "wa-mailbox-learning__title";
-    learningTitle.textContent = config.learningTitle ?? "Learning your style";
+    const learningTitleText = document.createElement("span");
+    learningTitleText.dataset.mailboxLearningTitleText = "";
+    learningTitleText.textContent = config.learningTitle ?? MAILBOX_LEARNING_TITLE;
+    const readyChevron = document.createElement("span");
+    readyChevron.className = "wa-mailbox-learning__ready-chevron";
+    readyChevron.dataset.mailboxLearningReadyChevron = "";
+    readyChevron.setAttribute("aria-hidden", "true");
+    learningTitle.append(learningTitleText, readyChevron);
 
     const learningDetail = document.createElement("p");
     learningDetail.className = "wa-mailbox-learning__detail";
-    learningDetail.textContent = config.learningDetail ?? "Analyzing vocabulary...";
+    learningDetail.textContent = config.learningDetail ?? MAILBOX_LEARNING_STAGES[0].detail;
 
     const progress = document.createElement("div");
     progress.className = "wa-mailbox-learning__progress";

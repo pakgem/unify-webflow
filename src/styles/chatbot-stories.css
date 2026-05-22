@@ -2681,12 +2681,41 @@ body {
 
 .wa-mailbox-learning__title {
   grid-area: title;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   margin: 0;
   color: #5b5752;
   font-size: 15.5px;
   line-height: 1;
   font-weight: 560;
   white-space: nowrap;
+}
+
+.wa-mailbox-learning__ready-chevron {
+  position: relative;
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  color: currentColor;
+  opacity: 0;
+  transform-origin: center;
+}
+
+.wa-mailbox-learning__ready-chevron::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 1px;
+  width: 6px;
+  height: 6px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg);
+}
+
+.wa-mailbox-learning[data-mailbox-learning-state="ready"] .wa-mailbox-learning__title {
+  color: #11110f;
 }
 
 .wa-mailbox-learning__detail {
