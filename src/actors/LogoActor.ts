@@ -13,6 +13,7 @@ export type LoadingLogoMoveOptions = {
   shadow?: boolean;
   duration?: number;
   offset?: Offset;
+  scale?: number;
   label?: string;
 };
 
@@ -59,8 +60,11 @@ export class LogoActor {
 
   private setX: (value: number) => void;
   private setY: (value: number) => void;
+  private viewport: HTMLElement;
+  private chatShell: HTMLElement | null;
   private currentPosition: Point = { ...DEFAULT_POINT };
   private plannedPosition: Point = { ...DEFAULT_POINT };
+  private currentScale = 1;
   private mode: LoadingLogoMode = "static";
   private moveIndex = 0;
   private storyId = "story";
@@ -74,7 +78,11 @@ export class LogoActor {
     private resolver: TargetResolver,
     private options: LogoActorOptions = {},
   ) {
-    this.el = this.root.querySelector<HTMLElement>("[data-loading-logo]") ?? this.createElement("wa-loading-logo");
+    this.chatShell =
+      this.root.querySelector<HTMLElement>(".wa-chat-shell__body") ??
+      this.root.querySelector<HTMLElement>("[data-chat-shell]");
+    this.viewport = this.root.querySelector<HTMLElement>("[data-loading-logo-viewport]") ?? this.createViewport();
+    this.el = this.viewport.querySelector<HTMLElement>("[data-loading-logo]") ?? this.createElement("wa-loading-logo");
     this.setX = gsap.quickSetter(this.el, "x", "px") as (value: number) => void;
     this.setY = gsap.quickSetter(this.el, "y", "px") as (value: number) => void;
     this.setMode("static");
@@ -95,10 +103,47 @@ export class LogoActor {
     return gsap.timeline().call(() => this.setMode(mode));
   }
 
+  placeAtElement(element: HTMLElement | null, options: LoadingLogoMoveOptions = {}): void {
+    if (!element) {
+      this.hide();
+      return;
+    }
+
+    gsap.killTweensOf(this.el);
+    this.stopTracking();
+    this.resolver.refresh();
+
+    const label = options.label ?? `logo-${this.moveIndex}`;
+    const seed = `${this.storyId}:${label}:${this.resolver.getBreakpoint()}`;
+    const point = this.resolveElementTarget(element, options.offset, seed, this.plannedPosition);
+    const scale = options.scale ?? 1;
+
+    this.currentPosition = { ...point };
+    this.plannedPosition = { ...point };
+    this.currentScale = scale;
+    this.renderPosition(point);
+    this.setMode(options.mode ?? this.mode);
+    this.hasPosition = true;
+    gsap.set(this.el, { autoAlpha: 1, scale });
+    this.startTracking(element, options.offset);
+  }
+
+  hide(duration = 0.18): void {
+    this.stopTracking();
+    gsap.killTweensOf(this.el);
+    gsap.to(this.el, {
+      autoAlpha: 0,
+      duration: this.options.reducedMotion ? 0.01 : duration,
+      ease: "power2.out",
+      overwrite: true,
+    });
+  }
+
   moveTo(target: ResponsiveTarget, options: LoadingLogoMoveOptions = {}): gsap.core.Timeline {
     const label = options.label ?? `logo-${this.moveIndex}`;
     const seed = `${this.storyId}:${label}:${this.resolver.getBreakpoint()}`;
     const tl = gsap.timeline();
+    const targetScale = options.scale ?? 1;
     const state: LogoMotionState = {
       start: { ...this.currentPosition },
       end: { ...this.plannedPosition },
@@ -129,7 +174,15 @@ export class LogoActor {
       this.hasPosition = true;
     }, undefined, 0);
 
-    tl.set(this.el, { autoAlpha: 1, scale: 1 }, 0);
+    tl.to(this.el, {
+      autoAlpha: 1,
+      scale: targetScale,
+      duration: this.options.reducedMotion ? LOGO_MOTION.reducedDuration : options.duration ?? LOGO_MOTION.duration,
+      ease: LOGO_MOTION.ease,
+      onComplete: () => {
+        this.currentScale = targetScale;
+      },
+    }, 0);
 
     tl.to(state, {
       progress: 1,
@@ -154,6 +207,7 @@ export class LogoActor {
     const label = options.label ?? `logo-${this.moveIndex}`;
     const seed = `${this.storyId}:${label}:${this.resolver.getBreakpoint()}`;
     const tl = gsap.timeline();
+    const targetScale = options.scale ?? 1;
     const state: LogoMotionState = {
       start: { ...this.currentPosition },
       end: { ...this.plannedPosition },
@@ -184,7 +238,15 @@ export class LogoActor {
       this.hasPosition = true;
     }, undefined, 0);
 
-    tl.set(this.el, { autoAlpha: 1, scale: 1 }, 0);
+    tl.to(this.el, {
+      autoAlpha: 1,
+      scale: targetScale,
+      duration: this.options.reducedMotion ? LOGO_MOTION.reducedDuration : options.duration ?? LOGO_MOTION.duration,
+      ease: LOGO_MOTION.ease,
+      onComplete: () => {
+        this.currentScale = targetScale;
+      },
+    }, 0);
 
     tl.to(state, {
       progress: 1,
@@ -213,15 +275,16 @@ export class LogoActor {
   resetInteraction(): void {
     this.stopTracking();
     gsap.killTweensOf(this.el);
-    this.root.querySelectorAll("[data-loading-logo-shadow]").forEach((shadow) => {
+    this.viewport.querySelectorAll("[data-loading-logo-shadow]").forEach((shadow) => {
       gsap.killTweensOf(shadow);
       shadow.remove();
     });
+    this.hide();
   }
 
   destroy(): void {
     this.resetInteraction();
-    this.el.remove();
+    this.viewport.remove();
   }
 
   private resolveTarget(target: ResponsiveTarget, offset: Offset | undefined, seed: string): Point {
@@ -273,8 +336,10 @@ export class LogoActor {
   }
 
   private renderPosition(point: Point): void {
-    this.setX(point.x);
-    this.setY(point.y);
+    const viewportOrigin = this.updateViewport();
+
+    this.setX(point.x - viewportOrigin.x);
+    this.setY(point.y - viewportOrigin.y);
   }
 
   private startTracking(element: HTMLElement, offset?: Offset): void {
@@ -321,6 +386,7 @@ export class LogoActor {
     this.currentPosition = point;
     this.plannedPosition = point;
     this.renderPosition(point);
+    gsap.set(this.el, { scale: this.currentScale });
     this.scheduleTracking();
   };
 
@@ -329,10 +395,11 @@ export class LogoActor {
 
     shadow.dataset.loadingLogoShadow = "";
     shadow.dataset.logoMode = this.mode;
-    this.root.append(shadow);
+    this.viewport.append(shadow);
+    const viewportOrigin = this.updateViewport();
     gsap.set(shadow, {
-      x: point.x,
-      y: point.y,
+      x: point.x - viewportOrigin.x,
+      y: point.y - viewportOrigin.y,
       autoAlpha: LOGO_SHADOW.startOpacity,
       scale: 1,
     });
@@ -357,10 +424,38 @@ export class LogoActor {
 
     if (className === "wa-loading-logo") {
       el.dataset.loadingLogo = "";
-      this.root.append(el);
+      this.viewport.append(el);
     }
 
     return el;
+  }
+
+  private createViewport(): HTMLElement {
+    const viewport = document.createElement("span");
+
+    viewport.className = "wa-loading-logo-viewport";
+    viewport.dataset.loadingLogoViewport = "";
+    viewport.setAttribute("aria-hidden", "true");
+    this.root.append(viewport);
+    return viewport;
+  }
+
+  private updateViewport(): Point {
+    const rootRect = this.root.getBoundingClientRect();
+    const shellRect = (this.chatShell ?? this.root).getBoundingClientRect();
+    const left = shellRect.left - rootRect.left;
+    const top = shellRect.top - rootRect.top;
+
+    this.viewport.style.left = `${left}px`;
+    this.viewport.style.top = `${top}px`;
+    this.viewport.style.width = `${shellRect.width}px`;
+    this.viewport.style.height = `${shellRect.height}px`;
+
+    if (this.chatShell) {
+      this.viewport.style.borderRadius = getComputedStyle(this.chatShell).borderRadius;
+    }
+
+    return { x: left, y: top };
   }
 }
 

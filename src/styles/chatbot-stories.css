@@ -583,8 +583,9 @@ body {
 .wa-signup-scene__logo {
   display: block;
   width: clamp(70px, 8.4vw, 96px);
-  height: auto;
+  aspect-ratio: 18 / 11;
   margin-bottom: 4px;
+  pointer-events: none;
 }
 
 .wa-signup-scene__title {
@@ -4735,6 +4736,17 @@ body {
 /* --------------------------------------------------------------------------
    8. Persistent Loading Logo
    -------------------------------------------------------------------------- */
+
+.wa-loading-logo-viewport {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 19;
+  overflow: hidden;
+  pointer-events: none;
+  contain: layout paint style;
+  transform: translate3d(0, 0, 0);
+}
 
 .wa-loading-logo,
 .wa-loading-logo-shadow {

@@ -1020,6 +1020,11 @@ export const defaultStories: StoryDefinition[] = [
     entryLeadTime: SIGNUP_ENTRY_LEAD_TIME,
     prepare: (ctx) => {
       ctx.chat.prepareSignup();
+      ctx.logo.placeAtElement(ctx.root.querySelector<HTMLElement>("[data-signup-logo-target]"), {
+        label: "signup-logo",
+        mode: "static",
+        scale: 4.8,
+      });
     },
     build: (ctx) => {
       return buildStorySteps(ctx, [
