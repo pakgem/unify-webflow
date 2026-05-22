@@ -13,6 +13,15 @@ import type { TargetResolver } from "./TargetResolver";
 
 type ControllerOptions = Required<Pick<ChatbotStoriesConfig, "autoplay" | "loop" | "autoAdvanceDelay">> &
   Pick<ChatbotStoriesConfig, "initialStory" | "onStoryChange">;
+type StoryProgressScrubState = {
+  storyIndex: number;
+  wasPlaying: boolean;
+  pointerId: number;
+  marker: HTMLElement;
+  trackTop: number;
+  trackHeight: number;
+  removeListeners: () => void;
+};
 
 const CHAT_HISTORY_SCROLL = {
   minPixelDelta: 0.5,
@@ -40,6 +49,7 @@ export class StoryController implements ChatbotStoriesInstance {
   private playing = false;
   private historyPaused = false;
   private storyTabListeners: Array<() => void> = [];
+  private storyProgressScrub: StoryProgressScrubState | null = null;
 
   constructor(
     private root: HTMLElement,
@@ -303,14 +313,15 @@ export class StoryController implements ChatbotStoriesInstance {
   private seekTo(progress: number, duration = 0.28): void {
     if (!this.activeTimeline) return;
 
+    const wasPlaying = this.playing;
     this.autoAdvance?.kill();
     this.seekTween?.kill();
-    this.playing = false;
     this.setHistoryPaused(false);
     this.chat.stopScrollMotion();
 
     const clampedProgress = clampProgress(progress);
     const timelineDuration = this.activeTimeline.duration();
+    this.playing = wasPlaying;
     this.seekTween = gsap.to(this.activeTimeline, {
       time: timelineDuration * clampedProgress,
       duration,
@@ -318,6 +329,7 @@ export class StoryController implements ChatbotStoriesInstance {
       overwrite: true,
       onUpdate: () => this.updateProgress(),
       onComplete: () => {
+        if (wasPlaying) this.activeTimeline?.play();
         this.updatePlayButton();
       },
     });
@@ -392,13 +404,25 @@ export class StoryController implements ChatbotStoriesInstance {
     button.dataset.storyTab = story.id;
     button.style.setProperty("--wa-tab-progress", "0");
     button.setAttribute("aria-pressed", "false");
-    const handleClick = () => this.goTo(index);
+    const handleClick = (event: MouseEvent) => {
+      const target = event.target instanceof Element ? event.target : null;
+
+      if (target?.closest(".wa-story-tab__marker")) {
+        event.preventDefault();
+        return;
+      }
+
+      this.goTo(index);
+    };
     button.addEventListener("click", handleClick);
     this.storyTabListeners.push(() => button.removeEventListener("click", handleClick));
 
     const marker = document.createElement("span");
     marker.className = "wa-story-tab__marker";
     marker.setAttribute("aria-hidden", "true");
+    const handleMarkerPointerDown = (event: PointerEvent) => this.beginStoryProgressScrub(event, index, marker);
+    marker.addEventListener("pointerdown", handleMarkerPointerDown);
+    this.storyTabListeners.push(() => marker.removeEventListener("pointerdown", handleMarkerPointerDown));
 
     const body = document.createElement("span");
     body.className = "wa-story-tab__body";
@@ -436,8 +460,128 @@ export class StoryController implements ChatbotStoriesInstance {
   }
 
   private clearStoryTabListeners(): void {
+    this.endStoryProgressScrub(false);
     for (const remove of this.storyTabListeners) remove();
     this.storyTabListeners = [];
+  }
+
+  private beginStoryProgressScrub(event: PointerEvent, storyIndex: number, marker: HTMLElement): void {
+    event.preventDefault();
+    event.stopPropagation();
+
+    this.endStoryProgressScrub(false);
+
+    const wasPlaying = this.playing;
+    const handleMove = (moveEvent: PointerEvent) => {
+      if (moveEvent.pointerId !== event.pointerId) return;
+      moveEvent.preventDefault();
+      this.scrubStoryProgress(storyIndex, marker, moveEvent.clientY);
+    };
+    const handleEnd = (endEvent: PointerEvent) => {
+      if (endEvent.pointerId !== event.pointerId) return;
+      endEvent.preventDefault();
+      this.endStoryProgressScrub(true);
+    };
+    const removeListeners = () => {
+      window.removeEventListener("pointermove", handleMove);
+      window.removeEventListener("pointerup", handleEnd);
+      window.removeEventListener("pointercancel", handleEnd);
+    };
+
+    const markerRect = marker.getBoundingClientRect();
+
+    this.storyProgressScrub = {
+      storyIndex,
+      wasPlaying,
+      pointerId: event.pointerId,
+      marker,
+      trackTop: markerRect.top,
+      trackHeight: markerRect.height,
+      removeListeners,
+    };
+
+    marker.dataset.scrubbing = "true";
+    window.addEventListener("pointermove", handleMove, { passive: false });
+    window.addEventListener("pointerup", handleEnd, { passive: false });
+    window.addEventListener("pointercancel", handleEnd, { passive: false });
+    this.scrubStoryProgress(storyIndex, marker, event.clientY);
+  }
+
+  private scrubStoryProgress(storyIndex: number, marker: HTMLElement, clientY: number): void {
+    const progress = this.getMarkerProgress(marker, clientY, this.storyProgressScrub);
+
+    this.activateStoryForProgressScrub(storyIndex);
+    this.setActiveTimelineProgress(progress);
+  }
+
+  private activateStoryForProgressScrub(storyIndex: number): void {
+    if (storyIndex === this.activeIndex && this.activeTimeline) {
+      this.prepareActiveTimelineForProgressScrub();
+      return;
+    }
+
+    const startPoint = this.cursor.getPosition();
+    const wasPlaying = this.storyProgressScrub?.wasPlaying ?? this.playing;
+
+    this.stopTimeline();
+    this.activeIndex = storyIndex;
+    this.activeTimeline = this.buildTimeline(this.activeIndex, startPoint);
+    this.playing = wasPlaying;
+    this.updateStoryMeta();
+    this.options.onStoryChange?.(this.stories[this.activeIndex], this.activeIndex);
+    this.prepareActiveTimelineForProgressScrub();
+  }
+
+  private prepareActiveTimelineForProgressScrub(): void {
+    this.autoAdvance?.kill();
+    this.seekTween?.kill();
+    this.resumeRestoreTimeline?.kill();
+    this.resumeRestoreTimeline = null;
+    this.setHistoryPaused(false);
+    this.chat.stopScrollMotion();
+    this.activeTimeline?.pause();
+    this.updatePlayButton();
+  }
+
+  private setActiveTimelineProgress(progress: number): void {
+    if (!this.activeTimeline) return;
+
+    this.activeTimeline.progress(clampProgress(progress)).pause();
+    this.updateProgress();
+  }
+
+  private endStoryProgressScrub(restorePlayback: boolean): void {
+    const scrub = this.storyProgressScrub;
+
+    if (!scrub) return;
+
+    scrub.removeListeners();
+    scrub.marker.removeAttribute("data-scrubbing");
+    this.storyProgressScrub = null;
+    this.playing = restorePlayback ? scrub.wasPlaying : this.playing;
+
+    if (restorePlayback && scrub.wasPlaying) {
+      this.activeTimeline?.play();
+    } else {
+      this.activeTimeline?.pause();
+    }
+
+    this.updatePlayButton();
+  }
+
+  private getMarkerProgress(
+    marker: HTMLElement,
+    clientY: number,
+    scrub: StoryProgressScrubState | null = null,
+  ): number {
+    if (scrub?.marker === marker && scrub.trackHeight > 0) {
+      return clampProgress((clientY - scrub.trackTop) / scrub.trackHeight);
+    }
+
+    const rect = marker.getBoundingClientRect();
+
+    if (rect.height <= 0) return 0;
+    return clampProgress((clientY - rect.top) / rect.height);
   }
 
   private attachChatHistoryScroll(): void {

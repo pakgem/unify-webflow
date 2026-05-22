@@ -323,6 +323,8 @@ body {
   min-height: 80px;
   overflow: hidden;
   background: var(--wa-soft);
+  cursor: ns-resize;
+  touch-action: none;
 }
 
 .wa-story-tab__marker::before {
@@ -336,8 +338,18 @@ body {
   will-change: transform;
 }
 
+.wa-story-tab__marker::after {
+  content: "";
+  position: absolute;
+  inset: 0 -8px;
+}
+
 .wa-story-tab.is-active .wa-story-tab__marker::before {
   background: var(--wa-color-accent);
+}
+
+.wa-story-tab__marker[data-scrubbing="true"]::before {
+  transition: none;
 }
 
 .wa-story-tab__body {
