@@ -1355,10 +1355,7 @@ export class ChatActor {
   proximityLeadList(config: ProximityLeadListConfig): gsap.core.Timeline {
     const list = this.createProximityLeadList(config);
 
-    return this.revealComponentItems("proximity", list, ".wa-proximity-lead", {
-      ...COMPONENT_CHILD_REVEAL.stackCard,
-      to: { ...COMPONENT_CHILD_REVEAL.stackCard.to, duration: motionDuration(0.25), stagger: 0.06 },
-    });
+    return this.revealComponentItems("table", list, ".wa-data-table__row", COMPONENT_CHILD_REVEAL.tableRow);
   }
 
   mailboxConnection(config: MailboxConnectionConfig): gsap.core.Timeline {
@@ -3939,58 +3936,44 @@ export class ChatActor {
   }
 
   private createProximityLeadList(config: ProximityLeadListConfig): HTMLElement {
-    const section = document.createElement("section");
-    section.className = "wa-proximity-list";
-    section.dataset.proximityList = config.id;
-    const header = this.createSectionHeader("wa-proximity-list", config.title, config.subtitle);
-
-    const rows = document.createElement("div");
-    rows.className = "wa-proximity-list__rows";
-
-    config.leads.forEach((lead) => {
-      const row = document.createElement("article");
-      row.className = "wa-proximity-lead";
-      row.dataset.proximityScore = lead.score;
-
-      const rank = document.createElement("span");
-      rank.className = "wa-proximity-lead__rank";
-      rank.textContent = lead.rank;
-
-      const body = document.createElement("div");
-      body.className = "wa-proximity-lead__body";
-
-      const top = document.createElement("div");
-      top.className = "wa-proximity-lead__top";
-
-      const identity = document.createElement("span");
-      identity.className = "wa-proximity-lead__identity";
-      const name = document.createElement("strong");
-      name.textContent = lead.name;
-      const role = document.createElement("span");
-      role.textContent = `${lead.title}, ${lead.company}`;
-      identity.append(name, role);
-
-      const score = document.createElement("span");
-      score.className = "wa-proximity-lead__score";
-      score.textContent = lead.score;
-
-      top.append(identity, score);
-
-      const personalization = document.createElement("p");
-      personalization.className = "wa-proximity-lead__personalization";
-      personalization.textContent = lead.personalization;
-
-      const proximity = document.createElement("span");
-      proximity.className = "wa-proximity-lead__proximity";
-      proximity.textContent = lead.proximity;
-
-      body.append(top, personalization, proximity);
-      row.append(rank, body);
-      rows.append(row);
+    const table = this.createDataTable({
+      id: config.id,
+      title: config.title,
+      eyebrow: "ranked leads",
+      count: `${config.leads.length} leads`,
+      columns: [
+        { key: "name", label: "Name", width: "1.12fr" },
+        { key: "company", label: "Company", width: "0.88fr" },
+        { key: "title", label: "Title", width: "1fr" },
+        { key: "connection", label: "Connection", width: "2.05fr" },
+      ],
+      rows: config.leads.map((lead) => ({
+        id: `proximity-${lead.rank}`,
+        values: {
+          name: lead.name,
+          company: lead.company,
+          title: lead.title,
+          connection: this.formatLeadConnection(lead),
+          source: "signal",
+          avatarTone: lead.rank,
+          score: lead.score,
+        },
+      })),
     });
 
-    section.append(header, rows);
-    return section;
+    table.classList.add("wa-data-table--proximity");
+    table.dataset.proximityList = config.id;
+    return table;
+  }
+
+  private formatLeadConnection(lead: ProximityLeadListConfig["leads"][number]): string {
+    const connection = lead.personalization.trim();
+    const label = lead.proximity.trim();
+
+    if (!label) return connection;
+    if (!connection) return label;
+
+    return `${label}: ${connection}`;
   }
 
   private createPersonalizationSwipeGame(config: PersonalizationSwipeGameConfig): HTMLElement {

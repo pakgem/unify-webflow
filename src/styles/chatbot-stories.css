@@ -1620,6 +1620,16 @@ body {
   color: #565553;
 }
 
+.wa-data-table--proximity .wa-data-table__row:not([data-header="true"]) {
+  min-height: 38px;
+}
+
+.wa-data-table--proximity .wa-data-table__cell[data-column-key="connection"] {
+  color: var(--wa-ink);
+  font-size: 9.6px;
+  line-height: 1.18;
+}
+
 .wa-data-table__cell[data-empty="true"] {
   color: #aaa7a2;
 }
