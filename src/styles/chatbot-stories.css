@@ -376,6 +376,17 @@ body {
   white-space: nowrap;
 }
 
+.wa-control-button svg {
+  display: block;
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
 /* --------------------------------------------------------------------------
    5. Right-Side Browser Composition
    -------------------------------------------------------------------------- */
@@ -4964,7 +4975,8 @@ body {
 
   .wa-section__inner {
     grid-template-columns: 1fr;
-    row-gap: 56px;
+    grid-template-rows: auto auto auto;
+    row-gap: 28px;
   }
 
   .wa-copy {
@@ -4976,7 +4988,99 @@ body {
     grid-column: 1;
   }
 
+  .wa-story-controls {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    width: min(660px, 100%);
+    justify-self: center;
+    gap: 14px;
+    padding-top: 0;
+  }
+
+  .wa-story-tabs {
+    min-width: 0;
+    gap: 0;
+  }
+
+  .wa-story-tab {
+    display: none;
+  }
+
+  .wa-story-tab.is-active {
+    display: grid;
+    grid-template-columns: 4px minmax(0, 1fr);
+    min-height: 36px;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .wa-story-tab.is-active .wa-story-tab__marker {
+    min-height: 36px;
+  }
+
+  .wa-story-tab__body {
+    min-width: 0;
+    gap: 0;
+    padding-top: 0;
+  }
+
+  .wa-story-tab__title {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 24px;
+    line-height: 1.08;
+  }
+
+  .wa-story-tab__description {
+    display: none;
+  }
+
+  .wa-controls-row {
+    position: static;
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip: auto;
+    clip-path: none;
+    white-space: normal;
+  }
+
+  .wa-controls-row [data-toggle-play],
+  .wa-controls-row .wa-scrubber {
+    display: none;
+  }
+
+  .wa-control-button {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border: 1px solid var(--wa-line-12);
+    border-radius: 999px;
+    color: var(--wa-color-heading-strong);
+    background: rgba(255, 255, 249, 0.76);
+    box-shadow: 0 8px 22px rgba(23, 23, 20, 0.08);
+    cursor: pointer;
+  }
+
+  .wa-control-button:hover {
+    border-color: var(--wa-line-20);
+    background: rgba(255, 255, 249, 0.94);
+  }
+
+  .wa-control-button:focus-visible {
+    outline: 2px solid var(--wa-color-accent);
+    outline-offset: 3px;
+  }
+
   .wa-stage {
+    grid-row: 3;
     width: min(660px, 100%);
     justify-self: center;
   }
@@ -5023,7 +5127,7 @@ body {
   }
 
   .wa-section__inner {
-    row-gap: 40px;
+    row-gap: 24px;
   }
 
   .wa-copy__title {
@@ -5032,25 +5136,25 @@ body {
   }
 
   .wa-story-tabs {
-    gap: 22px;
+    gap: 0;
   }
 
   .wa-story-tab {
-    gap: 18px;
-    min-height: 64px;
+    gap: 12px;
+    min-height: 36px;
   }
 
   .wa-story-tab__marker {
-    min-height: 64px;
+    min-height: 36px;
   }
 
   .wa-story-tab__body {
-    gap: 13px;
-    padding-top: 9px;
+    gap: 0;
+    padding-top: 0;
   }
 
   .wa-story-tab__title {
-    font-size: 24px;
+    font-size: 21px;
   }
 
   .wa-story-tab__description {

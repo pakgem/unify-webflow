@@ -63,9 +63,17 @@ export function renderDefaultMarkup(root: HTMLElement, options: RenderDefaultMar
       <div class="wa-story-controls" data-story-controls>
         <div class="wa-story-tabs" data-story-tabs></div>
         <div class="wa-controls-row" aria-label="Animation controls">
-          <button class="wa-control-button" type="button" data-prev-story aria-label="Previous story">Prev</button>
+          <button class="wa-control-button" type="button" data-prev-story aria-label="Previous story">
+            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="M10 3.5 5.5 8l4.5 4.5"></path>
+            </svg>
+          </button>
           <button class="wa-control-button" type="button" data-toggle-play aria-label="Pause animation">Pause</button>
-          <button class="wa-control-button" type="button" data-next-story aria-label="Next story">Next</button>
+          <button class="wa-control-button" type="button" data-next-story aria-label="Next story">
+            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="m6 3.5 4.5 4.5L6 12.5"></path>
+            </svg>
+          </button>
           <input class="wa-scrubber" data-story-scrubber type="range" min="0" max="1000" value="0" aria-label="Story progress">
         </div>
       </div>
