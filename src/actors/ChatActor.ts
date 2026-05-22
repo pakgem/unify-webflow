@@ -1828,7 +1828,9 @@ export class ChatActor {
           .timeline()
           .call(() => {
             removeFollower?.();
-            followOffset = this.getCursorFileEntryOffset(file, cursor);
+            const entryOffset = this.getCursorFileEntryOffset(file, cursor);
+            followOffset.x = entryOffset.x;
+            followOffset.y = entryOffset.y;
             removeFollower = this.followCursorWithFile(file, cursor, followOffset);
           })
           .to(followOffset, {

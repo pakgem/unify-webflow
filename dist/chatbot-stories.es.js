@@ -3248,7 +3248,9 @@ class bs {
     }), {
       el: i,
       startFollow: () => w.timeline().call(() => {
-        r?.(), o = this.getCursorFileEntryOffset(i, t), r = this.followCursorWithFile(i, t, o);
+        r?.();
+        const l = this.getCursorFileEntryOffset(i, t);
+        o.x = l.x, o.y = l.y, r = this.followCursorWithFile(i, t, o);
       }).to(o, {
         x: 0,
         y: 0,
