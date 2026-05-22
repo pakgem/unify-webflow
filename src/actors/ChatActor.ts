@@ -1718,7 +1718,8 @@ export class ChatActor {
       this.markThinkingStepsComplete(trackItems);
       this.options.logo?.setMode("done");
       this.animateMessageScrollIntoView(thinking.message);
-    });
+    })
+      .add(this.moveLogoToCurrentThinkingMessage(thinking, "sequence-build"));
     this.addThinkingElapsedTimer(tl, thinking.elapsed, elapsedLabel);
     return tl;
   }
@@ -2782,7 +2783,8 @@ export class ChatActor {
 
     tl.call(() => {
       this.markThinkingStepsComplete(items);
-    }, undefined, `+=${options.finalHold}`);
+    }, undefined, `+=${options.finalHold}`)
+      .add(this.moveLogoToCurrentThinkingMessage(thinking, thinkingState.title));
     this.addThinkingElapsedTimer(tl, thinking.elapsed, elapsedLabel);
     return tl;
   }
@@ -2870,6 +2872,17 @@ export class ChatActor {
       mode: "thinking",
       shadow: index > 0,
       label: `thinking-step-${index}-${slugForAnimation(label)}`,
+      offset: { x: 0, y: 0 },
+    }) ?? gsap.timeline();
+  }
+
+  private moveLogoToCurrentThinkingMessage(thinking: ClaimedThinkingMessage, label: string): gsap.core.Timeline {
+    const target = thinking.header.querySelector<HTMLElement>(".wa-thinking__glyph");
+
+    return this.options.logo?.moveToElement(target, {
+      mode: "done",
+      duration: 0.08,
+      label: `thinking-current-${slugForAnimation(label)}`,
       offset: { x: 0, y: 0 },
     }) ?? gsap.timeline();
   }
