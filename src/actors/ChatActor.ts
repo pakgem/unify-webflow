@@ -4,6 +4,7 @@ import type {
   DataSourceGridConfig,
   DataTableConfig,
   EnrichmentConfig,
+  MailboxConnectionConfig,
   OutreachStyleProfileConfig,
   PersonalizationSwipeDecision,
   PersonalizationSwipeGameConfig,
@@ -95,6 +96,7 @@ type ComponentKind =
   | "result"
   | "strategy"
   | "sources"
+  | "mailbox"
   | "style"
   | "proximity"
   | "game"
@@ -152,6 +154,7 @@ const MESSAGE_KIND_CLASSES = [
       "result",
       "strategy",
       "sources",
+      "mailbox",
       "style",
       "proximity",
       "game",
@@ -1286,6 +1289,28 @@ export class ChatActor {
     return this.revealComponentItems("proximity", list, ".wa-proximity-lead", {
       ...COMPONENT_CHILD_REVEAL.stackCard,
       to: { ...COMPONENT_CHILD_REVEAL.stackCard.to, duration: motionDuration(0.25), stagger: 0.06 },
+    });
+  }
+
+  mailboxConnection(config: MailboxConnectionConfig): gsap.core.Timeline {
+    const connection = this.createMailboxConnection(config);
+    const revealTargets = this.compactElements(
+      connection.querySelector<HTMLElement>(".wa-mailbox-connection__header"),
+      connection.querySelector<HTMLElement>(".wa-mailbox-connection__account"),
+      ...this.queryElements(connection, ".wa-mailbox-connection__signal"),
+    );
+
+    return this.revealComponentItems("mailbox", connection, revealTargets, {
+      from: { autoAlpha: 0, y: 10, scale: 0.99 },
+      to: {
+        autoAlpha: 1,
+        y: 0,
+        scale: 1,
+        duration: motionDuration(0.28),
+        ease: "power2.out",
+        stagger: 0.045,
+      },
+      position: "-=0.2",
     });
   }
 
@@ -3541,6 +3566,64 @@ export class ChatActor {
       section.append(examples);
     }
 
+    return section;
+  }
+
+  private createMailboxConnection(config: MailboxConnectionConfig): HTMLElement {
+    const section = document.createElement("section");
+    section.className = "wa-mailbox-connection";
+    section.dataset.mailboxConnection = config.id;
+
+    const header = document.createElement("div");
+    header.className = "wa-mailbox-connection__header";
+
+    const mark = document.createElement("span");
+    mark.className = "wa-mailbox-connection__mark";
+    mark.setAttribute("aria-hidden", "true");
+
+    const copy = document.createElement("span");
+    copy.className = "wa-mailbox-connection__copy";
+
+    const title = document.createElement("h3");
+    title.className = "wa-mailbox-connection__title";
+    title.textContent = config.title;
+
+    if (config.subtitle) {
+      const subtitle = document.createElement("p");
+      subtitle.className = "wa-mailbox-connection__subtitle";
+      subtitle.textContent = config.subtitle;
+      copy.append(title, subtitle);
+    } else {
+      copy.append(title);
+    }
+
+    const status = document.createElement("span");
+    status.className = "wa-mailbox-connection__status";
+    status.textContent = config.status ?? "connected";
+
+    header.append(mark, copy, status);
+
+    const account = document.createElement("div");
+    account.className = "wa-mailbox-connection__account";
+
+    const provider = document.createElement("span");
+    provider.textContent = config.provider;
+
+    const email = document.createElement("strong");
+    email.textContent = config.account;
+
+    account.append(provider, email);
+
+    const signals = document.createElement("div");
+    signals.className = "wa-mailbox-connection__signals";
+    config.signals.forEach((signalText) => {
+      const signal = document.createElement("span");
+      signal.className = "wa-mailbox-connection__signal";
+      signal.textContent = signalText;
+      signals.append(signal);
+    });
+
+    section.append(header, account, signals);
     return section;
   }
 

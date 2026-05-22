@@ -2,8 +2,8 @@ import type {
   DataSourceGridConfig,
   DataTableConfig,
   EnrichmentConfig,
+  MailboxConnectionConfig,
   OutreachStyleProfileConfig,
-  PersonalizationSwipeGameConfig,
   ProximityLeadListConfig,
   ResponsiveTarget,
   SequenceBuildThinkingConfig,
@@ -625,6 +625,16 @@ const AGENT_CONTEXT_FILES = [
   },
 ];
 
+const GMAIL_MAILBOX_CONNECTION = {
+  id: "gmail-mailbox-connection",
+  title: "Connect Gmail mailbox",
+  subtitle: "Unify reads recent sent mail, replies, and meeting context to learn how you actually communicate.",
+  provider: "Gmail",
+  account: "joel@unifygtm.com",
+  status: "connected",
+  signals: ["sent emails", "reply patterns", "calendar context", "signature and tone"],
+} satisfies MailboxConnectionConfig;
+
 const OUTREACH_STYLE_PROFILE = {
   id: "learned-outreach-style",
   title: "Learned outreach style",
@@ -640,38 +650,6 @@ const OUTREACH_STYLE_PROFILE = {
     "Avoid generic automation language unless the account shows ops pain.",
   ],
 } satisfies OutreachStyleProfileConfig;
-
-const PERSONALIZATION_SWIPE_GAME = {
-  id: "personalization-swipe-calibration",
-  title: "Personalization preferences",
-  subtitle: "A tiny game teaches the agent what should and should not show up in outreach.",
-  prompt: "Swipe toward the personalization you would actually use.",
-  labels: {
-    avoid: "Never me",
-    use: "I'd use it",
-  },
-  completeLabel: "3 personalization rules captured",
-  signals: [
-    {
-      id: "recent-post-topic",
-      label: "{{reference something they recently posted}}",
-      detail: "Use a real public post when it connects to the reason for reaching out.",
-      decision: "use",
-    },
-    {
-      id: "local-weather",
-      label: "Hope the weather in {{city}} is treating you well",
-      detail: "A location warm-up that adds words without adding context.",
-      decision: "avoid",
-    },
-    {
-      id: "mutual-connection",
-      label: "{{mention a mutual connection}}",
-      detail: "Useful when the shared contact creates a credible reason to compare notes.",
-      decision: "use",
-    },
-  ],
-} satisfies PersonalizationSwipeGameConfig;
 
 const PROXIMITY_LEADS = {
   id: "personalized-lead-proximity",
@@ -1137,7 +1115,9 @@ export const defaultStories: StoryDefinition[] = [
       });
 
       return buildStorySteps(ctx, [
-        { kind: "status", text: "waiting for context" },
+        { kind: "status", text: "connecting mailbox" },
+        { kind: "custom", build: () => ctx.chat.mailboxConnection(GMAIL_MAILBOX_CONNECTION), at: "+=0.04" },
+        { kind: "status", text: "waiting for context", at: `+=${STORY_TIMING.beat}` },
         { kind: "custom", build: () => cursorFile.startFollow(), at: "+=0.04" },
         { kind: "custom", build: () => dropArea.revealWhenCursorEnters(ctx.cursor), at: "<" },
         {
@@ -1162,17 +1142,6 @@ export const defaultStories: StoryDefinition[] = [
           at: `+=${STORY_TIMING.beat}`,
         },
         { kind: "custom", build: () => ctx.chat.outreachStyleProfile(OUTREACH_STYLE_PROFILE), at: "-=0.02" },
-        {
-          kind: "assistant",
-          text: "Before drafting, I’ll calibrate which personalization patterns sound like you.",
-          at: `+=${STORY_TIMING.beat}`,
-        },
-        {
-          kind: "personalizationSwipeGame",
-          config: PERSONALIZATION_SWIPE_GAME,
-          at: "+=0.06",
-        },
-        { kind: "status", text: "Personalization rules learned", at: "+=0.12" },
         {
           kind: "prompt",
           text: "Write a sequence for consumer fintech founders.",

@@ -3,6 +3,7 @@ import type {
   DataSourceGridConfig,
   DataTableConfig,
   EnrichmentConfig,
+  MailboxConnectionConfig,
   OutreachStyleProfileConfig,
   PersonalizationSwipeGameConfig,
   ProximityLeadListConfig,
@@ -28,6 +29,7 @@ import {
 import type {
   BuilderComponent,
   BuilderEnrichmentComponent,
+  BuilderMailboxConnectionComponent,
   BuilderSequenceEngagementComponent,
   BuilderStep,
   BuilderStory,
@@ -116,8 +118,20 @@ function buildHitGroundRunningStory(ctx: StoryContext, story: BuilderStory): gsa
 }
 
 function buildContextLearningStory(ctx: StoryContext, story: BuilderStory): gsap.core.Timeline {
+  const mailboxStep = firstComponent(story, "mailboxConnection");
   const uploadedFilesStep = firstComponent(story, "uploadedFiles");
   const steps: StoryStep[] = [];
+
+  if (mailboxStep) {
+    steps.push(
+      { kind: "status" as const, text: "connecting mailbox" },
+      {
+        kind: "custom" as const,
+        build: (ctx: StoryContext) => ctx.chat.mailboxConnection(toMailboxConnection(mailboxStep.component)),
+        at: "+=0.04",
+      },
+    );
+  }
 
   if (uploadedFilesStep) {
     const files = toUploadedFiles(uploadedFilesStep.component);
@@ -150,7 +164,7 @@ function buildContextLearningStory(ctx: StoryContext, story: BuilderStory): gsap
   }
 
   for (const step of story.steps) {
-    if (step === uploadedFilesStep) continue;
+    if (step === mailboxStep || step === uploadedFilesStep) continue;
     appendRuntimeStep(steps, story.id, step);
   }
 
@@ -405,6 +419,11 @@ function appendComponentRuntimeStep(
     return;
   }
 
+  if (component.kind === "mailboxConnection") {
+    steps.push({ kind: "custom", build: (ctx: StoryContext) => ctx.chat.mailboxConnection(toMailboxConnection(component)), at: "-=0.04" });
+    return;
+  }
+
   if (component.kind === "styleProfile") {
     steps.push({ kind: "custom", build: (ctx: StoryContext) => ctx.chat.outreachStyleProfile(toStyleProfile(component)), at: "-=0.02" });
     return;
@@ -569,6 +588,18 @@ function toUploadedFiles(component: BuilderUploadedFilesComponent): UploadedFile
     detail: file.detail,
     type: file.type,
   }));
+}
+
+function toMailboxConnection(component: BuilderMailboxConnectionComponent): MailboxConnectionConfig {
+  return {
+    id: slugId(component.title || "mailbox-connection"),
+    title: component.title,
+    subtitle: component.subtitle,
+    provider: component.provider,
+    account: component.account,
+    status: component.status,
+    signals: component.signals,
+  };
 }
 
 function toStyleProfile(component: Extract<BuilderComponent, { kind: "styleProfile" }>): OutreachStyleProfileConfig {

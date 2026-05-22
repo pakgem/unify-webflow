@@ -76,6 +76,16 @@ export type BuilderUploadedFilesComponent = {
   }>;
 };
 
+export type BuilderMailboxConnectionComponent = {
+  kind: "mailboxConnection";
+  title: string;
+  subtitle: string;
+  provider: string;
+  account: string;
+  status: string;
+  signals: string[];
+};
+
 export type BuilderStyleProfileComponent = {
   kind: "styleProfile";
   title: string;
@@ -153,6 +163,7 @@ export type BuilderComponent =
   | BuilderEnrichmentComponent
   | BuilderDataSourcesComponent
   | BuilderUploadedFilesComponent
+  | BuilderMailboxConnectionComponent
   | BuilderStyleProfileComponent
   | BuilderProximityListComponent
   | BuilderPersonalizationSwipeComponent
@@ -745,6 +756,9 @@ export class StoryBuilder {
     if (step.component.kind === "enrichment") return this.createEnrichmentComponentBody(step, step.component);
     if (step.component.kind === "dataSources") return this.createDataSourcesComponentBody(step, step.component);
     if (step.component.kind === "uploadedFiles") return this.createUploadedFilesComponentBody(step, step.component);
+    if (step.component.kind === "mailboxConnection") {
+      return this.createMailboxConnectionComponentBody(step, step.component);
+    }
     if (step.component.kind === "styleProfile") return this.createStyleProfileComponentBody(step, step.component);
     if (step.component.kind === "proximityList") return this.createProximityListComponentBody(step, step.component);
     if (step.component.kind === "personalizationSwipeGame") {
@@ -1049,6 +1063,48 @@ export class StoryBuilder {
     });
 
     content.append(title, grid);
+    return card;
+  }
+
+  private createMailboxConnectionComponentBody(
+    step: BuilderStep,
+    component: BuilderMailboxConnectionComponent,
+  ): HTMLElement {
+    const card = this.createStructuredComponentCard("Mailbox connection");
+    const content = card.querySelector<HTMLElement>(".wa-builder-component-card__content")!;
+
+    const title = this.createComponentField(step.id, "title", component.title, {
+      className: "wa-builder-component-card__title",
+    });
+    const subtitle = this.createComponentField(step.id, "subtitle", component.subtitle, {
+      className: "wa-builder-component-card__subtitle",
+    });
+    const meta = document.createElement("div");
+    meta.className = "wa-builder-mailbox-editor__meta";
+    meta.append(
+      this.createComponentInput(step.id, "mailboxProvider", component.provider, {
+        className: "wa-builder-mailbox-editor__provider",
+      }),
+      this.createComponentInput(step.id, "mailboxAccount", component.account, {
+        className: "wa-builder-mailbox-editor__account",
+      }),
+      this.createComponentInput(step.id, "mailboxStatus", component.status, {
+        className: "wa-builder-mailbox-editor__status",
+      }),
+    );
+
+    const signals = document.createElement("div");
+    signals.className = "wa-builder-mailbox-editor__signals";
+    component.signals.forEach((signal, itemIndex) => {
+      signals.append(
+        this.createComponentInput(step.id, "mailboxSignal", signal, {
+          itemIndex,
+          className: "wa-builder-mailbox-editor__signal",
+        }),
+      );
+    });
+
+    content.append(title, subtitle, meta, signals);
     return card;
   }
 
@@ -2121,6 +2177,12 @@ function createSeedSteps(storyId: string, fallbackSummary: string): BuilderStep[
     "crm-update": [
       {
         kind: "component",
+        text: "Connect Gmail mailbox",
+        note: "Mailbox connection happens before the business context files are dragged in.",
+        component: createMailboxConnectionComponent(),
+      },
+      {
+        kind: "component",
         text: "Uploaded business context files",
         note: "Dragged in as a bundle before the agent learns the business.",
         component: createUploadedFilesComponent(),
@@ -2136,12 +2198,6 @@ function createSeedSteps(storyId: string, fallbackSummary: string): BuilderStep[
         text: "Learned outreach style",
         note: "Shows the style and qualification rules the AI learned.",
         component: createStyleProfileComponent(),
-      },
-      {
-        kind: "component",
-        text: "Personalization swipe mini game",
-        note: "Swipe cards to teach which personalization patterns sound like Joel.",
-        component: createPersonalizationSwipeComponent(),
       },
       { kind: "user", text: "Write a sequence for consumer fintech founders.", note: "This is intentionally outside the learned ICP." },
       { kind: "assistant", text: "Are you sure? this doesn't fit your ICP", note: "Guardrail response based on the uploaded context." },
@@ -2612,6 +2668,18 @@ function createUploadedFilesComponent(): BuilderUploadedFilesComponent {
   };
 }
 
+function createMailboxConnectionComponent(): BuilderMailboxConnectionComponent {
+  return {
+    kind: "mailboxConnection",
+    title: "Connect Gmail mailbox",
+    subtitle: "Unify reads recent sent mail, replies, and meeting context to learn how you actually communicate.",
+    provider: "Gmail",
+    account: "joel@unifygtm.com",
+    status: "connected",
+    signals: ["sent emails", "reply patterns", "calendar context", "signature and tone"],
+  };
+}
+
 function createStyleProfileComponent(): BuilderStyleProfileComponent {
   return {
     kind: "styleProfile",
@@ -2914,6 +2982,17 @@ function updateComponentValue(
     if (field === "fileDetail") file.detail = value;
   }
 
+  if (component.kind === "mailboxConnection") {
+    if (field === "subtitle") component.subtitle = value;
+    if (field === "mailboxProvider") component.provider = value;
+    if (field === "mailboxAccount") component.account = value;
+    if (field === "mailboxStatus") component.status = value;
+
+    if (field === "mailboxSignal" && indexes.itemIndex !== null) {
+      component.signals[indexes.itemIndex] = value;
+    }
+  }
+
   if (component.kind === "styleProfile") {
     if (field === "subtitle") component.subtitle = value;
 
@@ -3050,6 +3129,7 @@ function getComponentDisplayText(component: BuilderComponent): string {
   if (component.kind === "enrichment") return component.title;
   if (component.kind === "dataSources") return component.title;
   if (component.kind === "uploadedFiles") return component.title;
+  if (component.kind === "mailboxConnection") return component.title;
   if (component.kind === "styleProfile") return component.title;
   if (component.kind === "proximityList") return component.title;
   if (component.kind === "personalizationSwipeGame") return component.title;

@@ -100,6 +100,16 @@ export type UploadedFileConfig = {
   type?: string;
 };
 
+export type MailboxConnectionConfig = {
+  id: string;
+  title: string;
+  subtitle?: string;
+  provider: string;
+  account: string;
+  status?: string;
+  signals: string[];
+};
+
 export type OutreachStyleProfileConfig = {
   id: string;
   title: string;
