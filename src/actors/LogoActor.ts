@@ -151,14 +151,63 @@ export class LogoActor {
   moveToElement(element: HTMLElement | null, options: LoadingLogoMoveOptions = {}): gsap.core.Timeline {
     if (!element) return gsap.timeline();
 
-    return this.moveTo(
-      {
-        target: element,
-        anchor: "center",
-        humanOffset: false,
+    const label = options.label ?? `logo-${this.moveIndex}`;
+    const seed = `${this.storyId}:${label}:${this.resolver.getBreakpoint()}`;
+    const tl = gsap.timeline();
+    const state: LogoMotionState = {
+      start: { ...this.currentPosition },
+      end: { ...this.plannedPosition },
+      progress: 0,
+      bend: 0,
+    };
+
+    this.moveIndex += 1;
+
+    tl.call(() => {
+      this.stopTracking();
+      this.resolver.refresh();
+      state.start = { ...this.currentPosition };
+      state.end = this.resolveElementTarget(element, options.offset, seed, this.plannedPosition);
+      state.progress = 0;
+
+      if (!this.hasPosition) {
+        state.start = { ...state.end };
+        this.currentPosition = { ...state.end };
+        this.renderPosition(state.end);
+      }
+
+      state.bend = this.getArcBend(state.start, state.end, seed);
+      this.plannedPosition = { ...state.end };
+
+      if (options.shadow && this.hasPosition) this.createShadow(state.start);
+      if (options.mode) this.setMode(options.mode);
+      this.hasPosition = true;
+    }, undefined, 0);
+
+    tl.set(this.el, { autoAlpha: 1, scale: 1 }, 0);
+
+    tl.to(state, {
+      progress: 1,
+      duration: this.options.reducedMotion ? LOGO_MOTION.reducedDuration : options.duration ?? LOGO_MOTION.duration,
+      ease: LOGO_MOTION.ease,
+      overwrite: true,
+      onUpdate: () => {
+        state.end = this.resolveElementTarget(element, options.offset, seed, state.end);
+        this.plannedPosition = { ...state.end };
+        this.currentPosition = this.sampleMotion(state);
+        this.renderPosition(this.currentPosition);
       },
-      options,
-    ).call(() => this.startTracking(element, options.offset));
+      onComplete: () => {
+        const end = this.resolveElementTarget(element, options.offset, seed, state.end);
+
+        this.currentPosition = { ...end };
+        this.plannedPosition = { ...end };
+        this.renderPosition(end);
+        this.startTracking(element, options.offset);
+      },
+    });
+
+    return tl;
   }
 
   resetInteraction(): void {
@@ -182,6 +231,20 @@ export class LogoActor {
       x: point.x + (offset?.x ?? 0),
       y: point.y + (offset?.y ?? 0),
     };
+  }
+
+  private resolveElementTarget(element: HTMLElement, offset: Offset | undefined, seed: string, fallback: Point): Point {
+    if (!element.isConnected) return { ...fallback };
+
+    return this.resolveTarget(
+      {
+        target: element,
+        anchor: "center",
+        humanOffset: false,
+      },
+      offset,
+      seed,
+    );
   }
 
   private sampleMotion(state: LogoMotionState): Point {
