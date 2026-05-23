@@ -4590,7 +4590,7 @@ export class ChatActor {
       id: config.id,
       icon: "gmail",
       label: normalizeMailboxProviderButtonLabel("gmail", config.ctaLabel),
-      loadingLabel: config.loadingLabel ?? "Connecting",
+      loadingLabel: normalizeMailboxStateLabel(config.loadingLabel, "Connecting"),
       connectedLabel: normalizeMailboxProviderButtonLabel("gmail", config.status, "connected"),
       isPrimary: true,
     });
@@ -4654,7 +4654,7 @@ export class ChatActor {
 
     if (options.isPrimary && options.id) {
       button.dataset.mailboxConnect = options.id;
-      button.dataset.mailboxLoadingLabel = options.loadingLabel ?? "Connecting";
+      button.dataset.mailboxLoadingLabel = normalizeMailboxStateLabel(options.loadingLabel, "Connecting");
       button.dataset.mailboxConnectedLabel = options.connectedLabel ?? "Gmail";
     }
 
@@ -4677,7 +4677,7 @@ export class ChatActor {
       loadingLabel.className = "wa-mailbox-connection__button-label";
       loadingLabel.dataset.mailboxButtonLabel = "loading";
       loadingLabel.setAttribute("aria-hidden", "true");
-      loadingLabel.textContent = options.loadingLabel ?? "Connecting";
+      loadingLabel.textContent = normalizeMailboxStateLabel(options.loadingLabel, "Connecting");
 
       const connectedLabel = document.createElement("span");
       connectedLabel.className = "wa-mailbox-connection__button-label";
@@ -5680,6 +5680,12 @@ function normalizeMailboxProviderButtonLabel(
   if (providerStates.has(lower)) return fallback;
 
   return normalized;
+}
+
+function normalizeMailboxStateLabel(value: string | undefined, fallback: "Connecting" | "Connected"): string {
+  const normalized = value?.trim();
+  if (!normalized) return fallback;
+  return normalized.toLowerCase() === fallback.toLowerCase() ? fallback : normalized;
 }
 
 function mailboxThumbprintSegmentProgress(index: number, percent: number): number {

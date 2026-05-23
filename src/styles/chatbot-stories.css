@@ -3145,9 +3145,10 @@ body {
 
 .wa-mailbox-connection[data-mailbox-state="connected"] [data-mailbox-connect] {
   grid-template-columns: max-content;
-  color: #080807;
-  border-color: #d6d5cf;
-  background: #fffff9;
+  color: #aaa59d;
+  border-color: rgba(23, 23, 20, 0.14);
+  background: transparent;
+  box-shadow: none;
 }
 
 .wa-mailbox-connection[data-mailbox-state="connected"] [data-mailbox-connect] .wa-mailbox-connection__provider-icon {
