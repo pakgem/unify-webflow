@@ -7,6 +7,7 @@ import {
   getDefaultThinkingDetail,
   getThinkingElapsedLabel,
 } from "../stories/thinkingText";
+import { createUnifyMarkSvg } from "../assets/unifyMark";
 
 export type BuilderStepKind =
   | "user"
@@ -680,7 +681,9 @@ export class StoryBuilder {
 
     const glyph = document.createElement("span");
     glyph.className = "wa-thinking__glyph";
+    glyph.dataset.logoRole = "shadow";
     glyph.setAttribute("aria-hidden", "true");
+    glyph.append(createUnifyMarkSvg("wa-thinking__logo-mark"));
 
     const title = document.createElement("span");
     title.className = "wa-thinking__title";
@@ -704,11 +707,11 @@ export class StoryBuilder {
     step.thinking.items.forEach((thinkingItem, itemIndex) => {
       const item = document.createElement("div");
       item.className = "wa-research-step wa-builder-research-step";
-      item.dataset.stepState = "current";
+      item.dataset.stepState = "complete";
 
-      const check = document.createElement("span");
-      check.className = "wa-research-step__check";
-      check.setAttribute("aria-hidden", "true");
+      const marker = document.createElement("span");
+      marker.className = "wa-research-step__marker";
+      marker.setAttribute("aria-hidden", "true");
 
       const copy = document.createElement("div");
       copy.className = "wa-research-step__body";
@@ -741,7 +744,7 @@ export class StoryBuilder {
       );
 
       copy.append(label, detail, disclosure);
-      item.append(check, copy);
+      item.append(marker, copy);
       steps.append(item);
     });
 

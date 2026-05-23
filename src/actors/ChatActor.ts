@@ -128,6 +128,8 @@ type NormalizedThinkingState = {
 type ClaimedThinkingMessage = {
   message: HTMLElement;
   header: HTMLElement;
+  headerGlyph: HTMLElement;
+  traveler: HTMLElement;
   elapsed: HTMLElement;
   steps: HTMLElement;
 };
@@ -258,9 +260,9 @@ const AI_TEXT_STREAM = {
 /* --------------------------------------------------------------------------
    Thinking Step Animation
 
-      0ms   row appears and becomes current
-    +80ms   evidence detail streams in under the title
-   done   active shimmer stops, detail folds away, title remains
+      0ms   header streams with logo sitting on the header mark
+    +80ms   logo glides to the current row, leaving a dot behind previous rows
+   done   rows fold away and logo returns to the header shadow
    -------------------------------------------------------------------------- */
 
 const THINKING_STEP_STREAM = {
@@ -288,10 +290,21 @@ const THINKING_STEP_FOLD = {
   duration: motionDuration(0.24),
 };
 
+const THINKING_LOGO_TRAVEL = {
+  duration: motionDuration(0.34),
+  returnDuration: motionDuration(0.38),
+  ease: "power2.inOut",
+};
+
+const THINKING_BLOCK_COLLAPSE = {
+  y: -4,
+  duration: motionDuration(0.26),
+  ease: "power2.inOut",
+};
+
 const SEQUENCE_THINKING_LOGO = {
   templateHold: motionDuration(0.54),
   progressDuration: motionDuration(3.9),
-  progressLogoSwitchAt: 1.65,
   finalHold: motionDuration(0.34),
 };
 
@@ -1764,7 +1777,8 @@ export class ChatActor {
       .call(() => {
         templateItem.dataset.stepState = "current";
         gsap.set(templateItem, { display: "grid" });
-      });
+      })
+      .add(this.moveThinkingLogoToStep(thinking, templateItem), "<");
 
     this.addThinkingStepReveal(tl, templateItem, { position: "<" });
 
@@ -1777,6 +1791,7 @@ export class ChatActor {
           gsap.set(item, { display: "grid" });
         });
       }, undefined, "+=0.1")
+      .add(this.moveThinkingLogoToStep(thinking, trackItems[0]), "<")
       .to(trackItems, {
         autoAlpha: 1,
         y: 0,
@@ -1808,11 +1823,7 @@ export class ChatActor {
       tl.add(this.foldThinkingStep(item), index === 0 ? undefined : "<");
     });
 
-    tl.call(() => {
-      this.markThinkingStepsComplete(trackItems);
-      this.setThinkingLogoMode(thinking, "done");
-      this.animateMessageScrollIntoView(thinking.message);
-    });
+    tl.add(this.collapseThinkingToHeader(thinking, allItems));
     this.addThinkingElapsedTimer(tl, thinking.elapsed, elapsedLabel);
     return tl;
   }
@@ -2799,6 +2810,7 @@ export class ChatActor {
       item.dataset.stepState = "pending";
     });
     gsap.set(thinking.header, { autoAlpha: 0, y: 5 });
+    gsap.set(thinking.traveler, { autoAlpha: 0, x: 0, y: 0 });
     gsap.set(thinking.steps, { display: "grid", autoAlpha: 1, y: 0 });
     gsap.set(items, { autoAlpha: 0, y: itemStartY, display: "none" });
   }
@@ -2811,6 +2823,12 @@ export class ChatActor {
         duration: motionDuration(duration),
         ease: "power2.out",
       })
+      .call(() => this.snapThinkingLogoTo(thinking, thinking.headerGlyph))
+      .to(thinking.traveler, {
+        autoAlpha: 1,
+        duration: motionDuration(0.12),
+        ease: "power2.out",
+      }, "<")
       .add(this.streamThinkingHeader(thinking.header), "-=0.08");
   }
 
@@ -2853,6 +2871,70 @@ export class ChatActor {
     });
   }
 
+  private getThinkingLogoTargetPosition(thinking: ClaimedThinkingMessage, target: HTMLElement): { x: number; y: number } {
+    const block = thinking.message.querySelector<HTMLElement>(".wa-thinking-block");
+    const baseRect = (block ?? thinking.message).getBoundingClientRect();
+    const targetRect = target.getBoundingClientRect();
+    const logoWidth = thinking.traveler.offsetWidth || thinking.headerGlyph.offsetWidth || 18;
+    const logoHeight = thinking.traveler.offsetHeight || thinking.headerGlyph.offsetHeight || 11;
+
+    return {
+      x: targetRect.left - baseRect.left + (targetRect.width - logoWidth) / 2,
+      y: targetRect.top - baseRect.top + (targetRect.height - logoHeight) / 2,
+    };
+  }
+
+  private snapThinkingLogoTo(thinking: ClaimedThinkingMessage, target: HTMLElement): void {
+    const position = this.getThinkingLogoTargetPosition(thinking, target);
+
+    gsap.set(thinking.traveler, position);
+  }
+
+  private moveThinkingLogoTo(thinking: ClaimedThinkingMessage, target: HTMLElement, duration = THINKING_LOGO_TRAVEL.duration): gsap.core.Timeline {
+    return gsap.timeline().to(thinking.traveler, {
+      x: () => this.getThinkingLogoTargetPosition(thinking, target).x,
+      y: () => this.getThinkingLogoTargetPosition(thinking, target).y,
+      duration,
+      ease: THINKING_LOGO_TRAVEL.ease,
+      overwrite: "auto",
+    });
+  }
+
+  private moveThinkingLogoToStep(thinking: ClaimedThinkingMessage, item: HTMLElement | undefined): gsap.core.Timeline {
+    const target = item?.querySelector<HTMLElement>(".wa-research-step__marker");
+
+    return target ? this.moveThinkingLogoTo(thinking, target) : gsap.timeline();
+  }
+
+  private collapseThinkingToHeader(thinking: ClaimedThinkingMessage, items: HTMLElement[]): gsap.core.Timeline {
+    return gsap.timeline()
+      .call(() => {
+        this.markThinkingStepsComplete(items);
+        this.setLocalLogoMode(thinking.traveler, "done");
+        gsap.set(thinking.steps, {
+          height: thinking.steps.offsetHeight,
+          overflow: "hidden",
+        });
+      })
+      .add(this.moveThinkingLogoTo(thinking, thinking.headerGlyph, THINKING_LOGO_TRAVEL.returnDuration), 0)
+      .to(thinking.steps, {
+        autoAlpha: 0,
+        y: THINKING_BLOCK_COLLAPSE.y,
+        height: 0,
+        duration: THINKING_BLOCK_COLLAPSE.duration,
+        ease: THINKING_BLOCK_COLLAPSE.ease,
+      }, 0)
+      .call(() => {
+        gsap.set(thinking.steps, {
+          display: "none",
+          height: "",
+          overflow: "",
+          y: 0,
+        });
+        this.animateMessageScrollIntoView(thinking.message);
+      });
+  }
+
   private runThinkingSequence(thinkingState: NormalizedThinkingState, options: ThinkingSequenceOptions): gsap.core.Timeline {
     const tl = gsap.timeline();
     const items = thinkingState.items.map((item, index) => this.createThinkingStep(item, index));
@@ -2868,15 +2950,13 @@ export class ChatActor {
       const position = index === 0 ? "+=0" : `+=${options.hold}`;
 
       tl.call(() => this.activateThinkingStep(items, index), undefined, position)
+        .add(this.moveThinkingLogoToStep(thinking, item), "<")
         .add(this.createThinkingStepReveal(item), "<")
         .to({}, { duration: options.afterStepHold })
         .add(this.foldThinkingStep(item));
     });
 
-    tl.call(() => {
-      this.markThinkingStepsComplete(items);
-      this.setThinkingLogoMode(thinking, "done");
-    }, undefined, `+=${options.finalHold}`);
+    tl.add(this.collapseThinkingToHeader(thinking, items), `+=${options.finalHold}`);
     this.addThinkingElapsedTimer(tl, thinking.elapsed, elapsedLabel);
     return tl;
   }
@@ -2913,6 +2993,8 @@ export class ChatActor {
     header.className = "wa-thinking";
 
     const glyph = this.createThinkingLogo();
+    glyph.dataset.logoRole = "shadow";
+    const traveler = this.createThinkingLogo("wa-thinking-logo-traveler");
 
     const title = document.createElement("span");
     title.className = "wa-thinking__title";
@@ -2930,11 +3012,13 @@ export class ChatActor {
     steps.append(...items);
 
     header.append(glyph, title, elapsed);
-    content.append(header, steps);
+    content.append(header, steps, traveler);
 
     return {
       message: this.claimComponentMessage("thinking", content),
       header,
+      headerGlyph: glyph,
+      traveler,
       elapsed,
       steps,
     };
@@ -2944,18 +3028,14 @@ export class ChatActor {
     addTimelineElapsedTimer(tl, elapsed, finalLabel, { reducedMotion: this.prefersReducedMotion });
   }
 
-  private createThinkingLogo(): HTMLElement {
+  private createThinkingLogo(className = "wa-thinking__glyph"): HTMLElement {
     const glyph = document.createElement("span");
 
-    glyph.className = "wa-thinking__glyph";
+    glyph.className = className;
     glyph.dataset.logoMode = "thinking";
     glyph.setAttribute("aria-hidden", "true");
     glyph.append(createUnifyMarkSvg("wa-thinking__logo-mark"));
     return glyph;
-  }
-
-  private setThinkingLogoMode(thinking: ClaimedThinkingMessage, mode: "thinking" | "done" | "static"): void {
-    this.setLocalLogoMode(thinking.header.querySelector<HTMLElement>(".wa-thinking__glyph"), mode);
   }
 
   private setLocalLogoMode(glyph: HTMLElement | null | undefined, mode: "thinking" | "done" | "static"): void {
@@ -2998,9 +3078,9 @@ export class ChatActor {
     item.dataset.researchStep = String(index);
     item.dataset.stepState = index === 0 ? "current" : "complete";
 
-    const check = document.createElement("span");
-    check.className = "wa-research-step__check";
-    check.setAttribute("aria-hidden", "true");
+    const marker = document.createElement("span");
+    marker.className = "wa-research-step__marker";
+    marker.setAttribute("aria-hidden", "true");
 
     const body = document.createElement("span");
     body.className = "wa-research-step__body";
@@ -3024,7 +3104,7 @@ export class ChatActor {
     chevron.setAttribute("aria-hidden", "true");
 
     body.append(label, detail, disclosure);
-    item.append(check, body, chevron);
+    item.append(marker, body, chevron);
     return item;
   }
 
