@@ -173,6 +173,8 @@ type ChildRevealPreset = {
   to: gsap.TweenVars;
   position?: string | number;
 };
+type WaterfallStepState = "complete" | "failed" | "pending";
+type WaterfallRuntimeState = WaterfallStepState | "loading";
 export type DataTablePageRestore = {
   tableId: string;
   currentPage: number;
@@ -470,6 +472,14 @@ const FILE_DROP_LANDING = {
   shadowY: 16,
   shadowBlur: 28,
   shadowAlpha: 0.18,
+};
+const ENRICHMENT_WATERFALL_MOTION = {
+  rowStartHold: motionDuration(0.16),
+  rowGapHold: motionDuration(0.18),
+  serviceRevealDuration: motionDuration(0.18),
+  serviceLoadDuration: motionDuration(0.62),
+  serviceSettleDuration: motionDuration(0.18),
+  rowCompleteHold: motionDuration(0.18),
 };
 
 const COMPONENT_CHILD_REVEAL = {
@@ -1398,13 +1408,18 @@ export class ChatActor {
 
   enrichmentPanel(config: EnrichmentConfig): gsap.core.Timeline {
     const panel = this.createEnrichmentPanel(config);
-    const tl = this.revealComponentItems("enrichment", panel, ".wa-waterfall-row", COMPONENT_CHILD_REVEAL.waterfallRow);
+    const message = this.claimComponentMessage("enrichment", panel);
+    const rows = this.queryElements(panel, ".wa-waterfall-row");
+    const chips = this.queryElements(panel, ".wa-waterfall-chip");
+    const tl = this.revealPreparedItems(message, rows, COMPONENT_CHILD_REVEAL.waterfallRow);
     const elapsed = panel.querySelector<HTMLElement>(".wa-thinking__elapsed");
     const glyph = panel.querySelector<HTMLElement>(".wa-thinking__glyph");
 
-    if (elapsed) this.addThinkingElapsedTimer(tl, elapsed, elapsed.dataset.elapsedTarget ?? "4m 20s");
+    gsap.set(chips, { autoAlpha: 0, y: 3, scale: 0.98 });
     tl.call(() => this.setLocalLogoMode(glyph, "thinking"), undefined, 0);
+    tl.add(this.animateEnrichmentWaterfall(rows), `+=${ENRICHMENT_WATERFALL_MOTION.rowStartHold}`);
     tl.call(() => this.setLocalLogoMode(glyph, "done"));
+    if (elapsed) this.addThinkingElapsedTimer(tl, elapsed, elapsed.dataset.elapsedTarget ?? "4m 20s");
     return tl;
   }
 
@@ -4390,20 +4405,21 @@ export class ChatActor {
     rows.className = "wa-waterfall-rows";
     rows.append(
       this.createWaterfallRow("Work email", "complete", [
-        { label: "Apollo", state: "complete" },
-        { label: "ZoomInfo", state: "failed" },
-      ]),
-      this.createWaterfallRow("Mobile number", "failed", [
         { label: "Apollo", state: "failed" },
-        { label: "FullEnrich", state: "failed" },
+        { label: "ZoomInfo", state: "failed" },
+        { label: "FullEnrich", state: "complete" },
       ]),
-      this.createWaterfallRow("LinkedIn", "pending", [
-        { label: "Apollo", state: "pending" },
+      this.createWaterfallRow("Mobile number", "complete", [
+        { label: "Apollo", state: "failed" },
+        { label: "FullEnrich", state: "complete" },
+      ]),
+      this.createWaterfallRow("LinkedIn", "complete", [
+        { label: "Apollo", state: "complete" },
         { label: "ZoomInfo", state: "pending" },
       ]),
-      this.createWaterfallRow("Title", "pending", [
-        { label: "Apollo", state: "pending" },
-        { label: "ZoomInfo", state: "pending" },
+      this.createWaterfallRow("Title", "complete", [
+        { label: "Apollo", state: "failed" },
+        { label: "ZoomInfo", state: "complete" },
         { label: "FullEnrich", state: "pending" },
       ]),
     );
@@ -4414,12 +4430,13 @@ export class ChatActor {
 
   private createWaterfallRow(
     labelText: string,
-    state: "complete" | "failed" | "pending",
-    chips: Array<{ label: string; state: "complete" | "failed" | "pending" }>,
+    state: WaterfallStepState,
+    chips: Array<{ label: string; state: WaterfallStepState }>,
   ): HTMLElement {
     const row = document.createElement("div");
     row.className = "wa-waterfall-row";
-    row.dataset.stepState = state;
+    row.dataset.stepState = "pending";
+    row.dataset.finalStepState = state;
 
     const status = document.createElement("span");
     status.className = "wa-waterfall-row__status";
@@ -4435,7 +4452,8 @@ export class ChatActor {
       ...chips.map((chip) => {
         const item = document.createElement("span");
         item.className = "wa-waterfall-chip";
-        item.dataset.stepState = chip.state;
+        item.dataset.stepState = "pending";
+        item.dataset.finalStepState = chip.state;
         item.textContent = chip.label;
         return item;
       }),
@@ -4443,6 +4461,73 @@ export class ChatActor {
 
     row.append(status, label, chipList);
     return row;
+  }
+
+  private animateEnrichmentWaterfall(rows: HTMLElement[]): gsap.core.Timeline {
+    const tl = gsap.timeline();
+
+    rows.forEach((row, rowIndex) => {
+      const chips = this.queryElements(row, ".wa-waterfall-chip");
+      const attemptedChips = this.getAttemptedWaterfallChips(chips);
+      const rowFinalState = this.getWaterfallFinalState(row);
+
+      tl.call(() => this.setWaterfallState(row, "loading"), undefined, rowIndex === 0 ? 0 : `+=${ENRICHMENT_WATERFALL_MOTION.rowGapHold}`)
+        .to(chips, {
+          autoAlpha: 1,
+          y: 0,
+          scale: 1,
+          duration: ENRICHMENT_WATERFALL_MOTION.serviceRevealDuration,
+          ease: "power2.out",
+          stagger: 0.035,
+        }, "<");
+
+      attemptedChips.forEach((chip) => {
+        const finalState = this.getWaterfallFinalState(chip);
+
+        tl.call(() => this.setWaterfallState(chip, "loading"))
+          .to(chip, {
+            scale: 1.04,
+            duration: ENRICHMENT_WATERFALL_MOTION.serviceSettleDuration,
+            ease: "power2.out",
+          }, "<")
+          .to({}, { duration: ENRICHMENT_WATERFALL_MOTION.serviceLoadDuration })
+          .call(() => this.setWaterfallState(chip, finalState))
+          .to(chip, {
+            scale: 1,
+            duration: ENRICHMENT_WATERFALL_MOTION.serviceSettleDuration,
+            ease: finalState === "complete" ? "back.out(1.8)" : "power2.out",
+          });
+      });
+
+      tl.call(() => this.setWaterfallState(row, rowFinalState))
+        .to({}, { duration: ENRICHMENT_WATERFALL_MOTION.rowCompleteHold });
+    });
+
+    return tl;
+  }
+
+  private getAttemptedWaterfallChips(chips: HTMLElement[]): HTMLElement[] {
+    const attempted: HTMLElement[] = [];
+
+    for (const chip of chips) {
+      const finalState = this.getWaterfallFinalState(chip);
+
+      if (finalState === "pending") break;
+      attempted.push(chip);
+      if (finalState === "complete") break;
+    }
+
+    return attempted;
+  }
+
+  private getWaterfallFinalState(el: HTMLElement): WaterfallStepState {
+    const state = el.dataset.finalStepState;
+
+    return state === "complete" || state === "failed" || state === "pending" ? state : "pending";
+  }
+
+  private setWaterfallState(el: HTMLElement, state: WaterfallRuntimeState): void {
+    el.dataset.stepState = state;
   }
 
   private createStrategyPlan(plan: StrategyPlanConfig): HTMLElement {

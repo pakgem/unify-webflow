@@ -2232,7 +2232,7 @@ body {
   display: grid;
   gap: 11px;
   min-width: 0;
-  max-width: 420px;
+  max-width: 480px;
   overflow: visible;
   border: 0;
   border-radius: 0;
@@ -2323,6 +2323,18 @@ body {
   transform: rotate(-45deg);
 }
 
+.wa-waterfall-row[data-step-state="loading"] .wa-waterfall-row__status::before {
+  top: 1px;
+  left: 1px;
+  width: 10px;
+  height: 10px;
+  border: 1.4px solid #d6d1c8;
+  border-top-color: #67635f;
+  border-radius: 999px;
+  background: transparent;
+  animation: wa-spin 760ms linear infinite;
+}
+
 .wa-waterfall-row[data-step-state="failed"] .wa-waterfall-row__status::before,
 .wa-waterfall-row[data-step-state="failed"] .wa-waterfall-row__status::after {
   top: 6px;
@@ -2351,7 +2363,7 @@ body {
 .wa-waterfall-row__chips {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
   min-width: 0;
   overflow: hidden;
 }
@@ -2361,15 +2373,15 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  max-width: 86px;
-  min-height: 17px;
-  padding: 2px 6px 2px 15px;
+  max-width: 98px;
+  min-height: 20px;
+  padding: 3px 7px 3px 17px;
   overflow: hidden;
   border: 1px solid #ebe5dc;
   border-radius: 3px;
   color: #7c7770;
   background: #fbfaf3;
-  font-size: 10px;
+  font-size: 10.5px;
   line-height: 1;
   text-overflow: ellipsis;
 }
@@ -2381,19 +2393,42 @@ body {
 }
 
 .wa-waterfall-chip::before {
-  top: 7px;
-  left: 6px;
+  top: 8px;
+  left: 7px;
   width: 4px;
   height: 4px;
   border-radius: 999px;
   background: #a49f98;
 }
 
-.wa-waterfall-chip[data-step-state="complete"]::before {
-  top: 6px;
+.wa-waterfall-chip[data-step-state="pending"] {
+  opacity: 0.68;
+}
+
+.wa-waterfall-chip[data-step-state="loading"] {
+  opacity: 1;
+  border-color: #d5d0c7;
+  color: #56534f;
+  background: #fffffa;
+}
+
+.wa-waterfall-chip[data-step-state="loading"]::before {
+  top: 5px;
   left: 5px;
-  width: 7px;
-  height: 3.5px;
+  width: 9px;
+  height: 9px;
+  border: 1.2px solid #d6d1c8;
+  border-top-color: #67635f;
+  border-radius: 999px;
+  background: transparent;
+  animation: wa-spin 760ms linear infinite;
+}
+
+.wa-waterfall-chip[data-step-state="complete"]::before {
+  top: 7px;
+  left: 6px;
+  width: 7.5px;
+  height: 4px;
   border-bottom: 1.2px solid #279443;
   border-left: 1.2px solid #279443;
   border-radius: 0;
@@ -2407,9 +2442,9 @@ body {
 
 .wa-waterfall-chip[data-step-state="failed"]::before,
 .wa-waterfall-chip[data-step-state="failed"]::after {
-  top: 8px;
-  left: 5px;
-  width: 7px;
+  top: 9px;
+  left: 6px;
+  width: 8px;
   height: 1.2px;
   border-radius: 999px;
   background: #e1544c;
@@ -5146,9 +5181,9 @@ body {
   }
 
   .wa-waterfall-chip {
-    max-width: 72px;
-    padding-right: 5px;
-    font-size: 8.5px;
+    max-width: 82px;
+    padding-right: 6px;
+    font-size: 9px;
   }
 
   .wa-swipe-game {
