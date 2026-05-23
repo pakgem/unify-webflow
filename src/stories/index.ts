@@ -20,6 +20,7 @@ import {
   responsiveElementTarget,
   SIGNUP_EMAIL_TARGET,
   SIGNUP_ENTRY_LEAD_TIME,
+  SIGNUP_SUBMIT_TARGET,
   STORY_TIMING,
 } from "./storySystem";
 
@@ -28,9 +29,9 @@ import {
 
       0ms   cursor heads to first visible sign-up field
     300ms   email typing starts before the cursor fully settles
-   1500ms   sign-up scene scrolls up and the chat workspace enters
-   2200ms   assistant narrates the company-learning pass
-   2900ms   research steps cycle through public company signals
+   1500ms   cursor clicks the sign-in button
+   1800ms   sign-up scene scrolls up while the logo transfers into thinking
+   2600ms   research steps cycle through public company signals
    5700ms   three GTM strategies reveal as compact strategy cards
    -------------------------------------------------------------------------- */
 
@@ -1096,11 +1097,20 @@ export const defaultStories: StoryDefinition[] = [
       return buildStorySteps(ctx, [
         { kind: "status", text: "Sign up" },
         { kind: "cursorClick", nextMode: "text", at: "-=0.04" },
-        { kind: "typeSignupEmail", email: "joel@acme.co", duration: STORY_TIMING.typeShort },
-        { kind: "status", text: "Building workspace", at: "-=0.16" },
+        { kind: "typeSignupEmail", email: "joel@vercel.com", duration: STORY_TIMING.typeShort },
+        {
+          kind: "cursorMove",
+          target: SIGNUP_SUBMIT_TARGET,
+          options: { mode: "pointer", intent: "click", speed: "quick", label: "signup-submit" },
+          at: "-=0.04",
+        },
+        { kind: "cursorClick", nextMode: "default", at: "-=0.03" },
+        { kind: "custom", build: () => ctx.chat.submitSignup(), at: "<" },
+        { kind: "status", text: "Building workspace", at: "-=0.08" },
+        { kind: "custom", build: () => ctx.chat.transferSignupLogoToNextThinking(), at: "<" },
         { kind: "transitionSignupToChat", at: `+=${STORY_TIMING.beat}` },
-        { kind: "status", text: "Researching Acme", at: "<" },
-        { kind: "thinking", steps: GTM_RESEARCH_STEPS, hold: 0.46, at: "+=0.04" },
+        { kind: "status", text: "Researching Vercel", at: "<" },
+        { kind: "thinking", steps: GTM_RESEARCH_STEPS, hold: 0.46, at: "<" },
         { kind: "assistant", text: "Here are some ideas I can put into action for you:" },
         { kind: "status", text: "Game plans ready", at: "<" },
         { kind: "strategyPlans", plans: GTM_STRATEGY_PLANS, at: "-=0.08" },

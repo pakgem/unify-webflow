@@ -100,9 +100,16 @@ export function renderDefaultMarkup(root: HTMLElement, options: RenderDefaultMar
             <div class="wa-chat-shell__body">
               <div class="wa-signup-scene" data-signup-scene>
                 <span class="wa-signup-scene__logo" data-signup-logo-target aria-hidden="true">${UNIFY_MARK_SVG}</span>
-                <h3 class="wa-signup-scene__title">sign up</h3>
+                <h3 class="wa-signup-scene__title">Sign up</h3>
                 <div class="wa-signup-field" data-signup-field>
                   <span data-signup-email></span>
+                  <button class="wa-signup-field__submit" type="button" data-signup-submit aria-label="Sign in">
+                    <svg class="wa-signup-field__submit-icon" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                      <path d="M12 5l0 14"></path>
+                      <path d="M18 13l-6 6"></path>
+                      <path d="M6 13l6 6"></path>
+                    </svg>
+                  </button>
                 </div>
               </div>
 

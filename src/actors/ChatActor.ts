@@ -89,6 +89,18 @@ type FileLandingLabel = {
   setY: (value: number) => void;
   setOpacity: (value: number) => void;
 };
+type SignupLogoTransfer = {
+  el: HTMLElement;
+  startX: number;
+  startY: number;
+  startWidth: number;
+  startHeight: number;
+  target: HTMLElement;
+  setX: (value: number) => void;
+  setY: (value: number) => void;
+  setWidth: (value: number) => void;
+  setHeight: (value: number) => void;
+};
 type ComposerFrame = {
   left: number;
   bottom: number;
@@ -363,6 +375,12 @@ const SIGNUP_TRANSITION = {
   threadOverlap: "-=0.36",
 };
 
+const SIGNUP_LOGO_TRANSFER = {
+  duration: motionDuration(0.68),
+  ease: "power3.inOut",
+  targetColor: "#67635f",
+};
+
 const CHAT_BOTTOM_CLEARANCE = 110;
 
 const CHAT_SCROLL_MOTION = {
@@ -393,7 +411,8 @@ const MARKETING_DATA_GRID_ARTBOARD = {
 };
 
 const STREAM_SCROLL_INTERVAL_MS = 96;
-const TRANSIENT_ELEMENT_SELECTOR = ".wa-cursor-file, .wa-file-landing-clone, .wa-file-landing-label, .wa-csv-drop";
+const TRANSIENT_ELEMENT_SELECTOR =
+  ".wa-cursor-file, .wa-file-landing-clone, .wa-file-landing-label, .wa-csv-drop, .wa-signup-logo-transfer";
 const MARKETING_PANEL_SELECTOR = "[data-marketing-data-sources-grid]";
 const DATA_TABLE_SELECTOR = "[data-data-table]";
 const DATA_TABLE_ACTION_SELECTOR = "[data-table-action]";
@@ -512,7 +531,9 @@ export class ChatActor {
   private composerContents: HTMLElement[] = [];
   private tableControlTooltip: HTMLElement;
   private signupScene: HTMLElement;
+  private signupLogo: HTMLElement;
   private signupEmail: HTMLElement;
+  private signupSubmit: HTMLElement;
   private status: HTMLElement | null;
   private messagePool: HTMLElement[] = [];
   private messageBodies = new WeakMap<HTMLElement, HTMLElement>();
@@ -527,6 +548,7 @@ export class ChatActor {
   private lastStreamScrollAt = 0;
   private prefersReducedMotion = false;
   private composerVisible = false;
+  private transferSignupLogoOnNextThinking = false;
   private activeTablePageTimelines = new Map<string, gsap.core.Timeline>();
   private expectedDataTablePages = new Map<string, number>();
 
@@ -585,7 +607,9 @@ export class ChatActor {
     this.chatShell.addEventListener("pointerout", this.handleDataTableControlPointerOut);
     this.chatShell.addEventListener("click", this.handleDataTableControlClick);
     this.signupScene = this.required("[data-signup-scene]");
+    this.signupLogo = this.required("[data-signup-logo-target]");
     this.signupEmail = this.required("[data-signup-email]");
+    this.signupSubmit = this.required("[data-signup-submit]");
     this.status = this.root.querySelector<HTMLElement>("[data-chat-status]");
     this.prefersReducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
     this.removeElements("[data-thinking], [data-research-steps], [data-result-grid]");
@@ -608,8 +632,10 @@ export class ChatActor {
     this.activeTablePageTimelines.forEach((timeline) => timeline.kill());
     this.activeTablePageTimelines.clear();
     this.expectedDataTablePages.clear();
+    this.transferSignupLogoOnNextThinking = false;
     this.hideDataTableControlTooltip();
     this.signupEmail.textContent = "";
+    this.setSignupEmailFilled(false);
     this.status?.replaceChildren(document.createTextNode("Ready"));
     this.clearCustomResults();
 
@@ -618,6 +644,7 @@ export class ChatActor {
       clearProps: "maxHeight,minHeight,paddingTop,paddingBottom,borderWidth",
     });
     gsap.set(this.signupScene, { autoAlpha: 0, y: 0, scale: 1, display: "none" });
+    gsap.set([this.signupLogo, this.signupSubmit], { clearProps: "transform,opacity,visibility" });
     gsap.set(this.thread, {
       autoAlpha: 1,
       y: 0,
@@ -678,6 +705,7 @@ export class ChatActor {
 
   prepareSignup(email = ""): void {
     this.signupEmail.textContent = email;
+    this.setSignupEmailFilled(Boolean(email));
     gsap.set(this.signupScene, {
       display: "grid",
       autoAlpha: 1,
@@ -685,6 +713,7 @@ export class ChatActor {
       scale: 1,
       pointerEvents: "auto",
     });
+    gsap.set([this.signupLogo, this.signupSubmit], { clearProps: "transform,opacity,visibility" });
     gsap.set([this.thread, this.composer], {
       autoAlpha: 0,
       y: 34,
@@ -692,6 +721,11 @@ export class ChatActor {
     gsap.set(this.composer, this.getComposerHiddenVars());
     gsap.set(this.composerContents, this.getComposerContentsHiddenVars());
     this.setComposerVisibleState(false);
+  }
+
+  private setSignupEmailFilled(isFilled: boolean): void {
+    this.signupScene.dataset.signupFilled = String(isFilled);
+    if (!isFilled) delete this.signupScene.dataset.signupSubmitted;
   }
 
   typeComposer(text: string, duration = 1.1): gsap.core.Timeline {
@@ -939,6 +973,7 @@ export class ChatActor {
       .timeline()
       .call(() => {
         this.signupEmail.textContent = email;
+        this.setSignupEmailFilled(Boolean(email));
       })
       .set(this.signupScene, {
         display: "grid",
@@ -947,6 +982,7 @@ export class ChatActor {
         scale: 1,
         pointerEvents: "auto",
       })
+      .set([this.signupLogo, this.signupSubmit], { clearProps: "transform,opacity,visibility" })
       .set(this.thread, {
         autoAlpha: 0,
         y: 34,
@@ -963,15 +999,41 @@ export class ChatActor {
       .timeline()
       .call(() => {
         this.signupEmail.textContent = "";
+        this.setSignupEmailFilled(false);
       })
       .to(proxy, {
         count: email.length,
         duration,
         ease: "none",
         onUpdate: () => {
-          this.signupEmail.textContent = email.slice(0, Math.round(proxy.count));
+          const typedEmail = email.slice(0, Math.round(proxy.count));
+          this.signupEmail.textContent = typedEmail;
+          this.setSignupEmailFilled(Boolean(typedEmail));
         },
       });
+  }
+
+  submitSignup(): gsap.core.Timeline {
+    return gsap
+      .timeline()
+      .call(() => {
+        this.signupScene.dataset.signupSubmitted = "true";
+      })
+      .to(this.signupSubmit, {
+        scale: 0.9,
+        duration: motionDuration(0.08),
+        ease: "power2.out",
+      })
+      .to(this.signupSubmit, {
+        scale: 1,
+        duration: motionDuration(0.2),
+        ease: "back.out(3.2)",
+      });
+  }
+
+  transferSignupLogoToNextThinking(): gsap.core.Timeline {
+    this.transferSignupLogoOnNextThinking = true;
+    return gsap.timeline();
   }
 
   transitionSignupToChat(): gsap.core.Timeline {
@@ -3070,6 +3132,10 @@ export class ChatActor {
   }
 
   private revealThinkingHeader(thinking: ClaimedThinkingMessage, duration: number): gsap.core.Timeline {
+    if (this.consumeSignupLogoTransfer()) {
+      return this.revealThinkingHeaderFromSignupLogo(thinking, duration);
+    }
+
     return gsap.timeline()
       .to(thinking.header, {
         autoAlpha: 1,
@@ -3084,6 +3150,97 @@ export class ChatActor {
         ease: "power2.out",
       }, "<")
       .add(this.streamThinkingHeader(thinking.header), "-=0.08");
+  }
+
+  private revealThinkingHeaderFromSignupLogo(
+    thinking: ClaimedThinkingMessage,
+    duration: number,
+  ): gsap.core.Timeline {
+    let transfer: SignupLogoTransfer | null = null;
+    const progress = { value: 0 };
+
+    return gsap.timeline()
+      .call(() => {
+        transfer = this.createSignupLogoTransfer(thinking.headerGlyph);
+        gsap.set(this.signupLogo, { autoAlpha: 0 });
+        gsap.set(thinking.header, { autoAlpha: 1, y: 0 });
+        gsap.set(thinking.traveler, { autoAlpha: 0 });
+        this.snapThinkingLogoTo(thinking, thinking.headerGlyph);
+      })
+      .add(this.streamThinkingHeader(thinking.header), motionDuration(Math.min(duration, 0.16)))
+      .to(progress, {
+        value: 1,
+        duration: SIGNUP_LOGO_TRANSFER.duration,
+        ease: SIGNUP_LOGO_TRANSFER.ease,
+        overwrite: "auto",
+        onUpdate: () => this.renderSignupLogoTransfer(transfer, progress.value),
+      }, 0)
+      .call(() => {
+        this.renderSignupLogoTransfer(transfer, 1);
+        this.snapThinkingLogoTo(thinking, thinking.headerGlyph);
+        gsap.set(thinking.traveler, { autoAlpha: 1 });
+        transfer?.el.remove();
+      });
+  }
+
+  private consumeSignupLogoTransfer(): boolean {
+    const shouldTransfer = this.transferSignupLogoOnNextThinking;
+    this.transferSignupLogoOnNextThinking = false;
+
+    if (!shouldTransfer) return false;
+    if (!this.signupLogo.isConnected) return false;
+
+    const rect = this.signupLogo.getBoundingClientRect();
+    return rect.width > 0 && rect.height > 0;
+  }
+
+  private createSignupLogoTransfer(target: HTMLElement): SignupLogoTransfer {
+    const sourceRect = this.signupLogo.getBoundingClientRect();
+    const sourcePosition = this.getElementLocalRect(sourceRect, this.chatBody);
+    const clone = this.signupLogo.cloneNode(true) as HTMLElement;
+
+    clone.className = "wa-signup-logo-transfer";
+    clone.removeAttribute("data-signup-logo-target");
+    clone.setAttribute("aria-hidden", "true");
+    this.chatBody.append(clone);
+    gsap.set(clone, {
+      width: sourceRect.width,
+      height: sourceRect.height,
+      x: sourcePosition.left,
+      y: sourcePosition.top,
+      color: getComputedStyle(this.signupLogo).color,
+      autoAlpha: 1,
+    });
+    gsap.set(target, { autoAlpha: 1 });
+
+    return {
+      el: clone,
+      startX: sourcePosition.left,
+      startY: sourcePosition.top,
+      startWidth: sourceRect.width,
+      startHeight: sourceRect.height,
+      target,
+      setX: gsap.quickSetter(clone, "x", "px") as (value: number) => void,
+      setY: gsap.quickSetter(clone, "y", "px") as (value: number) => void,
+      setWidth: gsap.quickSetter(clone, "width", "px") as (value: number) => void,
+      setHeight: gsap.quickSetter(clone, "height", "px") as (value: number) => void,
+    };
+  }
+
+  private renderSignupLogoTransfer(transfer: SignupLogoTransfer | null, progress: number): void {
+    if (!transfer) return;
+
+    const targetRect = transfer.target.getBoundingClientRect();
+    const targetPosition = this.getElementLocalRect(targetRect, this.chatBody);
+    const easedProgress = smoothstep(progress);
+
+    transfer.setX(this.interpolate(transfer.startX, targetPosition.left, easedProgress));
+    transfer.setY(this.interpolate(transfer.startY, targetPosition.top, easedProgress));
+    transfer.setWidth(this.interpolate(transfer.startWidth, targetRect.width, easedProgress));
+    transfer.setHeight(this.interpolate(transfer.startHeight, targetRect.height, easedProgress));
+    gsap.set(transfer.el, {
+      color: progress > 0.78 ? SIGNUP_LOGO_TRANSFER.targetColor : getComputedStyle(this.signupLogo).color,
+    });
   }
 
   private addThinkingStepReveal(

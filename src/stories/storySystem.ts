@@ -62,6 +62,8 @@ export const SIGNUP_EMAIL_TARGET = responsiveElementTarget("[data-signup-field]"
   mobile: -48,
 });
 
+export const SIGNUP_SUBMIT_TARGET = responsiveElementTarget("[data-signup-submit]", "center");
+
 export const SEND_TARGET = responsiveElementTarget("[data-send-button]", "center");
 
 const THINKING_IDLE_TARGET = {
