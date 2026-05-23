@@ -680,8 +680,9 @@ function getFoldedRoleTableColumnWidth(label: string, foldsRoleIntoName: boolean
   if (!foldsRoleIntoName) return undefined;
 
   const normalized = label.toLowerCase();
-  if (normalized.includes("connector") || normalized.includes("connection")) return "minmax(300px,1.45fr)";
-  if (normalized.includes("email") || normalized.includes("mobile")) return "minmax(150px,0.88fr)";
+  if (normalized.includes("connector") || normalized.includes("connection")) return "minmax(170px,0.78fr)";
+  if (normalized.includes("email")) return "minmax(190px,0.95fr)";
+  if (normalized.includes("mobile")) return "minmax(150px,0.72fr)";
   return "minmax(130px,1fr)";
 }
 

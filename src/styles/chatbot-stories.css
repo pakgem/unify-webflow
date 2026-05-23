@@ -1518,6 +1518,10 @@ body {
   --wa-data-table-scroll-width: 860px;
 }
 
+.wa-data-table[data-table-variant="enriched"] {
+  --wa-data-table-scroll-width: 760px;
+}
+
 .wa-data-table__row:first-child {
   border-top: 0;
 }
@@ -1823,8 +1827,25 @@ body {
 }
 
 .wa-data-table__cell[data-column-key="email"],
-.wa-data-table__cell[data-column-key="number"] {
+.wa-data-table__cell[data-column-key="number"],
+.wa-data-table__cell[data-column-key="work-email"],
+.wa-data-table__cell[data-column-key="mobile"] {
   color: #565553;
+}
+
+.wa-data-table[data-table-variant="enriched"] .wa-data-table__cell[data-column-key="email"],
+.wa-data-table[data-table-variant="enriched"] .wa-data-table__cell[data-column-key="number"],
+.wa-data-table[data-table-variant="enriched"] .wa-data-table__cell[data-column-key="work-email"],
+.wa-data-table[data-table-variant="enriched"] .wa-data-table__cell[data-column-key="mobile"] {
+  background: rgba(14, 156, 144, 0.12);
+  color: #0c6f66;
+}
+
+.wa-data-table[data-table-variant="enriched"] .wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="email"],
+.wa-data-table[data-table-variant="enriched"] .wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="number"],
+.wa-data-table[data-table-variant="enriched"] .wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="work-email"],
+.wa-data-table[data-table-variant="enriched"] .wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="mobile"] {
+  color: #147970;
 }
 
 .wa-data-table--proximity .wa-data-table__row:not([data-header="true"]) {
