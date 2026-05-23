@@ -629,6 +629,10 @@ body {
   color: #aaa89e;
 }
 
+.wa-signup-field [data-signup-email] {
+  transform: translateY(-1px);
+}
+
 .wa-signup-field [data-signup-email]::after {
   content: "";
   display: inline-block;
