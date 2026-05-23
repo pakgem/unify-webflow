@@ -1247,17 +1247,17 @@ export class ChatActor {
   strategyPlans(plans: StrategyPlanConfig[]): gsap.core.Timeline {
     const cards = plans.map((plan) => this.createStrategyPlan(plan));
     const grid = document.createElement("div");
-    const summaries = cards.flatMap((card) => this.queryElements(card, ".wa-strategy-plan__summary"));
+    const bulletItems = cards.flatMap((card) => this.queryElements(card, ".wa-strategy-plan__bullets li"));
 
     grid.className = "wa-result-grid has-strategy-plans";
     grid.dataset.strategyPlans = plans.map((plan) => plan.id).join(" ");
     grid.append(...cards);
 
-    gsap.set(summaries, { autoAlpha: 0, y: 8 });
+    gsap.set(bulletItems, { autoAlpha: 0, y: 5 });
 
     return this.revealComponentItems("strategy", grid, cards, COMPONENT_CHILD_REVEAL.strategyCard)
       .to(
-        summaries,
+        bulletItems,
         {
           autoAlpha: 1,
           y: 0,
@@ -1267,6 +1267,30 @@ export class ChatActor {
         },
         "-=0.22",
       );
+  }
+
+  strategyPlanHoverSequence(selector: string): gsap.core.Timeline {
+    const tl = gsap.timeline();
+    const state: { cards: HTMLElement[] } = { cards: [] };
+
+    tl.call(() => {
+      const container = this.root.querySelector<HTMLElement>(selector);
+      state.cards = container ? this.queryElements(container, ".wa-strategy-plan") : [];
+    });
+
+    for (let index = 0; index < 3; index += 1) {
+      tl.call(() => {
+        state.cards.forEach((card, cardIndex) => {
+          card.toggleAttribute("data-cursor-hover", cardIndex === index);
+        });
+      }).to({}, { duration: motionDuration(0.22), ease: "none" });
+    }
+
+    tl.call(() => {
+      state.cards.forEach((card) => card.removeAttribute("data-cursor-hover"));
+    });
+
+    return tl;
   }
 
   dataSourcesGrid(config: DataSourceGridConfig): gsap.core.Timeline {
@@ -3971,26 +3995,28 @@ export class ChatActor {
     card.className = "wa-strategy-plan";
     card.dataset.strategyPlan = plan.id;
 
-    const label = document.createElement("div");
-    label.className = "wa-strategy-plan__label";
-    label.textContent = plan.label;
-
     const title = document.createElement("h3");
     title.className = "wa-strategy-plan__title";
     title.textContent = plan.title;
 
-    const summary = document.createElement("p");
-    summary.className = "wa-strategy-plan__summary";
-    summary.textContent = this.getStrategyPlanSummary(plan);
+    const bullets = document.createElement("ul");
+    bullets.className = "wa-strategy-plan__bullets";
 
-    card.append(label, title, summary);
+    for (const item of this.getStrategyPlanBullets(plan)) {
+      const bullet = document.createElement("li");
+      bullet.textContent = item;
+      bullets.append(bullet);
+    }
+
+    card.append(title, bullets);
     return card;
   }
 
-  private getStrategyPlanSummary(plan: StrategyPlanConfig): string {
-    if (plan.summary) return plan.summary;
+  private getStrategyPlanBullets(plan: StrategyPlanConfig): string[] {
+    if (plan.bullets?.length) return plan.bullets;
+    if (plan.summary) return plan.summary.split(/\n+/).map((item) => item.trim()).filter(Boolean);
 
-    return [plan.audience, plan.motion, plan.proof].filter(Boolean).join(". ");
+    return [plan.audience, plan.motion, plan.proof].filter((item): item is string => Boolean(item));
   }
 
   private createDataSourcesGrid(config: DataSourceGridConfig): HTMLElement {

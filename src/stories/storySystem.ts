@@ -373,6 +373,8 @@ function addPersonalizationSwipeGame(
 function componentAttention(ctx: StoryContext, selector: string, label: string): gsap.core.Timeline {
   const tl = createBuildTimeline(ctx).add(ctx.cursor.scanAcross(selector, { label }));
 
+  if (label.startsWith("strategy-")) tl.add(ctx.chat.strategyPlanHoverSequence(selector), "<+=0.06");
+
   return releaseBuildTimeline(tl);
 }
 

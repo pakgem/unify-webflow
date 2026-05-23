@@ -45,21 +45,30 @@ const GTM_RESEARCH_STEPS = [
 const GTM_STRATEGY_PLANS = [
   {
     id: "founder-signal",
-    label: "Strategy one",
-    title: "Founder-led signal capture",
-    summary: "Use hiring, funding, and founder activity to catch seed teams right as they start building a repeatable sales motion.",
+    label: "Idea one",
+    title: "Target DevOps teams outgrowing AWS complexity",
+    bullets: [
+      "I'll find mid-market SaaS companies with heavy AWS footprints and hiring DevOps",
+      "I'll run a 3-step email + LinkedIn sequence using the Notion infra efficiency angle",
+    ],
   },
   {
     id: "revops-consolidation",
-    label: "Strategy two",
-    title: "RevOps consolidation wedge",
-    summary: "lead with a data-quality audit for teams already showing CRM cleanup pain, then turn the gaps into a consolidation case.",
+    label: "Idea two",
+    title: "Intercept AI teams burning cycles on LLM infra",
+    bullets: [
+      "I'll identify companies building AI products, showing LLM/ML engineering hiring signals",
+      "I'll craft a sequence leading with AI infra complexity pain and Vercel AI SDK as the path",
+    ],
   },
   {
     id: "pipeline-acceleration",
-    label: "Strategy three",
-    title: "Pipeline acceleration sprint",
-    summary: "Package the strongest buyer and account signals into a short sprint for sales leaders who need near-term pipeline movement.",
+    label: "Idea three",
+    title: "Hit e-commerce teams before peak season",
+    bullets: [
+      "I'll find ecom and DTC brands with 50+ engineers and upcoming high-traffic events",
+      "I'll lead with PAIGE's Black Friday results in a short sequence timed to pre-peak urgency",
+    ],
   },
 ] satisfies StrategyPlanConfig[];
 
@@ -1021,7 +1030,7 @@ export const defaultStories: StoryDefinition[] = [
         { kind: "transitionSignupToChat", at: `+=${STORY_TIMING.beat}` },
         { kind: "status", text: "Researching Acme", at: "<" },
         { kind: "thinking", steps: GTM_RESEARCH_STEPS, hold: 0.46, at: "+=0.04" },
-        { kind: "assistant", text: "I found three GTM paths worth testing first." },
+        { kind: "assistant", text: "Here are some ideas I can put into action for you:" },
         { kind: "status", text: "Game plans ready", at: "<" },
         { kind: "strategyPlans", plans: GTM_STRATEGY_PLANS, at: "-=0.08" },
         exitStory(EXIT_TARGETS.right, "+=0.18"),

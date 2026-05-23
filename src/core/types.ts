@@ -75,6 +75,7 @@ export type StrategyPlanConfig = {
   label: string;
   title: string;
   summary?: string;
+  bullets?: string[];
   audience?: string;
   motion?: string;
   proof?: string;

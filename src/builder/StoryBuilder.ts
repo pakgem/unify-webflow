@@ -2127,7 +2127,7 @@ function createSeedSteps(storyId: string, fallbackSummary: string): BuilderStep[
         "Scanning careers pages for priorities",
         "Mapping current GTM signals",
       ]),
-      { kind: "assistant", text: "I found three GTM paths worth testing first.", note: "" },
+      { kind: "assistant", text: "Here are some ideas I can put into action for you:", note: "" },
       {
         kind: "component",
         text: "Three compact GTM strategy cards",
@@ -2462,19 +2462,28 @@ function createStrategyComponent(): BuilderStrategyComponent {
     title: "Three go-to-market strategies",
     cards: [
       {
-        label: "Strategy one",
-        title: "Founder-led signal capture",
-        summary: "Use hiring, funding, and founder activity to catch seed teams right as they start building a repeatable sales motion.",
+        label: "Idea one",
+        title: "Target DevOps teams outgrowing AWS complexity",
+        summary: [
+          "I'll find mid-market SaaS companies with heavy AWS footprints and hiring DevOps",
+          "I'll run a 3-step email + LinkedIn sequence using the Notion infra efficiency angle",
+        ].join("\n"),
       },
       {
-        label: "Strategy two",
-        title: "RevOps consolidation wedge",
-        summary: "lead with a data-quality audit for teams already showing CRM cleanup pain, then turn the gaps into a consolidation case.",
+        label: "Idea two",
+        title: "Intercept AI teams burning cycles on LLM infra",
+        summary: [
+          "I'll identify companies building AI products, showing LLM/ML engineering hiring signals",
+          "I'll craft a sequence leading with AI infra complexity pain and Vercel AI SDK as the path",
+        ].join("\n"),
       },
       {
-        label: "Strategy three",
-        title: "Pipeline acceleration sprint",
-        summary: "Package the strongest buyer and account signals into a short sprint for sales leaders who need near-term pipeline movement.",
+        label: "Idea three",
+        title: "Hit e-commerce teams before peak season",
+        summary: [
+          "I'll find ecom and DTC brands with 50+ engineers and upcoming high-traffic events",
+          "I'll lead with PAIGE's Black Friday results in a short sequence timed to pre-peak urgency",
+        ].join("\n"),
       },
     ],
   };

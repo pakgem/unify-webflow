@@ -750,6 +750,7 @@ function toStrategyPlans(component: Extract<BuilderComponent, { kind: "strategyC
     label: card.label,
     title: card.title,
     summary: card.summary,
+    bullets: card.summary.split(/\n+/).map((item) => item.trim()).filter(Boolean),
   }));
 }
 
