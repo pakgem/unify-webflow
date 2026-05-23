@@ -4007,7 +4007,11 @@ export class ChatActor {
     button.dataset.tooltipVisible = "false";
     button.setAttribute("aria-label", action.tooltip ?? action.label);
 
-    button.append(this.createDataTableActionIcon(action.icon ?? "email"));
+    const label = document.createElement("span");
+    label.className = "wa-data-table-action__label";
+    label.textContent = action.label;
+
+    button.append(this.createDataTableActionIcon(action.icon ?? "email"), label);
 
     if (action.badge) {
       button.dataset.tooltipBadge = action.badge;
@@ -4031,14 +4035,18 @@ export class ChatActor {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     const paths = iconName === "dialer"
       ? [
-          "M7.2 5.6c.5 4 2.7 6.2 6.2 7.2l1.9-1.9c.3-.3.7-.4 1.1-.2l3.1 1.2c.5.2.8.6.8 1.1v3.1c0 .7-.5 1.2-1.2 1.2C10 17.3 2.7 10 2.7 1.9 2.7 1.2 3.2.7 3.9.7H7c.5 0 .9.3 1.1.8l1.2 3.1c.1.4.1.8-.2 1.1L7.2 7.6",
+          "M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2",
+          "M15 7a2 2 0 0 1 2 2",
+          "M15 3a6 6 0 0 1 6 6",
         ]
       : [
-          "M3.5 5.5h17v13h-17z",
-          "m4.2 6.1 4.9 3.8a2.2 2.2 0 0 0 2.8 0l4.9-3.8",
+          "M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z",
+          "M3 7l9 6l9 -6",
         ];
 
     svg.classList.add("wa-data-table-action__icon");
+    svg.setAttribute("width", "16");
+    svg.setAttribute("height", "16");
     svg.setAttribute("viewBox", "0 0 24 24");
     svg.setAttribute("aria-hidden", "true");
     svg.setAttribute("focusable", "false");

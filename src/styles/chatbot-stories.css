@@ -1761,7 +1761,7 @@ body {
 .wa-data-table__actions {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
   min-width: 0;
 }
 
@@ -1770,15 +1770,18 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 26px;
-  height: 26px;
-  padding: 0;
+  gap: 6px;
+  min-width: 0;
+  min-height: 32px;
+  padding: 0 10px;
   border: 1px solid #ded9d2;
-  border-radius: 5px;
+  border-radius: 6px;
   color: #555452;
   background: transparent;
+  font: inherit;
   box-shadow: 0 1px 1px rgba(23, 23, 20, 0.03);
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .wa-data-table-action[data-action-variant="primary"] {
@@ -1789,13 +1792,21 @@ body {
 
 .wa-data-table-action__icon {
   display: block;
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-width: 1.8;
+  stroke-width: 2;
+}
+
+.wa-data-table-action__label {
+  display: inline-block;
+  font-size: 11px;
+  line-height: 1;
+  font-weight: 520;
 }
 
 .wa-data-table-action__badge {
@@ -5953,19 +5964,22 @@ body {
   }
 
   .wa-data-table__actions {
-    gap: 4px;
+    gap: 5px;
   }
 
   .wa-data-table-action {
-    width: 22px;
-    height: 22px;
-    padding: 0;
-    border-radius: 4px;
+    min-height: 28px;
+    padding: 0 8px;
+    border-radius: 5px;
   }
 
   .wa-data-table-action__icon {
-    width: 12px;
-    height: 12px;
+    width: 16px;
+    height: 16px;
+  }
+
+  .wa-data-table-action__label {
+    font-size: 10px;
   }
 
   .wa-data-table-action__badge {

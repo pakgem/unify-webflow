@@ -777,7 +777,7 @@ function toDataTableAction(action: NonNullable<BuilderTableComponent["actions"]>
 
   return {
     id,
-    label: action.label,
+    label: id === "power-dialer" ? "Power dial" : "Outreach sequence",
     icon: id === "power-dialer" ? "dialer" : "email",
     tooltip: action.tooltip,
     badge: action.badge || undefined,

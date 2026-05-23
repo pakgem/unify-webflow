@@ -848,7 +848,7 @@ const WEBSITE_VISITOR_SALES_TABLE = {
   actions: [
     {
       id: "power-dialer",
-      label: "Power dialer",
+      label: "Power dial",
       icon: "dialer",
       tooltip: "Start power dialing",
       badge: "Coming soon",
@@ -856,7 +856,7 @@ const WEBSITE_VISITOR_SALES_TABLE = {
     },
     {
       id: "email-sequence",
-      label: "Create outreach sequence",
+      label: "Outreach sequence",
       icon: "email",
       tooltip: "Build outreach sequence",
       variant: "secondary",
