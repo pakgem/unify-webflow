@@ -368,6 +368,7 @@ const MARKETING_PAGE_MOTION = {
   revealEase: "power3.inOut",
   cardDuration: motionDuration(0.28),
 };
+const STRATEGY_REVEAL_SCROLL_EXTRA = 4;
 const MARKETING_DATA_SOURCE_COLUMNS = [
   ["CRM", "Core Data", "Ad Intelligence"],
   ["Web Intent", "Product Analytics", "SMB Data", "Ecommerce"],
@@ -1258,7 +1259,13 @@ export class ChatActor {
 
     const message = this.claimComponentMessage("strategy", grid);
 
-    return this.revealPreparedItems(message, cards, COMPONENT_CHILD_REVEAL.strategyCard, scrollAnchor)
+    return this.revealPreparedItems(
+      message,
+      cards,
+      COMPONENT_CHILD_REVEAL.strategyCard,
+      scrollAnchor,
+      STRATEGY_REVEAL_SCROLL_EXTRA,
+    )
       .to(
         bulletItems,
         {
@@ -2331,8 +2338,9 @@ export class ChatActor {
     vars: gsap.TweenVars,
     position: string | number = "-=0.22",
     scrollAnchor: HTMLElement | null = null,
+    scrollOffset = 0,
   ): gsap.core.Timeline {
-    return gsap.timeline().add(this.revealMessage(message, scrollAnchor)).to(targets, vars, position);
+    return gsap.timeline().add(this.revealMessage(message, scrollAnchor, scrollOffset)).to(targets, vars, position);
   }
 
   private revealMessageWithChildFrom(
@@ -2383,17 +2391,25 @@ export class ChatActor {
     targets: HTMLElement[],
     preset: ChildRevealPreset,
     scrollAnchor: HTMLElement | null = null,
+    scrollOffset = 0,
   ): gsap.core.Timeline {
     if (targets.length) gsap.set(targets, { ...preset.from });
 
-    return this.revealMessageWithChildren(message, targets, { ...preset.to }, preset.position, scrollAnchor).call(
-      () => this.animateMessageScrollIntoView(message, CHAT_SCROLL_MOTION.followDuration, scrollAnchor),
+    return this.revealMessageWithChildren(
+      message,
+      targets,
+      { ...preset.to },
+      preset.position,
+      scrollAnchor,
+      scrollOffset,
+    ).call(
+      () => this.animateMessageScrollIntoView(message, CHAT_SCROLL_MOTION.followDuration, scrollAnchor, scrollOffset),
       undefined,
       "+=0.02",
     );
   }
 
-  private revealMessage(message: HTMLElement, scrollAnchor: HTMLElement | null = null): gsap.core.Timeline {
+  private revealMessage(message: HTMLElement, scrollAnchor: HTMLElement | null = null, scrollOffset = 0): gsap.core.Timeline {
     let scrollTarget = 0;
 
     return gsap
@@ -2403,7 +2419,7 @@ export class ChatActor {
         this.scrollTween = null;
         message.style.display = "grid";
         if (this.composerVisible) this.pinThreadToBottom();
-        scrollTarget = this.getMessageScrollTarget(message, scrollAnchor);
+        scrollTarget = this.getMessageScrollTarget(message, scrollAnchor, scrollOffset);
       })
       .to(
         this.thread,
@@ -5206,9 +5222,13 @@ export class ChatActor {
     });
   }
 
-  private getMessageScrollTarget(message: HTMLElement, alignElement: HTMLElement | null = null): number {
+  private getMessageScrollTarget(
+    message: HTMLElement,
+    alignElement: HTMLElement | null = null,
+    alignOffset = 0,
+  ): number {
     const alignedTarget = alignElement
-      ? this.getAlignedElementScrollTarget(alignElement)
+      ? this.getAlignedElementScrollTarget(alignElement, alignOffset)
       : this.getAlignedMessageScrollTarget(message);
 
     if (alignedTarget !== null) return alignedTarget;
@@ -5236,9 +5256,9 @@ export class ChatActor {
     return this.getAlignedElementScrollTarget(equalInsetTarget);
   }
 
-  private getAlignedElementScrollTarget(element: HTMLElement): number {
+  private getAlignedElementScrollTarget(element: HTMLElement, extraScroll = 0): number {
     const sideInset = this.getElementSideInset(element);
-    const target = this.getElementOffsetTopWithinThread(element) - sideInset;
+    const target = this.getElementOffsetTopWithinThread(element) - sideInset + extraScroll;
 
     return Math.min(Math.max(0, target), this.getThreadBottomScrollTarget());
   }
@@ -5285,8 +5305,9 @@ export class ChatActor {
     message: HTMLElement,
     duration = CHAT_SCROLL_MOTION.followDuration,
     scrollAnchor: HTMLElement | null = null,
+    scrollOffset = 0,
   ): void {
-    const target = this.getMessageScrollTarget(message, scrollAnchor);
+    const target = this.getMessageScrollTarget(message, scrollAnchor, scrollOffset);
 
     if (this.prefersReducedMotion || Math.abs(this.thread.scrollTop - target) < 1) {
       this.thread.scrollTop = target;

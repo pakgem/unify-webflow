@@ -2356,7 +2356,7 @@ const fs = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="52 42 88 66">
   revealDuration: A(0.62),
   revealEase: "power3.inOut",
   cardDuration: A(0.28)
-}, Ps = [
+}, Ps = 4, Is = [
   ["CRM", "Core Data", "Ad Intelligence"],
   ["Web Intent", "Product Analytics", "SMB Data", "Ecommerce"],
   ["Enrichment", "Company / Fundraising", "Tech Stack"],
@@ -2364,7 +2364,7 @@ const fs = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="52 42 88 66">
 ], za = {
   contentWidth: 1881,
   height: 1280
-}, Is = 96, rr = ".wa-cursor-file, .wa-file-landing-clone, .wa-csv-drop", Ds = "[data-marketing-data-sources-grid]", nr = "[data-data-table]", Ft = "[data-table-action]", or = "[data-table-page-button]", Rs = "[data-table-page-range]", Fa = {
+}, Ds = 96, rr = ".wa-cursor-file, .wa-file-landing-clone, .wa-csv-drop", Rs = "[data-marketing-data-sources-grid]", nr = "[data-data-table]", Ft = "[data-table-action]", or = "[data-table-page-button]", Ns = "[data-table-page-range]", Fa = {
   offscreenMargin: 96,
   pullInDuration: A(0.38),
   pullInEase: "power3.out"
@@ -2464,7 +2464,7 @@ const fs = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="52 42 88 66">
     position: "-=0.18"
   }
 };
-class Ns {
+class Ls {
   constructor(e) {
     this.root = e, this.chatShell = this.required("[data-chat-shell]"), this.chatBody = this.required(".wa-chat-shell__body"), this.thread = this.required("[data-chat-thread]"), this.composer = this.required("[data-chat-input]"), this.composerText = this.required("[data-composer-text]"), this.composerContents = Array.from(this.composer.children).filter(
       (t) => t instanceof HTMLElement
@@ -2872,7 +2872,7 @@ class Ns {
       duration: A(0.14),
       ease: "power1.out",
       onStart: () => {
-        l.table = this.findDataTable(e), s && this.expectedDataTablePages.set(e, t), l.currentRows = l.table ? this.getVisibleDataTableRows(l.table) : [], l.targetRows = l.table ? this.queryElements(l.table, `.wa-data-table__row[data-page="${t}"]`) : [], l.buttons = l.table ? this.queryElements(l.table, or) : [], l.targetButton = l.buttons.find((d) => Number(d.dataset.tablePageButton) === t), l.range = l.table?.querySelector(Rs) ?? null, l.canSwitch = !!(l.table && l.targetRows.length && l.table.dataset.activePage !== String(t)), l.canSwitch && w.set(l.currentRows, { autoAlpha: 1, y: 0 });
+        l.table = this.findDataTable(e), s && this.expectedDataTablePages.set(e, t), l.currentRows = l.table ? this.getVisibleDataTableRows(l.table) : [], l.targetRows = l.table ? this.queryElements(l.table, `.wa-data-table__row[data-page="${t}"]`) : [], l.buttons = l.table ? this.queryElements(l.table, or) : [], l.targetButton = l.buttons.find((d) => Number(d.dataset.tablePageButton) === t), l.range = l.table?.querySelector(Ns) ?? null, l.canSwitch = !!(l.table && l.targetRows.length && l.table.dataset.activePage !== String(t)), l.canSwitch && w.set(l.currentRows, { autoAlpha: 1, y: 0 });
       },
       onUpdate: () => {
         if (!l.canSwitch) return;
@@ -2954,7 +2954,13 @@ class Ns {
     const t = e.map((s) => this.createStrategyPlan(s)), a = document.createElement("div"), i = t.flatMap((s) => this.queryElements(s, ".wa-strategy-plan__bullets li")), r = this.getLastMessageBody();
     a.className = "wa-result-grid has-strategy-plans", a.dataset.strategyPlans = e.map((s) => s.id).join(" "), a.append(...t), w.set(i, { autoAlpha: 0, y: 5 });
     const o = this.claimComponentMessage("strategy", a);
-    return this.revealPreparedItems(o, t, Se.strategyCard, r).to(
+    return this.revealPreparedItems(
+      o,
+      t,
+      Se.strategyCard,
+      r,
+      Ps
+    ).to(
       i,
       {
         autoAlpha: 1,
@@ -3657,8 +3663,8 @@ class Ns {
       e
     ).toFixed(2)}px rgba(23, 23, 20, ${(be.shadowAlpha * t).toFixed(3)})`;
   }
-  revealMessageWithChildren(e, t, a, i = "-=0.22", r = null) {
-    return w.timeline().add(this.revealMessage(e, r)).to(t, a, i);
+  revealMessageWithChildren(e, t, a, i = "-=0.22", r = null, o = 0) {
+    return w.timeline().add(this.revealMessage(e, r, o)).to(t, a, i);
   }
   revealMessageWithChildFrom(e, t, a, i, r = "-=0.22") {
     return w.timeline().add(this.revealMessage(e)).fromTo(
@@ -3679,21 +3685,28 @@ class Ns {
   resolveRevealTargets(e, t) {
     return typeof t == "string" ? this.queryElements(e, t) : t;
   }
-  revealPreparedItems(e, t, a, i = null) {
-    return t.length && w.set(t, { ...a.from }), this.revealMessageWithChildren(e, t, { ...a.to }, a.position, i).call(
-      () => this.animateMessageScrollIntoView(e, ze.followDuration, i),
+  revealPreparedItems(e, t, a, i = null, r = 0) {
+    return t.length && w.set(t, { ...a.from }), this.revealMessageWithChildren(
+      e,
+      t,
+      { ...a.to },
+      a.position,
+      i,
+      r
+    ).call(
+      () => this.animateMessageScrollIntoView(e, ze.followDuration, i, r),
       void 0,
       "+=0.02"
     );
   }
-  revealMessage(e, t = null) {
-    let a = 0;
+  revealMessage(e, t = null, a = 0) {
+    let i = 0;
     return w.timeline().call(() => {
-      this.scrollTween?.kill(), this.scrollTween = null, e.style.display = "grid", this.composerVisible && this.pinThreadToBottom(), a = this.getMessageScrollTarget(e, t);
+      this.scrollTween?.kill(), this.scrollTween = null, e.style.display = "grid", this.composerVisible && this.pinThreadToBottom(), i = this.getMessageScrollTarget(e, t, a);
     }).to(
       this.thread,
       {
-        scrollTop: () => a,
+        scrollTop: () => i,
         duration: ze.revealDuration,
         ease: ze.revealEase,
         overwrite: "auto"
@@ -4536,7 +4549,7 @@ class Ns {
   }
   createMarketingDataSourcesGrid(e) {
     const t = this.createDataSourcesGrid(e), a = document.createElement("div"), i = document.createElement("div"), r = t.querySelector(".wa-data-source-grid__header"), o = this.groupDataSources(e.sources);
-    return t.classList.add("wa-data-source-grid--marketing"), t.dataset.marketingDataSourcesGrid = e.id, a.className = "wa-data-source-grid__scale", i.className = "wa-data-source-grid__groups", Ps.forEach((s) => {
+    return t.classList.add("wa-data-source-grid--marketing"), t.dataset.marketingDataSourcesGrid = e.id, a.className = "wa-data-source-grid__scale", i.className = "wa-data-source-grid__groups", Is.forEach((s) => {
       const l = document.createElement("div");
       l.className = "wa-data-source-grid__column", s.forEach((d) => {
         const c = o.find((u) => u.category === d);
@@ -4679,7 +4692,7 @@ class Ns {
   }
   updateMailboxThumbprintFill(e, t) {
     e.forEach((a, i) => {
-      const r = qs(i, t);
+      const r = Os(i, t);
       if (r <= 0) {
         a.setAttribute("stroke-dasharray", "0 100");
         return;
@@ -5014,7 +5027,7 @@ class Ns {
     );
   }
   clearMarketingPanels() {
-    this.removeElements(Ds);
+    this.removeElements(Rs);
   }
   registerTransientElement(e, t) {
     this.transientCleanups.push(() => {
@@ -5030,19 +5043,19 @@ class Ns {
       w.killTweensOf(t), t.remove();
     });
   }
-  getMessageScrollTarget(e, t = null) {
-    const a = t ? this.getAlignedElementScrollTarget(t) : this.getAlignedMessageScrollTarget(e);
-    if (a !== null) return a;
-    const i = e.offsetTop + e.offsetHeight + this.getThreadBottomPadding() - this.thread.clientHeight;
-    return this.composerVisible ? Math.max(0, i, this.getThreadBottomScrollTarget()) : Math.max(0, i);
+  getMessageScrollTarget(e, t = null, a = 0) {
+    const i = t ? this.getAlignedElementScrollTarget(t, a) : this.getAlignedMessageScrollTarget(e);
+    if (i !== null) return i;
+    const r = e.offsetTop + e.offsetHeight + this.getThreadBottomPadding() - this.thread.clientHeight;
+    return this.composerVisible ? Math.max(0, r, this.getThreadBottomScrollTarget()) : Math.max(0, r);
   }
   getAlignedMessageScrollTarget(e) {
     const t = e.matches('[data-scroll-align="equal-inset"]') ? e : e.querySelector('[data-scroll-align="equal-inset"]');
     return t ? this.getAlignedElementScrollTarget(t) : null;
   }
-  getAlignedElementScrollTarget(e) {
-    const t = this.getElementSideInset(e), a = this.getElementOffsetTopWithinThread(e) - t;
-    return Math.min(Math.max(0, a), this.getThreadBottomScrollTarget());
+  getAlignedElementScrollTarget(e, t = 0) {
+    const a = this.getElementSideInset(e), i = this.getElementOffsetTopWithinThread(e) - a + t;
+    return Math.min(Math.max(0, i), this.getThreadBottomScrollTarget());
   }
   getElementSideInset(e) {
     const t = e.getBoundingClientRect(), a = this.chatBody.getBoundingClientRect(), i = Number.parseFloat(getComputedStyle(this.chatBody).paddingLeft) || 0, r = t.left - a.left;
@@ -5065,14 +5078,14 @@ class Ns {
   pinThreadToBottom() {
     this.thread.scrollTop = this.getThreadBottomScrollTarget();
   }
-  animateMessageScrollIntoView(e, t = ze.followDuration, a = null) {
-    const i = this.getMessageScrollTarget(e, a);
-    if (this.prefersReducedMotion || Math.abs(this.thread.scrollTop - i) < 1) {
-      this.thread.scrollTop = i;
+  animateMessageScrollIntoView(e, t = ze.followDuration, a = null, i = 0) {
+    const r = this.getMessageScrollTarget(e, a, i);
+    if (this.prefersReducedMotion || Math.abs(this.thread.scrollTop - r) < 1) {
+      this.thread.scrollTop = r;
       return;
     }
     this.scrollTween?.kill(), this.scrollTween = w.to(this.thread, {
-      scrollTop: i,
+      scrollTop: r,
       duration: t,
       ease: ze.followEase,
       overwrite: "auto",
@@ -5083,7 +5096,7 @@ class Ns {
   }
   requestMessageScroll(e) {
     const t = performance.now();
-    this.scheduledScrollMessage = e, !(t - this.lastStreamScrollAt < Is) && (this.scheduledScrollFrame || (this.lastStreamScrollAt = t, this.scheduledScrollFrame = window.requestAnimationFrame(() => {
+    this.scheduledScrollMessage = e, !(t - this.lastStreamScrollAt < Ds) && (this.scheduledScrollFrame || (this.lastStreamScrollAt = t, this.scheduledScrollFrame = window.requestAnimationFrame(() => {
       const a = this.scheduledScrollMessage;
       this.scheduledScrollFrame = 0, this.scheduledScrollMessage = null, a?.isConnected && this.animateMessageScrollIntoView(a);
     })));
@@ -5095,7 +5108,7 @@ class Ns {
 function Sn(n) {
   return Math.min(1, Math.max(0, n));
 }
-function Ls(n) {
+function qs(n) {
   const e = Sn(n);
   return e * e * (3 - 2 * e);
 }
@@ -5113,13 +5126,13 @@ function Ha(n, e, t = "idle") {
   ]);
   return t === "connected" && (s.has(o) || o === "connected") ? "Connected" : s.has(o) ? a : i;
 }
-function qs(n, e) {
-  const t = ks[n] ?? 0, a = 24 + n * 11 % 8, i = Math.min(100, t + a), r = Ls((e - t) / (i - t));
+function Os(n, e) {
+  const t = ks[n] ?? 0, a = 24 + n * 11 % 8, i = Math.min(100, t + a), r = qs((e - t) / (i - t));
   if (r <= 0) return 0;
   const o = Ss.has(n) ? 20 : 12;
   return Math.round(o + r * (100 - o));
 }
-function Os(n, e) {
+function Bs(n, e) {
   return Math.hypot(e.x - n.x, e.y - n.y);
 }
 function Ut(n, e, t) {
@@ -5132,34 +5145,34 @@ function lr(n, e, t, a, i) {
     y: l * n.y + 3 * s * i * e.y + 3 * r * o * t.y + d * a.y
   };
 }
-function Bs(n) {
+function zs(n) {
   let e = 2166136261;
   for (let t = 0; t < n.length; t += 1)
     e ^= n.charCodeAt(t), e = Math.imul(e, 16777619);
   return e >>> 0;
 }
 function Cn(n) {
-  let e = Bs(n) || 1;
+  let e = zs(n) || 1;
   return () => {
     e += 1831565813;
     let t = e;
     return t = Math.imul(t ^ t >>> 15, t | 1), t ^= t + Math.imul(t ^ t >>> 7, t | 61), ((t ^ t >>> 14) >>> 0) / 4294967296;
   };
 }
-const zs = {
+const Fs = {
   slow: 560,
   normal: 860,
   quick: 1220
-}, Fs = {
+}, Hs = {
   entry: 1.08,
   hover: 0.96,
   click: 0.9,
   drag: 1.18,
   text: 1.04,
   exit: 1
-}, Hs = 1.24;
+}, Gs = 1.24;
 function na(n, e, t) {
-  const a = Cn(t.seed), i = Os(n, e), r = t.speed ?? "normal", o = t.intent ?? "hover";
+  const a = Cn(t.seed), i = Bs(n, e), r = t.speed ?? "normal", o = t.intent ?? "hover";
   if (t.reducedMotion || i < 2)
     return {
       start: n,
@@ -5168,7 +5181,7 @@ function na(n, e, t) {
       end: e,
       duration: t.reducedMotion ? 0.12 : 0.08
     };
-  const s = e.x - n.x, l = e.y - n.y, d = s / i, c = l / i, u = -c, p = d, m = a() > 0.5 ? 1 : -1, g = t.curve ?? 1, f = Ut(i * (o === "drag" ? 0.1 : o === "click" ? 0.17 : 0.22) * g, 18, 150) * m * (0.72 + a() * 0.44), b = i / zs[r] + 0.16, _ = Ut(b * Fs[o] * Hs, 0.3, 1.66), y = t.overshoot === !1 || i < 120 ? 0 : typeof t.overshoot == "number" ? t.overshoot : Ut(i * 0.026, 4, 18), v = y > 0 ? {
+  const s = e.x - n.x, l = e.y - n.y, d = s / i, c = l / i, u = -c, p = d, m = a() > 0.5 ? 1 : -1, g = t.curve ?? 1, f = Ut(i * (o === "drag" ? 0.1 : o === "click" ? 0.17 : 0.22) * g, 18, 150) * m * (0.72 + a() * 0.44), b = i / Fs[r] + 0.16, _ = Ut(b * Hs[o] * Gs, 0.3, 1.66), y = t.overshoot === !1 || i < 120 ? 0 : typeof t.overshoot == "number" ? t.overshoot : Ut(i * 0.026, 4, 18), v = y > 0 ? {
     x: e.x + d * y,
     y: e.y + c * y
   } : e, x = {
@@ -5213,8 +5226,8 @@ const Ga = "button, a, [role='button'], [data-send-button], [data-result-action]
   topRatio: 0.3,
   minTopInset: 74,
   maxTopInset: 190
-}, Gs = -135, Us = 0.34;
-class Vs {
+}, Us = -135, Vs = 0.34;
+class Ws {
   constructor(e, t, a = {}) {
     this.root = e, this.resolver = t, this.options = a, this.el = this.root.querySelector("[data-cursor]") ?? this.createElement(), this.floatLayer = this.ensureFloatLayer(), this.setX = w.quickSetter(this.el, "x", "px"), this.setY = w.quickSetter(this.el, "y", "px"), this.setRotation = w.quickSetter(this.el, "rotation", "deg");
     const i = this.resolver.resolve({ target: "[data-chat-shell]", anchor: "center" }, "cursor:start");
@@ -5586,7 +5599,7 @@ class Vs {
   renderMimicRotation(e, t) {
     const a = t.x - e.x, i = t.y - e.y;
     if (a * a + i * i < 4) return;
-    const r = Math.atan2(i, a) * 180 / Math.PI, o = Ws(r - Gs), s = this.rotationState + js(this.rotationState, o) * Us;
+    const r = Math.atan2(i, a) * 180 / Math.PI, o = js(r - Us), s = this.rotationState + Ys(this.rotationState, o) * Vs;
     this.renderRotation(s);
   }
   resetRotation(e = !1) {
@@ -5728,10 +5741,10 @@ function cr(n, e, t) {
     y: n.y + (e.y - n.y) * t
   };
 }
-function Ws(n) {
+function js(n) {
   return (n % 360 + 360) % 360;
 }
-function js(n, e) {
+function Ys(n, e) {
   return (e - n + 540) % 360 - 180;
 }
 const lt = {
@@ -5742,10 +5755,10 @@ const lt = {
   cursor: "Cursor",
   status: "State",
   file: "File"
-}, Ys = ["user", "assistant", "thinking", "component", "cursor", "file"], $s = "/api/story-draft", Xs = 800, An = "73 tone & tactic rules defined", _t = 3;
-class Js {
+}, $s = ["user", "assistant", "thinking", "component", "cursor", "file"], Xs = "/api/story-draft", Js = 800, An = "73 tone & tactic rules defined", _t = 3;
+class Ks {
   constructor(e, t, a = {}) {
-    this.root = e, this.sourceStories = t, this.options = a, this.stories = ur(t), this.selectedStepId = this.stories[0]?.steps[0]?.id ?? null, this.draftEndpoint = a.draftEndpoint ?? $s, this.draftAutoSave = a.draftAutoSave ?? !0;
+    this.root = e, this.sourceStories = t, this.options = a, this.stories = ur(t), this.selectedStepId = this.stories[0]?.steps[0]?.id ?? null, this.draftEndpoint = a.draftEndpoint ?? Xs, this.draftAutoSave = a.draftAutoSave ?? !0;
   }
   root;
   sourceStories;
@@ -5854,7 +5867,7 @@ class Js {
   renderAddRail() {
     const e = this.refs;
     if (!e || e.addRail.childElementCount) return;
-    const t = Ys.map((a) => {
+    const t = $s.map((a) => {
       const i = document.createElement("button");
       return i.className = "wa-builder-add-button", i.type = "button", i.dataset.builderAdd = a, i.textContent = `+ ${lt[a]}`, i;
     });
@@ -6010,7 +6023,7 @@ class Js {
     }), i.append(r, o, s), t ? (a.dataset.thinkingHeaderSuppressed = "true", a.append(l)) : a.append(i, l), a;
   }
   createComponentBody(e) {
-    if (e.component ??= tl(e.text), e.component.kind === "table") return this.createTableComponentBody(e, e.component);
+    if (e.component ??= al(e.text), e.component.kind === "table") return this.createTableComponentBody(e, e.component);
     if (e.component.kind === "strategyCards") return this.createStrategyComponentBody(e, e.component);
     if (e.component.kind === "enrichment") return this.createEnrichmentComponentBody(e, e.component);
     if (e.component.kind === "dataSources") return this.createDataSourcesComponentBody(e, e.component);
@@ -6518,18 +6531,18 @@ class Js {
     });
   }
   addStep(e) {
-    const t = Qs(e, el(e), ""), a = this.activeStory.steps, i = a.findIndex((o) => o.id === this.selectedStepId), r = i >= 0 ? i + 1 : a.length;
+    const t = Zs(e, tl(e), ""), a = this.activeStory.steps, i = a.findIndex((o) => o.id === this.selectedStepId), r = i >= 0 ? i + 1 : a.length;
     a.splice(r, 0, t), this.selectedStepId = t.id, this.render(), this.emitChange(`Added ${lt[e]} message`);
   }
   updateStep(e, t, a = {}) {
     const i = this.activeStory.steps.find((r) => r.id === e);
-    i && (Object.assign(i, t), i.kind === "thinking" && hl(i, t), this.renderExport(), this.emitChange("Draft updated", !1), a.renderThread !== !1 && (this.renderThread(), this.renderPanel()));
+    i && (Object.assign(i, t), i.kind === "thinking" && ml(i, t), this.renderExport(), this.emitChange("Draft updated", !1), a.renderThread !== !1 && (this.renderThread(), this.renderPanel()));
   }
   handleStepAction(e) {
     const t = e.dataset.builderAction, a = e.dataset.builderActionStep;
     if (!t || !a) return;
     const i = this.activeStory.steps, r = i.findIndex((o) => o.id === a);
-    r < 0 || (t === "duplicate" && (i.splice(r + 1, 0, wl(i[r])), this.selectedStepId = i[r + 1]?.id ?? a), t === "delete" && i.length > 1 && (i.splice(r, 1), this.selectedStepId = i[Math.min(r, i.length - 1)]?.id ?? null), this.render(), this.emitChange("Draft updated"));
+    r < 0 || (t === "duplicate" && (i.splice(r + 1, 0, bl(i[r])), this.selectedStepId = i[r + 1]?.id ?? a), t === "delete" && i.length > 1 && (i.splice(r, 1), this.selectedStepId = i[Math.min(r, i.length - 1)]?.id ?? null), this.render(), this.emitChange("Draft updated"));
   }
   handleDragStart(e) {
     const t = e.target, a = t?.closest("[data-builder-step]");
@@ -6537,7 +6550,7 @@ class Js {
       e.preventDefault();
       return;
     }
-    if (Sl(t) && !t?.closest("[data-builder-drag-handle]")) {
+    if (Cl(t) && !t?.closest("[data-builder-drag-handle]")) {
       e.preventDefault();
       return;
     }
@@ -6576,17 +6589,17 @@ class Js {
   }
   handleThinkingInput(e) {
     const t = e.dataset.builderThinkingStep, a = e.dataset.builderThinkingField, i = nt(e.dataset.builderThinkingItem), r = t ? this.activeStory.steps.find((o) => o.id === t) : null;
-    !r || !a || (r.thinking ??= Rt(r.text, r.note), ul(r.thinking, a, e.value, i), pl(r), this.selectedStepId === r.id && (this.syncPanelStepText(r.text), this.syncPanelStepNote(r.note)), this.renderExport(), this.emitChange("Thinking updated", !1));
+    !r || !a || (r.thinking ??= Rt(r.text, r.note), pl(r.thinking, a, e.value, i), hl(r), this.selectedStepId === r.id && (this.syncPanelStepText(r.text), this.syncPanelStepNote(r.note)), this.renderExport(), this.emitChange("Thinking updated", !1));
   }
   handleComponentInput(e) {
     const t = e.dataset.builderComponentStep, a = e.dataset.builderComponentField, i = t ? this.activeStory.steps.find((r) => r.id === t) : null;
-    !i?.component || !a || (gl(i.component, a, e.value, {
+    !i?.component || !a || (fl(i.component, a, e.value, {
       rowIndex: nt(e.dataset.builderComponentRow),
       columnIndex: nt(e.dataset.builderComponentColumn),
       cardIndex: nt(e.dataset.builderComponentCard),
       fieldIndex: nt(e.dataset.builderComponentGroup),
       itemIndex: nt(e.dataset.builderComponentItem)
-    }), i.text = fl(i.component), this.selectedStepId === i.id && this.syncPanelStepText(i.text), this.renderExport(), this.emitChange("Component updated", !1));
+    }), i.text = wl(i.component), this.selectedStepId === i.id && this.syncPanelStepText(i.text), this.renderExport(), this.emitChange("Component updated", !1));
   }
   handlePanelInput(e) {
     const t = e.dataset.builderPanelInput;
@@ -6631,7 +6644,7 @@ class Js {
     !t || !e.thinking || t.thread.querySelectorAll(
       `[data-builder-thinking-step="${e.id}"]`
     ).forEach((a) => {
-      const i = a.dataset.builderThinkingField, r = nt(a.dataset.builderThinkingItem), o = ml(e.thinking, i, r);
+      const i = a.dataset.builderThinkingField, r = nt(a.dataset.builderThinkingItem), o = gl(e.thinking, i, r);
       o === null || a.value === o || (a.value = o, a instanceof HTMLTextAreaElement && this.autoSize(a));
     });
   }
@@ -6669,7 +6682,7 @@ class Js {
           headers: { Accept: "application/json" }
         });
         if (e.status === 404) {
-          const r = await yl(e);
+          const r = await _l(e);
           if (gt(r) && r.error === "not_found") {
             this.setStatus("seeding blob draft"), this.loadingRemoteDraft = !1, this.queueRemoteSave();
             return;
@@ -6697,7 +6710,7 @@ class Js {
       }
       this.saveTimer !== null && window.clearTimeout(this.saveTimer), this.saveTimer = window.setTimeout(() => {
         this.saveTimer = null, this.saveRemoteDraft();
-      }, Xs);
+      }, Js);
     }
   }
   async saveRemoteDraft() {
@@ -6708,7 +6721,7 @@ class Js {
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
-            ...Cl()
+            ...Al()
           },
           body: JSON.stringify({
             schemaVersion: _t,
@@ -6746,10 +6759,10 @@ function ur(n) {
     id: e.id,
     label: e.navLabel ?? e.label,
     summary: e.navDescription ?? e.summary,
-    steps: Ks(e.id, e.summary)
+    steps: Qs(e.id, e.summary)
   }));
 }
-function Ks(n, e) {
+function Qs(n, e) {
   return ({
     "hit-ground-running": [
       { kind: "status", text: "Sign up", note: "Start in the browser sign-up screen." },
@@ -6766,7 +6779,7 @@ function Ks(n, e) {
         kind: "component",
         text: "Three compact GTM strategy cards",
         note: "Founder-led signal capture, RevOps consolidation, and pipeline acceleration.",
-        component: il()
+        component: rl()
       }
     ],
     "data-marketplace": [
@@ -6805,7 +6818,7 @@ function Ks(n, e) {
         kind: "component",
         text: "Enrichment waterfall",
         note: "Business emails and mobile phones.",
-        component: rl()
+        component: nl()
       },
       {
         kind: "component",
@@ -6834,7 +6847,7 @@ function Ks(n, e) {
         kind: "component",
         text: "Grid: specific vendor partners",
         note: "Marketing page grid of vendor partners grouped by data area.",
-        component: nl()
+        component: ol()
       }
     ],
     "crm-update": [
@@ -6842,13 +6855,13 @@ function Ks(n, e) {
         kind: "component",
         text: "Connect a mailbox",
         note: "Mailbox connection happens before the business context files are dragged in.",
-        component: sl()
+        component: ll()
       },
       {
         kind: "component",
         text: "Uploaded business context files",
         note: "Dragged in as a bundle before the agent learns the business.",
-        component: ol()
+        component: sl()
       },
       rt([
         "Reading battle cards and competitive traps",
@@ -6860,7 +6873,7 @@ function Ks(n, e) {
         kind: "component",
         text: "Learned outreach style",
         note: "Shows the style and qualification rules the AI learned.",
-        component: ll()
+        component: dl()
       },
       { kind: "user", text: "Write a sequence for consumer fintech founders.", note: "This is intentionally outside the learned ICP." },
       { kind: "assistant", text: "Are you sure? this doesn't fit your ICP", note: "Guardrail response based on the uploaded context." },
@@ -6870,7 +6883,7 @@ function Ks(n, e) {
         kind: "component",
         text: "Ranked leads with proximity fields",
         note: "Personalization is ranked by relationship proximity.",
-        component: dl()
+        component: cl()
       }
     ],
     "research-brief": [
@@ -6879,7 +6892,7 @@ function Ks(n, e) {
         kind: "component",
         text: "Table: Recent website visitors",
         note: "Shows 10 rows at a time with pagination, power dialer, and outreach sequence actions.",
-        component: al("Recent website visitors", [
+        component: il("Recent website visitors", [
           ["Maya Patel", "OrbitGrid", "VP Sales", "12m ago", "Pricing page"],
           ["Evan Brooks", "Northstar Dev", "Head of Sales", "18m ago", "Integrations"],
           ["Clara Wong", "BrightLayer", "VP Revenue", "27m ago", "Case study"],
@@ -6919,7 +6932,7 @@ function Ks(n, e) {
         kind: "component",
         text: "Personalized sequence preview",
         note: "Switch between people to inspect tailored email, LinkedIn, email, and call steps before kickoff.",
-        component: cl()
+        component: ul()
       }
     ],
     "csv-import-cleanup": [
@@ -6958,7 +6971,7 @@ function Ks(n, e) {
     id: `${n}-step-${r + 1}`
   }));
 }
-function Qs(n, e, t) {
+function Zs(n, e, t) {
   const a = {
     id: Mn("step"),
     kind: n,
@@ -6979,7 +6992,7 @@ function Rt(n, e = "") {
     items: t
   };
 }
-function Zs(n, e = {}) {
+function el(n, e = {}) {
   const t = _n(n).map((a, i) => ({
     label: a.label,
     detail: e[a.label] || a.detail || Lt(a.label, i),
@@ -6991,7 +7004,7 @@ function Zs(n, e = {}) {
     items: t
   };
 }
-function el(n) {
+function tl(n) {
   return {
     user: "Ask the assistant to transform the current result.",
     assistant: "The assistant responds with the next useful result.",
@@ -7003,7 +7016,7 @@ function el(n) {
   }[n];
 }
 function rt(n, e = {}) {
-  const t = Zs(n, e), a = t.items[0];
+  const t = el(n, e), a = t.items[0];
   return {
     kind: "thinking",
     text: a?.label ?? "",
@@ -7011,7 +7024,7 @@ function rt(n, e = {}) {
     thinking: t
   };
 }
-function tl(n) {
+function al(n) {
   return {
     kind: "generic",
     title: n,
@@ -7027,7 +7040,7 @@ function pr(n, e, t = {}) {
     rows: e
   };
 }
-function al(n, e) {
+function il(n, e) {
   return {
     kind: "table",
     title: n,
@@ -7052,7 +7065,7 @@ function al(n, e) {
     }
   };
 }
-function il() {
+function rl() {
   return {
     kind: "strategyCards",
     title: "Three go-to-market strategies",
@@ -7087,7 +7100,7 @@ function il() {
     ]
   };
 }
-function rl() {
+function nl() {
   return {
     kind: "enrichment",
     title: "Enriching",
@@ -7112,7 +7125,7 @@ function rl() {
     ]
   };
 }
-function nl() {
+function ol() {
   return {
     kind: "dataSources",
     title: "Ask complex questions across diverse data sets",
@@ -7289,7 +7302,7 @@ function nl() {
     ]
   };
 }
-function ol() {
+function sl() {
   return {
     kind: "uploadedFiles",
     title: "Business context files",
@@ -7301,7 +7314,7 @@ function ol() {
     ]
   };
 }
-function sl() {
+function ll() {
   return {
     kind: "mailboxConnection",
     title: "Connect a mailbox",
@@ -7318,7 +7331,7 @@ function sl() {
     signals: ["sent emails", "reply patterns", "calendar context", "signature and tone"]
   };
 }
-function ll() {
+function dl() {
   return {
     kind: "styleProfile",
     title: "Learned outreach style",
@@ -7335,7 +7348,7 @@ function ll() {
     ]
   };
 }
-function dl() {
+function cl() {
   return {
     kind: "proximityList",
     title: "Ranked leads with proximity fields",
@@ -7380,7 +7393,7 @@ function dl() {
     ]
   };
 }
-function cl() {
+function ul() {
   return {
     kind: "sequenceEngagement",
     title: "Personalized sequence preview",
@@ -7494,31 +7507,31 @@ function cl() {
     channels: []
   };
 }
-function ul(n, e, t, a) {
+function pl(n, e, t, a) {
   if (e === "title" && (n.title = t), e === "elapsed" && (n.elapsed = t), a === null) return;
   const i = n.items[a];
   i && (e === "label" && (i.label = t), e === "detail" && (i.detail = t), e === "disclosure" && (i.disclosure = t));
 }
-function pl(n) {
+function hl(n) {
   if (!n.thinking) return;
   const e = n.thinking.items[0];
   n.text = e?.label ?? "", n.note = e?.detail ?? "";
 }
-function hl(n, e) {
+function ml(n, e) {
   n.kind === "thinking" && (n.thinking ??= Rt(n.text, n.note), n.thinking.items[0] ??= {
     label: n.text,
     detail: n.note || Lt(n.text, 0),
     disclosure: Xe
   }, e.text !== void 0 && (n.thinking.items[0].label = e.text), e.note !== void 0 && (n.thinking.items[0].detail = e.note));
 }
-function ml(n, e, t) {
+function gl(n, e, t) {
   if (e === "title") return n.title;
   if (e === "elapsed") return n.elapsed;
   if (t === null) return null;
   const a = n.items[t];
   return a ? e === "label" ? a.label : e === "detail" ? a.detail : e === "disclosure" ? a.disclosure : null : null;
 }
-function gl(n, e, t, a) {
+function fl(n, e, t, a) {
   if (e === "title" && (n.title = t), n.kind === "generic" && e === "item" && a.itemIndex !== null && (n.items[a.itemIndex] = t), n.kind === "dataSources" && (e === "subtitle" && (n.subtitle = t), a.itemIndex !== null)) {
     const i = n.sources[a.itemIndex];
     if (!i) return;
@@ -7573,34 +7586,34 @@ function gl(n, e, t, a) {
     }
   }
 }
-function fl(n) {
+function wl(n) {
   return n.kind === "table" ? `Table: ${n.title}` : (n.kind === "strategyCards" || n.kind === "enrichment" || n.kind === "dataSources" || n.kind === "uploadedFiles" || n.kind === "mailboxConnection" || n.kind === "styleProfile" || n.kind === "proximityList" || n.kind === "personalizationSwipeGame" || n.kind === "sequenceEngagement", n.title);
 }
-function wl(n) {
+function bl(n) {
   return {
     ...n,
     id: Mn("step"),
-    component: n.component ? bl(n.component) : void 0
+    component: n.component ? yl(n.component) : void 0
   };
 }
-function bl(n) {
+function yl(n) {
   return En(n);
 }
 function Tn(n) {
   if (!gt(n) || !Array.isArray(n.stories)) return null;
-  const e = typeof n.schemaVersion == "number" ? n.schemaVersion : 1, t = n.stories.map((a) => _l(a)).filter((a) => !!a);
+  const e = typeof n.schemaVersion == "number" ? n.schemaVersion : 1, t = n.stories.map((a) => xl(a)).filter((a) => !!a);
   return t.length ? { schemaVersion: e, stories: t } : null;
 }
-async function yl(n) {
+async function _l(n) {
   try {
     return await n.clone().json();
   } catch {
     return null;
   }
 }
-function _l(n) {
+function xl(n) {
   if (!gt(n) || !Array.isArray(n.steps)) return null;
-  const e = ve(n.id), t = ve(n.label), a = ve(n.summary), i = n.steps.map((r) => xl(r)).filter((r) => !!r);
+  const e = ve(n.id), t = ve(n.label), a = ve(n.summary), i = n.steps.map((r) => vl(r)).filter((r) => !!r);
   return !e || !t || !i.length ? null : {
     id: e,
     label: t,
@@ -7608,7 +7621,7 @@ function _l(n) {
     steps: i
   };
 }
-function xl(n) {
+function vl(n) {
   if (!gt(n)) return null;
   const e = ve(n.id), t = ve(n.kind), a = ve(n.text), i = ve(n.note);
   return !e || !t || !di(t) ? null : {
@@ -7616,22 +7629,22 @@ function xl(n) {
     kind: t,
     text: a ?? "",
     note: i ?? "",
-    thinking: gt(n.thinking) ? vl(n.thinking, a ?? "", i ?? "") : t === "thinking" ? Rt(a ?? "", i ?? "") : void 0,
+    thinking: gt(n.thinking) ? kl(n.thinking, a ?? "", i ?? "") : t === "thinking" ? Rt(a ?? "", i ?? "") : void 0,
     component: gt(n.component) ? En(n.component) : void 0
   };
 }
 function En(n) {
   return typeof structuredClone == "function" ? structuredClone(n) : JSON.parse(JSON.stringify(n));
 }
-function vl(n, e, t) {
-  const i = (Array.isArray(n.items) ? n.items : []).map((r, o) => kl(r, o)).filter((r) => !!r);
+function kl(n, e, t) {
+  const i = (Array.isArray(n.items) ? n.items : []).map((r, o) => Sl(r, o)).filter((r) => !!r);
   return i.length ? {
     title: ve(n.title) ?? Ae,
     elapsed: ve(n.elapsed) ?? aa(i.length),
     items: i
   } : Rt(e, t);
 }
-function kl(n, e) {
+function Sl(n, e) {
   if (!gt(n)) return null;
   const t = ve(n.label);
   return t ? {
@@ -7657,17 +7670,17 @@ function Mn(n) {
 function Wa(n, e) {
   return n instanceof Element ? n.closest(e) : null;
 }
-function Sl(n) {
+function Cl(n) {
   return !!n?.closest("textarea, input, select, button, [contenteditable='true']");
 }
 function di(n) {
   return n in lt;
 }
-function Cl() {
-  const n = Al();
+function Al() {
+  const n = Tl();
   return n ? { "x-story-draft-token": n } : {};
 }
-function Al() {
+function Tl() {
   try {
     return window.localStorage.getItem("storyDraftWriteToken");
   } catch {
@@ -7716,7 +7729,7 @@ const xa = {
   desktop: -74,
   tablet: -66,
   mobile: -48
-}), Tl = F("[data-send-button]", "center"), Pi = {
+}), El = F("[data-send-button]", "center"), Pi = {
   desktop: {
     target: "[data-chat-shell]",
     anchor: "right",
@@ -7735,7 +7748,7 @@ const xa = {
     offset: { x: -28, y: -96 },
     humanOffset: !0
   }
-}, El = 2.8, Ml = 42, Pl = 2, Il = 3, va = "[data-chat-shell] [data-chat-thread]", Dl = `${va} [data-message-role="assistant"]:not(.wa-message--component) [data-message-body]`, Rl = `${va} [data-message-role="assistant"].wa-message--thinking .wa-research-step[data-step-state="current"] .wa-research-step__body, ${va} [data-message-role="assistant"].wa-message--thinking .wa-research-step[data-step-state="complete"] .wa-research-step__label`, ci = 0.24, In = 0.3, Le = {
+}, Ml = 2.8, Pl = 42, Il = 2, Dl = 3, va = "[data-chat-shell] [data-chat-thread]", Rl = `${va} [data-message-role="assistant"]:not(.wa-message--component) [data-message-body]`, Nl = `${va} [data-message-role="assistant"].wa-message--thinking .wa-research-step[data-step-state="current"] .wa-research-step__body, ${va} [data-message-role="assistant"].wa-message--thinking .wa-research-step[data-step-state="complete"] .wa-research-step__label`, ci = 0.24, In = 0.3, Le = {
   right: { target: "[data-chat-shell]", anchor: "right", outside: "right" },
   bottomRight: { target: "[data-chat-shell]", anchor: "bottomRight", outside: "bottom" }
 };
@@ -7748,15 +7761,15 @@ function je(n = Le.right, e) {
   };
 }
 function Ee(n, e) {
-  const t = Ii(n), a = Fl();
+  const t = Ii(n), a = Hl();
   for (const [i, r] of e.entries())
-    Nl(t, n, r, i, a);
+    Ll(t, n, r, i, a);
   return Di(t);
 }
-function Nl(n, e, t, a, i) {
+function Ll(n, e, t, a, i) {
   switch (t.kind) {
     case "prompt":
-      n.add(Gl(e, t), t.at);
+      n.add(Ul(e, t), t.at);
       return;
     case "status":
       n.add(e.chat.setStatus(t.text), t.at);
@@ -7771,18 +7784,18 @@ function Nl(n, e, t, a, i) {
       n.add(e.chat.transitionSignupToChat(), t.at);
       return;
     case "assistant":
-      n.add(e.chat.assistantMessage(t.text), t.at), zl(n, e, i, {
+      n.add(e.chat.assistantMessage(t.text), t.at), Fl(n, e, i, {
         kind: "assistant",
         key: t.text,
         text: t.text,
-        selector: Dl,
+        selector: Rl,
         label: `assistant-${ui(t.text)}`,
         stepIndex: a
       });
       return;
     case "thinking": {
-      const r = Ll(t), o = r.items.map((s) => s.label);
-      t.statusBefore && n.add(e.chat.setStatus(t.statusBefore), t.at), n.add(e.chat.thinkingState(r, t.hold), t.statusBefore ? void 0 : t.at), Bl(n, e, i, t.hold, o.length, o.join("|"), a);
+      const r = ql(t), o = r.items.map((s) => s.label);
+      t.statusBefore && n.add(e.chat.setStatus(t.statusBefore), t.at), n.add(e.chat.thinkingState(r, t.hold), t.statusBefore ? void 0 : t.at), zl(n, e, i, t.hold, o.length, o.join("|"), a);
       return;
     }
     case "dataTable":
@@ -7836,7 +7849,7 @@ function Nl(n, e, t, a, i) {
       );
       return;
     case "personalizationSwipeGame":
-      ql(n, e, t.config, t.at);
+      Ol(n, e, t.config, t.at);
       return;
     case "sequenceEngagement":
       bt(
@@ -7859,16 +7872,16 @@ function Nl(n, e, t, a, i) {
       return;
   }
 }
-function Ll(n) {
+function ql(n) {
   return "thinking" in n && n.thinking ? n.thinking : Array.isArray(n.steps) ? { items: n.steps.map(gr) } : { items: [gr(n.label ?? "")] };
 }
 function gr(n) {
   return typeof n == "string" ? { label: n } : n;
 }
 function bt(n, e, t, a, i, r) {
-  n.add(t, a), n.add(Ol(e, i, r), "+=0.06");
+  n.add(t, a), n.add(Bl(e, i, r), "+=0.06");
 }
-function ql(n, e, t, a) {
+function Ol(n, e, t, a) {
   const i = xt(
     `[data-personalization-swipe-game="${Ge(t.id)}"]`
   );
@@ -7908,11 +7921,11 @@ function ql(n, e, t, a) {
     "+=0.08"
   );
 }
-function Ol(n, e, t) {
+function Bl(n, e, t) {
   const a = Ii(n).add(n.cursor.scanAcross(e, { label: t }));
   return t.startsWith("strategy-") && a.add(n.chat.strategyPlanHoverSequence(e), "<+=0.06"), Di(a);
 }
-function Bl(n, e, t, a = M.thinkingShort, i = 1, r = "thinking", o = 0) {
+function zl(n, e, t, a = M.thinkingShort, i = 1, r = "thinking", o = 0) {
   const s = a * Math.max(1, i), l = i >= 3 && Dn(e, t, {
     kind: "thinking",
     key: r,
@@ -7921,13 +7934,13 @@ function Bl(n, e, t, a = M.thinkingShort, i = 1, r = "thinking", o = 0) {
     minChars: 16
   });
   l && n.add(
-    e.cursor.scanAcross(Rl, {
+    e.cursor.scanAcross(Nl, {
       label: `thinking-skim-${ui(r)}`,
       match: "last",
       duration: 0.72
     }),
     "<+=0.58"
-  ), !(s < El) && n.add(
+  ), !(s < Ml) && n.add(
     e.cursor.moveTo(Pi, {
       intent: "hover",
       mode: "default",
@@ -7939,7 +7952,7 @@ function Bl(n, e, t, a = M.thinkingShort, i = 1, r = "thinking", o = 0) {
     l ? "+=0.08" : "<+=0.08"
   );
 }
-function zl(n, e, t, a) {
+function Fl(n, e, t, a) {
   Dn(e, t, a) && n.add(
     e.cursor.scanAcross(a.selector, {
       label: `text-skim-${a.label}`,
@@ -7949,7 +7962,7 @@ function zl(n, e, t, a) {
     "+=0.04"
   );
 }
-function Fl() {
+function Hl() {
   return {
     textCandidateCount: 0,
     textSkimCount: 0,
@@ -7957,14 +7970,14 @@ function Fl() {
   };
 }
 function Dn(n, e, t) {
-  const a = t.text.trim(), i = t.minChars ?? Ml;
-  if (a.length < i || e.textSkimCount >= Il) return !1;
+  const a = t.text.trim(), i = t.minChars ?? Pl;
+  if (a.length < i || e.textSkimCount >= Dl) return !1;
   const r = e.textCandidateCount;
   e.textCandidateCount += 1;
-  const o = e.textSkimCount === 0, s = t.stepIndex - e.lastTextSkimStep >= Pl, l = Hl(`${n.story.id}:${t.kind}:${r}:${t.key}`), d = r > 0 && r % 3 === 0, c = o || s && (l >= 0.58 || d);
+  const o = e.textSkimCount === 0, s = t.stepIndex - e.lastTextSkimStep >= Il, l = Gl(`${n.story.id}:${t.kind}:${r}:${t.key}`), d = r > 0 && r % 3 === 0, c = o || s && (l >= 0.58 || d);
   return c && (e.textSkimCount += 1, e.lastTextSkimStep = t.stepIndex), c;
 }
-function Hl(n) {
+function Gl(n) {
   let e = 2166136261;
   for (let a = 0; a < n.length; a += 1)
     e ^= n.charCodeAt(a), e = Math.imul(e, 16777619);
@@ -7981,7 +7994,7 @@ function xt(n) {
 function ui(n) {
   return n.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 36) || "state";
 }
-function Gl(n, e) {
+function Ul(n, e) {
   const t = Ii(n);
   return e.statusBefore && t.add(n.chat.setStatus(e.statusBefore)), t.add(n.chat.showComposer(), e.statusBefore ? "-=0.02" : void 0), e.fromEntry || t.add(
     n.cursor.moveTo(e.focusTarget ?? n.story.entry, {
@@ -7992,7 +8005,7 @@ function Gl(n, e) {
     }),
     "-=0.18"
   ), t.add(n.cursor.click("text"), "-=0.02").add(n.chat.setComposerFocus(!0), "-=0.14").add(n.chat.typeComposer(e.text, e.duration ?? M.typeMedium)).add(
-    n.cursor.moveTo(Tl, {
+    n.cursor.moveTo(El, {
       mode: "pointer",
       intent: "click",
       speed: "quick",
@@ -8018,46 +8031,46 @@ function Ii(n) {
 function Di(n) {
   return n.paused(!1), n;
 }
-const Ul = {
+const Vl = {
   desktop: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 180, y: -74 }, humanOffset: !1 },
   tablet: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 144, y: -58 }, humanOffset: !1 },
   mobile: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 96, y: -42 }, humanOffset: !1 }
 };
-function Vl(n, e) {
+function Wl(n, e) {
   const t = new Map(n.map((a) => [a.id, a]));
   return e.map((a) => {
     const i = t.get(a.id);
-    return i ? Wl(i, a) : a;
+    return i ? jl(i, a) : a;
   });
 }
-function Wl(n, e) {
+function jl(n, e) {
   return {
     ...e,
     label: n.label,
     navLabel: n.label,
     navDescription: n.summary || e.navDescription,
     summary: n.summary || e.summary,
-    entry: jl(n.id, e),
-    entryLeadTime: Yl(n.id, e),
+    entry: Yl(n.id, e),
+    entryLeadTime: $l(n.id, e),
     prepare: n.id === "hit-ground-running" ? (t) => t.chat.prepareSignup() : e.prepare,
-    build: (t) => $l(t, n, e)
+    build: (t) => Xl(t, n, e)
   };
 }
-function jl(n, e) {
+function Yl(n, e) {
   return n === "hit-ground-running" ? Pn : n === "data-marketplace" ? xa.dataMarketplace : n === "research-brief" ? xa.researchBrief : e.entry;
 }
-function Yl(n, e) {
+function $l(n, e) {
   return n === "hit-ground-running" ? In : n === "data-marketplace" || n === "research-brief" ? ci : e.entryLeadTime;
 }
-function $l(n, e, t) {
-  if (e.id === "hit-ground-running") return Xl(n, e);
-  if (e.id === "crm-update") return Jl(n, e);
-  if (e.id === "research-brief") return Kl(n, e);
-  if (e.id === "csv-import-cleanup") return Ql(n, e);
-  const a = ad(e);
+function Xl(n, e, t) {
+  if (e.id === "hit-ground-running") return Jl(n, e);
+  if (e.id === "crm-update") return Kl(n, e);
+  if (e.id === "research-brief") return Ql(n, e);
+  if (e.id === "csv-import-cleanup") return Zl(n, e);
+  const a = id(e);
   return a.length ? Ee(n, [...a, je(Le.bottomRight, "+=0.18")]) : t.build(n);
 }
-function Xl(n, e) {
+function Jl(n, e) {
   const t = qe(e, "status"), a = qe(e, "user"), i = qe(e, "thinking"), r = qe(e, "assistant"), o = Nt(e, "strategyCards");
   return Ee(n, [
     { kind: "status", text: t?.text || "Sign up" },
@@ -8073,7 +8086,7 @@ function Xl(n, e) {
     je(Le.right, "+=0.18")
   ]);
 }
-function Jl(n, e) {
+function Kl(n, e) {
   const t = Nt(e, "mailboxConnection"), a = Nt(e, "uploadedFiles"), i = [];
   if (t && On(i, qn(t.component)), a) {
     const r = Ln(a.component), o = n.chat.prepareCsvDropArea({
@@ -8088,7 +8101,7 @@ function Jl(n, e) {
       { kind: "status", text: "waiting for context" },
       {
         kind: "cursorMove",
-        target: Ul,
+        target: Vl,
         options: {
           mode: "default",
           intent: "exit",
@@ -8116,7 +8129,7 @@ function Jl(n, e) {
     r === t || r === a || Rn(i, e.id, r);
   return i.push(je(Le.bottomRight, "+=0.16")), Ee(n, i);
 }
-function Kl(n, e) {
+function Ql(n, e) {
   const t = qe(e, "user"), a = Nt(e, "table"), i = qe(e, "thinking"), r = Nt(e, "sequenceEngagement"), o = a ? Ri(a.component, "website-visitors-sales") : null, s = r ? Bn(r.component, "visitor-outreach-sequences") : null, l = [];
   if (t && l.push({
     kind: "prompt",
@@ -8211,8 +8224,8 @@ function Kl(n, e) {
   }
   return Ee(n, l);
 }
-function Ql(n, e) {
-  const t = qe(e, "file"), a = qe(e, "thinking"), i = qe(e, "assistant"), r = Nt(e, "table"), o = t?.text || "webinar_attendees.csv", s = Zl(t, r?.component), l = n.chat.prepareCsvDropArea(), d = n.chat.prepareCursorFile(o, n.cursor), c = F("[data-chat-shell]", "center", {
+function Zl(n, e) {
+  const t = qe(e, "file"), a = qe(e, "thinking"), i = qe(e, "assistant"), r = Nt(e, "table"), o = t?.text || "webinar_attendees.csv", s = ed(t, r?.component), l = n.chat.prepareCsvDropArea(), d = n.chat.prepareCursorFile(o, n.cursor), c = F("[data-chat-shell]", "center", {
     desktop: { x: 0, y: 82 },
     tablet: { x: 0, y: 72 },
     mobile: { x: 0, y: 64 }
@@ -8237,30 +8250,30 @@ function Ql(n, e) {
     je(Le.bottomRight, "+=0.18")
   ]);
 }
-function Zl(n, e) {
-  const t = ed(e);
+function ed(n, e) {
+  const t = td(e);
   if (t) return t;
   const a = n?.note?.trim();
-  return !a || td(a) ? "CSV uploaded" : a;
+  return !a || ad(a) ? "CSV uploaded" : a;
 }
-function ed(n) {
+function td(n) {
   if (!n || n.kind !== "table") return null;
   const e = n.count?.trim();
   if (e) return e;
   const t = n.rows.length;
   return t <= 0 ? null : `${t} ${t === 1 ? "record" : "records"}`;
 }
-function td(n) {
+function ad(n) {
   return /user-side message|after release|drop overlay|appears as/i.test(n);
 }
-function ad(n) {
-  const e = [], t = n.id === "data-marketplace" ? id(n.steps) : n.steps;
+function id(n) {
+  const e = [], t = n.id === "data-marketplace" ? rd(n.steps) : n.steps;
   let a = 0;
   for (const i of t)
     a += i.kind === "user" ? 1 : 0, Rn(e, n.id, i, a === 1);
   return e;
 }
-function id(n) {
+function rd(n) {
   const e = [];
   let t = 0;
   for (; t < n.length; ) {
@@ -8272,11 +8285,11 @@ function id(n) {
     const i = [];
     for (; t < n.length && n[t].kind === "thinking"; )
       i.push(n[t]), t += 1;
-    e.push(i.length > 1 ? rd(i) : a);
+    e.push(i.length > 1 ? nd(i) : a);
   }
   return e;
 }
-function rd(n) {
+function nd(n) {
   const e = n[0], a = n.flatMap(
     (i) => i.thinking?.items.length ? i.thinking.items : [{
       label: i.text || "Thinking",
@@ -8328,13 +8341,13 @@ function Rn(n, e, t, a = !1) {
     n.push({ kind: "custom", build: (i) => i.chat.uploadedFileMessage(t.text, t.note || "uploaded") });
     return;
   }
-  t.kind !== "component" || !t.component || nd(n, e, t);
+  t.kind !== "component" || !t.component || od(n, e, t);
 }
-function nd(n, e, t) {
+function od(n, e, t) {
   const a = t.component;
   if (a.kind === "table") {
     const i = Ri(a, `${e}-${t.id}`);
-    sd(e, t, i) && (i.scrollAlign = "equal-inset"), n.push({ kind: "dataTable", config: i, at: "-=0.04" });
+    ld(e, t, i) && (i.scrollAlign = "equal-inset"), n.push({ kind: "dataTable", config: i, at: "-=0.04" });
     return;
   }
   if (a.kind === "strategyCards") {
@@ -8342,11 +8355,11 @@ function nd(n, e, t) {
     return;
   }
   if (a.kind === "enrichment") {
-    n.push({ kind: "enrichmentPanel", config: md(a), at: "+=0.12" });
+    n.push({ kind: "enrichmentPanel", config: gd(a), at: "+=0.12" });
     return;
   }
   if (a.kind === "dataSources") {
-    const i = gd(a);
+    const i = fd(a);
     n.push({
       kind: e === "data-marketplace" ? "marketingDataSourcesGrid" : "dataSourcesGrid",
       config: i,
@@ -8363,15 +8376,15 @@ function nd(n, e, t) {
     return;
   }
   if (a.kind === "styleProfile") {
-    n.push({ kind: "custom", build: (i) => i.chat.outreachStyleProfile(fd(a)), at: "-=0.02" });
+    n.push({ kind: "custom", build: (i) => i.chat.outreachStyleProfile(wd(a)), at: "-=0.02" });
     return;
   }
   if (a.kind === "proximityList") {
-    n.push({ kind: "custom", build: (i) => i.chat.proximityLeadList(wd(a)), at: "-=0.04" });
+    n.push({ kind: "custom", build: (i) => i.chat.proximityLeadList(bd(a)), at: "-=0.04" });
     return;
   }
   if (a.kind === "personalizationSwipeGame") {
-    n.push({ kind: "personalizationSwipeGame", config: bd(a), at: "+=0.06" });
+    n.push({ kind: "personalizationSwipeGame", config: yd(a), at: "+=0.06" });
     return;
   }
   if (a.kind === "sequenceEngagement") {
@@ -8384,12 +8397,12 @@ function nd(n, e, t) {
 function Aa(n, e = {}) {
   return {
     kind: "thinking",
-    thinking: od(n.thinking, n.text, n.note),
+    thinking: sd(n.thinking, n.text, n.note),
     hold: e.hold,
     at: e.at
   };
 }
-function od(n, e, t) {
+function sd(n, e, t) {
   return n?.items.length ? {
     title: n.title,
     elapsed: n.elapsed,
@@ -8408,7 +8421,7 @@ function od(n, e, t) {
   };
 }
 function Ri(n, e) {
-  const t = ld(n.columns), a = n.rows.map((o, s) => cd(o, t, s)), i = Math.min(10, a.length || 10), r = n.pagination?.ranges.map((o, s) => ({
+  const t = dd(n.columns), a = n.rows.map((o, s) => ud(o, t, s)), i = Math.min(10, a.length || 10), r = n.pagination?.ranges.map((o, s) => ({
     page: s + 1,
     range: o,
     rows: a.slice(s * i, (s + 1) * i)
@@ -8418,22 +8431,22 @@ function Ri(n, e) {
     title: n.title,
     eyebrow: n.eyebrow,
     count: n.count,
-    variant: t.variant ?? yd(n),
+    variant: t.variant ?? _d(n),
     columns: t.columns,
     rows: r[0]?.rows ?? a,
-    actions: n.actions?.map(hd),
+    actions: n.actions?.map(md),
     pagination: r.length > 1 ? {
       pageSize: i,
-      totalRows: _d(n, a.length),
+      totalRows: xd(n, a.length),
       activePage: 1,
       pages: r
     } : void 0
   };
 }
-function sd(n, e, t) {
+function ld(n, e, t) {
   return n !== "data-marketplace" ? !1 : e.id === "data-marketplace-step-3" || le(t.title) === "new-hires-at-dev-tool-companies";
 }
-function ld(n) {
+function dd(n) {
   const e = n.findIndex((o) => o.trim().toLowerCase() === "name"), t = e >= 0 ? n.findIndex((o, s) => s > e && /^role\b/i.test(o.trim())) : -1, a = e >= 0 && t >= 0, i = n.map((o, s) => s).filter((o) => o !== t), r = i.map((o) => {
     const s = n[o] || `Column ${o + 1}`;
     return a && o === e ? {
@@ -8447,7 +8460,7 @@ function ld(n) {
     } : {
       key: le(s || `column-${o + 1}`),
       label: s,
-      width: dd(s, a)
+      width: cd(s, a)
     };
   });
   return {
@@ -8458,17 +8471,17 @@ function ld(n) {
     variant: r.some((o) => o.key === "mutualConnection") ? "connections" : void 0
   };
 }
-function dd(n, e) {
+function cd(n, e) {
   if (!e) return;
   const t = n.toLowerCase();
   return t.includes("connector") || t.includes("connection") ? "minmax(170px,0.78fr)" : t.includes("email") ? "minmax(190px,0.95fr)" : t.includes("mobile") ? "minmax(150px,0.72fr)" : "minmax(130px,1fr)";
 }
-function cd(n, e, t) {
+function ud(n, e, t) {
   const a = {};
   if (e.columns.forEach((i, r) => {
     a[i.key] = n[e.sourceIndexes[r]] ?? "";
   }), e.foldedRoleIndex !== void 0 && (a.prospectDetail = n[e.foldedRoleIndex] ?? ""), e.mutualConnectionKey) {
-    const i = pd(a[e.mutualConnectionKey] ?? ""), r = ud(t);
+    const i = hd(a[e.mutualConnectionKey] ?? ""), r = pd(t);
     a[e.mutualConnectionKey] = i.name, a.mutualConnectionDetail = i.title, a.mutualConnectionContext = i.context, i.name && r && (a.mutualConnectionBadge = r);
   }
   return {
@@ -8476,11 +8489,11 @@ function cd(n, e, t) {
     values: a
   };
 }
-function ud(n) {
+function pd(n) {
   const e = [2, 3, 7, null, 1, 12, 4, 5, null, 8, 6, 10], t = e[n % e.length];
   return t === null ? null : `+${t} more`;
 }
-function pd(n) {
+function hd(n) {
   const [e = "", t = ""] = n.split(/\s+[—–]\s+/, 2), a = e.trim().match(/^(.+?)(?:\s*\((.+)\))?$/);
   return {
     name: a?.[1]?.trim() || n.trim(),
@@ -8488,7 +8501,7 @@ function pd(n) {
     context: t.trim()
   };
 }
-function hd(n) {
+function md(n) {
   const e = n.label.toLowerCase().includes("dial") ? "power-dialer" : "email-sequence";
   return {
     id: e,
@@ -8507,7 +8520,7 @@ function Nn(n) {
     bullets: e.summary.split(/\n+/).map((a) => a.trim()).filter(Boolean)
   }));
 }
-function md(n) {
+function gd(n) {
   return {
     id: le(n.title || "enrichment"),
     title: n.title,
@@ -8516,7 +8529,7 @@ function md(n) {
     fields: n.fields
   };
 }
-function gd(n) {
+function fd(n) {
   return {
     id: le(n.title || "data-sources"),
     title: n.title,
@@ -8601,7 +8614,7 @@ function On(n, e) {
     }
   );
 }
-function fd(n) {
+function wd(n) {
   return {
     id: le(n.title || "style-profile"),
     title: n.title,
@@ -8610,7 +8623,7 @@ function fd(n) {
     examples: n.examples
   };
 }
-function wd(n) {
+function bd(n) {
   return {
     id: le(n.title || "proximity-list"),
     title: n.title,
@@ -8618,7 +8631,7 @@ function wd(n) {
     leads: n.leads
   };
 }
-function bd(n) {
+function yd(n) {
   return {
     id: le(n.title || "personalization-swipe"),
     title: n.title,
@@ -8666,25 +8679,25 @@ function Nt(n, e) {
 function zn(n) {
   return n.length > 72 ? M.typeLong : n.length > 38 ? M.typeMedium : M.typeShort;
 }
-function yd(n) {
+function _d(n) {
   const e = `${n.title} ${n.eyebrow ?? ""}`.toLowerCase();
   if (e.includes("enrich")) return "enriched";
   if (e.includes("filter") || e.includes("raised")) return "filtered";
 }
-function _d(n, e) {
+function xd(n, e) {
   const t = n.pagination?.ranges ?? [], i = t[t.length - 1]?.match(/of\s+(\d+)/i);
   return i ? Number(i[1]) : e;
 }
 function le(n) {
   return n.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "item";
 }
-const xd = [
+const vd = [
   "Researching the company profile",
   "Learning the ICP and buyer roles",
   "Reading blog posts for positioning",
   "Scanning careers pages for priorities",
   "Mapping current GTM signals"
-], vd = [
+], kd = [
   {
     id: "founder-signal",
     label: "Idea one",
@@ -8716,12 +8729,12 @@ const xd = [
   { key: "name", label: "Name", width: "1.45fr" },
   { key: "company", label: "Company", width: "1fr" },
   { key: "title", label: "Title", width: "1.45fr" }
-], kd = [
+], Sd = [
   { key: "name", label: "Prospect", width: "minmax(220px,0.95fr)" },
   { key: "email", label: "Work email", width: "minmax(190px,0.95fr)" },
   { key: "number", label: "Mobile", width: "minmax(150px,0.72fr)" },
   { key: "connector", label: "Connector", width: "minmax(170px,0.78fr)" }
-], Sd = {
+], Cd = {
   id: "dev-tool-new-hires",
   title: "New hires at dev-tool companies",
   eyebrow: "Natural language search",
@@ -8818,7 +8831,7 @@ const xd = [
       }
     }
   ]
-}, Cd = {
+}, Ad = {
   id: "recently-funded-dev-tools",
   title: "Raised in the past three months",
   eyebrow: "Filtered results",
@@ -8871,7 +8884,7 @@ const xd = [
       }
     }
   ]
-}, Ad = {
+}, Td = {
   id: "contact-enrichment",
   title: "I’m about to run an enrichment",
   subtitle: "Up to 84 credits could be spent across 2 fields on 14 records.",
@@ -8886,7 +8899,7 @@ const xd = [
       steps: ["Unify Data", "5-Step Waterfall", "FullEnrich"]
     }
   ]
-}, Td = {
+}, Ed = {
   id: "data-marketplace-sources",
   title: "Ask complex questions across diverse data sets",
   subtitle: "Unify routes each search across the right partner sources for the job.",
@@ -9088,13 +9101,13 @@ const xd = [
       logoSrc: "/data-logos/BuyerCaddy.svg"
     }
   ]
-}, Ed = {
+}, Md = {
   id: "enriched-dev-tool-contacts",
   title: "Enriched contacts",
   eyebrow: "ready to engage",
   count: "3 contacts",
   variant: "enriched",
-  columns: kd,
+  columns: Sd,
   rows: [
     {
       id: "jamie-chen",
@@ -9249,7 +9262,7 @@ const xd = [
   learningDetail: "Analyzing vocabulary...",
   learningReadyDetail: "73 tone & tactic rules defined",
   signals: ["sent emails", "reply patterns", "calendar context", "signature and tone"]
-}, Md = {
+}, Pd = {
   id: "learned-outreach-style",
   title: "Learned outreach style",
   subtitle: "The agent extracts how your team writes, qualifies, and earns replies.",
@@ -9263,7 +9276,7 @@ const xd = [
     "Keep the opener grounded in a real business trigger.",
     "Avoid generic automation language unless the account shows ops pain."
   ]
-}, Pd = {
+}, Id = {
   id: "personalized-lead-proximity",
   title: "Ranked leads with proximity fields",
   subtitle: "Each lead gets a relationship-aware reason to personalize the first touch.",
@@ -9305,7 +9318,7 @@ const xd = [
       score: "76"
     }
   ]
-}, Id = {
+}, Dd = {
   id: "visitor-outreach-sequences",
   title: "Personalized sequence preview",
   subtitle: "Each visitor gets a channel plan based on company fit, page intent, and the person’s role.",
@@ -9404,7 +9417,7 @@ const xd = [
     }
   ],
   channels: []
-}, Dd = {
+}, Rd = {
   id: "visitor-sequence-build",
   title: "building outbound sequence",
   subtitle: "Using Unify’s offering, visitor intent, and role-level context to draft the campaign.",
@@ -9423,7 +9436,7 @@ const xd = [
       detail: "Checking role, seniority, likely ownership, and channel-specific personalization angles."
     }
   ]
-}, Rd = [
+}, Nd = [
   { key: "name", label: "Name", width: "1.2fr" },
   { key: "company", label: "Company", width: "0.95fr" },
   { key: "title", label: "Title", width: "1.15fr" },
@@ -9440,7 +9453,7 @@ const xd = [
   { id: "sam-hollis-visitor", values: { name: "Sam Hollis", company: "Apollo", title: "VP Sales", visit: "1h ago", signal: "Comparison", source: "signal", avatarTone: "8" } },
   { id: "rachel-cho-visitor", values: { name: "Rachel Cho", company: "Retool", title: "Head of Sales", visit: "2h ago", signal: "Pricing page", source: "database", avatarTone: "9" } },
   { id: "owen-lee-visitor", values: { name: "Owen Lee", company: "Linear", title: "Sales Lead", visit: "2h ago", signal: "Demo page", source: "signal", avatarTone: "1" } }
-], Nd = [
+], Ld = [
   { id: "fatima-ali-visitor", values: { name: "Fatima Ali", company: "Vercel", title: "VP Sales", visit: "2h ago", signal: "Enterprise", source: "signal", avatarTone: "2" } },
   { id: "leo-martin-visitor", values: { name: "Leo Martin", company: "Hex", title: "Head of Sales", visit: "3h ago", signal: "Blog", source: "database", avatarTone: "3" } },
   { id: "priya-rao-visitor", values: { name: "Priya Rao", company: "Census", title: "Sales Director", visit: "3h ago", signal: "Demo page", source: "engage", avatarTone: "4" } },
@@ -9451,13 +9464,13 @@ const xd = [
   { id: "sara-nelson-visitor", values: { name: "Sara Nelson", company: "Airtable", title: "Sales Lead", visit: "6h ago", signal: "Comparison", source: "signal", avatarTone: "9" } },
   { id: "noah-singh-visitor", values: { name: "Noah Singh", company: "dbt Labs", title: "Head of Sales", visit: "6h ago", signal: "ROI calculator", source: "signal", avatarTone: "1" } },
   { id: "ava-garcia-visitor", values: { name: "Ava Garcia", company: "Gusto", title: "VP Revenue", visit: "7h ago", signal: "Demo page", source: "engage", avatarTone: "2" } }
-], Ld = {
+], qd = {
   id: "website-visitors-sales",
   title: "Recent website visitors",
   eyebrow: "Visitor intent",
   count: "50 sales leaders",
   variant: "filtered",
-  columns: Rd,
+  columns: Nd,
   rows: wr,
   pagination: {
     pageSize: 10,
@@ -9465,7 +9478,7 @@ const xd = [
     activePage: 1,
     pages: [
       { page: 1, range: "1-10 of 50 people", rows: wr },
-      { page: 2, range: "11-20 of 50 people", rows: Nd }
+      { page: 2, range: "11-20 of 50 people", rows: Ld }
     ]
   },
   actions: [
@@ -9485,7 +9498,7 @@ const xd = [
       variant: "secondary"
     }
   ]
-}, qd = {
+}, Od = {
   id: "clean-webinar-attendees",
   title: "Cleaned webinar attendees",
   eyebrow: "CSV cleanup",
@@ -9573,10 +9586,10 @@ const xd = [
       { kind: "status", text: "Building workspace", at: "-=0.16" },
       { kind: "transitionSignupToChat", at: `+=${M.beat}` },
       { kind: "status", text: "Researching Acme", at: "<" },
-      { kind: "thinking", steps: xd, hold: 0.46, at: "+=0.04" },
+      { kind: "thinking", steps: vd, hold: 0.46, at: "+=0.04" },
       { kind: "assistant", text: "Here are some ideas I can put into action for you:" },
       { kind: "status", text: "Game plans ready", at: "<" },
-      { kind: "strategyPlans", plans: vd, at: "-=0.08" },
+      { kind: "strategyPlans", plans: kd, at: "-=0.08" },
       je(Le.right, "+=0.18")
     ])
   },
@@ -9604,7 +9617,7 @@ const xd = [
         label: "Searching hiring signals, headcount, and company data",
         hold: M.thinkingMedium
       },
-      { kind: "dataTable", config: Sd, at: "-=0.04" },
+      { kind: "dataTable", config: Cd, at: "-=0.04" },
       {
         kind: "prompt",
         text: "Filter to the ones that have raised in the past three months.",
@@ -9618,7 +9631,7 @@ const xd = [
         label: "Checking rounds announced since February 2026",
         hold: M.thinkingShort
       },
-      { kind: "dataTable", config: Cd, at: "-=0.04" },
+      { kind: "dataTable", config: Ad, at: "-=0.04" },
       {
         kind: "prompt",
         text: "Okay, enrich these contacts.",
@@ -9627,10 +9640,10 @@ const xd = [
         statusAfter: "Preparing enrichment",
         at: `+=${M.beat}`
       },
-      { kind: "enrichmentPanel", config: Ad, at: "+=0.12" },
+      { kind: "enrichmentPanel", config: Td, at: "+=0.12" },
       { kind: "status", text: "Contacts enriched", at: "+=0.86" },
-      { kind: "dataTable", config: Ed, at: "-=0.02" },
-      { kind: "marketingDataSourcesGrid", config: Td, at: "+=0.44" },
+      { kind: "dataTable", config: Md, at: "-=0.02" },
+      { kind: "marketingDataSourcesGrid", config: Ed, at: "+=0.44" },
       je(Le.bottomRight, "+=3")
     ])
   },
@@ -9731,7 +9744,7 @@ const xd = [
           hold: 0.24,
           at: `+=${M.beat}`
         },
-        { kind: "custom", build: () => n.chat.outreachStyleProfile(Md), at: "-=0.02" },
+        { kind: "custom", build: () => n.chat.outreachStyleProfile(Pd), at: "-=0.02" },
         {
           kind: "prompt",
           text: "Write a sequence for consumer fintech founders.",
@@ -9754,7 +9767,7 @@ const xd = [
           label: "Scoring shared schools, fields of study, mutual contacts, and warm signals",
           hold: M.thinkingMedium
         },
-        { kind: "custom", build: () => n.chat.proximityLeadList(Pd), at: "-=0.04" },
+        { kind: "custom", build: () => n.chat.proximityLeadList(Id), at: "-=0.04" },
         je(Le.bottomRight, "+=0.16")
       ]);
     }
@@ -9798,7 +9811,7 @@ const xd = [
           statusAfter: "building visitor list",
           fromEntry: !0
         },
-        { kind: "dataTable", config: Ld, at: "-=0.02" },
+        { kind: "dataTable", config: qd, at: "-=0.02" },
         {
           kind: "cursorMove",
           target: e,
@@ -9830,8 +9843,8 @@ const xd = [
         { kind: "cursorClick", at: "+=0.18" },
         { kind: "custom", build: () => n.chat.dataTableActionTooltip("website-visitors-sales", "email-sequence", !1), at: "<+=0.02" },
         { kind: "status", text: "building outreach sequence", at: "<" },
-        { kind: "custom", build: () => n.chat.sequenceBuildThinking(Dd), at: "+=0.06" },
-        { kind: "sequenceEngagement", config: Id, at: "-=0.02" },
+        { kind: "custom", build: () => n.chat.sequenceBuildThinking(Rd), at: "+=0.06" },
+        { kind: "sequenceEngagement", config: Dd, at: "-=0.02" },
         { kind: "custom", build: () => n.timeline().to({}, { duration: M.beat + 0.24 }), at: "+=0.04" },
         {
           kind: "cursorMove",
@@ -9904,7 +9917,7 @@ const xd = [
           at: `+=${M.beat}`
         },
         { kind: "assistant", text: "I cleaned the attendee list and normalized the fields that matter for routing and follow-up." },
-        { kind: "dataTable", config: qd, at: "-=0.04" },
+        { kind: "dataTable", config: Od, at: "-=0.04" },
         je(Le.bottomRight, "+=0.18")
       ]);
     }
@@ -9953,7 +9966,7 @@ const xd = [
   amplitude: 18,
   arriveDistance: 3.5
 };
-class Od {
+class Bd {
   constructor(e, t, a = {}) {
     this.root = e, this.cursor = t, this.options = a;
   }
@@ -10052,7 +10065,7 @@ class Od {
       return;
     }
     if (this.mode === "return") {
-      const t = this.getReturnHomePoint(), a = Bd((e - this.returnStartedAt) / Ya.durationMs), i = this.getReturnWavePoint(a, t), r = this.getReturnWavePoint(Math.min(1, a + 0.035), t);
+      const t = this.getReturnHomePoint(), a = zd((e - this.returnStartedAt) / Ya.durationMs), i = this.getReturnWavePoint(a, t), r = this.getReturnWavePoint(Math.min(1, a + 0.035), t);
       if (this.target = t, this.cursor.mimicViewportPoint(i, 1, a < 1 ? r : t), a >= 1 || He(this.getCursorViewportPoint(), t) <= Ya.arriveDistance) {
         this.cursor.mimicViewportPoint(t, 1, t), this.completeReturn();
         return;
@@ -10085,7 +10098,7 @@ class Od {
       i > 1.5 && (this.trailDirection = {
         x: a.x / i,
         y: a.y / i
-      }, this.velocity = Ud(a, K.maxMomentumStep));
+      }, this.velocity = Vd(a, K.maxMomentumStep));
     }
     const t = {
       x: e.x - this.trailDirection.x * K.trailDistance,
@@ -10104,7 +10117,7 @@ class Od {
       x: this.pointer.x + Math.cos(a) * Fe.radiusX,
       y: this.pointer.y + Math.sin(a * 1.28) * Fe.radiusY + i * Fe.bobY
     };
-    this.target = Fd(r, this.pointer, Fe.minPointerDistance, Fe.viewportInset);
+    this.target = Hd(r, this.pointer, Fe.minPointerDistance, Fe.viewportInset);
   }
   resumeFollowing(e) {
     this.mode = "follow", this.sniffAnchor = null, this.nextSniffAt = 0, this.sniffIndex = 0, this.playStartedAt = 0, this.playPhase = 0, this.returnAt = 0, this.lastPointer = e, this.updateFollowTarget(e), this.dismissSamples = [], this.lastMoveAt = performance.now();
@@ -10142,7 +10155,7 @@ class Od {
     return this.cursor.getHistoryParkViewportPoint();
   }
   getReturnWavePoint(e, t) {
-    const a = this.returnStart ?? this.getCursorViewportPoint(), i = zd(e), r = t.x - a.x, o = t.y - a.y, s = Math.hypot(r, o), l = {
+    const a = this.returnStart ?? this.getCursorViewportPoint(), i = Fd(e), r = t.x - a.x, o = t.y - a.y, s = Math.hypot(r, o), l = {
       x: a.x + r * i,
       y: a.y + o * i
     };
@@ -10163,7 +10176,7 @@ class Od {
       x: t.left + a.x,
       y: t.top + a.y
     };
-    return Gd(i, e) > K.maxBrowserDistance;
+    return Ud(i, e) > K.maxBrowserDistance;
   }
   getChatShell() {
     return this.chatShell?.isConnected ? this.chatShell : (this.chatShell = this.root.querySelector("[data-chat-shell]"), this.chatShell);
@@ -10228,13 +10241,13 @@ class Od {
 function He(n, e) {
   return Math.hypot(e.x - n.x, e.y - n.y);
 }
-function Bd(n) {
+function zd(n) {
   return Math.min(1, Math.max(0, n));
 }
 function br(n, e, t) {
   return Math.min(t, Math.max(e, n));
 }
-function zd(n) {
+function Fd(n) {
   return -(Math.cos(Math.PI * n) - 1) / 2;
 }
 function yr(n, e) {
@@ -10243,8 +10256,8 @@ function yr(n, e) {
     y: br(n.y, e, window.innerHeight - e)
   };
 }
-function Fd(n, e, t, a) {
-  const i = yr(Hd(n, e, t), a);
+function Hd(n, e, t, a) {
+  const i = yr(Gd(n, e, t), a);
   if (He(i, e) >= t * 0.86) return i;
   const r = {
     x: window.innerWidth / 2 - e.x,
@@ -10255,7 +10268,7 @@ function Fd(n, e, t, a) {
     y: e.y + r.y / o * t
   }, a);
 }
-function Hd(n, e, t) {
+function Gd(n, e, t) {
   const a = n.x - e.x, i = n.y - e.y, r = Math.hypot(a, i);
   if (r >= t) return n;
   const o = -Math.PI * 0.28, s = r > 0.01 ? a / r : Math.cos(o), l = r > 0.01 ? i / r : Math.sin(o);
@@ -10264,11 +10277,11 @@ function Hd(n, e, t) {
     y: e.y + l * t
   };
 }
-function Gd(n, e) {
+function Ud(n, e) {
   const t = Math.max(e.left - n.x, 0, n.x - e.right), a = Math.max(e.top - n.y, 0, n.y - e.bottom);
   return Math.hypot(t, a);
 }
-function Ud(n, e) {
+function Vd(n, e) {
   const t = Math.hypot(n.x, n.y);
   return t <= e || t === 0 ? n : {
     x: n.x / t * e,
@@ -10281,9 +10294,9 @@ function _r(n) {
 const xr = {
   minPixelDelta: 0.5
 };
-class Vd {
+class Wd {
   constructor(e, t, a, i, r, o) {
-    this.root = e, this.stories = t, this.resolver = a, this.cursor = i, this.chat = r, this.options = o, this.storyProgress = this.stories.map(() => 0), this.pausedCursorMimic = new Od(this.root, this.cursor, {
+    this.root = e, this.stories = t, this.resolver = a, this.cursor = i, this.chat = r, this.options = o, this.storyProgress = this.stories.map(() => 0), this.pausedCursorMimic = new Bd(this.root, this.cursor, {
       onMimicStart: () => this.cancelHistoryParkMotion()
     });
   }
@@ -10370,7 +10383,7 @@ class Vd {
   }
   updateStories(e, t = {}) {
     if (!e.length) return;
-    const a = this.stories[this.activeIndex]?.id, i = this.stories, r = new Map(this.stories.map((d, c) => [d.id, this.storyProgress[c] ?? 0])), o = this.cursor.getPosition(), s = this.playing, l = Wd(i, e);
+    const a = this.stories[this.activeIndex]?.id, i = this.stories, r = new Map(this.stories.map((d, c) => [d.id, this.storyProgress[c] ?? 0])), o = this.cursor.getPosition(), s = this.playing, l = jd(i, e);
     if (this.stories = e, this.storyProgress = this.stories.map((d) => r.get(d.id) ?? 0), this.activeIndex = Math.max(0, this.resolveStoryIndex(a ?? this.stories[0].id)), l && this.renderStoryTabs(), t.restartActive) {
       this.stopTimeline(), this.setHistoryPaused(!1), this.activeTimeline = this.buildTimeline(this.activeIndex, o), this.activeTimeline.progress(0), this.playing = s || this.options.autoplay, this.updateStoryMeta(), this.updateProgress(), this.updatePlayButton(), this.playing && this.activeTimeline.play();
       return;
@@ -10631,14 +10644,14 @@ function Gn(n, e, t) {
 function da(n) {
   return Gn(n, 0, 1);
 }
-function Wd(n, e) {
+function jd(n, e) {
   return n.length !== e.length ? !0 : e.some((t, a) => {
     const i = n[a];
     return !i || i.id !== t.id || i.label !== t.label || i.navLabel !== t.navLabel || i.navDescription !== t.navDescription;
   });
 }
 const ca = ["mobile", "tablet", "desktop", "wide"];
-class jd {
+class Yd {
   constructor(e) {
     this.root = e;
   }
@@ -10750,7 +10763,7 @@ class jd {
     }
   }
 }
-function Yd(n, e = {}) {
+function $d(n, e = {}) {
   if (n.classList.add("wa-section"), n.querySelector("[data-chat-shell]")) return;
   const t = e.showBuilder === !1 ? "" : `
       <div class="wa-builder" data-story-builder>
@@ -10889,25 +10902,25 @@ function Yd(n, e = {}) {
     </div>
   `;
 }
-function $d(n, e = {}) {
-  Yd(n, { showBuilder: e.showBuilder !== !1 });
-  const t = e.stories?.length ? e.stories : Hn, a = e.builderDraftEndpoint ?? "/api/story-draft", i = e.reducedMotion ?? window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? !1, r = new jd(n), o = new Ns(n), s = new Vs(n, r, { reducedMotion: i }), l = new Vd(n, t, r, s, o, {
+function Xd(n, e = {}) {
+  $d(n, { showBuilder: e.showBuilder !== !1 });
+  const t = e.stories?.length ? e.stories : Hn, a = e.builderDraftEndpoint ?? "/api/story-draft", i = e.reducedMotion ?? window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? !1, r = new Yd(n), o = new Ls(n), s = new Ws(n, r, { reducedMotion: i }), l = new Wd(n, t, r, s, o, {
     autoplay: e.autoplay ?? !0,
     loop: e.loop ?? !0,
     autoAdvanceDelay: e.autoAdvanceDelay ?? 3.2,
     initialStory: e.initialStory ?? 0,
     onStoryChange: e.onStoryChange
   }), d = (p, m = {}) => {
-    l.updateStories(Vl(p, t), {
+    l.updateStories(Wl(p, t), {
       restartActive: m.source === "load"
     });
-  }, c = l.destroy.bind(l), u = e.showBuilder === !1 ? null : new Js(n, t, {
+  }, c = l.destroy.bind(l), u = e.showBuilder === !1 ? null : new Ks(n, t, {
     onStorySelect: (p) => l.goTo(p),
     onStoriesChange: d,
     draftEndpoint: a,
     draftAutoSave: e.builderDraftAutoSave
   });
-  return l.mount(), u?.mount(), !u && a && Xd(a, d), {
+  return l.mount(), u?.mount(), !u && a && Jd(a, d), {
     play: l.play.bind(l),
     pause: l.pause.bind(l),
     next: l.next.bind(l),
@@ -10919,7 +10932,7 @@ function $d(n, e = {}) {
     }
   };
 }
-async function Xd(n, e) {
+async function Jd(n, e) {
   try {
     const t = await fetch(n, {
       method: "GET",
@@ -10943,7 +10956,7 @@ function Un() {
   const e = document.createElement("style");
   e.id = vr, e.textContent = $a, document.head.append(e);
 }
-function Jd(n) {
+function Kd(n) {
   if (n instanceof HTMLElement) return n;
   const e = document.querySelector(n);
   if (!e)
@@ -10951,14 +10964,14 @@ function Jd(n) {
   return e;
 }
 function Vn(n = "[data-chatbot-stories]", e = {}) {
-  return e.injectStyles !== !1 && Un(), $d(Jd(n), e);
+  return e.injectStyles !== !1 && Un(), Xd(Kd(n), e);
 }
-const Kd = {
+const Qd = {
   init: Vn,
   defaultStories: Hn
 };
 if (typeof window < "u") {
-  window.ChatbotStories = Kd;
+  window.ChatbotStories = Qd;
   const n = () => {
     document.querySelector("[data-chatbot-stories][data-auto-init]") && Un(), document.querySelectorAll("[data-chatbot-stories][data-auto-init]").forEach((e) => {
       e.dataset.chatbotStoriesMounted || (e.dataset.chatbotStoriesMounted = "true", Vn(e));
