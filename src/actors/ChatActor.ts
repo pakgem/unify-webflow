@@ -3312,7 +3312,10 @@ export class ChatActor {
         cell.append(this.createDataTablePerson(values, values[column.key] ?? ""));
       } else {
         const value = values[column.key] ?? "";
-        cell.textContent = value || "-";
+        const text = document.createElement("span");
+        text.className = "wa-data-table__cell-text";
+        text.textContent = value || "-";
+        cell.append(text);
         if (!value) cell.dataset.empty = "true";
       }
 
