@@ -2240,7 +2240,7 @@ const fs = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="52 42 88 66">
   readyPopUpDuration: 0.12,
   readyPopSettleDuration: 0.22,
   settleHold: A(0.24)
-}, Zi = "Learning your style", xs = "Ready to mimic your voice", er = "73 tone & tactic rules defined", La = [
+}, Zi = "Learning your style", xs = "Voice calibrated", er = "73 tone & tactic rules defined", La = [
   { detail: "Analyzing vocabulary", progress: 31, duration: 1.05, hold: 0.38 },
   { detail: "Investigating wins", progress: 64, duration: 1.2, hold: 0.46 },
   { detail: "Figuring out your voice", progress: 100, duration: 1.15, hold: 0.76 }

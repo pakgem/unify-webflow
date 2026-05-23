@@ -186,7 +186,7 @@ const MAILBOX_CONNECT_MOTION = {
   settleHold: motionDuration(0.24),
 };
 const MAILBOX_LEARNING_TITLE = "Learning your style";
-const MAILBOX_LEARNING_READY_TITLE = "Ready to mimic your voice";
+const MAILBOX_LEARNING_READY_TITLE = "Voice calibrated";
 const MAILBOX_LEARNING_READY_DETAIL = "73 tone & tactic rules defined";
 const MAILBOX_LEARNING_STAGES = [
   { detail: "Analyzing vocabulary", progress: 31, duration: 1.05, hold: 0.38 },
