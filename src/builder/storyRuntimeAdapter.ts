@@ -27,6 +27,7 @@ import {
   responsiveElementTarget,
   type StoryStep,
 } from "../stories/storySystem";
+import { getThinkingElapsedLabel } from "../stories/thinkingText";
 import type {
   BuilderComponent,
   BuilderEnrichmentComponent,
@@ -341,14 +342,71 @@ function buildCsvCleanupStory(ctx: StoryContext, story: BuilderStory): gsap.core
 
 function createGenericStorySteps(story: BuilderStory): StoryStep[] {
   const steps: StoryStep[] = [];
+  const builderSteps = story.id === "data-marketplace"
+    ? consolidateConsecutiveThinkingSteps(story.steps)
+    : story.steps;
   let promptIndex = 0;
 
-  for (const step of story.steps) {
+  for (const step of builderSteps) {
     promptIndex += step.kind === "user" ? 1 : 0;
     appendRuntimeStep(steps, story.id, step, promptIndex === 1);
   }
 
   return steps;
+}
+
+function consolidateConsecutiveThinkingSteps(steps: BuilderStep[]): BuilderStep[] {
+  const consolidated: BuilderStep[] = [];
+  let index = 0;
+
+  while (index < steps.length) {
+    const step = steps[index];
+
+    if (step.kind !== "thinking") {
+      consolidated.push(step);
+      index += 1;
+      continue;
+    }
+
+    const thinkingRun: BuilderStep[] = [];
+
+    while (index < steps.length && steps[index].kind === "thinking") {
+      thinkingRun.push(steps[index]);
+      index += 1;
+    }
+
+    consolidated.push(thinkingRun.length > 1 ? mergeThinkingSteps(thinkingRun) : step);
+  }
+
+  return consolidated;
+}
+
+function mergeThinkingSteps(steps: BuilderStep[]): BuilderStep {
+  const firstStep = steps[0];
+  const items = steps.flatMap((step) => step.thinking?.items.length
+    ? step.thinking.items
+    : [{
+        label: step.text || "Thinking",
+        detail: step.note || "",
+        disclosure: "",
+      }]
+  ).filter((item) => item.label.trim());
+  const normalizedItems = items.map((item, index) => ({
+    label: item.label,
+    detail: item.detail,
+    disclosure: item.disclosure || (index === 0 ? "Show more" : "Show less"),
+  }));
+
+  return {
+    ...firstStep,
+    text: normalizedItems[0]?.label || firstStep.text,
+    note: normalizedItems[0]?.detail || firstStep.note,
+    thinking: {
+      title: firstStep.thinking?.title || "Thinking",
+      elapsed: getThinkingElapsedLabel(normalizedItems.length),
+      items: normalizedItems,
+    },
+  };
 }
 
 function appendRuntimeStep(
