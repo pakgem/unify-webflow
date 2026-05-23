@@ -47,6 +47,11 @@ const HISTORY_PARK = {
   minTopInset: 74,
   maxTopInset: 190,
 };
+const MODE_SYNC = {
+  minDistance: 6,
+  minInterval: 24,
+  lookahead: 5,
+};
 const DEFAULT_CURSOR_POINT_ANGLE = -135;
 const MIMIC_ROTATION_SMOOTHING = 0.34;
 
@@ -74,7 +79,9 @@ export class CursorActor {
   private targetObserver: MutationObserver | null = null;
   private lastModeSyncAt = 0;
   private lastModeSyncPoint: Point = { x: Number.NaN, y: Number.NaN };
+  private lastModeSamplePoint: Point = { x: Number.NaN, y: Number.NaN };
   private modeWatchFrame = 0;
+  private modeSyncFrame = 0;
   private chatShell: HTMLElement | null = null;
 
   constructor(
@@ -469,6 +476,7 @@ export class CursorActor {
   destroy(): void {
     this.targetObserver?.disconnect();
     this.stopModeWatch();
+    this.stopScheduledModeSync();
     this.stopIdleFloat();
     this.el.remove();
   }
@@ -852,13 +860,17 @@ export class CursorActor {
     const now = performance.now();
     const dx = point.x - this.lastModeSyncPoint.x;
     const dy = point.y - this.lastModeSyncPoint.y;
-    const movedEnough = Number.isNaN(dx) || dx * dx + dy * dy >= 24 * 24;
+    const sampleDx = Number.isNaN(this.lastModeSamplePoint.x) ? 0 : point.x - this.lastModeSamplePoint.x;
+    const sampleDy = Number.isNaN(this.lastModeSamplePoint.y) ? 0 : point.y - this.lastModeSamplePoint.y;
+    const movedEnough = Number.isNaN(dx) || dx * dx + dy * dy >= MODE_SYNC.minDistance * MODE_SYNC.minDistance;
 
-    if (!movedEnough && now - this.lastModeSyncAt < 72) return;
+    this.lastModeSamplePoint = { ...point };
+
+    if (!movedEnough && now - this.lastModeSyncAt < MODE_SYNC.minInterval) return;
 
     this.lastModeSyncAt = now;
     this.lastModeSyncPoint = { ...point };
-    this.syncModeToPoint(point);
+    this.syncModeToPoint(point, { x: sampleDx, y: sampleDy });
   }
 
   private updateModeWatch(): void {
@@ -892,19 +904,50 @@ export class CursorActor {
     this.modeWatchFrame = 0;
   }
 
-  private syncModeToPoint(point: Point): void {
+  private scheduleModeSync(): void {
+    if (this.modeSyncFrame) return;
+
+    this.modeSyncFrame = window.requestAnimationFrame(() => {
+      this.modeSyncFrame = 0;
+      if (!this.modeOverride) this.syncModeToPoint(this.currentPosition);
+    });
+  }
+
+  private stopScheduledModeSync(): void {
+    if (!this.modeSyncFrame) return;
+
+    window.cancelAnimationFrame(this.modeSyncFrame);
+    this.modeSyncFrame = 0;
+  }
+
+  private syncModeToPoint(point: Point, movement: Point = { x: 0, y: 0 }): void {
     if (this.payloadDragActive) {
       this.modeOverride = "drag";
       if (this.mode !== "drag") this.setMode("drag");
       return;
     }
 
-    const mode = this.getModeForPoint(point);
+    const mode = this.getModeForPoint(point, movement);
 
     if (mode !== this.mode) this.setMode(mode);
   }
 
-  private getModeForPoint(point: Point): CursorMode {
+  private getModeForPoint(point: Point, movement: Point = { x: 0, y: 0 }): CursorMode {
+    const mode = this.getModeForExactPoint(point);
+
+    if (mode !== "default") return mode;
+
+    const movementMagnitude = Math.hypot(movement.x, movement.y);
+
+    if (movementMagnitude <= 0.25) return "default";
+
+    return this.getModeForExactPoint({
+      x: point.x + (movement.x / movementMagnitude) * MODE_SYNC.lookahead,
+      y: point.y + (movement.y / movementMagnitude) * MODE_SYNC.lookahead,
+    });
+  }
+
+  private getModeForExactPoint(point: Point): CursorMode {
     const rootRect = this.root.getBoundingClientRect();
     const viewportPoint = {
       x: rootRect.left + point.x,
@@ -979,6 +1022,7 @@ export class CursorActor {
 
     this.targetObserver = new MutationObserver(() => {
       this.modeTargetsDirty = true;
+      this.scheduleModeSync();
     });
     this.targetObserver.observe(this.root, {
       attributes: true,
