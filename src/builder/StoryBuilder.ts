@@ -31,6 +31,7 @@ export type BuilderTableComponent = {
     badge: string;
   }>;
   pagination?: {
+    pageSize?: number;
     ranges: string[];
   };
 };
@@ -2300,7 +2301,13 @@ function createSeedSteps(storyId: string, fallbackSummary: string): BuilderStep[
     ],
     "csv-import-cleanup": [
       { kind: "cursor", text: "Cursor exits right and drags a CSV into the browser.", note: "Drop overlay appears as soon as the file enters." },
-      { kind: "file", text: "webinar_attendees.csv", note: "6 normalized records" },
+      { kind: "file", text: "may_webinar_attendees.csv", note: "54 records" },
+      {
+        kind: "component",
+        text: "Raw attendee table",
+        note: "Messy imported data before normalization.",
+        component: createRawWebinarAttendeesTableComponent(),
+      },
       createThinkingStepSeed([
         "Parsing webinar attendee CSV",
         "Normalizing email addresses",
@@ -2316,7 +2323,7 @@ function createSeedSteps(storyId: string, fallbackSummary: string): BuilderStep[
           kind: "table",
           title: "Cleaned webinar attendees",
           eyebrow: "CSV cleanup",
-          count: "6 normalized records",
+          count: "54 records",
           columns: ["Full name", "Email", "Company", "Status"],
           rows: [
             ["Maya Rodriguez", "maya.rodriguez@northstar.ai", "Northstar AI", "Normalized"],
@@ -2462,6 +2469,34 @@ function createWebsiteVisitorTableComponent(title: string, rows: string[][]): Bu
     ],
     pagination: {
       ranges: ["1-10 of 50 people", "11-20 of 50 people"],
+    },
+  };
+}
+
+function createRawWebinarAttendeesTableComponent(): BuilderTableComponent {
+  return {
+    kind: "table",
+    title: "Raw webinar attendees",
+    eyebrow: "CSV import",
+    count: "54 records",
+    columns: ["Name", "Email", "Company", "Messiness"],
+    rows: [
+      ["Maya R.", "MAYA.RODRIGUEZ@NorthStar.ai ", "northstar ai", "case + trailing space"],
+      ["Ethan / Cho", " ethan.cho@clearbit.dev", "Clearbit Inc.", "split name delimiter"],
+      ["Priya Shah", "priya.shah+webinar@orbitgrid.com", "Orbitgrid", "alias cleanup"],
+      ["Lucas", "lucas.meyer@ramp.com", "Ramp", "missing last name"],
+      ["N. Kapoor", "nina+webinar@mercury.com", "Mercury", "abbreviated first name"],
+      ["sam hollis", "sam.hollis@apollo.io", "Apollo.io", "name casing"],
+      ["Anna Li", "anna.li@@linear.app", "Linear", "invalid email"],
+      ["Devon Park", "devon.park@brex .com", "Brex", "domain spacing"],
+      ["Rachel Cho", "rcho@figma.com", "Figma", "short email format"],
+      ["Owen Lee", "owen.lee@notion.so", "", "missing company"],
+      ["Clara Wong", "clara.wong@brightlayer.com", "Bright Layer", "company normalization"],
+      ["Maya Rodriguez", "maya.rodriguez@northstar.ai", "Northstar AI", "duplicate attendee"],
+    ],
+    pagination: {
+      pageSize: 6,
+      ranges: ["1-6 of 54 records", "7-12 of 54 records"],
     },
   };
 }

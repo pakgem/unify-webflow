@@ -1076,8 +1076,9 @@ export class ChatActor {
 
   dataTable(config: DataTableConfig): gsap.core.Timeline {
     const table = this.createDataTable(config);
+    const scrollAnchor = config.scrollAnchor === "previous-message" ? this.getLastMessageBody() : null;
 
-    return this.revealComponentItems("table", table, ".wa-data-table__row", COMPONENT_CHILD_REVEAL.tableRow);
+    return this.revealComponentItems("table", table, ".wa-data-table__row", COMPONENT_CHILD_REVEAL.tableRow, scrollAnchor);
   }
 
   dataTablePage(tableId: string, page: number, options: { updateExpected?: boolean } = {}): gsap.core.Timeline {
@@ -2367,10 +2368,11 @@ export class ChatActor {
     content: HTMLElement,
     targets: string | HTMLElement[],
     preset: ChildRevealPreset,
+    scrollAnchor: HTMLElement | null = null,
   ): gsap.core.Timeline {
     const message = this.claimComponentMessage(kind, content);
 
-    return this.revealPreparedItems(message, this.resolveRevealTargets(content, targets), preset);
+    return this.revealPreparedItems(message, this.resolveRevealTargets(content, targets), preset, scrollAnchor);
   }
 
   private revealUserComponentItems(

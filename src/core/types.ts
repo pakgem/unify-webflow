@@ -234,6 +234,7 @@ export type DataTableConfig = {
       rows: DataTableRowConfig[];
     }>;
   };
+  scrollAnchor?: "previous-message";
   actions?: Array<{
     id: string;
     label: string;

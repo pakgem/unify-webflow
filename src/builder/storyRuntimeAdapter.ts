@@ -308,9 +308,14 @@ function buildCsvCleanupStory(ctx: StoryContext, story: BuilderStory): gsap.core
   const fileStep = firstStep(story, "file");
   const thinkingStep = firstStep(story, "thinking");
   const assistantStep = firstStep(story, "assistant");
-  const tableStep = firstComponent(story, "table");
-  const fileName = fileStep?.text || "webinar_attendees.csv";
-  const fileDetail = getCsvUploadDetail(fileStep, tableStep?.component);
+  const tableSteps = story.steps.filter((step): step is BuilderStep & { component: Extract<BuilderComponent, { kind: "table" }> } =>
+    step.kind === "component" && step.component?.kind === "table",
+  );
+  const thinkingIndex = thinkingStep ? story.steps.indexOf(thinkingStep) : -1;
+  const rawTableStep = tableSteps.find((step) => thinkingIndex >= 0 && story.steps.indexOf(step) < thinkingIndex);
+  const cleanTableStep = [...tableSteps].reverse().find((step) => step !== rawTableStep);
+  const fileName = fileStep?.text || "may_webinar_attendees.csv";
+  const fileDetail = getCsvUploadDetail(fileStep, rawTableStep?.component ?? cleanTableStep?.component);
   const dropArea = ctx.chat.prepareCsvDropArea();
   const cursorFile = ctx.chat.prepareCursorFile(fileName, ctx.cursor);
   const dropTarget = responsiveElementTarget("[data-chat-shell]", "center", {
@@ -332,10 +337,11 @@ function buildCsvCleanupStory(ctx: StoryContext, story: BuilderStory): gsap.core
     { kind: "custom", build: () => dropArea.activate(), at: "<+=0.02" },
     { kind: "custom", build: () => dropArea.complete(), at: "-=0.24" },
     { kind: "custom", build: () => cursorFile.landAsUploadedFile(fileName, fileDetail), at: "<" },
+    ...(rawTableStep ? [{ kind: "dataTable" as const, config: toDataTable(rawTableStep.component, "raw-webinar-attendees"), at: "+=0.08" }] : []),
     { kind: "status", text: "Cleaning CSV", at: "<" },
     ...(thinkingStep ? [toThinkingStoryStep(thinkingStep, { hold: 0.34, at: `+=${STORY_TIMING.beat}` })] : []),
     ...(assistantStep ? [{ kind: "assistant" as const, text: assistantStep.text }] : []),
-    ...(tableStep ? [{ kind: "dataTable" as const, config: toDataTable(tableStep.component, "cleaned-webinar-attendees"), at: "-=0.04" }] : []),
+    ...(cleanTableStep ? [{ kind: "dataTable" as const, config: withCsvCleanTableScroll(toDataTable(cleanTableStep.component, "cleaned-webinar-attendees")), at: "-=0.04" }] : []),
     exitStory(EXIT_TARGETS.bottomRight, "+=0.18"),
   ]);
 }
@@ -599,7 +605,7 @@ function toDataTable(component: BuilderTableComponent, fallbackId: string): Data
   const rows = component.rows
     .filter((row) => row.some((cell) => cell.trim()))
     .map((row, rowIndex) => toDataTableRow(row, shape, rowIndex));
-  const pageSize = Math.min(10, rows.length || 10);
+  const pageSize = component.pagination?.pageSize ?? inferPageSizeFromRanges(component.pagination?.ranges) ?? Math.min(10, rows.length || 10);
   const pages = component.pagination?.ranges.map((range, pageIndex) => ({
     page: pageIndex + 1,
     range,
@@ -624,6 +630,26 @@ function toDataTable(component: BuilderTableComponent, fallbackId: string): Data
         }
       : undefined,
   };
+}
+
+function withCsvCleanTableScroll(config: DataTableConfig): DataTableConfig {
+  return {
+    ...config,
+    scrollAnchor: "previous-message",
+  };
+}
+
+function inferPageSizeFromRanges(ranges: string[] | undefined): number | null {
+  const firstRange = ranges?.[0];
+  const match = firstRange?.match(/^\s*(\d+)\s*[-–]\s*(\d+)/);
+
+  if (!match) return null;
+
+  const start = Number(match[1]);
+  const end = Number(match[2]);
+  const pageSize = end - start + 1;
+
+  return Number.isFinite(pageSize) && pageSize > 0 ? pageSize : null;
 }
 
 function shouldEqualInsetRevealTable(
@@ -665,7 +691,7 @@ function getBuilderTableShape(labels: string[]): BuilderTableShape {
     return {
       key: slugId(label || `column-${sourceIndex + 1}`),
       label,
-      width: getFoldedRoleTableColumnWidth(label, foldsRoleIntoName),
+      width: getBuilderTableColumnWidth(label, foldsRoleIntoName),
     };
   });
 
@@ -678,10 +704,12 @@ function getBuilderTableShape(labels: string[]): BuilderTableShape {
   };
 }
 
-function getFoldedRoleTableColumnWidth(label: string, foldsRoleIntoName: boolean): string | undefined {
+function getBuilderTableColumnWidth(label: string, foldsRoleIntoName: boolean): string | undefined {
+  const normalized = label.toLowerCase();
+
+  if (normalized === "email") return "max-content";
   if (!foldsRoleIntoName) return undefined;
 
-  const normalized = label.toLowerCase();
   if (normalized.includes("connector") || normalized.includes("connection")) return "minmax(170px,0.78fr)";
   if (normalized.includes("email")) return "minmax(190px,0.95fr)";
   if (normalized.includes("mobile")) return "minmax(150px,0.72fr)";

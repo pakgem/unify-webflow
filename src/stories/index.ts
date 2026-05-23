@@ -873,15 +873,151 @@ const WEBSITE_VISITOR_SALES_TABLE = {
    5200ms   clean attendee table appears
    -------------------------------------------------------------------------- */
 
+const CSV_RAW_ROWS = [
+  {
+    id: "raw-maya-rodriguez",
+    values: {
+      rawName: "Maya R.",
+      rawEmail: "MAYA.RODRIGUEZ@NorthStar.ai ",
+      company: "northstar ai",
+      issue: "case + trailing space",
+    },
+  },
+  {
+    id: "raw-ethan-cho",
+    values: {
+      rawName: "Ethan / Cho",
+      rawEmail: " ethan.cho@clearbit.dev",
+      company: "Clearbit Inc.",
+      issue: "split name delimiter",
+    },
+  },
+  {
+    id: "raw-priya-shah",
+    values: {
+      rawName: "Priya Shah",
+      rawEmail: "priya.shah+webinar@orbitgrid.com",
+      company: "Orbitgrid",
+      issue: "alias cleanup",
+    },
+  },
+  {
+    id: "raw-lucas-meyer",
+    values: {
+      rawName: "Lucas",
+      rawEmail: "lucas.meyer@ramp.com",
+      company: "Ramp",
+      issue: "missing last name",
+    },
+  },
+  {
+    id: "raw-nina-kapoor",
+    values: {
+      rawName: "N. Kapoor",
+      rawEmail: "nina+webinar@mercury.com",
+      company: "Mercury",
+      issue: "abbreviated first name",
+    },
+  },
+  {
+    id: "raw-sam-hollis",
+    values: {
+      rawName: "sam hollis",
+      rawEmail: "sam.hollis@apollo.io",
+      company: "Apollo.io",
+      issue: "name casing",
+    },
+  },
+  {
+    id: "raw-anna-li",
+    values: {
+      rawName: "Anna Li",
+      rawEmail: "anna.li@@linear.app",
+      company: "Linear",
+      issue: "invalid email",
+    },
+  },
+  {
+    id: "raw-devon-park",
+    values: {
+      rawName: "Devon Park",
+      rawEmail: "devon.park@brex .com",
+      company: "Brex",
+      issue: "domain spacing",
+    },
+  },
+  {
+    id: "raw-rachel-cho",
+    values: {
+      rawName: "Rachel Cho",
+      rawEmail: "rcho@figma.com",
+      company: "Figma",
+      issue: "short email format",
+    },
+  },
+  {
+    id: "raw-owen-lee",
+    values: {
+      rawName: "Owen Lee",
+      rawEmail: "owen.lee@notion.so",
+      company: "",
+      issue: "missing company",
+    },
+  },
+  {
+    id: "raw-clara-wong",
+    values: {
+      rawName: "Clara Wong",
+      rawEmail: "clara.wong@brightlayer.com",
+      company: "Bright Layer",
+      issue: "company normalization",
+    },
+  },
+  {
+    id: "raw-maya-rodriguez-duplicate",
+    values: {
+      rawName: "Maya Rodriguez",
+      rawEmail: "maya.rodriguez@northstar.ai",
+      company: "Northstar AI",
+      issue: "duplicate attendee",
+    },
+  },
+];
+
+const CSV_RAW_TABLE = {
+  id: "raw-webinar-attendees",
+  title: "Raw webinar attendees",
+  eyebrow: "CSV import",
+  count: "54 records",
+  variant: "default",
+  columns: [
+    { key: "rawName", label: "Name", width: "minmax(130px,0.85fr)" },
+    { key: "rawEmail", label: "Email", width: "max-content" },
+    { key: "company", label: "Company", width: "minmax(120px,0.8fr)" },
+    { key: "issue", label: "Messiness", width: "minmax(150px,1fr)" },
+  ],
+  rows: CSV_RAW_ROWS,
+  pagination: {
+    pageSize: 6,
+    totalRows: 54,
+    activePage: 1,
+    pages: [
+      { page: 1, range: "1-6 of 54 records", rows: CSV_RAW_ROWS.slice(0, 6) },
+      { page: 2, range: "7-12 of 54 records", rows: CSV_RAW_ROWS.slice(6, 12) },
+    ],
+  },
+} satisfies DataTableConfig;
+
 const CSV_CLEAN_TABLE = {
   id: "clean-webinar-attendees",
   title: "Cleaned webinar attendees",
   eyebrow: "CSV cleanup",
-  count: "6 normalized records",
+  count: "54 records",
   variant: "filtered",
+  scrollAnchor: "previous-message",
   columns: [
     { key: "fullName", label: "Full name", width: "1.25fr" },
-    { key: "email", label: "Email", width: "1.55fr" },
+    { key: "email", label: "Email", width: "max-content" },
     { key: "company", label: "Company", width: "1fr" },
     { key: "status", label: "Status", width: "0.85fr" },
   ],
@@ -1280,7 +1416,7 @@ export const defaultStories: StoryDefinition[] = [
     entryLeadTime: 0.18,
     build: (ctx) => {
       const dropArea = ctx.chat.prepareCsvDropArea();
-      const cursorFile = ctx.chat.prepareCursorFile("webinar_attendees.csv", ctx.cursor);
+      const cursorFile = ctx.chat.prepareCursorFile("may_webinar_attendees.csv", ctx.cursor);
       const dropTarget = responsiveElementTarget("[data-chat-shell]", "center", {
         desktop: { x: 0, y: 82 },
         tablet: { x: 0, y: 72 },
@@ -1299,7 +1435,8 @@ export const defaultStories: StoryDefinition[] = [
         },
         { kind: "custom", build: () => dropArea.activate(), at: "<+=0.02" },
         { kind: "custom", build: () => dropArea.complete(), at: "-=0.24" },
-        { kind: "custom", build: () => cursorFile.landAsUploadedFile("webinar_attendees.csv", "1,284 attendees"), at: "<" },
+        { kind: "custom", build: () => cursorFile.landAsUploadedFile("may_webinar_attendees.csv", "54 records"), at: "<" },
+        { kind: "dataTable", config: CSV_RAW_TABLE, at: "+=0.08" },
         { kind: "status", text: "Cleaning CSV", at: "<" },
         {
           kind: "thinking",
