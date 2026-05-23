@@ -189,6 +189,7 @@ const MAILBOX_CONNECT_MOTION = {
 };
 const MAILBOX_LEARNING_TITLE = "Learning your style";
 const MAILBOX_LEARNING_READY_TITLE = "Ready to mimic your voice";
+const MAILBOX_LEARNING_READY_DETAIL = "73 tone & tactic rules defined";
 const MAILBOX_LEARNING_STAGES = [
   { detail: "Analyzing vocabulary", progress: 31, duration: 1.05, hold: 0.38 },
   { detail: "Investigating wins", progress: 64, duration: 1.2, hold: 0.46 },
@@ -1542,7 +1543,7 @@ export class ChatActor {
       .call(() => {
         learning.dataset.mailboxLearningState = "ready";
         titleText.textContent = MAILBOX_LEARNING_READY_TITLE;
-        detail.textContent = "";
+        detail.textContent = learning.dataset.mailboxLearningReadyDetail ?? MAILBOX_LEARNING_READY_DETAIL;
       })
       .fromTo(
         titleText,
@@ -1553,6 +1554,17 @@ export class ChatActor {
           duration: MAILBOX_CONNECT_MOTION.detailSwapDuration,
           ease: "power2.out",
         },
+      )
+      .fromTo(
+        detail,
+        { autoAlpha: 0, y: 4 },
+        {
+          autoAlpha: 1,
+          y: 0,
+          duration: MAILBOX_CONNECT_MOTION.detailSwapDuration,
+          ease: "power2.out",
+        },
+        "<+=0.03",
       )
       .fromTo(
         this.compactElements(titleChevron),
@@ -4174,6 +4186,7 @@ export class ChatActor {
     const learning = document.createElement("div");
     learning.className = "wa-mailbox-learning";
     learning.dataset.mailboxLearning = "";
+    learning.dataset.mailboxLearningReadyDetail = config.learningReadyDetail ?? MAILBOX_LEARNING_READY_DETAIL;
 
     const thumbprintFrame = document.createElement("div");
     thumbprintFrame.className = "wa-mailbox-learning__thumbprint";

@@ -112,6 +112,7 @@ export type MailboxConnectionConfig = {
   loadingLabel?: string;
   learningTitle?: string;
   learningDetail?: string;
+  learningReadyDetail?: string;
   signals: string[];
 };
 

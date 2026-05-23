@@ -2916,6 +2916,7 @@ body {
 
 .wa-mailbox-learning__ready-chevron {
   position: relative;
+  top: -1px;
   display: inline-block;
   width: 9px;
   height: 9px;

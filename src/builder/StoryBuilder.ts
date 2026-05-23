@@ -89,6 +89,7 @@ export type BuilderMailboxConnectionComponent = {
   loadingLabel: string;
   learningTitle: string;
   learningDetail: string;
+  learningReadyDetail?: string;
   signals: string[];
 };
 
@@ -236,6 +237,7 @@ const STEP_KIND_LABELS: Record<BuilderStepKind, string> = {
 const ADDABLE_STEP_KINDS: BuilderStepKind[] = ["user", "assistant", "thinking", "component", "cursor", "file"];
 const DEFAULT_DRAFT_ENDPOINT = "/api/story-draft";
 const DRAFT_SAVE_DEBOUNCE_MS = 800;
+const MAILBOX_LEARNING_READY_DETAIL = "73 tone & tactic rules defined";
 export const BUILDER_DRAFT_SCHEMA_VERSION = 3;
 
 export class StoryBuilder {
@@ -1112,6 +1114,14 @@ export class StoryBuilder {
     const learningDetail = this.createComponentField(step.id, "mailboxLearningDetail", component.learningDetail, {
       className: "wa-builder-mailbox-editor__learning-detail",
     });
+    const learningReadyDetail = this.createComponentField(
+      step.id,
+      "mailboxLearningReadyDetail",
+      component.learningReadyDetail ?? MAILBOX_LEARNING_READY_DETAIL,
+      {
+        className: "wa-builder-mailbox-editor__learning-detail",
+      },
+    );
 
     const signals = document.createElement("div");
     signals.className = "wa-builder-mailbox-editor__signals";
@@ -1124,7 +1134,7 @@ export class StoryBuilder {
       );
     });
 
-    content.append(title, subtitle, meta, cta, learningTitle, learningDetail, signals);
+    content.append(title, subtitle, meta, cta, learningTitle, learningDetail, learningReadyDetail, signals);
     return card;
   }
 
@@ -2700,6 +2710,7 @@ function createMailboxConnectionComponent(): BuilderMailboxConnectionComponent {
     loadingLabel: "connecting",
     learningTitle: "Learning your style",
     learningDetail: "Analyzing vocabulary...",
+    learningReadyDetail: MAILBOX_LEARNING_READY_DETAIL,
     signals: ["sent emails", "reply patterns", "calendar context", "signature and tone"],
   };
 }
@@ -3016,6 +3027,7 @@ function updateComponentValue(
     if (field === "mailboxLoadingLabel") component.loadingLabel = value;
     if (field === "mailboxLearningTitle") component.learningTitle = value;
     if (field === "mailboxLearningDetail") component.learningDetail = value;
+    if (field === "mailboxLearningReadyDetail") component.learningReadyDetail = value;
 
     if (field === "mailboxSignal" && indexes.itemIndex !== null) {
       component.signals[indexes.itemIndex] = value;

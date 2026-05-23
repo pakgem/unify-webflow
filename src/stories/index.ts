@@ -626,6 +626,7 @@ const GMAIL_MAILBOX_CONNECTION = {
   loadingLabel: "connecting",
   learningTitle: "Learning your style",
   learningDetail: "Analyzing vocabulary...",
+  learningReadyDetail: "73 tone & tactic rules defined",
   signals: ["sent emails", "reply patterns", "calendar context", "signature and tone"],
 } satisfies MailboxConnectionConfig;
 

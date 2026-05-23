@@ -785,6 +785,7 @@ function toMailboxConnection(component: BuilderMailboxConnectionComponent): Mail
     loadingLabel: component.loadingLabel,
     learningTitle: component.learningTitle,
     learningDetail: component.learningDetail,
+    learningReadyDetail: component.learningReadyDetail,
     signals: component.signals,
   };
 }
