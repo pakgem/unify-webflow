@@ -585,29 +585,29 @@ const GMAIL_MAILBOX_CONNECTION = {
 const PYLON_BUSINESS_REPORT = {
   id: "pylon-business-report",
   title: "Pylon business report",
-  subtitle: "What Unify learned from the uploaded business context.",
+  subtitle: "How to win Pylon's market from the uploaded business context.",
   signals: [
     {
-      label: "Messaging strategy",
-      value: "Lead with support-led growth: turn customer conversations into expansion, retention, and renewal signals.",
+      label: "Winning wedge",
+      value: "Sell Pylon as the revenue layer for post-sale conversations: support signals become expansion, renewal, and risk plays before competitors see them.",
     },
     {
-      label: "Positioning",
-      value: "Frame Pylon as the customer intelligence layer for modern B2B teams, not another inbox or ticket queue.",
+      label: "Primary motion",
+      value: "Target VP CS, RevOps, and founders at B2B SaaS companies where Slack, tickets, and call notes hide account-level next actions.",
     },
     {
-      label: "Competitors",
-      value: "Against Intercom and Zendesk, emphasize account visibility, CRM-native handoffs, and revenue-ready workflows.",
+      label: "Displacement angle",
+      value: "Against Zendesk and Intercom, avoid ticketing arguments. Show where they break: account context, revenue handoffs, and renewal escalation.",
     },
     {
-      label: "Best-fit ICP",
-      value: "Series A-C B2B SaaS with complex accounts, high-value customers, and support data trapped outside GTM workflows.",
+      label: "Proof to use",
+      value: "Lead with fewer missed expansion signals, faster executive escalation, cleaner CS-to-sales handoffs, and one shared customer timeline.",
     },
   ],
   examples: [
-    "Run expansion plays from support signals: stalled onboarding, repeated feature requests, and renewal risk.",
-    "Position against ticketing systems by showing how customer context becomes sales action, not just case resolution.",
-    "Avoid generic AI-agent language; anchor the pitch in account visibility, handoffs, and revenue moments.",
+    "Open with a customer moment: repeated feature requests, renewal risk, or stalled onboarding that should have triggered a revenue play.",
+    "Package the CTA as a quick account review: show hidden risks and expansion signals pulled from recent customer conversations.",
+    "Keep the copy specific: account visibility, post-sale intelligence, executive escalation, and revenue timing beats generic AI language.",
   ],
 } satisfies OutreachStyleProfileConfig;
 
