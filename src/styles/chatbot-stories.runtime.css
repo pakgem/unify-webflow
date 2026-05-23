@@ -2300,7 +2300,7 @@ body {
 .wa-waterfall-rows {
   position: relative;
   display: grid;
-  gap: 10px;
+  gap: 0;
   padding: 0;
 }
 
@@ -2317,10 +2317,10 @@ body {
 .wa-waterfall-row {
   position: relative;
   display: grid;
-  grid-template-columns: var(--wa-thinking-icon-column) 202px max-content;
-  gap: var(--wa-thinking-column-gap) 14px;
+  grid-template-columns: var(--wa-thinking-icon-column) 100px max-content;
+  gap: var(--wa-thinking-column-gap) 8px;
   align-items: center;
-  min-height: 52px;
+  min-height: 32px;
   color: #11110f;
   font-size: 14px;
   line-height: 1;
@@ -5265,13 +5265,13 @@ body {
   }
 
   .wa-waterfall-rows {
-    gap: 7px;
+    gap: 0;
   }
 
   .wa-waterfall-row {
-    grid-template-columns: var(--wa-thinking-icon-column) 104px max-content;
+    grid-template-columns: var(--wa-thinking-icon-column) 100px max-content;
     gap: 8px;
-    min-height: 42px;
+    min-height: 32px;
     font-size: 14px;
   }
 
