@@ -369,8 +369,8 @@ const COMPOSER_BOX_RESET_VARS: gsap.TweenVars = {
 };
 
 const SIGNUP_TRANSITION = {
-  scrollOutRatio: 0.74,
-  minScrollOut: 280,
+  scrollOutRatio: 1.02,
+  minScrollOut: 420,
   duration: motionDuration(0.58),
   threadOverlap: "-=0.36",
 };
@@ -1046,6 +1046,11 @@ export class ChatActor {
         duration: SIGNUP_TRANSITION.duration,
         ease: "power3.inOut",
       })
+      .to(this.signupScene, {
+        autoAlpha: 0,
+        duration: motionDuration(0.08),
+        ease: "power1.out",
+      }, ">-0.08")
       .set(this.signupScene, { pointerEvents: "none" })
       .fromTo(
         this.thread,
