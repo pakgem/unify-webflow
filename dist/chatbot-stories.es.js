@@ -7123,7 +7123,7 @@ function al(r, e) {
       {
         kind: "component",
         text: "Raw attendee table",
-        note: "Messy imported data before normalization.",
+        note: "Names and emails need normalization.",
         component: ll()
       },
       nt([
@@ -7259,20 +7259,20 @@ function ll() {
     title: "Raw webinar attendees",
     eyebrow: "CSV import",
     count: "54 records",
-    columns: ["Name", "Email", "Company", "Messiness"],
+    columns: ["Name", "Email", "Company"],
     rows: [
-      ["Maya R.", "MAYA.RODRIGUEZ@NorthStar.ai ", "northstar ai", "case + trailing space"],
-      ["Ethan / Cho", " ethan.cho@clearbit.dev", "Clearbit Inc.", "split name delimiter"],
-      ["Priya Shah", "priya.shah+webinar@orbitgrid.com", "Orbitgrid", "alias cleanup"],
-      ["Lucas", "lucas.meyer@ramp.com", "Ramp", "missing last name"],
-      ["N. Kapoor", "nina+webinar@mercury.com", "Mercury", "abbreviated first name"],
-      ["sam hollis", "sam.hollis@apollo.io", "Apollo.io", "name casing"],
-      ["Anna Li", "anna.li@@linear.app", "Linear", "invalid email"],
-      ["Devon Park", "devon.park@brex .com", "Brex", "domain spacing"],
-      ["Rachel Cho", "rcho@figma.com", "Figma", "short email format"],
-      ["Owen Lee", "owen.lee@notion.so", "", "missing company"],
-      ["Clara Wong", "clara.wong@brightlayer.com", "Bright Layer", "company normalization"],
-      ["Maya Rodriguez", "maya.rodriguez@northstar.ai", "Northstar AI", "duplicate attendee"]
+      ["Maya R.", "MAYA.RODRIGUEZ@NorthStar.ai ", "northstar ai"],
+      ["Ethan / Cho", "ethan.cho@gmail.com", "Clearbit Inc."],
+      ["Priya Shah", "priya.shah+webinar@orbitgrid.com", "Orbitgrid"],
+      ["Lucas", "", "Ramp"],
+      ["N. Kapoor", "nina@yahoo.com", "Mercury"],
+      ["sam hollis", "sam.hollis@apollo.io", "Apollo.io"],
+      ["Anna Li", "", "Linear"],
+      ["Devon Park", "devon.park@brex.com", "Brex"],
+      ["Rachel C.", "rcho@figma.com", "Figma"],
+      ["Owen Lee", "owen.lee@icloud.com", "Notion"],
+      ["Clara Wong", "clara.wong@brightlayer.com", "Bright Layer"],
+      ["Maya Rodriguez", "maya.rodriguez@northstar.ai", "Northstar AI"]
     ],
     pagination: {
       pageSize: 6,
@@ -9919,17 +9919,15 @@ const Pd = [
     values: {
       rawName: "Maya R.",
       rawEmail: "MAYA.RODRIGUEZ@NorthStar.ai ",
-      company: "northstar ai",
-      issue: "case + trailing space"
+      company: "northstar ai"
     }
   },
   {
     id: "raw-ethan-cho",
     values: {
       rawName: "Ethan / Cho",
-      rawEmail: " ethan.cho@clearbit.dev",
-      company: "Clearbit Inc.",
-      issue: "split name delimiter"
+      rawEmail: "ethan.cho@gmail.com",
+      company: "Clearbit Inc."
     }
   },
   {
@@ -9937,26 +9935,23 @@ const Pd = [
     values: {
       rawName: "Priya Shah",
       rawEmail: "priya.shah+webinar@orbitgrid.com",
-      company: "Orbitgrid",
-      issue: "alias cleanup"
+      company: "Orbitgrid"
     }
   },
   {
     id: "raw-lucas-meyer",
     values: {
       rawName: "Lucas",
-      rawEmail: "lucas.meyer@ramp.com",
-      company: "Ramp",
-      issue: "missing last name"
+      rawEmail: "",
+      company: "Ramp"
     }
   },
   {
     id: "raw-nina-kapoor",
     values: {
       rawName: "N. Kapoor",
-      rawEmail: "nina+webinar@mercury.com",
-      company: "Mercury",
-      issue: "abbreviated first name"
+      rawEmail: "nina@yahoo.com",
+      company: "Mercury"
     }
   },
   {
@@ -9964,44 +9959,39 @@ const Pd = [
     values: {
       rawName: "sam hollis",
       rawEmail: "sam.hollis@apollo.io",
-      company: "Apollo.io",
-      issue: "name casing"
+      company: "Apollo.io"
     }
   },
   {
     id: "raw-anna-li",
     values: {
       rawName: "Anna Li",
-      rawEmail: "anna.li@@linear.app",
-      company: "Linear",
-      issue: "invalid email"
+      rawEmail: "",
+      company: "Linear"
     }
   },
   {
     id: "raw-devon-park",
     values: {
       rawName: "Devon Park",
-      rawEmail: "devon.park@brex .com",
-      company: "Brex",
-      issue: "domain spacing"
+      rawEmail: "devon.park@brex.com",
+      company: "Brex"
     }
   },
   {
     id: "raw-rachel-cho",
     values: {
-      rawName: "Rachel Cho",
+      rawName: "Rachel C.",
       rawEmail: "rcho@figma.com",
-      company: "Figma",
-      issue: "short email format"
+      company: "Figma"
     }
   },
   {
     id: "raw-owen-lee",
     values: {
       rawName: "Owen Lee",
-      rawEmail: "owen.lee@notion.so",
-      company: "",
-      issue: "missing company"
+      rawEmail: "owen.lee@icloud.com",
+      company: "Notion"
     }
   },
   {
@@ -10009,8 +9999,7 @@ const Pd = [
     values: {
       rawName: "Clara Wong",
       rawEmail: "clara.wong@brightlayer.com",
-      company: "Bright Layer",
-      issue: "company normalization"
+      company: "Bright Layer"
     }
   },
   {
@@ -10018,8 +10007,7 @@ const Pd = [
     values: {
       rawName: "Maya Rodriguez",
       rawEmail: "maya.rodriguez@northstar.ai",
-      company: "Northstar AI",
-      issue: "duplicate attendee"
+      company: "Northstar AI"
     }
   }
 ], Wd = {
@@ -10031,8 +10019,7 @@ const Pd = [
   columns: [
     { key: "rawName", label: "Name", width: "minmax(130px,0.85fr)" },
     { key: "rawEmail", label: "Email", width: "max-content" },
-    { key: "company", label: "Company", width: "minmax(120px,0.8fr)" },
-    { key: "issue", label: "Messiness", width: "minmax(150px,1fr)" }
+    { key: "company", label: "Company", width: "minmax(120px,0.8fr)" }
   ],
   rows: Qa,
   pagination: {

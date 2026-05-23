@@ -1091,16 +1091,14 @@ const CSV_RAW_ROWS = [
       rawName: "Maya R.",
       rawEmail: "MAYA.RODRIGUEZ@NorthStar.ai ",
       company: "northstar ai",
-      issue: "case + trailing space",
     },
   },
   {
     id: "raw-ethan-cho",
     values: {
       rawName: "Ethan / Cho",
-      rawEmail: " ethan.cho@clearbit.dev",
+      rawEmail: "ethan.cho@gmail.com",
       company: "Clearbit Inc.",
-      issue: "split name delimiter",
     },
   },
   {
@@ -1109,25 +1107,22 @@ const CSV_RAW_ROWS = [
       rawName: "Priya Shah",
       rawEmail: "priya.shah+webinar@orbitgrid.com",
       company: "Orbitgrid",
-      issue: "alias cleanup",
     },
   },
   {
     id: "raw-lucas-meyer",
     values: {
       rawName: "Lucas",
-      rawEmail: "lucas.meyer@ramp.com",
+      rawEmail: "",
       company: "Ramp",
-      issue: "missing last name",
     },
   },
   {
     id: "raw-nina-kapoor",
     values: {
       rawName: "N. Kapoor",
-      rawEmail: "nina+webinar@mercury.com",
+      rawEmail: "nina@yahoo.com",
       company: "Mercury",
-      issue: "abbreviated first name",
     },
   },
   {
@@ -1136,43 +1131,38 @@ const CSV_RAW_ROWS = [
       rawName: "sam hollis",
       rawEmail: "sam.hollis@apollo.io",
       company: "Apollo.io",
-      issue: "name casing",
     },
   },
   {
     id: "raw-anna-li",
     values: {
       rawName: "Anna Li",
-      rawEmail: "anna.li@@linear.app",
+      rawEmail: "",
       company: "Linear",
-      issue: "invalid email",
     },
   },
   {
     id: "raw-devon-park",
     values: {
       rawName: "Devon Park",
-      rawEmail: "devon.park@brex .com",
+      rawEmail: "devon.park@brex.com",
       company: "Brex",
-      issue: "domain spacing",
     },
   },
   {
     id: "raw-rachel-cho",
     values: {
-      rawName: "Rachel Cho",
+      rawName: "Rachel C.",
       rawEmail: "rcho@figma.com",
       company: "Figma",
-      issue: "short email format",
     },
   },
   {
     id: "raw-owen-lee",
     values: {
       rawName: "Owen Lee",
-      rawEmail: "owen.lee@notion.so",
-      company: "",
-      issue: "missing company",
+      rawEmail: "owen.lee@icloud.com",
+      company: "Notion",
     },
   },
   {
@@ -1181,7 +1171,6 @@ const CSV_RAW_ROWS = [
       rawName: "Clara Wong",
       rawEmail: "clara.wong@brightlayer.com",
       company: "Bright Layer",
-      issue: "company normalization",
     },
   },
   {
@@ -1190,7 +1179,6 @@ const CSV_RAW_ROWS = [
       rawName: "Maya Rodriguez",
       rawEmail: "maya.rodriguez@northstar.ai",
       company: "Northstar AI",
-      issue: "duplicate attendee",
     },
   },
 ];
@@ -1205,7 +1193,6 @@ const CSV_RAW_TABLE = {
     { key: "rawName", label: "Name", width: "minmax(130px,0.85fr)" },
     { key: "rawEmail", label: "Email", width: "max-content" },
     { key: "company", label: "Company", width: "minmax(120px,0.8fr)" },
-    { key: "issue", label: "Messiness", width: "minmax(150px,1fr)" },
   ],
   rows: CSV_RAW_ROWS,
   pagination: {
