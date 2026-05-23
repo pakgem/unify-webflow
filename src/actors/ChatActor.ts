@@ -2612,7 +2612,12 @@ export class ChatActor {
     scrollAnchor: HTMLElement | null = null,
     scrollOffset = 0,
   ): gsap.core.Timeline {
-    return gsap.timeline().add(this.revealMessage(message, scrollAnchor, scrollOffset)).to(targets, vars, position);
+    return gsap
+      .timeline()
+      .add(this.revealMessage(message, scrollAnchor, scrollOffset))
+      .call(() => this.setMotionHints(targets), undefined, position)
+      .to(targets, vars, position)
+      .call(() => this.clearMotionHints(targets));
   }
 
   private revealMessageWithChildFrom(
@@ -2622,12 +2627,17 @@ export class ChatActor {
     toVars: gsap.TweenVars,
     position: string | number = "-=0.22",
   ): gsap.core.Timeline {
-    return gsap.timeline().add(this.revealMessage(message)).fromTo(
-      target,
-      fromVars,
-      toVars,
-      position,
-    );
+    return gsap
+      .timeline()
+      .add(this.revealMessage(message))
+      .call(() => this.setMotionHints(target), undefined, position)
+      .fromTo(
+        target,
+        fromVars,
+        toVars,
+        position,
+      )
+      .call(() => this.clearMotionHints(target));
   }
 
   private revealComponentItems(
@@ -2691,6 +2701,7 @@ export class ChatActor {
         this.scrollTween?.kill();
         this.scrollTween = null;
         message.style.display = "grid";
+        this.setMotionHints(message);
         if (this.composerVisible) this.pinThreadToBottom();
         scrollTarget = this.getMessageScrollTarget(message, scrollAnchor, scrollOffset);
       })
@@ -2710,6 +2721,15 @@ export class ChatActor {
         scale: 1,
         ...MESSAGE_SPRING,
       }, 0.04)
+      .call(() => this.clearMotionHints(message));
+  }
+
+  private setMotionHints(targets: gsap.TweenTarget, willChange = "transform, opacity"): void {
+    gsap.set(targets, { willChange });
+  }
+
+  private clearMotionHints(targets: gsap.TweenTarget): void {
+    gsap.set(targets, { willChange: "auto" });
   }
 
   private claimMessage(role: "user" | "assistant", text: string): HTMLElement {

@@ -1,17 +1,16 @@
 import { ChatActor } from "../actors/ChatActor";
 import { CursorActor } from "../actors/CursorActor";
-import { StoryBuilder } from "../builder/StoryBuilder";
 import type { BuilderStory } from "../builder/draftTypes";
 import { createStoriesFromBuilderDraft } from "../builder/storyRuntimeAdapter";
 import { defaultStories } from "../stories";
-import { loadRuntimeDraftStories } from "./loadRuntimeDraftStories";
 import { StoryController } from "./StoryController";
 import { TargetResolver } from "./TargetResolver";
 import type { ChatbotStoriesConfig, ChatbotStoriesInstance } from "./types";
-import { renderDefaultMarkup } from "./renderDefaultMarkup";
+import { loadRuntimeDraftStories } from "./loadRuntimeDraftStories";
+import { renderPlaybackMarkup } from "./renderPlaybackMarkup";
 
-export function createEngine(root: HTMLElement, config: ChatbotStoriesConfig = {}): ChatbotStoriesInstance {
-  renderDefaultMarkup(root, { showBuilder: config.showBuilder !== false });
+export function createPlaybackEngine(root: HTMLElement, config: ChatbotStoriesConfig = {}): ChatbotStoriesInstance {
+  renderPlaybackMarkup(root);
 
   const stories = config.stories?.length ? config.stories : defaultStories;
   const draftEndpoint = config.builderDraftEndpoint ?? "/api/story-draft";
@@ -29,25 +28,15 @@ export function createEngine(root: HTMLElement, config: ChatbotStoriesConfig = {
     initialStory: config.initialStory ?? 0,
     onStoryChange: config.onStoryChange,
   });
+
   const applyBuilderStories = (builderStories: BuilderStory[], options: { source?: "load" | "edit" } = {}) => {
     controller.updateStories(createStoriesFromBuilderDraft(builderStories, stories), {
       restartActive: options.source === "load",
     });
   };
-  const destroy = controller.destroy.bind(controller);
-  const builder =
-    config.showBuilder === false
-      ? null
-      : new StoryBuilder(root, stories, {
-          onStorySelect: (storyId) => controller.goTo(storyId),
-          onStoriesChange: applyBuilderStories,
-          draftEndpoint,
-          draftAutoSave: config.builderDraftAutoSave,
-        });
 
   controller.mount();
-  builder?.mount();
-  if (!builder && draftEndpoint) void loadRuntimeDraftStories(draftEndpoint, applyBuilderStories);
+  if (draftEndpoint) void loadRuntimeDraftStories(draftEndpoint, applyBuilderStories);
 
   return {
     play: controller.play.bind(controller),
@@ -57,8 +46,7 @@ export function createEngine(root: HTMLElement, config: ChatbotStoriesConfig = {
     goTo: controller.goTo.bind(controller),
     getState: controller.getState.bind(controller),
     destroy: () => {
-      builder?.destroy();
-      destroy();
+      controller.destroy();
       chat.destroy();
       cursor.destroy();
     },

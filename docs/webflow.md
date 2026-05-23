@@ -50,7 +50,9 @@ Initialize manually when you want to pass options:
 </script>
 ```
 
-Theme styles are centralized at the top of `src/styles/chatbot-stories.css`. Use a `data-theme` attribute on the root when embedding:
+Theme styles are centralized at the top of `src/styles/chatbot-stories.runtime.css`. Builder-only styles live in `src/styles/chatbot-stories.builder.css`. Use a `data-theme` attribute on the root when embedding:
+
+The Webflow bundle is the playback runtime only. The visual story builder and editor CSS stay in the local app entry so the production payload does not ship builder controls.
 
 ```html
 <section data-chatbot-stories data-auto-init data-theme="light"></section>

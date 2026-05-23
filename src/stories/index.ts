@@ -12,6 +12,12 @@ import type {
   StrategyPlanConfig,
 } from "../core/types";
 import {
+  collectDataSourceAssetUrls,
+  collectDataTableAssetUrls,
+  collectProximityAssetUrls,
+  collectSequenceAssetUrls,
+} from "../core/assetPreloader";
+import {
   buildStorySteps,
   CHAT_INPUT_TARGETS,
   EXIT_TARGETS,
@@ -1336,6 +1342,12 @@ export const defaultStories: StoryDefinition[] = [
       "A one-stop shop for your data needs, B2B contacts and companies, e-commerce, local businesses, technographics, and more in a single natural language search.",
     eyebrow: "Data marketplace",
     summary: "The assistant searches, filters, and enriches B2B company and contact data.",
+    assetUrls: [
+      ...collectDataTableAssetUrls(DATA_MARKETPLACE_INITIAL_TABLE),
+      ...collectDataTableAssetUrls(DATA_MARKETPLACE_FUNDED_TABLE),
+      ...collectDataTableAssetUrls(DATA_MARKETPLACE_ENRICHED_TABLE),
+      ...collectDataSourceAssetUrls(DATA_MARKETPLACE_SOURCES),
+    ],
     entry: CHAT_INPUT_TARGETS.dataMarketplace,
     entryLeadTime: INPUT_ENTRY_LEAD_TIME,
     build: (ctx) => {
@@ -1391,6 +1403,7 @@ export const defaultStories: StoryDefinition[] = [
     navLabel: "An agent that knows you",
     eyebrow: "Context learning",
     summary: "The assistant learns your sales context, protects ICP fit, and ranks leads by relationship proximity.",
+    assetUrls: collectProximityAssetUrls(PROXIMITY_LEADS),
     entry: {
       desktop: { target: "[data-chat-shell]", anchor: "right", offset: { x: -48, y: 168 } },
       tablet: { target: "[data-chat-shell]", anchor: "right", offset: { x: -44, y: 144 } },
@@ -1531,6 +1544,10 @@ export const defaultStories: StoryDefinition[] = [
     navLabel: "Zero effort engagement, built in",
     eyebrow: "Engagement engine",
     summary: "The assistant turns website visitor intent into a paginated list and engagement actions.",
+    assetUrls: [
+      ...collectDataTableAssetUrls(WEBSITE_VISITOR_SALES_TABLE),
+      ...collectSequenceAssetUrls(ENGAGEMENT_SEQUENCE_LAUNCH),
+    ],
     entry: CHAT_INPUT_TARGETS.researchBrief,
     entryLeadTime: INPUT_ENTRY_LEAD_TIME,
     build: (ctx) => {

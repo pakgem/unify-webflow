@@ -278,6 +278,7 @@ export type StoryDefinition = {
   accent?: string;
   entry: ResponsiveTarget;
   entryLeadTime?: number;
+  assetUrls?: string[];
   prepare?: (ctx: StoryContext) => void;
   build: (ctx: StoryContext) => gsap.core.Timeline;
 };

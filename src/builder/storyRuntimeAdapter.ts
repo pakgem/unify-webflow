@@ -16,6 +16,12 @@ import type {
   UploadedFileConfig,
 } from "../core/types";
 import {
+  collectDataSourceAssetUrls,
+  collectDataTableAssetUrls,
+  collectProximityAssetUrls,
+  collectSequenceAssetUrls,
+} from "../core/assetPreloader";
+import {
   CHAT_INPUT_TARGETS,
   EXIT_TARGETS,
   INPUT_ENTRY_LEAD_TIME,
@@ -39,7 +45,7 @@ import type {
   BuilderTableComponent,
   BuilderThinkingState,
   BuilderUploadedFilesComponent,
-} from "./StoryBuilder";
+} from "./draftTypes";
 
 type ComponentStep = BuilderStep & { component: BuilderComponent };
 
@@ -68,11 +74,36 @@ function createStoryFromBuilderStory(builderStory: BuilderStory, baseStory: Stor
     navLabel: builderStory.label,
     navDescription: builderStory.summary || baseStory.navDescription,
     summary: builderStory.summary || baseStory.summary,
+    assetUrls: collectBuilderStoryAssetUrls(builderStory),
     entry: getRuntimeEntry(builderStory.id, baseStory),
     entryLeadTime: getRuntimeEntryLeadTime(builderStory.id, baseStory),
     prepare: builderStory.id === "hit-ground-running" ? (ctx) => ctx.chat.prepareSignup() : baseStory.prepare,
     build: (ctx) => buildBuilderStory(ctx, builderStory, baseStory),
   };
+}
+
+function collectBuilderStoryAssetUrls(story: BuilderStory): string[] {
+  const urls = new Set<string>();
+
+  for (const step of story.steps) {
+    if (step.kind !== "component" || !step.component) continue;
+
+    const component = step.component;
+    if (component.kind === "table") {
+      collectDataTableAssetUrls(toDataTable(component, `${story.id}-${step.id}`)).forEach((url) => urls.add(url));
+    }
+    if (component.kind === "dataSources") {
+      collectDataSourceAssetUrls(toDataSources(component)).forEach((url) => urls.add(url));
+    }
+    if (component.kind === "proximityList") {
+      collectProximityAssetUrls(toProximityList(component)).forEach((url) => urls.add(url));
+    }
+    if (component.kind === "sequenceEngagement") {
+      collectSequenceAssetUrls(toSequenceEngagement(component, `${story.id}-${step.id}`)).forEach((url) => urls.add(url));
+    }
+  }
+
+  return [...urls];
 }
 
 function getRuntimeEntry(storyId: string, baseStory: StoryDefinition): StoryDefinition["entry"] {

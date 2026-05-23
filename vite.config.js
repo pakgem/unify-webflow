@@ -10,7 +10,7 @@ export default defineConfig(({ mode }) => ({
     ? {}
     : {
         lib: {
-          entry: "src/index.ts",
+          entry: "src/runtime.ts",
           name: "ChatbotStories",
           formats: ["iife", "es"],
           fileName: (format) => (format === "iife" ? "chatbot-stories.js" : "chatbot-stories.es.js"),

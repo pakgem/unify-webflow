@@ -1,6 +1,7 @@
 import { gsap } from "gsap";
 import type { ChatActor, DataTablePageRestore } from "../actors/ChatActor";
 import type { CursorActor } from "../actors/CursorActor";
+import { preloadStoriesAround } from "./assetPreloader";
 import { PausedCursorMimic } from "./PausedCursorMimic";
 import type {
   ChatbotStoriesConfig,
@@ -191,6 +192,7 @@ export class StoryController implements ChatbotStoriesInstance {
 
     this.updateStoryMeta();
     this.updateAllTabProgress();
+    preloadStoriesAround(this.stories, this.activeIndex);
   }
 
   goTo(story: number | string): void {
@@ -308,6 +310,7 @@ export class StoryController implements ChatbotStoriesInstance {
     progress = 0,
   ): void {
     this.activeIndex = storyIndex;
+    preloadStoriesAround(this.stories, this.activeIndex);
     this.activeTimeline = this.buildTimeline(this.activeIndex, startPoint);
     this.activeTimeline.progress(progress).pause();
     this.updateStoryMeta();

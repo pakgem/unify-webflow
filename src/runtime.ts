@@ -1,16 +1,13 @@
-import { createEngine } from "./core/createEngine";
+import { createPlaybackEngine } from "./core/createPlaybackEngine";
 import type { ChatbotStoriesConfig, ChatbotStoriesInstance } from "./core/types";
 import { defaultStories } from "./stories";
-import builderStyles from "./styles/chatbot-stories.builder.css?inline";
-import runtimeStyles from "./styles/chatbot-stories.runtime.css?inline";
 import { injectStyleText } from "./styles/injectStyles";
+import runtimeStyles from "./styles/chatbot-stories.runtime.css?inline";
 
 const RUNTIME_STYLE_ID = "chatbot-stories-runtime-styles";
-const BUILDER_STYLE_ID = "chatbot-stories-builder-styles";
 
-function injectStyles(): void {
+function injectRuntimeStyles(): void {
   injectStyleText(RUNTIME_STYLE_ID, runtimeStyles);
-  injectStyleText(BUILDER_STYLE_ID, builderStyles);
 }
 
 function resolveRoot(target: string | HTMLElement): HTMLElement {
@@ -29,9 +26,9 @@ export function init(
   target: string | HTMLElement = "[data-chatbot-stories]",
   config: ChatbotStoriesConfig = {},
 ): ChatbotStoriesInstance {
-  if (config.injectStyles !== false) injectStyles();
+  if (config.injectStyles !== false) injectRuntimeStyles();
 
-  return createEngine(resolveRoot(target), config);
+  return createPlaybackEngine(resolveRoot(target), config);
 }
 
 export { defaultStories };
@@ -52,7 +49,7 @@ if (typeof window !== "undefined") {
   window.ChatbotStories = api;
 
   const autoInit = () => {
-    if (document.querySelector("[data-chatbot-stories][data-auto-init]")) injectStyles();
+    if (document.querySelector("[data-chatbot-stories][data-auto-init]")) injectRuntimeStyles();
 
     document.querySelectorAll<HTMLElement>("[data-chatbot-stories][data-auto-init]").forEach((root) => {
       if (root.dataset.chatbotStoriesMounted) return;
