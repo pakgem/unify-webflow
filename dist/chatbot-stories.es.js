@@ -7904,7 +7904,7 @@ function Ol(n, e) {
       label: e.sendLabel
     }),
     "-=0.16"
-  ).add(n.cursor.click()).add(n.chat.setComposerFocus(!1), "-=0.08").add(n.chat.sendComposerText(), "-=0.06").add(n.chat.userMessage(e.text), "-=0.12").add(n.chat.hideComposer(), "-=0.05").add(n.chat.clearComposer()).add(
+  ).add(n.cursor.click()).add(n.chat.setComposerFocus(!1), "-=0.08").add(n.chat.sendComposerText(), "-=0.06").add(n.chat.userMessage(e.text), "-=0.12").add(n.chat.hideComposer(), "<").add(n.chat.clearComposer()).add(
     n.cursor.moveTo(Pi, {
       intent: "hover",
       mode: "default",

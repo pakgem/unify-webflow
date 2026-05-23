@@ -552,7 +552,7 @@ function buildPromptStep(ctx: StoryContext, step: PromptStep): gsap.core.Timelin
     .add(ctx.chat.setComposerFocus(false), "-=0.08")
     .add(ctx.chat.sendComposerText(), "-=0.06")
     .add(ctx.chat.userMessage(step.text), "-=0.12")
-    .add(ctx.chat.hideComposer(), "-=0.05")
+    .add(ctx.chat.hideComposer(), "<")
     .add(ctx.chat.clearComposer())
     .add(
       ctx.cursor.moveTo(THINKING_IDLE_TARGET, {

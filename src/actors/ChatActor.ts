@@ -311,11 +311,11 @@ const SEQUENCE_THINKING_LOGO = {
 /* --------------------------------------------------------------------------
    Composer Show/Hide Storyboard
 
-       0ms   hidden shell is a compact centered pill
-       0ms   show: pill frame morphs to full input dimensions
-       0ms   chat reserves final composer clearance
-       0ms   hide: full input collapses through the compact pill into its center
-     done   hidden shell is removed from pointer and accessibility flow
+   0ms   hidden shell is a compact centered pill
+   0ms   show: pill frame morphs to full input dimensions
+   0ms   chat reserves final composer clearance
+   0ms   send: message enters while full input collapses into its center
+ done   hidden shell is removed from pointer and accessibility flow
    -------------------------------------------------------------------------- */
 
 const COMPOSER_MOTION = {
