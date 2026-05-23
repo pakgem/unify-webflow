@@ -919,7 +919,7 @@ body {
   --wa-step-progress: 0;
   position: relative;
   display: grid;
-  grid-template-columns: var(--wa-thinking-icon-column) minmax(0, 1fr) 9px;
+  grid-template-columns: var(--wa-thinking-icon-column) minmax(0, 1fr);
   align-content: start;
   gap: var(--wa-thinking-column-gap);
   align-items: start;
@@ -986,6 +986,14 @@ body {
   display: grid;
   align-content: start;
   gap: 4px;
+  min-width: 0;
+}
+
+.wa-research-step__label-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 9px;
+  gap: var(--wa-thinking-column-gap);
+  align-items: center;
   min-width: 0;
 }
 
@@ -1123,9 +1131,10 @@ body {
 .wa-research-step__chevron {
   position: relative;
   z-index: 1;
+  justify-self: end;
   width: 8px;
   height: 14px;
-  margin-top: 1px;
+  margin-top: 0;
 }
 
 .wa-research-step__chevron::before {

@@ -3130,6 +3130,9 @@ export class ChatActor {
     const body = document.createElement("span");
     body.className = "wa-research-step__body";
 
+    const labelRow = document.createElement("span");
+    labelRow.className = "wa-research-step__label-row";
+
     const label = document.createElement("span");
     label.className = "wa-research-step__label";
     label.dataset.fullText = itemConfig.label;
@@ -3148,8 +3151,9 @@ export class ChatActor {
     chevron.className = "wa-research-step__chevron";
     chevron.setAttribute("aria-hidden", "true");
 
-    body.append(label, detail, disclosure);
-    item.append(marker, body, chevron);
+    labelRow.append(label, chevron);
+    body.append(labelRow, detail, disclosure);
+    item.append(marker, body);
     return item;
   }
 
