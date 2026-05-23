@@ -2948,6 +2948,8 @@ body {
   display: grid;
   gap: 15px;
   min-width: 0;
+  box-sizing: border-box;
+  padding-left: 8px;
 }
 
 .wa-mailbox-connection__title {
