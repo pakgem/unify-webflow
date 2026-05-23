@@ -1238,7 +1238,7 @@ body {
 }
 
 .wa-cursor-file--stack {
-  width: 318px;
+  width: 252px;
   height: 96px;
 }
 
@@ -1246,7 +1246,7 @@ body {
   position: absolute;
   top: 0;
   left: 0;
-  width: 296px;
+  width: 230px;
   transform-origin: 18px 28px;
 }
 
@@ -1387,7 +1387,8 @@ body {
 }
 
 .wa-uploaded-files[data-uploaded-file-count="4"] {
-  width: min(600px, calc(100vw - 72px));
+  --wa-uploaded-file-target-width: 230px;
+  width: min(467px, calc(100vw - 72px));
   max-width: 100%;
 }
 
@@ -1406,7 +1407,8 @@ body {
 
 .wa-uploaded-files[data-uploaded-file-count="4"] .wa-uploaded-files__list {
   width: 100%;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, var(--wa-uploaded-file-target-width)));
+  justify-content: end;
   justify-items: stretch;
 }
 
