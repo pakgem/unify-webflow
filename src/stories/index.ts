@@ -632,7 +632,7 @@ const GMAIL_MAILBOX_CONNECTION = {
   status: "Connected",
   ctaLabel: "Gmail",
   secondaryCtaLabel: "Outlook",
-  loadingLabel: "connecting",
+  loadingLabel: "Connecting",
   learningTitle: "Learning your style",
   learningDetail: "Analyzing vocabulary...",
   learningReadyDetail: "73 tone & tactic rules defined",

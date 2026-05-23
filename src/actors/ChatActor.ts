@@ -1462,7 +1462,7 @@ export class ChatActor {
       section.dataset.mailboxState = "loading";
       button.disabled = true;
       button.setAttribute("aria-busy", "true");
-      button.setAttribute("aria-label", button.dataset.mailboxLoadingLabel ?? "connecting");
+      button.setAttribute("aria-label", button.dataset.mailboxLoadingLabel ?? "Connecting");
       learning.dataset.mailboxLearningState = "idle";
       titleText.textContent = MAILBOX_LEARNING_TITLE;
       detail.textContent = MAILBOX_LEARNING_STAGES[0].detail;
@@ -4298,7 +4298,7 @@ export class ChatActor {
       id: config.id,
       icon: "gmail",
       label: normalizeMailboxProviderButtonLabel("gmail", config.ctaLabel),
-      loadingLabel: config.loadingLabel ?? "connecting",
+      loadingLabel: config.loadingLabel ?? "Connecting",
       connectedLabel: normalizeMailboxProviderButtonLabel("gmail", config.status, "connected"),
       isPrimary: true,
     });
@@ -4362,7 +4362,7 @@ export class ChatActor {
 
     if (options.isPrimary && options.id) {
       button.dataset.mailboxConnect = options.id;
-      button.dataset.mailboxLoadingLabel = options.loadingLabel ?? "connecting";
+      button.dataset.mailboxLoadingLabel = options.loadingLabel ?? "Connecting";
       button.dataset.mailboxConnectedLabel = options.connectedLabel ?? "Gmail";
     }
 
@@ -4385,7 +4385,7 @@ export class ChatActor {
       loadingLabel.className = "wa-mailbox-connection__button-label";
       loadingLabel.dataset.mailboxButtonLabel = "loading";
       loadingLabel.setAttribute("aria-hidden", "true");
-      loadingLabel.textContent = options.loadingLabel ?? "connecting";
+      loadingLabel.textContent = options.loadingLabel ?? "Connecting";
 
       const connectedLabel = document.createElement("span");
       connectedLabel.className = "wa-mailbox-connection__button-label";

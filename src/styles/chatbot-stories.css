@@ -2983,19 +2983,23 @@ body {
 }
 
 .wa-mailbox-connection[data-mailbox-state="loading"] [data-mailbox-connect] {
+  grid-template-columns: max-content;
   border-color: rgba(234, 67, 53, 0.38);
 }
 
 .wa-mailbox-connection[data-mailbox-state="loading"] [data-mailbox-connect]::before {
-  opacity: 1;
-  animation:
-    wa-mailbox-gmail-radiate 1.16s ease-in-out infinite,
-    wa-mailbox-gmail-pulse 1.72s ease-in-out infinite;
+  opacity: 0;
+  animation: none;
 }
 
 .wa-mailbox-connection[data-mailbox-state="loading"] [data-mailbox-connect]::after {
   opacity: 1;
   animation: wa-mailbox-gmail-radiate 1.16s ease-in-out infinite;
+}
+
+.wa-mailbox-connection[data-mailbox-state="loading"] [data-mailbox-connect] .wa-mailbox-connection__provider-icon,
+.wa-mailbox-connection[data-mailbox-state="loading"] [data-mailbox-connect] .wa-mailbox-connection__spinner {
+  display: none;
 }
 
 .wa-mailbox-connection[data-mailbox-state="connected"] [data-mailbox-connect] {
@@ -3018,12 +3022,6 @@ body {
   border-top-color: currentColor;
   border-radius: 999px;
   animation: wa-spin 0.76s linear infinite;
-}
-
-.wa-mailbox-connection[data-mailbox-state="loading"] .wa-mailbox-connection__spinner {
-  display: block;
-  opacity: 1;
-  transform: translateY(0);
 }
 
 .wa-mailbox-learning {

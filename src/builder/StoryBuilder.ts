@@ -2731,7 +2731,7 @@ function createMailboxConnectionComponent(): BuilderMailboxConnectionComponent {
     status: "Connected",
     ctaLabel: "Gmail",
     secondaryCtaLabel: "Outlook",
-    loadingLabel: "connecting",
+    loadingLabel: "Connecting",
     learningTitle: "Learning your style",
     learningDetail: "Analyzing vocabulary...",
     learningReadyDetail: MAILBOX_LEARNING_READY_DETAIL,
