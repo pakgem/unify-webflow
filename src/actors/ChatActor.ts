@@ -29,6 +29,7 @@ import { getProfilePhotoUrl } from "../assets/profilePhotos";
 import { createUnifyMarkSvg } from "../assets/unifyMark";
 import gmailConnectorIconSvg from "../assets/email-connectors/gmail.svg?raw";
 import outlookConnectorIconSvg from "../assets/email-connectors/outlook.svg?raw";
+import { getInitialSequenceIndex } from "../core/sequenceSelection";
 
 type PreparedResultCard = {
   el: HTMLElement;
@@ -1923,13 +1924,16 @@ export class ChatActor {
 
   sequenceEngagement(config: SequenceEngagementConfig): gsap.core.Timeline {
     const panel = this.createSequenceEngagement(config);
+    const initialIndex = Number(panel.dataset.activeSequenceIndex ?? "0");
 
     return this.revealComponentItems(
       "sequence",
       panel,
       ".wa-sequence-person-card, .wa-sequence-card, .wa-sequence-step, .wa-sequence-wait, .wa-sequence-copy-panel, .wa-engage-channel, .wa-sequence-kickoff",
       COMPONENT_CHILD_REVEAL.stackCard,
-    );
+    )
+      .call(() => this.setSequencePersonRailPosition(panel, initialIndex), undefined, 0.01)
+      .call(() => this.clearSequencePersonCardMotionStyles(panel));
   }
 
   sequenceBuildThinking(config: SequenceBuildThinkingConfig): gsap.core.Timeline {
@@ -2048,8 +2052,7 @@ export class ChatActor {
         duration: motionDuration(0.24),
         ease: "power2.out",
         stagger: 0.014,
-      })
-      .call(() => this.animateMessageScrollIntoView(section.closest<HTMLElement>(".wa-message") ?? section));
+      });
 
     return tl;
   }
@@ -5014,16 +5017,18 @@ export class ChatActor {
 
   private createSequenceEngagement(config: SequenceEngagementConfig): HTMLElement {
     const section = document.createElement("section");
+    const initialIndex = getInitialSequenceIndex(config);
+
     section.className = "wa-sequence-engagement";
     section.dataset.sequenceEngagement = config.id;
     section.dataset.peopleCount = config.peopleCount;
-    section.dataset.activeSequenceIndex = "0";
+    section.dataset.activeSequenceIndex = String(initialIndex);
 
     const count = document.createElement("span");
     count.className = "wa-sequence-engagement__count";
     count.dataset.sequenceCount = "";
     count.textContent = config.sequences.some((sequence) => sequence.steps?.length)
-      ? this.getSequenceCountLabel(0, config.peopleCount)
+      ? this.getSequenceCountLabel(initialIndex, config.peopleCount)
       : config.peopleCount;
     const header = this.createSectionHeader("wa-sequence-engagement", config.title, config.subtitle, count);
 
@@ -5052,8 +5057,8 @@ export class ChatActor {
         person.tabIndex = -1;
         person.dataset.sequencePersonCard = `${config.id}:${index}`;
         person.dataset.sequencePersonIndex = String(index);
-        person.dataset.active = String(index === 0);
-        person.setAttribute("aria-pressed", String(index === 0));
+        person.dataset.active = String(index === initialIndex);
+        person.setAttribute("aria-pressed", String(index === initialIndex));
         person.setAttribute("aria-label", `Preview sequence for ${sequence.name}`);
         person.addEventListener("click", () => {
           this.sequencePerson(config.id, index).play();
@@ -5079,13 +5084,13 @@ export class ChatActor {
       card.className = "wa-sequence-card";
       card.dataset.sequenceCard = `${config.id}:${index}`;
       card.dataset.sequenceIndex = String(index);
-      card.dataset.active = String(index === 0);
+      card.dataset.active = String(index === initialIndex);
       card.dataset.sequenceName = sequence.name;
       card.dataset.sequenceMeta = [sequence.title, sequence.company].filter(Boolean).join(", ");
       card.dataset.sequenceTemplateName = sequence.name;
       card.dataset.sequenceTemplateMeta = [sequence.title, sequence.company].filter(Boolean).join(", ");
       card.dataset.sequenceTemplateAvatarUrl = sequence.avatarUrl ?? "";
-      if (index !== 0) {
+      if (index !== initialIndex) {
         card.style.display = "none";
         gsap.set(card, { autoAlpha: 0, y: 8 });
       }
@@ -5155,7 +5160,7 @@ export class ChatActor {
             this.selectSequenceStep(card, stepIndex);
           });
           channel.className = "wa-sequence-step__channel";
-          channel.textContent = step.channel;
+          channel.textContent = this.formatSequenceChannelLabel(step.channel);
           copy.className = "wa-sequence-step__copy";
           stepLabel.textContent = step.label;
           copy.append(stepLabel);
@@ -5288,6 +5293,12 @@ export class ChatActor {
       .find((section) => section.dataset.sequenceEngagement === sequenceId) ?? null;
   }
 
+  private clearSequencePersonCardMotionStyles(section: HTMLElement): void {
+    const personCards = this.queryElements(section, "[data-sequence-person-card]");
+
+    gsap.set(personCards, { clearProps: "opacity,visibility" });
+  }
+
   private createSequenceWaitRow(waitDays: number, index: number): HTMLElement {
     const wait = document.createElement("div");
     const label = document.createElement("span");
@@ -5314,6 +5325,16 @@ export class ChatActor {
 
   private formatSequenceWaitLabel(days: number): string {
     return `wait ${days} ${days === 1 ? "day" : "days"}`;
+  }
+
+  private formatSequenceChannelLabel(channel: string): string {
+    const normalized = channel.trim().toLowerCase();
+
+    if (normalized.includes("email")) return "Email";
+    if (normalized.includes("linkedin") || normalized.includes("social")) return "Social";
+    if (normalized.includes("call") || normalized.includes("dial")) return "Call";
+
+    return channel.trim() || "Step";
   }
 
   private setActiveSequencePerson(section: HTMLElement, index: number, shouldCenter = false): void {
@@ -5350,8 +5371,7 @@ export class ChatActor {
 
     if (!rail || !card) return;
 
-    const maxScroll = Math.max(0, rail.scrollWidth - rail.clientWidth);
-    const target = Math.min(maxScroll, Math.max(0, card.offsetLeft - (rail.clientWidth - card.offsetWidth) / 2));
+    const target = this.getSequencePersonRailScrollTarget(rail, card);
 
     if (this.prefersReducedMotion || Math.abs(rail.scrollLeft - target) < 1) {
       rail.scrollLeft = target;
@@ -5364,6 +5384,21 @@ export class ChatActor {
       ease: "power2.out",
       overwrite: "auto",
     });
+  }
+
+  private setSequencePersonRailPosition(section: HTMLElement, index: number): void {
+    const rail = section.querySelector<HTMLElement>("[data-sequence-people-rail]");
+    const card = rail?.querySelector<HTMLElement>(`[data-sequence-person-index="${index}"]`);
+
+    if (!rail || !card) return;
+
+    rail.scrollLeft = this.getSequencePersonRailScrollTarget(rail, card);
+  }
+
+  private getSequencePersonRailScrollTarget(rail: HTMLElement, card: HTMLElement): number {
+    const maxScroll = Math.max(0, rail.scrollWidth - rail.clientWidth);
+
+    return Math.min(maxScroll, Math.max(0, card.offsetLeft - (rail.clientWidth - card.offsetWidth) / 2));
   }
 
   private getSequenceCountLabel(index: number, peopleCount: string): string {
@@ -5426,7 +5461,7 @@ export class ChatActor {
       step.dataset.stepSubject = templateStep.dataset.stepTemplateSubject ?? templateStep.dataset.stepSubject ?? "";
       step.dataset.stepBody = templateStep.dataset.stepTemplateBody ?? templateStep.dataset.stepBody ?? "";
       step.dataset.waitDays = templateStep.dataset.stepTemplateWaitDays ?? templateStep.dataset.waitDays ?? "";
-      if (channel) channel.textContent = templateStep.dataset.stepTemplateChannel ?? channel.textContent;
+      if (channel) channel.textContent = this.formatSequenceChannelLabel(templateStep.dataset.stepTemplateChannel ?? channel.textContent ?? "");
       if (label) label.textContent = templateStep.dataset.stepTemplateLabel ?? label.textContent;
 
       const wait = displayWaits[stepIndex];

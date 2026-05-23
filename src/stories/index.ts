@@ -17,6 +17,7 @@ import {
   collectProximityAssetUrls,
   collectSequenceAssetUrls,
 } from "../core/assetPreloader";
+import { getPreviewSequenceIndexes } from "../core/sequenceSelection";
 import {
   buildStorySteps,
   CHAT_INPUT_TARGETS,
@@ -1567,12 +1568,13 @@ export const defaultStories: StoryDefinition[] = [
         {},
         false,
       );
+      const [sequenceSecondPersonIndex, sequenceThirdPersonIndex] = getPreviewSequenceIndexes(ENGAGEMENT_SEQUENCE_LAUNCH, 2);
       const sequenceSecondPersonTarget = responsiveElementTarget(
-        '[data-sequence-person-card="visitor-outreach-sequences:1"]',
+        `[data-sequence-person-card="visitor-outreach-sequences:${sequenceSecondPersonIndex}"]`,
         "center",
       );
       const sequenceThirdPersonTarget = responsiveElementTarget(
-        '[data-sequence-person-card="visitor-outreach-sequences:2"]',
+        `[data-sequence-person-card="visitor-outreach-sequences:${sequenceThirdPersonIndex}"]`,
         "center",
       );
       const sequenceKickoffTarget = responsiveElementTarget(
@@ -1628,18 +1630,18 @@ export const defaultStories: StoryDefinition[] = [
         {
           kind: "cursorMove",
           target: sequenceSecondPersonTarget,
-          options: { mode: "pointer", intent: "click", speed: "normal", label: "preview-evan-sequence" },
+          options: { mode: "pointer", intent: "click", speed: "normal", label: "preview-next-sequence" },
         },
         { kind: "cursorClick", at: "-=0.02" },
-        { kind: "custom", build: () => ctx.chat.sequencePerson("visitor-outreach-sequences", 1), at: "-=0.03" },
+        { kind: "custom", build: () => ctx.chat.sequencePerson("visitor-outreach-sequences", sequenceSecondPersonIndex), at: "-=0.03" },
         { kind: "custom", build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat + 0.24 }), at: "+=0.04" },
         {
           kind: "cursorMove",
           target: sequenceThirdPersonTarget,
-          options: { mode: "pointer", intent: "click", speed: "normal", label: "preview-clara-sequence" },
+          options: { mode: "pointer", intent: "click", speed: "normal", label: "preview-following-sequence" },
         },
         { kind: "cursorClick", at: "-=0.02" },
-        { kind: "custom", build: () => ctx.chat.sequencePerson("visitor-outreach-sequences", 2), at: "-=0.03" },
+        { kind: "custom", build: () => ctx.chat.sequencePerson("visitor-outreach-sequences", sequenceThirdPersonIndex), at: "-=0.03" },
         { kind: "custom", build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat + 0.28 }), at: "+=0.04" },
         {
           kind: "cursorMove",

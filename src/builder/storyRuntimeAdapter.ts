@@ -21,6 +21,7 @@ import {
   collectProximityAssetUrls,
   collectSequenceAssetUrls,
 } from "../core/assetPreloader";
+import { getPreviewSequenceIndexes } from "../core/sequenceSelection";
 import {
   CHAT_INPUT_TARGETS,
   EXIT_TARGETS,
@@ -312,12 +313,13 @@ function buildEngagementStory(ctx: StoryContext, story: BuilderStory): gsap.core
   if (thinkingStep) steps.push(toThinkingStoryStep(thinkingStep, { hold: STORY_TIMING.thinkingMedium, at: "+=0.06" }));
 
   if (sequenceConfig) {
+    const [sequenceSecondPersonIndex, sequenceThirdPersonIndex] = getPreviewSequenceIndexes(sequenceConfig, 2);
     const sequenceSecondPersonTarget = responsiveElementTarget(
-      '[data-sequence-person-card="visitor-outreach-sequences:1"]',
+      `[data-sequence-person-card="visitor-outreach-sequences:${sequenceSecondPersonIndex}"]`,
       "center",
     );
     const sequenceThirdPersonTarget = responsiveElementTarget(
-      '[data-sequence-person-card="visitor-outreach-sequences:2"]',
+      `[data-sequence-person-card="visitor-outreach-sequences:${sequenceThirdPersonIndex}"]`,
       "center",
     );
     const sequenceKickoffTarget = responsiveElementTarget(
@@ -334,7 +336,7 @@ function buildEngagementStory(ctx: StoryContext, story: BuilderStory): gsap.core
         options: { mode: "pointer" as const, intent: "click" as const, speed: "normal" as const, label: "preview-second-sequence" },
       },
       { kind: "cursorClick" as const, at: "-=0.02" },
-      { kind: "custom" as const, build: () => ctx.chat.sequencePerson("visitor-outreach-sequences", 1), at: "-=0.03" },
+      { kind: "custom" as const, build: () => ctx.chat.sequencePerson("visitor-outreach-sequences", sequenceSecondPersonIndex), at: "-=0.03" },
       { kind: "custom" as const, build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat + 0.24 }), at: "+=0.04" },
       {
         kind: "cursorMove" as const,
@@ -342,7 +344,7 @@ function buildEngagementStory(ctx: StoryContext, story: BuilderStory): gsap.core
         options: { mode: "pointer" as const, intent: "click" as const, speed: "normal" as const, label: "preview-third-sequence" },
       },
       { kind: "cursorClick" as const, at: "-=0.02" },
-      { kind: "custom" as const, build: () => ctx.chat.sequencePerson("visitor-outreach-sequences", 2), at: "-=0.03" },
+      { kind: "custom" as const, build: () => ctx.chat.sequencePerson("visitor-outreach-sequences", sequenceThirdPersonIndex), at: "-=0.03" },
       { kind: "custom" as const, build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat + 0.28 }), at: "+=0.04" },
       {
         kind: "cursorMove" as const,

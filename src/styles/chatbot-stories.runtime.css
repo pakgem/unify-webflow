@@ -3597,21 +3597,41 @@ body {
 }
 
 .wa-sequence-people {
-  --wa-sequence-person-card-width: 138px;
+  --wa-sequence-person-card-min-width: 112px;
+  position: relative;
+  isolation: isolate;
   display: flex;
-  gap: 8px;
-  align-items: center;
+  gap: 4px;
+  align-items: end;
   width: 100%;
   max-width: 100%;
   margin: 0;
-  padding: 3px max(0px, calc(50% - 69px)) 8px;
+  padding: 3px max(16px, calc(50% - var(--wa-sequence-person-card-min-width) / 2)) 0;
   overflow-x: auto;
   overflow-y: visible;
   scroll-snap-type: x mandatory;
-  scroll-padding-inline: max(0px, calc(50% - 69px));
+  scroll-padding-inline: max(16px, calc(50% - var(--wa-sequence-person-card-min-width) / 2));
   scrollbar-width: none;
   -webkit-mask-image: linear-gradient(to right, transparent 0, #000 34px, #000 calc(100% - 34px), transparent 100%);
   mask-image: linear-gradient(to right, transparent 0, #000 34px, #000 calc(100% - 34px), transparent 100%);
+}
+
+.wa-sequence-people::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(17, 17, 15, 0.16) 34px,
+    rgba(17, 17, 15, 0.16) calc(100% - 34px),
+    transparent
+  );
+  pointer-events: none;
 }
 
 .wa-sequence-people::-webkit-scrollbar {
@@ -3619,24 +3639,28 @@ body {
 }
 
 .wa-sequence-person-card {
+  position: relative;
+  z-index: 1;
   display: grid;
-  flex: 0 0 var(--wa-sequence-person-card-width);
-  grid-template-columns: 28px minmax(0, 1fr);
+  flex: 0 0 auto;
+  grid-template-columns: 28px max-content;
   gap: 8px;
   align-items: center;
-  min-width: 0;
+  width: max-content;
+  min-width: var(--wa-sequence-person-card-min-width);
   min-height: 46px;
-  padding: 8px;
+  padding: 8px 10px 9px;
   border: 1px solid var(--wa-line-08);
-  border-radius: 9px;
+  border-bottom: 0;
+  border-radius: 9px 9px 0 0;
   color: var(--wa-ink);
   background: color-mix(in srgb, var(--wa-panel) 82%, #f1f0eb);
   font: inherit;
   text-align: left;
-  opacity: 0.56;
+  opacity: 0.66;
   cursor: pointer;
   scroll-snap-align: center;
-  transform: scale(0.955);
+  transform: none;
   transform-origin: center;
   transition:
     border-color 160ms ease,
@@ -3650,11 +3674,23 @@ body {
   border-color: rgba(17, 17, 15, 0.2);
   background: var(--wa-panel);
   opacity: 1;
-  transform: scale(1);
 }
 
 .wa-sequence-person-card[data-active="true"] {
-  box-shadow: 0 8px 20px rgba(17, 17, 15, 0.08);
+  z-index: 3;
+  border-color: rgba(17, 17, 15, 0.24);
+  box-shadow: none;
+}
+
+.wa-sequence-person-card[data-active="true"]::after {
+  content: "";
+  position: absolute;
+  right: -1px;
+  bottom: -1px;
+  left: -1px;
+  height: 2px;
+  background: var(--wa-panel);
+  pointer-events: none;
 }
 
 .wa-sequence-person-card__avatar {
@@ -3715,26 +3751,27 @@ body {
 .wa-sequence-person-card__copy {
   display: grid;
   gap: 2px;
+  width: max-content;
   min-width: 0;
 }
 
 .wa-sequence-person-card__copy strong {
-  overflow: hidden;
+  overflow: visible;
   color: var(--wa-ink);
   font-size: 12px;
   line-height: 1.1;
   font-weight: 560;
-  text-overflow: ellipsis;
+  text-overflow: clip;
   white-space: nowrap;
 }
 
 .wa-sequence-person-card__copy span {
-  overflow: hidden;
+  overflow: visible;
   color: var(--wa-color-muted);
   font-size: 10px;
   line-height: 1.12;
   font-weight: 410;
-  text-overflow: ellipsis;
+  text-overflow: clip;
   white-space: nowrap;
 }
 
@@ -3809,7 +3846,7 @@ body {
 .wa-sequence-step {
   position: relative;
   display: grid;
-  grid-template-columns: 48px minmax(0, 1fr);
+  grid-template-columns: 42px minmax(0, 1fr);
   gap: 7px;
   align-items: center;
   width: 100%;
@@ -3827,24 +3864,26 @@ body {
 .wa-sequence-step__channel {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  min-height: 16px;
-  padding: 0 4px;
-  border-radius: 4px;
-  color: var(--wa-color-inverse);
-  background: #6f6a62;
-  font-size: 7.5px;
+  justify-content: start;
+  min-height: 0;
+  padding: 0;
+  border-radius: 0;
+  color: var(--wa-color-muted);
+  background: transparent;
+  font-size: 8.5px;
   line-height: 1;
-  font-weight: 680;
-  text-transform: uppercase;
+  font-weight: 520;
+  text-transform: none;
 }
 
 .wa-sequence-step[data-channel="linkedin"] .wa-sequence-step__channel {
-  background: #0a66c2;
+  color: var(--wa-color-muted);
+  background: transparent;
 }
 
 .wa-sequence-step[data-channel="call"] .wa-sequence-step__channel {
-  background: #2f7d4f;
+  color: var(--wa-color-muted);
+  background: transparent;
 }
 
 .wa-sequence-step__copy {
@@ -3854,7 +3893,7 @@ body {
 
 .wa-sequence-step__copy strong {
   color: var(--wa-ink);
-  font-size: 10px;
+  font-size: 11px;
   line-height: 1.12;
   font-weight: 560;
   overflow: hidden;
@@ -3886,13 +3925,13 @@ body {
 
 .wa-sequence-wait {
   display: grid;
-  grid-template-columns: 48px minmax(0, 1fr);
+  grid-template-columns: 42px minmax(0, 1fr);
   gap: 7px;
   align-items: center;
   min-height: 18px;
   padding: 0 8px;
   color: var(--wa-color-muted);
-  font-size: 8.5px;
+  font-size: 9.5px;
   line-height: 1;
   font-weight: 560;
   letter-spacing: 0;
@@ -4782,7 +4821,7 @@ body {
 
   .wa-sequence-step__channel {
     justify-self: start;
-    padding: 0 8px;
+    padding: 0;
   }
 
   .wa-sequence-wait {
@@ -4796,16 +4835,16 @@ body {
   }
 
   .wa-sequence-people {
-    --wa-sequence-person-card-width: 124px;
-    padding-inline: max(0px, calc(50% - 62px));
-    scroll-padding-inline: max(0px, calc(50% - 62px));
+    --wa-sequence-person-card-min-width: 104px;
+    padding-inline: max(14px, calc(50% - var(--wa-sequence-person-card-min-width) / 2));
+    scroll-padding-inline: max(14px, calc(50% - var(--wa-sequence-person-card-min-width) / 2));
   }
 
   .wa-sequence-person-card {
-    grid-template-columns: 24px minmax(0, 1fr);
+    grid-template-columns: 24px max-content;
     gap: 7px;
     min-height: 42px;
-    padding: 7px;
+    padding: 7px 9px 8px;
   }
 
   .wa-sequence-person-card__avatar {
