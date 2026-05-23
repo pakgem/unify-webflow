@@ -2845,6 +2845,7 @@ body {
 .wa-mailbox-connection__provider-label,
 .wa-mailbox-connection__button-label {
   grid-area: 1 / 1;
+  display: block;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -2855,18 +2856,21 @@ body {
 .wa-mailbox-connection__button-label[data-mailbox-button-label="loading"],
 .wa-mailbox-connection__button-label[data-mailbox-button-label="connected"],
 .wa-mailbox-connection__spinner {
+  display: none;
   opacity: 0;
   transform: translateY(5px);
 }
 
 .wa-mailbox-connection[data-mailbox-state="loading"] [data-mailbox-connect] .wa-mailbox-connection__button-label[data-mailbox-button-label="idle"],
 .wa-mailbox-connection[data-mailbox-state="connected"] [data-mailbox-connect] .wa-mailbox-connection__button-label[data-mailbox-button-label="idle"] {
+  display: none;
   opacity: 0;
   transform: translateY(-5px);
 }
 
 .wa-mailbox-connection[data-mailbox-state="loading"] [data-mailbox-connect] .wa-mailbox-connection__button-label[data-mailbox-button-label="loading"],
 .wa-mailbox-connection[data-mailbox-state="connected"] [data-mailbox-connect] .wa-mailbox-connection__button-label[data-mailbox-button-label="connected"] {
+  display: block;
   opacity: 1;
   transform: translateY(0);
 }
@@ -2894,6 +2898,7 @@ body {
 }
 
 .wa-mailbox-connection[data-mailbox-state="loading"] .wa-mailbox-connection__spinner {
+  display: block;
   opacity: 1;
   transform: translateY(0);
 }
