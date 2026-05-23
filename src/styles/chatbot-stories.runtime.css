@@ -1188,6 +1188,21 @@ body {
 .wa-result-grid.has-strategy-plans {
   grid-template-columns: minmax(0, 1fr);
   gap: 14px;
+  overflow-x: visible;
+}
+
+.wa-message--strategy,
+.wa-message--strategy .wa-message__body {
+  overflow-x: visible;
+}
+
+.wa-chat-shell__body:has(.wa-result-grid.has-strategy-plans) {
+  overflow: visible;
+  clip-path: inset(0 -32px 0 -32px);
+}
+
+.wa-thread:has(.wa-result-grid.has-strategy-plans) {
+  overflow: visible;
 }
 
 .wa-result-grid.has-data-table,
