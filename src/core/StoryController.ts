@@ -22,6 +22,9 @@ type StoryProgressScrubState = {
   trackHeight: number;
   removeListeners: () => void;
 };
+type StorySwitchOptions = {
+  animateExit?: boolean;
+};
 
 const CHAT_HISTORY_SCROLL = {
   minPixelDelta: 0.5,
@@ -195,17 +198,17 @@ export class StoryController implements ChatbotStoriesInstance {
     preloadStoriesAround(this.stories, this.activeIndex);
   }
 
-  goTo(story: number | string): void {
+  goTo(story: number | string, options: StorySwitchOptions = {}): void {
     const nextIndex = this.resolveStoryIndex(story);
 
     if (nextIndex < 0 || !this.stories[nextIndex]) return;
 
-    this.transitionToStory(nextIndex);
+    this.transitionToStory(nextIndex, options);
   }
 
-  private transitionToStory(nextIndex: number): void {
+  private transitionToStory(nextIndex: number, options: StorySwitchOptions = {}): void {
     const startPoint = this.cursor.getPosition();
-    const shouldAnimateCurrentStoryOut = Boolean(this.activeTimeline);
+    const shouldAnimateCurrentStoryOut = Boolean(options.animateExit && this.activeTimeline);
 
     this.storyProgress[nextIndex] = 0;
     this.storySwitchTimeline?.kill();
@@ -339,7 +342,17 @@ export class StoryController implements ChatbotStoriesInstance {
     if (!this.options.loop && this.activeIndex === this.stories.length - 1) return;
 
     this.autoAdvance?.kill();
-    this.autoAdvance = gsap.delayedCall(this.options.autoAdvanceDelay, () => this.next());
+    this.autoAdvance = gsap.delayedCall(this.options.autoAdvanceDelay, () => {
+      const nextIndex = this.activeIndex + 1;
+
+      if (nextIndex >= this.stories.length) {
+        if (this.options.loop) this.resetStoryProgress();
+        this.goTo(this.options.loop ? 0 : this.activeIndex, { animateExit: true });
+        return;
+      }
+
+      this.goTo(nextIndex, { animateExit: true });
+    });
   }
 
   private seekTo(progress: number, duration = 0.28): void {

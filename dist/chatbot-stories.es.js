@@ -9150,19 +9150,19 @@ class _c {
     }
     this.updateStoryMeta(), this.updateAllTabProgress(), bn(this.stories, this.activeIndex);
   }
-  goTo(e) {
-    const t = this.resolveStoryIndex(e);
-    t < 0 || !this.stories[t] || this.transitionToStory(t);
+  goTo(e, t = {}) {
+    const a = this.resolveStoryIndex(e);
+    a < 0 || !this.stories[a] || this.transitionToStory(a, t);
   }
-  transitionToStory(e) {
-    const t = this.cursor.getPosition(), a = !!this.activeTimeline;
-    if (this.storyProgress[e] = 0, this.storySwitchTimeline?.kill(), this.storySwitchTimeline = null, this.stopTimeline(), this.setHistoryPaused(!1), !a) {
-      this.activateStory(e, t);
+  transitionToStory(e, t = {}) {
+    const a = this.cursor.getPosition(), i = !!(t.animateExit && this.activeTimeline);
+    if (this.storyProgress[e] = 0, this.storySwitchTimeline?.kill(), this.storySwitchTimeline = null, this.stopTimeline(), this.setHistoryPaused(!1), !i) {
+      this.activateStory(e, a);
       return;
     }
     this.playing = !1, this.updatePlayButton(), this.storySwitchTimeline = m.timeline({
       onComplete: () => {
-        this.storySwitchTimeline = null, this.activateStory(e, t);
+        this.storySwitchTimeline = null, this.activateStory(e, a);
       }
     }), this.storySwitchTimeline.add(this.chat.animateStorySwitchExit());
   }
@@ -9214,7 +9214,14 @@ class _c {
   }
   handleComplete() {
     const e = this.playing;
-    this.playing = !1, this.updatePlayButton(), !(!this.options.autoplay || !e) && (!this.options.loop && this.activeIndex === this.stories.length - 1 || (this.autoAdvance?.kill(), this.autoAdvance = m.delayedCall(this.options.autoAdvanceDelay, () => this.next())));
+    this.playing = !1, this.updatePlayButton(), !(!this.options.autoplay || !e) && (!this.options.loop && this.activeIndex === this.stories.length - 1 || (this.autoAdvance?.kill(), this.autoAdvance = m.delayedCall(this.options.autoAdvanceDelay, () => {
+      const t = this.activeIndex + 1;
+      if (t >= this.stories.length) {
+        this.options.loop && this.resetStoryProgress(), this.goTo(this.options.loop ? 0 : this.activeIndex, { animateExit: !0 });
+        return;
+      }
+      this.goTo(t, { animateExit: !0 });
+    })));
   }
   seekTo(e, t = 0.28) {
     if (!this.activeTimeline) return;
