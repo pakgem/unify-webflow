@@ -709,6 +709,10 @@ body {
   margin-top: var(--wa-chat-first-entry-offset);
 }
 
+.wa-section[data-active-story="crm-update"] {
+  --wa-chat-first-entry-offset: calc(var(--wa-chat-top-fade) + 3px);
+}
+
 .wa-section[data-active-story="data-marketplace"] .wa-thread {
   min-height: 0;
   max-height: none;
