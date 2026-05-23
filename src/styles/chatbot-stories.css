@@ -2872,9 +2872,14 @@ body {
 }
 
 .wa-mailbox-connection[data-mailbox-state="connected"] [data-mailbox-connect] {
+  grid-template-columns: max-content;
   color: #080807;
   border-color: #d6d5cf;
   background: #fffff9;
+}
+
+.wa-mailbox-connection[data-mailbox-state="connected"] [data-mailbox-connect] .wa-mailbox-connection__provider-icon {
+  display: none;
 }
 
 .wa-mailbox-connection__spinner {
