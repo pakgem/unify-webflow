@@ -2871,16 +2871,22 @@ export class ChatActor {
     });
   }
 
-  private getThinkingLogoTargetPosition(thinking: ClaimedThinkingMessage, target: HTMLElement): { x: number; y: number } {
+  private getThinkingLogoTargetPosition(
+    thinking: ClaimedThinkingMessage,
+    target: HTMLElement,
+    transformReference?: HTMLElement,
+  ): { x: number; y: number } {
     const block = thinking.message.querySelector<HTMLElement>(".wa-thinking-block");
     const baseRect = (block ?? thinking.message).getBoundingClientRect();
     const targetRect = target.getBoundingClientRect();
     const logoWidth = thinking.traveler.offsetWidth || thinking.headerGlyph.offsetWidth || 18;
     const logoHeight = thinking.traveler.offsetHeight || thinking.headerGlyph.offsetHeight || 11;
+    const currentX = transformReference ? Number(gsap.getProperty(transformReference, "x")) || 0 : 0;
+    const currentY = transformReference ? Number(gsap.getProperty(transformReference, "y")) || 0 : 0;
 
     return {
-      x: targetRect.left - baseRect.left + (targetRect.width - logoWidth) / 2,
-      y: targetRect.top - baseRect.top + (targetRect.height - logoHeight) / 2,
+      x: targetRect.left - baseRect.left + (targetRect.width - logoWidth) / 2 - currentX,
+      y: targetRect.top - baseRect.top + (targetRect.height - logoHeight) / 2 - currentY,
     };
   }
 
@@ -2890,10 +2896,15 @@ export class ChatActor {
     gsap.set(thinking.traveler, position);
   }
 
-  private moveThinkingLogoTo(thinking: ClaimedThinkingMessage, target: HTMLElement, duration = THINKING_LOGO_TRAVEL.duration): gsap.core.Timeline {
+  private moveThinkingLogoTo(
+    thinking: ClaimedThinkingMessage,
+    target: HTMLElement,
+    duration = THINKING_LOGO_TRAVEL.duration,
+    transformReference?: HTMLElement,
+  ): gsap.core.Timeline {
     return gsap.timeline().to(thinking.traveler, {
-      x: () => this.getThinkingLogoTargetPosition(thinking, target).x,
-      y: () => this.getThinkingLogoTargetPosition(thinking, target).y,
+      x: () => this.getThinkingLogoTargetPosition(thinking, target, transformReference).x,
+      y: () => this.getThinkingLogoTargetPosition(thinking, target, transformReference).y,
       duration,
       ease: THINKING_LOGO_TRAVEL.ease,
       overwrite: "auto",
@@ -2903,7 +2914,7 @@ export class ChatActor {
   private moveThinkingLogoToStep(thinking: ClaimedThinkingMessage, item: HTMLElement | undefined): gsap.core.Timeline {
     const target = item?.querySelector<HTMLElement>(".wa-research-step__marker");
 
-    return target ? this.moveThinkingLogoTo(thinking, target) : gsap.timeline();
+    return target ? this.moveThinkingLogoTo(thinking, target, THINKING_LOGO_TRAVEL.duration, item) : gsap.timeline();
   }
 
   private collapseThinkingToHeader(thinking: ClaimedThinkingMessage, items: HTMLElement[]): gsap.core.Timeline {
