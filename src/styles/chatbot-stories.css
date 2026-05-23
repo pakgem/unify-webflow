@@ -778,6 +778,7 @@ body {
 .wa-thinking-block {
   --wa-thinking-icon-column: 18px;
   --wa-thinking-column-gap: 8px;
+  --wa-thinking-guide-top: -9px;
   position: relative;
   display: grid;
   align-content: start;
@@ -907,7 +908,7 @@ body {
 .wa-research-steps::before {
   content: "";
   position: absolute;
-  top: 9px;
+  top: var(--wa-thinking-guide-top);
   bottom: 9px;
   left: calc(var(--wa-thinking-icon-column) / 2);
   width: 1px;
