@@ -1791,7 +1791,7 @@ body {
   display: grid;
   grid-template-columns: 25px minmax(0, 1fr);
   gap: 7px;
-  align-items: start;
+  align-items: center;
   width: 100%;
   min-width: 0;
   overflow: visible;
@@ -1941,7 +1941,7 @@ body {
   align-content: start;
   gap: 2px;
   min-width: 0;
-  margin-top: 3px;
+  margin-top: 0;
 }
 
 .wa-data-table-person__name {
@@ -5634,7 +5634,7 @@ body {
 
   .wa-data-table-person__copy {
     gap: 1px;
-    margin-top: 2px;
+    margin-top: 0;
   }
 
   .wa-data-table-person__avatar-wrap,
