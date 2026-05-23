@@ -54,6 +54,7 @@ export class CursorActor {
   private moveIndex = 0;
   private mode: CursorMode = "default";
   private modeOverride: CursorMode | null = null;
+  private payloadDragActive = false;
   private modeTargetsDirty = true;
   private pointerTargets: Element[] = [];
   private textTargets: Element[] = [];
@@ -355,6 +356,50 @@ export class CursorActor {
     return tl;
   }
 
+  beginDragPayload(): void {
+    const wasActive = this.payloadDragActive;
+
+    this.payloadDragActive = true;
+    this.stopIdleFloat();
+    this.modeOverride = "drag";
+    this.setMode("drag");
+    if (wasActive) return;
+
+    gsap.to(this.el, {
+      scale: 0.9,
+      duration: this.options.reducedMotion ? 0.04 : 0.16,
+      ease: "power2.out",
+      overwrite: "auto",
+    });
+  }
+
+  releaseDragPayload(): gsap.core.Timeline {
+    return gsap.timeline()
+      .call(() => {
+        this.payloadDragActive = false;
+        this.stopIdleFloat();
+        this.modeOverride = "release";
+        this.setMode("release");
+      })
+      .to(this.el, {
+        scale: 1.04,
+        duration: this.options.reducedMotion ? 0.03 : 0.1,
+        ease: "power2.out",
+        overwrite: "auto",
+      })
+      .to(this.el, {
+        scale: 1,
+        duration: this.options.reducedMotion ? 0.05 : 0.18,
+        ease: "back.out(2.5)",
+        overwrite: "auto",
+      })
+      .call(() => {
+        this.modeOverride = null;
+        this.syncModeToPoint(this.currentPosition);
+        this.queueIdleFloat();
+      });
+  }
+
   dragTo(target: ResponsiveTarget, options: CursorMoveOptions = {}): gsap.core.Timeline {
     const tl = gsap.timeline();
 
@@ -418,6 +463,7 @@ export class CursorActor {
   resetInteraction(): void {
     this.stopIdleFloat(true);
     this.modeOverride = null;
+    this.payloadDragActive = false;
     delete this.el.dataset.cursorMimicking;
     gsap.killTweensOf(this.el);
     gsap.set(this.el, { scale: 1 });
@@ -834,6 +880,12 @@ export class CursorActor {
   }
 
   private syncModeToPoint(point: Point): void {
+    if (this.payloadDragActive) {
+      this.modeOverride = "drag";
+      if (this.mode !== "drag") this.setMode("drag");
+      return;
+    }
+
     const mode = this.getModeForPoint(point);
 
     if (mode !== this.mode) this.setMode(mode);

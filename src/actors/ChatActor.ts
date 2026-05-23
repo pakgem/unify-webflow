@@ -419,7 +419,7 @@ const DATA_TABLE_ACTION_SELECTOR = "[data-table-action]";
 const DATA_TABLE_PAGE_BUTTON_SELECTOR = "[data-table-page-button]";
 const DATA_TABLE_PAGE_RANGE_SELECTOR = "[data-table-page-range]";
 const CURSOR_FILE_ENTRY = {
-  offscreenMargin: 96,
+  offscreenMargin: 280,
   pullInDuration: motionDuration(0.38),
   pullInEase: "power3.out",
 };
@@ -2035,23 +2035,22 @@ export class ChatActor {
           .timeline()
           .call(() => {
             removeFollower?.();
+            cursor.beginDragPayload();
             const entryOffset = this.getCursorFileEntryOffset(file, cursor);
             followOffset.x = entryOffset.x;
             followOffset.y = entryOffset.y;
             removeFollower = this.followCursorWithFile(file, cursor, followOffset);
           })
+          .set(file, {
+            autoAlpha: 1,
+            scale: 1,
+          }, 0)
           .to(followOffset, {
             x: 0,
             y: 0,
             duration: CURSOR_FILE_ENTRY.pullInDuration,
             ease: CURSOR_FILE_ENTRY.pullInEase,
-          }, 0)
-          .to(file, {
-            autoAlpha: 1,
-            scale: 1,
-            duration: motionDuration(0.24),
-            ease: "back.out(1.9)",
-          }, 0.04),
+          }, 0),
       stopFollow: () =>
         gsap
           .timeline()
@@ -2066,12 +2065,14 @@ export class ChatActor {
         gsap
           .timeline()
           .call(stopFollowing)
-          .add(this.uploadedFileMessageFromCursorFile(file, landedFileName, detail)),
+          .add(cursor.releaseDragPayload(), 0)
+          .add(this.uploadedFileMessageFromCursorFile(file, landedFileName, detail), 0),
       landAsUploadedFiles: (files) =>
         gsap
           .timeline()
           .call(stopFollowing)
-          .add(this.uploadedFilesMessageFromCursorFile(file, files)),
+          .add(cursor.releaseDragPayload(), 0)
+          .add(this.uploadedFilesMessageFromCursorFile(file, files), 0),
     };
   }
 
@@ -2864,6 +2865,8 @@ export class ChatActor {
       const nextX = point.x - fileWidth * 0.5 + offset.x;
       const nextY = point.y - fileHeight * 0.5 + offset.y;
 
+      if (cursor.el.dataset.cursorMode !== "drag") cursor.setMode("drag");
+
       if (nextX !== transformState.x) {
         transformState.x = nextX;
         setFileX(nextX);
@@ -2883,12 +2886,13 @@ export class ChatActor {
   private getCursorFileEntryOffset(file: HTMLElement, cursor: CursorActor): CursorFileFollowOffset {
     const fileWidth = file.offsetWidth || 154;
     const point = cursor.readPosition();
-    const rootWidth = this.root.getBoundingClientRect().width || window.innerWidth;
-    const fileRightWhenCentered = point.x + fileWidth * 0.5;
-    const offscreenRight = rootWidth + CURSOR_FILE_ENTRY.offscreenMargin;
+    const rootRect = this.root.getBoundingClientRect();
+    const viewportRightInRoot = window.innerWidth - rootRect.left;
+    const fileLeftWhenCentered = point.x - fileWidth * 0.5;
+    const offscreenLeft = viewportRightInRoot + CURSOR_FILE_ENTRY.offscreenMargin;
 
     return {
-      x: Math.max(0, offscreenRight - fileRightWhenCentered),
+      x: Math.max(0, offscreenLeft - fileLeftWhenCentered),
       y: 0,
     };
   }
