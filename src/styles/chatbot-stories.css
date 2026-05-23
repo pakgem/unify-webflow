@@ -1147,6 +1147,8 @@ body {
 .wa-result-grid.has-strategy-plans {
   grid-template-columns: minmax(0, 1fr);
   gap: 14px;
+  padding: 3px 10px 12px;
+  margin: -3px 0 -12px;
 }
 
 .wa-result-grid.has-data-table,
@@ -2412,33 +2414,41 @@ body {
 }
 
 .wa-strategy-plan {
-  --wa-strategy-hover-scale: 1.018;
+  --wa-strategy-hover-scale: 1.026;
   --wa-strategy-hover-border: #c8c3bb;
+  display: block;
+  min-height: 0;
+  overflow: visible;
+  will-change: transform, opacity;
+}
+
+.wa-strategy-plan__surface {
   display: grid;
   align-content: start;
   gap: 10px;
+  width: 100%;
   min-height: 0;
   padding: 16px 18px 16px 20px;
   border: 1px solid #dfddd5;
   border-radius: 7px;
   background: #fffffa;
   box-shadow: 0 7px 18px rgba(23, 23, 20, 0.055);
-  scale: 1;
+  transform: scale(1) translateZ(0);
   transform-origin: center;
   transition:
-    scale 130ms cubic-bezier(0.2, 0.9, 0.24, 1),
+    transform 125ms cubic-bezier(0.2, 0.92, 0.18, 1),
     border-color 120ms ease,
     background-color 120ms ease,
     box-shadow 140ms ease;
-  will-change: transform, opacity;
+  will-change: transform;
 }
 
-.wa-strategy-plan:hover,
-.wa-strategy-plan[data-cursor-hover] {
+.wa-strategy-plan:hover .wa-strategy-plan__surface,
+.wa-strategy-plan[data-cursor-hover] .wa-strategy-plan__surface {
   border-color: var(--wa-strategy-hover-border);
   background: #fffffe;
   box-shadow: 0 10px 24px rgba(23, 23, 20, 0.078);
-  scale: var(--wa-strategy-hover-scale);
+  transform: scale(var(--wa-strategy-hover-scale)) translateZ(0);
 }
 
 .wa-strategy-plan__title {
@@ -6018,7 +6028,7 @@ body {
     font-size: 8.5px;
   }
 
-  .wa-strategy-plan {
+  .wa-strategy-plan__surface {
     gap: 10px;
     padding: 14px 14px 14px 16px;
   }

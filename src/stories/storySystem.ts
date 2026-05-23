@@ -235,14 +235,11 @@ function addStep(
       );
       return;
     case "strategyPlans":
-      addComponentWithAttention(
-        tl,
-        ctx,
-        ctx.chat.strategyPlans(step.plans),
-        step.at,
-        chatThreadSelector(`[data-strategy-plans~="${escapeAttributeValue(step.plans[0]?.id ?? "strategy")}"]`),
-        `strategy-${step.plans[0]?.id ?? "plans"}`,
-      );
+      {
+        const selector = chatThreadSelector(`[data-strategy-plans~="${escapeAttributeValue(step.plans[0]?.id ?? "strategy")}"]`);
+        tl.add(ctx.chat.strategyPlans(step.plans), step.at);
+        tl.add(strategyPlansAttention(ctx, selector, step.plans), "+=0.06");
+      }
       return;
     case "dataSourcesGrid":
       addComponentWithAttention(
@@ -373,7 +370,29 @@ function addPersonalizationSwipeGame(
 function componentAttention(ctx: StoryContext, selector: string, label: string): gsap.core.Timeline {
   const tl = createBuildTimeline(ctx).add(ctx.cursor.scanAcross(selector, { label }));
 
-  if (label.startsWith("strategy-")) tl.add(ctx.chat.strategyPlanHoverSequence(selector), "<+=0.06");
+  return releaseBuildTimeline(tl);
+}
+
+function strategyPlansAttention(
+  ctx: StoryContext,
+  selector: string,
+  plans: StrategyPlanConfig[],
+): gsap.core.Timeline {
+  const tl = createBuildTimeline(ctx);
+
+  plans.forEach((plan, index) => {
+    const cardSelector = `${selector} [data-strategy-plan="${escapeAttributeValue(plan.id)}"]`;
+
+    tl.add(
+      ctx.cursor.scanAcross(cardSelector, {
+        duration: index === 0 ? 0.42 : 0.34,
+        label: `strategy-card-${plan.id}`,
+      }),
+      index === 0 ? 0 : "+=0.03",
+    );
+    tl.add(ctx.chat.strategyPlanHover(cardSelector, true), "<+=0.08");
+    tl.add(ctx.chat.strategyPlanHover(cardSelector, false), "-=0.04");
+  });
 
   return releaseBuildTimeline(tl);
 }

@@ -1280,28 +1280,14 @@ export class ChatActor {
       );
   }
 
-  strategyPlanHoverSequence(selector: string): gsap.core.Timeline {
-    const tl = gsap.timeline();
-    const state: { cards: HTMLElement[] } = { cards: [] };
+  strategyPlanHover(selector: string, visible: boolean): gsap.core.Timeline {
+    return gsap.timeline().call(() => {
+      const card = this.root.querySelector<HTMLElement>(selector);
+      const container = card?.closest<HTMLElement>("[data-strategy-plans]");
+      const cards = container ? this.queryElements(container, ".wa-strategy-plan") : [];
 
-    tl.call(() => {
-      const container = this.root.querySelector<HTMLElement>(selector);
-      state.cards = container ? this.queryElements(container, ".wa-strategy-plan") : [];
+      cards.forEach((candidate) => candidate.toggleAttribute("data-cursor-hover", visible && candidate === card));
     });
-
-    for (let index = 0; index < 3; index += 1) {
-      tl.call(() => {
-        state.cards.forEach((card, cardIndex) => {
-          card.toggleAttribute("data-cursor-hover", cardIndex === index);
-        });
-      }).to({}, { duration: motionDuration(0.22), ease: "none" });
-    }
-
-    tl.call(() => {
-      state.cards.forEach((card) => card.removeAttribute("data-cursor-hover"));
-    });
-
-    return tl;
   }
 
   dataSourcesGrid(config: DataSourceGridConfig): gsap.core.Timeline {
@@ -4046,6 +4032,9 @@ export class ChatActor {
     card.className = "wa-strategy-plan";
     card.dataset.strategyPlan = plan.id;
 
+    const surface = document.createElement("div");
+    surface.className = "wa-strategy-plan__surface";
+
     const title = document.createElement("h3");
     title.className = "wa-strategy-plan__title";
     title.textContent = plan.title;
@@ -4059,7 +4048,8 @@ export class ChatActor {
       bullets.append(bullet);
     }
 
-    card.append(title, bullets);
+    surface.append(title, bullets);
+    card.append(surface);
     return card;
   }
 
