@@ -499,12 +499,15 @@ function toThinkingState(
   };
 }
 
+type BuilderTableShape = {
+  columns: DataTableConfig["columns"];
+  sourceIndexes: number[];
+  foldedRoleIndex?: number;
+};
+
 function toDataTable(component: BuilderTableComponent, fallbackId: string): DataTableConfig {
-  const columns = component.columns.map((label, index) => ({
-    key: slugId(label || `column-${index + 1}`),
-    label: label || `Column ${index + 1}`,
-  }));
-  const rows = component.rows.map((row, rowIndex) => toDataTableRow(row, columns, rowIndex));
+  const shape = getBuilderTableShape(component.columns);
+  const rows = component.rows.map((row, rowIndex) => toDataTableRow(row, shape, rowIndex));
   const pageSize = Math.min(10, rows.length || 10);
   const pages = component.pagination?.ranges.map((range, pageIndex) => ({
     page: pageIndex + 1,
@@ -518,7 +521,7 @@ function toDataTable(component: BuilderTableComponent, fallbackId: string): Data
     eyebrow: component.eyebrow,
     count: component.count,
     variant: inferTableVariant(component),
-    columns,
+    columns: shape.columns,
     rows: pages[0]?.rows ?? rows,
     actions: component.actions?.map(toDataTableAction),
     pagination: pages.length > 1
@@ -532,16 +535,58 @@ function toDataTable(component: BuilderTableComponent, fallbackId: string): Data
   };
 }
 
+function getBuilderTableShape(labels: string[]): BuilderTableShape {
+  const nameIndex = labels.findIndex((label) => label.trim().toLowerCase() === "name");
+  const roleIndex = nameIndex >= 0
+    ? labels.findIndex((label, index) => index > nameIndex && /^role\b/i.test(label.trim()))
+    : -1;
+  const foldsRoleIntoName = nameIndex >= 0 && roleIndex >= 0;
+  const sourceIndexes = labels.map((_label, index) => index).filter((index) => index !== roleIndex);
+  const columns = sourceIndexes.map((sourceIndex) => {
+    const label = labels[sourceIndex] || `Column ${sourceIndex + 1}`;
+
+    if (foldsRoleIntoName && sourceIndex === nameIndex) {
+      return {
+        key: "name",
+        label: "Prospect",
+        width: "minmax(190px,0.9fr)",
+      };
+    }
+
+    return {
+      key: slugId(label || `column-${sourceIndex + 1}`),
+      label,
+      width: getFoldedRoleTableColumnWidth(label, foldsRoleIntoName),
+    };
+  });
+
+  return {
+    columns,
+    sourceIndexes,
+    foldedRoleIndex: foldsRoleIntoName ? roleIndex : undefined,
+  };
+}
+
+function getFoldedRoleTableColumnWidth(label: string, foldsRoleIntoName: boolean): string | undefined {
+  if (!foldsRoleIntoName) return undefined;
+
+  const normalized = label.toLowerCase();
+  if (normalized.includes("connector") || normalized.includes("connection")) return "minmax(300px,1.45fr)";
+  if (normalized.includes("email") || normalized.includes("mobile")) return "minmax(150px,0.88fr)";
+  return "minmax(130px,1fr)";
+}
+
 function toDataTableRow(
   row: string[],
-  columns: DataTableConfig["columns"],
+  shape: BuilderTableShape,
   rowIndex: number,
 ): DataTableConfig["rows"][number] {
   const values: Record<string, string> = {};
 
-  columns.forEach((column, columnIndex) => {
-    values[column.key] = row[columnIndex] ?? "";
+  shape.columns.forEach((column, columnIndex) => {
+    values[column.key] = row[shape.sourceIndexes[columnIndex]] ?? "";
   });
+  if (shape.foldedRoleIndex !== undefined) values.prospectDetail = row[shape.foldedRoleIndex] ?? "";
 
   return {
     id: `${slugId(row[0] || "row")}-${rowIndex + 1}`,

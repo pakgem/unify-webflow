@@ -3614,7 +3614,19 @@ export class ChatActor {
     label.textContent = name || "-";
 
     avatarWrap.append(avatar, source);
-    person.append(avatarWrap, label);
+    const copy = document.createElement("span");
+    copy.className = "wa-data-table-person__copy";
+    copy.append(label);
+
+    const detailText = values.prospectDetail || values.personDetail || "";
+    if (detailText) {
+      const detail = document.createElement("span");
+      detail.className = "wa-data-table-person__detail";
+      detail.textContent = detailText;
+      copy.append(detail);
+    }
+
+    person.append(avatarWrap, copy);
     return person;
   }
 
@@ -4166,17 +4178,16 @@ export class ChatActor {
       eyebrow: "ranked leads",
       count: `${config.leads.length} leads`,
       columns: [
-        { key: "name", label: "Name", width: "1.12fr" },
+        { key: "name", label: "Prospect", width: "1.18fr" },
         { key: "company", label: "Company", width: "0.88fr" },
-        { key: "title", label: "Title", width: "1fr" },
         { key: "connection", label: "Connection", width: "2.05fr" },
       ],
       rows: config.leads.map((lead) => ({
         id: `proximity-${lead.rank}`,
         values: {
           name: lead.name,
+          prospectDetail: lead.title,
           company: lead.company,
-          title: lead.title,
           connection: this.formatLeadConnection(lead),
           source: "signal",
           avatarTone: lead.rank,

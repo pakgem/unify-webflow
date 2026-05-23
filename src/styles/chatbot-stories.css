@@ -1438,6 +1438,10 @@ body {
   --wa-data-table-scroll-width: 560px;
 }
 
+.wa-data-table[data-column-count="2"] {
+  --wa-data-table-scroll-width: 620px;
+}
+
 .wa-data-table[data-column-count="4"] {
   --wa-data-table-scroll-width: 680px;
 }
@@ -1475,12 +1479,18 @@ body {
 }
 
 .wa-data-table__row[data-header="true"] .wa-data-table__cell {
+  align-items: flex-start;
   padding: 9px 10px 8px;
   color: #555452;
   font-size: 14px;
-  line-height: 1;
+  line-height: 1.08;
   font-weight: 560;
   text-transform: none;
+}
+
+.wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="name"],
+.wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="contact"] {
+  padding-left: 42px;
 }
 
 .wa-data-table__row[data-header="true"] .wa-data-table__cell:last-of-type {
@@ -1877,9 +1887,17 @@ body {
   display: none;
 }
 
+.wa-data-table-person__copy {
+  display: grid;
+  align-content: start;
+  gap: 2px;
+  min-width: 0;
+  margin-top: 3px;
+}
+
 .wa-data-table-person__name {
   min-width: 0;
-  margin-top: 4px;
+  margin-top: 0;
   overflow: visible;
   color: #050505;
   font-size: 14px;
@@ -1887,6 +1905,17 @@ body {
   font-weight: 400;
   overflow-wrap: normal;
   text-overflow: clip;
+  white-space: nowrap;
+}
+
+.wa-data-table-person__detail {
+  min-width: 0;
+  overflow: hidden;
+  color: #67635f;
+  font-size: 12px;
+  line-height: 1.12;
+  font-weight: 400;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
@@ -5469,6 +5498,11 @@ body {
     font-size: 9px;
   }
 
+  .wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="name"],
+  .wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="contact"] {
+    padding-left: 28px;
+  }
+
   .wa-data-table__row[data-header="true"] .wa-data-table__cell:last-of-type {
     padding-right: 26px;
   }
@@ -5549,6 +5583,11 @@ body {
     gap: 4px;
   }
 
+  .wa-data-table-person__copy {
+    gap: 1px;
+    margin-top: 2px;
+  }
+
   .wa-data-table-person__avatar-wrap,
   .wa-data-table-person__avatar {
     width: 20px;
@@ -5588,6 +5627,11 @@ body {
   .wa-data-table-person__name {
     font-size: 9px;
     line-height: 1.03;
+  }
+
+  .wa-data-table-person__detail {
+    font-size: 7.5px;
+    line-height: 1.04;
   }
 
   .wa-mailbox-connection__card {
