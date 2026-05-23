@@ -1428,7 +1428,7 @@ body {
   scrollbar-width: thin;
   scrollbar-color: rgba(17, 17, 15, 0.22) transparent;
   border: 1px solid #eee6df;
-  border-radius: 5px;
+  border-radius: 8px;
   background: var(--wa-color-panel);
   -webkit-overflow-scrolling: touch;
 }
@@ -1566,7 +1566,7 @@ body {
   height: 26px;
   padding: 0 0 1px;
   border: 1px solid #eee6df;
-  border-radius: 7px;
+  border-radius: 4px;
   color: #050505;
   background: #fffffb;
   box-shadow: 0 1px 1px rgba(23, 23, 20, 0.02);
@@ -5615,7 +5615,7 @@ body {
     right: 2px;
     width: 22px;
     height: 20px;
-    border-radius: 5px;
+    border-radius: 4px;
     font-size: 15px;
   }
 
