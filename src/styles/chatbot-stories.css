@@ -119,6 +119,7 @@ body {
   --wa-composer-height: 128px;
   --wa-composer-send-size: 38px;
   --wa-history-resume-height: 42px;
+  --wa-history-resume-y-offset: 44px;
   --wa-cursor-default-width: 14px;
   --wa-cursor-default-height: 23px;
 
@@ -4027,7 +4028,10 @@ body {
 .wa-history-resume {
   position: absolute;
   right: auto;
-  bottom: calc(var(--wa-composer-bottom-outset) + var(--wa-composer-height) - var(--wa-history-resume-height));
+  bottom: calc(
+    var(--wa-composer-bottom-outset) + var(--wa-composer-height) - var(--wa-history-resume-height) -
+      var(--wa-history-resume-y-offset)
+  );
   left: 50%;
   z-index: 5;
   display: inline-flex;
