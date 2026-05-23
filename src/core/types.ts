@@ -214,7 +214,7 @@ export type DataTableConfig = {
   title: string;
   eyebrow?: string;
   count?: string;
-  variant?: "default" | "filtered" | "enriched";
+  variant?: "default" | "filtered" | "enriched" | "connections";
   columns: Array<{
     key: string;
     label: string;

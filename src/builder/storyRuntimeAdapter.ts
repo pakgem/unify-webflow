@@ -503,6 +503,8 @@ type BuilderTableShape = {
   columns: DataTableConfig["columns"];
   sourceIndexes: number[];
   foldedRoleIndex?: number;
+  mutualConnectionKey?: string;
+  variant?: DataTableConfig["variant"];
 };
 
 function toDataTable(component: BuilderTableComponent, fallbackId: string): DataTableConfig {
@@ -520,7 +522,7 @@ function toDataTable(component: BuilderTableComponent, fallbackId: string): Data
     title: component.title,
     eyebrow: component.eyebrow,
     count: component.count,
-    variant: inferTableVariant(component),
+    variant: shape.variant ?? inferTableVariant(component),
     columns: shape.columns,
     rows: pages[0]?.rows ?? rows,
     actions: component.actions?.map(toDataTableAction),
@@ -549,7 +551,15 @@ function getBuilderTableShape(labels: string[]): BuilderTableShape {
       return {
         key: "name",
         label: "Prospect",
-        width: "minmax(190px,0.9fr)",
+        width: "minmax(0,0.95fr)",
+      };
+    }
+
+    if (foldsRoleIntoName && /^via\s+connector\b/i.test(label.trim())) {
+      return {
+        key: "mutualConnection",
+        label: "Mutual connection",
+        width: "minmax(0,1.3fr)",
       };
     }
 
@@ -564,6 +574,8 @@ function getBuilderTableShape(labels: string[]): BuilderTableShape {
     columns,
     sourceIndexes,
     foldedRoleIndex: foldsRoleIntoName ? roleIndex : undefined,
+    mutualConnectionKey: columns.some((column) => column.key === "mutualConnection") ? "mutualConnection" : undefined,
+    variant: columns.some((column) => column.key === "mutualConnection") ? "connections" : undefined,
   };
 }
 
@@ -588,9 +600,27 @@ function toDataTableRow(
   });
   if (shape.foldedRoleIndex !== undefined) values.prospectDetail = row[shape.foldedRoleIndex] ?? "";
 
+  if (shape.mutualConnectionKey) {
+    const parsed = parseMutualConnection(values[shape.mutualConnectionKey] ?? "");
+    values[shape.mutualConnectionKey] = parsed.name;
+    values.mutualConnectionDetail = parsed.title;
+    values.mutualConnectionContext = parsed.context;
+  }
+
   return {
     id: `${slugId(row[0] || "row")}-${rowIndex + 1}`,
     values,
+  };
+}
+
+function parseMutualConnection(value: string): { name: string; title: string; context: string } {
+  const [personPart = "", context = ""] = value.split(/\s+[—–]\s+/, 2);
+  const match = personPart.trim().match(/^(.+?)(?:\s*\((.+)\))?$/);
+
+  return {
+    name: match?.[1]?.trim() || value.trim(),
+    title: match?.[2]?.trim() || "",
+    context: context.trim(),
   };
 }
 

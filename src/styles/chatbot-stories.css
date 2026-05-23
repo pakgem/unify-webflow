@@ -1442,6 +1442,10 @@ body {
   --wa-data-table-scroll-width: 620px;
 }
 
+.wa-data-table[data-table-variant="connections"] {
+  --wa-data-table-scroll-width: 100%;
+}
+
 .wa-data-table[data-column-count="4"] {
   --wa-data-table-scroll-width: 680px;
 }
@@ -1514,8 +1518,9 @@ body {
 }
 
 .wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="name"],
-.wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="contact"] {
-  padding-left: 42px;
+.wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="contact"],
+.wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="mutualConnection"] {
+  padding-left: 8px;
 }
 
 .wa-data-table__row[data-header="true"] .wa-data-table__cell:last-of-type {
@@ -1736,7 +1741,8 @@ body {
 }
 
 .wa-data-table__cell[data-column-key="name"],
-.wa-data-table__cell[data-column-key="contact"] {
+.wa-data-table__cell[data-column-key="contact"],
+.wa-data-table__cell[data-column-key="mutualConnection"] {
   overflow: visible;
   color: #050505;
   font-weight: 400;
@@ -1756,6 +1762,20 @@ body {
   color: var(--wa-ink);
   font-size: 10.6px;
   line-height: 1.2;
+}
+
+.wa-data-table[data-table-variant="connections"] .wa-data-table__grid {
+  overflow-x: hidden;
+}
+
+.wa-data-table[data-table-variant="connections"] .wa-data-table__cell {
+  overflow: hidden;
+}
+
+.wa-data-table[data-table-variant="connections"] .wa-data-table-person__name,
+.wa-data-table[data-table-variant="connections"] .wa-data-table-person__detail {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .wa-data-table__cell[data-empty="true"] {
@@ -5523,8 +5543,9 @@ body {
   }
 
   .wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="name"],
-  .wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="contact"] {
-    padding-left: 28px;
+  .wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="contact"],
+  .wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="mutualConnection"] {
+    padding-left: 4px;
   }
 
   .wa-data-table__row[data-header="true"] .wa-data-table__cell:last-of-type {

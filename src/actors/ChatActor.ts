@@ -3357,6 +3357,14 @@ export class ChatActor {
         cell.textContent = column.label;
       } else if (column.key === "name" || column.key === "contact") {
         cell.append(this.createDataTablePerson(values, values[column.key] ?? ""));
+      } else if (column.key === "mutualConnection") {
+        cell.append(this.createDataTablePerson(values, values[column.key] ?? "", {
+          detailKey: "mutualConnectionDetail",
+          avatarToneKey: "mutualConnectionAvatarTone",
+          avatarUrlKey: "mutualConnectionAvatarUrl",
+          avatarKey: "mutualConnectionAvatar",
+          sourceKey: "mutualConnectionSource",
+        }));
       } else {
         const value = values[column.key] ?? "";
         const text = document.createElement("span");
@@ -3603,7 +3611,17 @@ export class ChatActor {
     return this.queryElements(table, ".wa-data-table__row[data-page]").filter((row) => row.style.display !== "none");
   }
 
-  private createDataTablePerson(values: Record<string, string>, name: string): HTMLElement {
+  private createDataTablePerson(
+    values: Record<string, string>,
+    name: string,
+    options: {
+      detailKey?: string;
+      avatarToneKey?: string;
+      avatarUrlKey?: string;
+      avatarKey?: string;
+      sourceKey?: string;
+    } = {},
+  ): HTMLElement {
     const person = document.createElement("span");
     person.className = "wa-data-table-person";
 
@@ -3612,12 +3630,17 @@ export class ChatActor {
 
     const avatar = document.createElement("span");
     avatar.className = "wa-data-table-person__avatar";
-    avatar.dataset.avatarTone = values.avatarTone ?? "1";
-    this.setProfileAvatar(avatar, name, values.avatarUrl, values.avatar);
+    avatar.dataset.avatarTone = values[options.avatarToneKey ?? "avatarTone"] ?? "1";
+    this.setProfileAvatar(
+      avatar,
+      name,
+      values[options.avatarUrlKey ?? "avatarUrl"],
+      values[options.avatarKey ?? "avatar"],
+    );
 
     const source = document.createElement("span");
     source.className = "wa-data-table-person__source";
-    source.dataset.source = values.source ?? "default";
+    source.dataset.source = values[options.sourceKey ?? "source"] ?? "default";
     source.setAttribute("aria-hidden", "true");
 
     const label = document.createElement("span");
@@ -3629,7 +3652,7 @@ export class ChatActor {
     copy.className = "wa-data-table-person__copy";
     copy.append(label);
 
-    const detailText = values.prospectDetail || values.personDetail || "";
+    const detailText = values[options.detailKey ?? "prospectDetail"] || values.personDetail || "";
     if (detailText) {
       const detail = document.createElement("span");
       detail.className = "wa-data-table-person__detail";
