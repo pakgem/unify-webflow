@@ -995,6 +995,11 @@ export class ChatActor {
     this.scrollTween = null;
   }
 
+  prepareForChatHistoryPause(): void {
+    gsap.killTweensOf(this.tableControlTooltip);
+    this.hideDataTableControlTooltip();
+  }
+
   scrollToLive(duration = CHAT_SCROLL_MOTION.followDuration): void {
     this.stopScrollMotion();
 

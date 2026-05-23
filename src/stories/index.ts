@@ -1107,9 +1107,9 @@ export const defaultStories: StoryDefinition[] = [
     eyebrow: "Context learning",
     summary: "The assistant learns your sales context, protects ICP fit, and ranks leads by relationship proximity.",
     entry: {
-      desktop: { target: "[data-chat-shell]", anchor: "right", offset: { x: -58, y: -150 } },
-      tablet: { target: "[data-chat-shell]", anchor: "right", offset: { x: -52, y: -132 } },
-      mobile: { target: "[data-chat-shell]", anchor: "right", offset: { x: -42, y: -104 } },
+      desktop: { target: "[data-chat-shell]", anchor: "right", offset: { x: -48, y: 168 } },
+      tablet: { target: "[data-chat-shell]", anchor: "right", offset: { x: -44, y: 144 } },
+      mobile: { target: "[data-chat-shell]", anchor: "right", offset: { x: -36, y: 112 } },
     } satisfies ResponsiveTarget,
     entryLeadTime: 0.18,
     build: (ctx) => {

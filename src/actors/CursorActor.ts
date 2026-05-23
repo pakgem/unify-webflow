@@ -265,8 +265,10 @@ export class CursorActor {
     this.plannedPosition = { ...initialEnd };
 
     tl.call(() => {
-      this.stopIdleFloat();
-      this.modeOverride = null;
+      this.stopIdleFloat(true);
+      gsap.killTweensOf([this.el, this.floatLayer]);
+      this.resetRotation(true);
+      this.modeOverride = "default";
       this.setMode("default");
     }, undefined, 0);
 

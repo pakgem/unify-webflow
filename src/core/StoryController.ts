@@ -637,6 +637,7 @@ export class StoryController implements ChatbotStoriesInstance {
     this.seekTween?.kill();
     this.activeTimeline?.pause();
     this.chat.stopScrollMotion();
+    this.chat.prepareForChatHistoryPause();
     this.cancelHistoryParkMotion();
     this.historyParkTimeline = this.cursor.parkForChatHistory();
     this.setHistoryPaused(true);

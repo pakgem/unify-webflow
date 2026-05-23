@@ -1557,6 +1557,11 @@ body {
   visibility: visible;
 }
 
+.wa-section[data-chat-history-paused="true"] .wa-data-table-floating-tooltip {
+  opacity: 0;
+  visibility: hidden;
+}
+
 .wa-data-table-floating-tooltip__label {
   display: block;
 }
@@ -2549,7 +2554,7 @@ body {
 .wa-mailbox-connection__subtitle {
   max-width: 310px;
   color: #11110f;
-  font-size: 15.5px;
+  font-size: 14px;
   line-height: 1.28;
   font-weight: 400;
 }
@@ -2686,7 +2691,7 @@ body {
   gap: 6px;
   margin: 0;
   color: #5b5752;
-  font-size: 15.5px;
+  font-size: 14px;
   line-height: 1;
   font-weight: 560;
   white-space: nowrap;
@@ -2718,11 +2723,15 @@ body {
   color: #11110f;
 }
 
+.wa-mailbox-learning[data-mailbox-learning-state="ready"] .wa-mailbox-learning__progress {
+  display: none;
+}
+
 .wa-mailbox-learning__detail {
   grid-area: detail;
   margin: 0;
   color: #8b867e;
-  font-size: 13.5px;
+  font-size: 13px;
   line-height: 1.15;
   font-weight: 400;
 }
@@ -5662,11 +5671,11 @@ body {
   }
 
   .wa-mailbox-learning__title {
-    font-size: 12.5px;
+    font-size: 14px;
   }
 
   .wa-mailbox-learning__detail {
-    font-size: 11px;
+    font-size: 13px;
   }
 
   .wa-enrichment-panel {
