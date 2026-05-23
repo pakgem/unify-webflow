@@ -3766,13 +3766,13 @@ body {
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 2;
+  z-index: 4;
   height: 1px;
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(17, 17, 15, 0.16) 34px,
-    rgba(17, 17, 15, 0.16) calc(100% - 34px),
+    rgba(17, 17, 15, 0.24) 34px,
+    rgba(17, 17, 15, 0.24) calc(100% - 34px),
     transparent
   );
   pointer-events: none;
@@ -3832,6 +3832,7 @@ body {
   right: -1px;
   bottom: -1px;
   left: -1px;
+  z-index: 5;
   height: 2px;
   background: var(--wa-panel);
   pointer-events: none;
