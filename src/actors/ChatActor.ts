@@ -66,17 +66,14 @@ type FileLandingClone = {
   target: HTMLElement;
   startX: number;
   startY: number;
-  startScaleX: number;
-  startScaleY: number;
   startRotation: number;
   startBackground: RgbaColor;
   endBackground: RgbaColor;
   startBorderColor: RgbaColor;
+  endBorderColor: RgbaColor;
   detailEls: HTMLElement[];
   setX: (value: number) => void;
   setY: (value: number) => void;
-  setScaleX: (value: number) => void;
-  setScaleY: (value: number) => void;
   setRotation: (value: number) => void;
   setBackgroundColor: (value: string) => void;
   setBorderColor: (value: string) => void;
@@ -1925,8 +1922,13 @@ export class ChatActor {
     };
   }
 
-  prepareCursorFile(fileName: string, cursor: CursorActor, fileType = "CSV"): PreparedCursorFile {
-    const file = this.createCursorFile(fileName, fileType);
+  prepareCursorFile(
+    fileName: string,
+    cursor: CursorActor,
+    fileType = "CSV",
+    stackFiles: UploadedFileConfig[] = [],
+  ): PreparedCursorFile {
+    const file = this.createCursorFile(fileName, fileType, stackFiles);
     let removeFollower: (() => void) | null = null;
     let followOffset: CursorFileFollowOffset = { x: 0, y: 0 };
     const stopFollowing = () => {
@@ -2141,12 +2143,13 @@ export class ChatActor {
 
   private createFileLandingClones(cursorFile: HTMLElement, targets: HTMLElement[]): FileLandingClone[] {
     const sourceCards = this.getCursorFileCards(cursorFile);
+    const landingLayer = this.chatBody;
 
     return targets.map((target, index) => {
       const sourceCard = sourceCards[Math.min(index, sourceCards.length - 1)];
       const sourceRect = sourceCard.getBoundingClientRect();
       const targetRect = target.getBoundingClientRect();
-      const sourceLocalRect = this.getRootLocalRect(sourceRect);
+      const sourceLocalRect = this.getElementLocalRect(sourceRect, landingLayer);
       const clone = target.cloneNode(true) as HTMLElement;
       const startRotation = this.getCursorFileCardRotation(index, sourceCards.length);
       const sourceStyle = window.getComputedStyle(sourceCard);
@@ -2154,11 +2157,12 @@ export class ChatActor {
       const startBackground = this.parseCssColor(sourceStyle.backgroundColor) ?? { r: 255, g: 255, b: 249, a: 0.96 };
       const endBackground = this.parseCssColor(targetStyle.backgroundColor) ?? startBackground;
       const startBorderColor = this.parseCssColor(sourceStyle.borderTopColor) ?? { r: 23, g: 23, b: 20, a: 0.12 };
+      const endBorderColor = this.parseCssColor(targetStyle.borderTopColor) ?? startBorderColor;
       const detailEls = this.queryElements(clone, ".wa-uploaded-file__body span");
 
       clone.classList.add("wa-file-landing-clone");
       clone.dataset.fileLandingClone = "";
-      this.root.append(clone);
+      landingLayer.append(clone);
       gsap.set(clone, {
         position: "absolute",
         zIndex: 21,
@@ -2168,8 +2172,8 @@ export class ChatActor {
         height: targetRect.height,
         x: sourceLocalRect.left,
         y: sourceLocalRect.top,
-        scaleX: sourceRect.width / Math.max(1, targetRect.width),
-        scaleY: sourceRect.height / Math.max(1, targetRect.height),
+        scaleX: 1,
+        scaleY: 1,
         rotation: startRotation,
         transformOrigin: "left top",
         pointerEvents: "none",
@@ -2189,17 +2193,14 @@ export class ChatActor {
         target,
         startX: sourceLocalRect.left,
         startY: sourceLocalRect.top,
-        startScaleX: sourceRect.width / Math.max(1, targetRect.width),
-        startScaleY: sourceRect.height / Math.max(1, targetRect.height),
         startRotation,
         startBackground,
         endBackground,
         startBorderColor,
+        endBorderColor,
         detailEls,
         setX: gsap.quickSetter(clone, "x", "px") as (value: number) => void,
         setY: gsap.quickSetter(clone, "y", "px") as (value: number) => void,
-        setScaleX: gsap.quickSetter(clone, "scaleX") as (value: number) => void,
-        setScaleY: gsap.quickSetter(clone, "scaleY") as (value: number) => void,
         setRotation: gsap.quickSetter(clone, "rotation", "deg") as (value: number) => void,
         setBackgroundColor: gsap.quickSetter(clone, "backgroundColor") as (value: string) => void,
         setBorderColor: gsap.quickSetter(clone, "borderColor") as (value: string) => void,
@@ -2208,26 +2209,21 @@ export class ChatActor {
   }
 
   private renderFileLandingClones(clones: FileLandingClone[], progress: number): void {
-    const rootRect = this.root.getBoundingClientRect();
+    const landingLayerRect = this.chatBody.getBoundingClientRect();
 
     for (const clone of clones) {
       const targetRect = clone.target.getBoundingClientRect();
-      const targetLeft = targetRect.left - rootRect.left;
-      const targetTop = targetRect.top - rootRect.top;
+      const targetLeft = targetRect.left - landingLayerRect.left;
+      const targetTop = targetRect.top - landingLayerRect.top;
       const detailProgress = clampUnit(
         (progress - FILE_DROP_LANDING.detailStart) / FILE_DROP_LANDING.detailSpan,
       );
 
       clone.setX(this.interpolate(clone.startX, targetLeft, progress));
       clone.setY(this.interpolate(clone.startY, targetTop, progress));
-      clone.setScaleX(this.interpolate(clone.startScaleX, 1, progress));
-      clone.setScaleY(this.interpolate(clone.startScaleY, 1, progress));
       clone.setRotation(this.interpolate(clone.startRotation, 0, progress));
       clone.setBackgroundColor(this.interpolateRgba(clone.startBackground, clone.endBackground, progress));
-      clone.setBorderColor(this.interpolateRgba(clone.startBorderColor, {
-        ...clone.startBorderColor,
-        a: 0,
-      }, progress));
+      clone.setBorderColor(this.interpolateRgba(clone.startBorderColor, clone.endBorderColor, progress));
       clone.el.style.boxShadow = this.getFileLandingShadow(progress);
 
       if (clone.detailEls.length) {
@@ -2251,12 +2247,12 @@ export class ChatActor {
     return sourceCount > 1 ? FILE_DROP_LANDING.rotations[index] ?? 0 : 0;
   }
 
-  private getRootLocalRect(rect: DOMRect): Pick<DOMRect, "left" | "top"> {
-    const rootRect = this.root.getBoundingClientRect();
+  private getElementLocalRect(rect: DOMRect, container: HTMLElement): Pick<DOMRect, "left" | "top"> {
+    const containerRect = container.getBoundingClientRect();
 
     return {
-      left: rect.left - rootRect.left,
-      top: rect.top - rootRect.top,
+      left: rect.left - containerRect.left,
+      top: rect.top - containerRect.top,
     };
   }
 
@@ -2591,16 +2587,16 @@ export class ChatActor {
     );
   }
 
-  private createCursorFile(fileName: string, fileType = "CSV"): HTMLElement {
+  private createCursorFile(fileName: string, fileType = "CSV", stackFiles: UploadedFileConfig[] = []): HTMLElement {
     const file = document.createElement("div");
     file.className = "wa-cursor-file";
     file.setAttribute("aria-hidden", "true");
 
-    const stackCount = this.getCursorFileStackCount(fileName);
+    const stackCount = this.getCursorFileStackCount(fileName, stackFiles);
 
     if (stackCount > 1) {
       file.classList.add("wa-cursor-file--stack");
-      file.append(...this.createCursorFileStack(fileName, fileType, stackCount));
+      file.append(...this.createCursorFileStack(fileName, fileType, stackCount, stackFiles));
     } else {
       file.append(this.createCursorFileCard(fileName, fileType));
     }
@@ -2651,36 +2647,65 @@ export class ChatActor {
     };
   }
 
-  private getCursorFileStackCount(fileName: string): number {
+  private getCursorFileStackCount(fileName: string, stackFiles: UploadedFileConfig[] = []): number {
+    if (stackFiles.length > 1) return Math.max(1, Math.min(4, stackFiles.length));
+
     const match = fileName.match(/^(\d+)\s+/);
     return match ? Math.max(1, Math.min(4, Number(match[1]))) : 1;
   }
 
-  private createCursorFileStack(fileName: string, fileType: string, count: number): HTMLElement[] {
-    const labels = this.getCursorFileStackLabels(fileName, count);
+  private createCursorFileStack(
+    fileName: string,
+    fileType: string,
+    count: number,
+    stackFiles: UploadedFileConfig[] = [],
+  ): HTMLElement[] {
+    const items = this.getCursorFileStackItems(fileName, fileType, count, stackFiles);
 
-    return labels.map((label, index) => {
-      const card = this.createCursorFileCard(label, fileType);
+    return items.map((item) => {
+      const card = this.createCursorFileCard(item.name, item.type);
       card.classList.add("wa-cursor-file__card--stacked");
       return card;
     });
   }
 
-  private getCursorFileStackLabels(fileName: string, count: number): string[] {
-    if (fileName.toLowerCase().includes("context")) {
-      return ["Battle cards", "ICP notes", "Voice doc", "Playbook"].slice(0, count);
+  private getCursorFileStackItems(
+    fileName: string,
+    fileType: string,
+    count: number,
+    stackFiles: UploadedFileConfig[] = [],
+  ): Array<{ name: string; type?: string }> {
+    if (stackFiles.length) {
+      return stackFiles.slice(0, count).map((file) => ({
+        name: file.name,
+        type: file.type,
+      }));
     }
 
-    return Array.from({ length: count }, (_item, index) => (index === 0 ? fileName : `File ${index + 1}`));
+    if (fileName.toLowerCase().includes("context")) {
+      return [
+        { name: "battlecards.pdf", type: "PDF" },
+        { name: "icp-context.md", type: "MD" },
+        { name: "voice-and-tone.docx", type: "DOC" },
+        { name: "outbound-playbook.pdf", type: "PDF" },
+      ].slice(0, count);
+    }
+
+    return Array.from({ length: count }, (_item, index) => ({
+      name: index === 0 ? fileName : `File ${index + 1}`,
+      type: fileType,
+    }));
   }
 
-  private createCursorFileCard(fileName: string, fileType: string): HTMLElement {
+  private createCursorFileCard(fileName: string, fileType?: string): HTMLElement {
+    const displayType = this.getFileDisplayType(fileName, fileType);
     const card = document.createElement("span");
     card.className = "wa-cursor-file__card";
+    card.dataset.fileTone = this.getFileTone(displayType);
 
     const icon = document.createElement("span");
     icon.className = "wa-cursor-file__icon";
-    icon.textContent = fileType;
+    icon.textContent = displayType;
 
     const name = document.createElement("span");
     name.className = "wa-cursor-file__name";
@@ -2690,13 +2715,15 @@ export class ChatActor {
     return card;
   }
 
-  private createUploadedFile(fileName: string, detail: string): HTMLElement {
+  private createUploadedFile(fileName: string, detail: string, fileType?: string): HTMLElement {
+    const displayType = this.getFileDisplayType(fileName, fileType);
     const file = document.createElement("div");
     file.className = "wa-uploaded-file";
+    file.dataset.fileTone = this.getFileTone(displayType);
 
     const icon = document.createElement("span");
     icon.className = "wa-uploaded-file__icon";
-    icon.textContent = "CSV";
+    icon.textContent = displayType;
 
     const body = document.createElement("span");
     body.className = "wa-uploaded-file__body";
@@ -2720,14 +2747,31 @@ export class ChatActor {
     const list = document.createElement("div");
     list.className = "wa-uploaded-files__list";
     files.forEach((fileConfig) => {
-      const file = this.createUploadedFile(fileConfig.name, fileConfig.detail);
-      const icon = file.querySelector<HTMLElement>(".wa-uploaded-file__icon");
-      if (icon) icon.textContent = fileConfig.type ?? "DOC";
+      const file = this.createUploadedFile(fileConfig.name, fileConfig.detail, fileConfig.type);
       list.append(file);
     });
 
     stack.append(list);
     return stack;
+  }
+
+  private getFileDisplayType(fileName: string, fileType?: string): string {
+    const explicitType = fileType?.trim().replace(/^\./, "");
+    if (explicitType) return explicitType.toUpperCase();
+
+    const extension = fileName.trim().split(".").pop();
+    return extension && extension !== fileName ? extension.toUpperCase() : "FILE";
+  }
+
+  private getFileTone(displayType: string): string {
+    const type = displayType.toLowerCase();
+
+    if (type === "csv" || type === "xls" || type === "xlsx") return "spreadsheet";
+    if (type === "pdf") return "pdf";
+    if (type === "doc" || type === "docx") return "doc";
+    if (type === "txt" || type === "md") return "text";
+    if (type === "ppt" || type === "pptx") return "ppt";
+    return "default";
   }
 
   private streamThinkingHeader(thinkingHeader: HTMLElement): gsap.core.Timeline {

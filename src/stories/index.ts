@@ -1102,7 +1102,7 @@ export const defaultStories: StoryDefinition[] = [
         title: "Drop business context files",
         detail: "Battle cards, playbooks, ICP notes, voice docs, and messaging context.",
       });
-      const cursorFile = ctx.chat.prepareCursorFile("4 context files", ctx.cursor, "DOC");
+      const cursorFile = ctx.chat.prepareCursorFile("4 context files", ctx.cursor, "DOC", AGENT_CONTEXT_FILES);
       const mailboxButtonTarget = responsiveElementTarget(
         `[data-mailbox-connect="${GMAIL_MAILBOX_CONNECTION.id}"]`,
         "center",

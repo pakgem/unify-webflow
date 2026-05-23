@@ -141,7 +141,7 @@ function buildContextLearningStory(ctx: StoryContext, story: BuilderStory): gsap
       detail: files.map((file) => file.name).join(", "),
     });
     const cursorLabel = files.length > 1 ? `${files.length} context files` : files[0]?.name ?? uploadedFilesStep.text;
-    const cursorFile = ctx.chat.prepareCursorFile(cursorLabel, ctx.cursor, files[0]?.type ?? "DOC");
+    const cursorFile = ctx.chat.prepareCursorFile(cursorLabel, ctx.cursor, files[0]?.type ?? "DOC", files);
     const dropTarget = responsiveElementTarget("[data-chat-shell]", "center", {
       desktop: { x: 0, y: 74 },
       tablet: { x: 0, y: 64 },
