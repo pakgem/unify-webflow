@@ -135,7 +135,11 @@ export function renderDefaultMarkup(root: HTMLElement, options: RenderDefaultMar
             </div>
 
             <button class="wa-history-resume" type="button" data-history-resume aria-hidden="true" tabindex="-1">
-              <span class="wa-history-resume__icon" aria-hidden="true">▶</span>
+              <span class="wa-history-resume__icon" aria-hidden="true">
+                <svg class="wa-history-resume__svg" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M7 4v16l13 -8z"></path>
+                </svg>
+              </span>
               <span>Continue playing</span>
             </button>
           </div>
