@@ -1544,7 +1544,7 @@ body {
 
 .wa-data-table__cell {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   min-width: 0;
   padding: 6px 8px;
   overflow: visible;
@@ -1563,7 +1563,7 @@ body {
 
 .wa-data-table__row[data-header="true"] .wa-data-table__cell {
   grid-row: 1;
-  align-items: flex-start;
+  align-items: center;
   padding: 9px 10px 8px;
   color: #555452;
   font-size: 14px;
@@ -1642,7 +1642,7 @@ body {
 .wa-data-table__cell-text {
   display: block;
   min-width: 0;
-  margin-top: 4px;
+  margin-top: 0;
 }
 
 .wa-data-table__footer {
@@ -1848,6 +1848,20 @@ body {
 .wa-data-table[data-table-variant="enriched"] .wa-data-table__cell[data-column-key="number"],
 .wa-data-table[data-table-variant="enriched"] .wa-data-table__cell[data-column-key="work-email"],
 .wa-data-table[data-table-variant="enriched"] .wa-data-table__cell[data-column-key="mobile"] {
+  color: #0c6f66;
+}
+
+.wa-data-table[data-table-variant="enriched"] .wa-data-table__cell[data-column-key="email"] .wa-data-table__cell-text,
+.wa-data-table[data-table-variant="enriched"] .wa-data-table__cell[data-column-key="number"] .wa-data-table__cell-text,
+.wa-data-table[data-table-variant="enriched"] .wa-data-table__cell[data-column-key="work-email"] .wa-data-table__cell-text,
+.wa-data-table[data-table-variant="enriched"] .wa-data-table__cell[data-column-key="mobile"] .wa-data-table__cell-text {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  max-width: 100%;
+  min-height: 22px;
+  padding: 2px 6px;
+  border-radius: 5px;
   background: rgba(14, 156, 144, 0.12);
   color: #0c6f66;
 }

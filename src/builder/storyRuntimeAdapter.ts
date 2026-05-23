@@ -596,7 +596,9 @@ type BuilderTableShape = {
 
 function toDataTable(component: BuilderTableComponent, fallbackId: string): DataTableConfig {
   const shape = getBuilderTableShape(component.columns);
-  const rows = component.rows.map((row, rowIndex) => toDataTableRow(row, shape, rowIndex));
+  const rows = component.rows
+    .filter((row) => row.some((cell) => cell.trim()))
+    .map((row, rowIndex) => toDataTableRow(row, shape, rowIndex));
   const pageSize = Math.min(10, rows.length || 10);
   const pages = component.pagination?.ranges.map((range, pageIndex) => ({
     page: pageIndex + 1,
