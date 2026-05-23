@@ -3525,7 +3525,7 @@ class Ls {
         y: 0,
         scale: 1,
         transformOrigin: "right center"
-      }), o = this.createFileLandingClones(e, a), w.set(e, { autoAlpha: 0 }), l = this.getMessageScrollTarget(t);
+      }), l = this.getMessageScrollTarget(t), o = this.createFileLandingClones(e, a, l), w.set(e, { autoAlpha: 0 });
     }).to(
       this.thread,
       {
@@ -3559,61 +3559,61 @@ class Ls {
       this.renderFileLandingClones(o, 1), w.set(r, { autoAlpha: 1, y: 0, scale: 1 }), w.set(t, { opacity: 1, visibility: "visible" }), o.forEach((d) => d.el.remove()), e.remove(), this.animateMessageScrollIntoView(t);
     }));
   }
-  createFileLandingClones(e, t) {
-    const a = this.getCursorFileCards(e), i = this.chatBody;
-    return t.map((r, o) => {
-      const s = a[Math.min(o, a.length - 1)], l = s.getBoundingClientRect(), d = r.getBoundingClientRect(), c = this.getElementLocalRect(l, i), u = r.cloneNode(!0), p = this.getCursorFileCardRotation(o, a.length), m = window.getComputedStyle(s), g = window.getComputedStyle(r), h = this.parseCssColor(m.backgroundColor) ?? { r: 255, g: 255, b: 249, a: 0.96 }, f = this.parseCssColor(g.backgroundColor) ?? h, b = this.parseCssColor(m.borderTopColor) ?? { r: 23, g: 23, b: 20, a: 0.12 }, _ = this.parseCssColor(g.borderTopColor) ?? b, y = this.queryElements(u, ".wa-uploaded-file__body span");
-      return u.classList.add("wa-file-landing-clone"), u.dataset.fileLandingClone = "", i.append(u), w.set(u, {
+  createFileLandingClones(e, t, a) {
+    const i = this.getCursorFileCards(e), r = this.chatBody;
+    return t.map((o, s) => {
+      const l = i[Math.min(s, i.length - 1)], d = l.getBoundingClientRect(), c = o.getBoundingClientRect(), u = this.getElementLocalRect(d, r), p = this.getFinalFileLandingTargetRect(o, c, r, a), m = o.cloneNode(!0), g = this.getCursorFileCardRotation(s, i.length), h = window.getComputedStyle(l), f = window.getComputedStyle(o), b = this.parseCssColor(h.backgroundColor) ?? { r: 255, g: 255, b: 249, a: 0.96 }, _ = this.parseCssColor(f.backgroundColor) ?? b, y = this.parseCssColor(h.borderTopColor) ?? { r: 23, g: 23, b: 20, a: 0.12 }, v = this.parseCssColor(f.borderTopColor) ?? y, x = this.queryElements(m, ".wa-uploaded-file__body span");
+      return m.classList.add("wa-file-landing-clone"), m.dataset.fileLandingClone = "", r.append(m), w.set(m, {
         position: "absolute",
         zIndex: 21,
         top: 0,
         left: 0,
-        width: d.width,
-        height: d.height,
-        x: c.left,
-        y: c.top,
+        width: c.width,
+        height: c.height,
+        x: u.left,
+        y: u.top,
         scaleX: 1,
         scaleY: 1,
-        rotation: p,
+        rotation: g,
         transformOrigin: "left top",
         pointerEvents: "none",
         margin: 0,
         autoAlpha: 1,
         visibility: "visible",
-        backgroundColor: this.formatRgba(h),
-        borderColor: this.formatRgba(b),
-        borderStyle: m.borderTopStyle === "none" ? "solid" : m.borderTopStyle,
-        borderWidth: m.borderTopWidth || "1px",
+        backgroundColor: this.formatRgba(b),
+        borderColor: this.formatRgba(y),
+        borderStyle: h.borderTopStyle === "none" ? "solid" : h.borderTopStyle,
+        borderWidth: h.borderTopWidth || "1px",
         boxShadow: this.getFileLandingShadow(0)
-      }), w.set(y, { autoAlpha: 0, y: -3 }), {
-        el: u,
-        target: r,
-        startX: c.left,
-        startY: c.top,
-        startRotation: p,
-        startBackground: h,
-        endBackground: f,
-        startBorderColor: b,
-        endBorderColor: _,
-        detailEls: y,
-        setX: w.quickSetter(u, "x", "px"),
-        setY: w.quickSetter(u, "y", "px"),
-        setRotation: w.quickSetter(u, "rotation", "deg"),
-        setBackgroundColor: w.quickSetter(u, "backgroundColor"),
-        setBorderColor: w.quickSetter(u, "borderColor")
+      }), w.set(x, { autoAlpha: 0, y: -3 }), {
+        el: m,
+        startX: u.left,
+        startY: u.top,
+        endX: p.left,
+        endY: p.top,
+        startRotation: g,
+        startBackground: b,
+        endBackground: _,
+        startBorderColor: y,
+        endBorderColor: v,
+        detailEls: x,
+        setX: w.quickSetter(m, "x", "px"),
+        setY: w.quickSetter(m, "y", "px"),
+        setRotation: w.quickSetter(m, "rotation", "deg"),
+        setBackgroundColor: w.quickSetter(m, "backgroundColor"),
+        setBorderColor: w.quickSetter(m, "borderColor")
       };
     });
   }
   renderFileLandingClones(e, t) {
-    const a = this.chatBody.getBoundingClientRect();
-    for (const i of e) {
-      const r = i.target.getBoundingClientRect(), o = r.left - a.left, s = r.top - a.top, l = Sn(
+    for (const a of e) {
+      const i = Sn(
         (t - be.detailStart) / be.detailSpan
       );
-      if (i.setX(this.interpolate(i.startX, o, t)), i.setY(this.interpolate(i.startY, s, t)), i.setRotation(this.interpolate(i.startRotation, 0, t)), i.setBackgroundColor(this.interpolateRgba(i.startBackground, i.endBackground, t)), i.setBorderColor(this.interpolateRgba(i.startBorderColor, i.endBorderColor, t)), i.el.style.boxShadow = this.getFileLandingShadow(t), i.detailEls.length) {
-        const d = this.interpolate(-3, 0, l);
-        i.detailEls.forEach((c) => {
-          c.style.opacity = String(l), c.style.visibility = l > 0 ? "visible" : "hidden", c.style.transform = `translate3d(0, ${d}px, 0)`;
+      if (a.setX(this.interpolate(a.startX, a.endX, t)), a.setY(this.interpolate(a.startY, a.endY, t)), a.setRotation(this.interpolate(a.startRotation, 0, t)), a.setBackgroundColor(this.interpolateRgba(a.startBackground, a.endBackground, t)), a.setBorderColor(this.interpolateRgba(a.startBorderColor, a.endBorderColor, t)), a.el.style.boxShadow = this.getFileLandingShadow(t), a.detailEls.length) {
+        const r = this.interpolate(-3, 0, i);
+        a.detailEls.forEach((o) => {
+          o.style.opacity = String(i), o.style.visibility = i > 0 ? "visible" : "hidden", o.style.transform = `translate3d(0, ${r}px, 0)`;
         });
       }
     }
@@ -3631,6 +3631,13 @@ class Ls {
       left: e.left - a.left,
       top: e.top - a.top
     };
+  }
+  getFinalFileLandingTargetRect(e, t, a, i) {
+    const r = this.getElementLocalRect(t, a);
+    return this.thread.contains(e) ? {
+      left: r.left,
+      top: r.top + this.thread.scrollTop - i
+    } : r;
   }
   interpolate(e, t, a) {
     return e + (t - e) * a;

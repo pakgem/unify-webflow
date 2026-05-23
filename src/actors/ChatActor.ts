@@ -63,9 +63,10 @@ type RgbaColor = {
 };
 type FileLandingClone = {
   el: HTMLElement;
-  target: HTMLElement;
   startX: number;
   startY: number;
+  endX: number;
+  endY: number;
   startRotation: number;
   startBackground: RgbaColor;
   endBackground: RgbaColor;
@@ -2131,9 +2132,9 @@ export class ChatActor {
           scale: 1,
           transformOrigin: "right center",
         });
-        clones = this.createFileLandingClones(cursorFile, targets);
-        gsap.set(cursorFile, { autoAlpha: 0 });
         scrollTarget = this.getMessageScrollTarget(message);
+        clones = this.createFileLandingClones(cursorFile, targets, scrollTarget);
+        gsap.set(cursorFile, { autoAlpha: 0 });
       })
       .to(
         this.thread,
@@ -2177,7 +2178,11 @@ export class ChatActor {
       });
   }
 
-  private createFileLandingClones(cursorFile: HTMLElement, targets: HTMLElement[]): FileLandingClone[] {
+  private createFileLandingClones(
+    cursorFile: HTMLElement,
+    targets: HTMLElement[],
+    finalScrollTop: number,
+  ): FileLandingClone[] {
     const sourceCards = this.getCursorFileCards(cursorFile);
     const landingLayer = this.chatBody;
 
@@ -2186,6 +2191,7 @@ export class ChatActor {
       const sourceRect = sourceCard.getBoundingClientRect();
       const targetRect = target.getBoundingClientRect();
       const sourceLocalRect = this.getElementLocalRect(sourceRect, landingLayer);
+      const targetLocalRect = this.getFinalFileLandingTargetRect(target, targetRect, landingLayer, finalScrollTop);
       const clone = target.cloneNode(true) as HTMLElement;
       const startRotation = this.getCursorFileCardRotation(index, sourceCards.length);
       const sourceStyle = window.getComputedStyle(sourceCard);
@@ -2226,9 +2232,10 @@ export class ChatActor {
 
       return {
         el: clone,
-        target,
         startX: sourceLocalRect.left,
         startY: sourceLocalRect.top,
+        endX: targetLocalRect.left,
+        endY: targetLocalRect.top,
         startRotation,
         startBackground,
         endBackground,
@@ -2245,18 +2252,13 @@ export class ChatActor {
   }
 
   private renderFileLandingClones(clones: FileLandingClone[], progress: number): void {
-    const landingLayerRect = this.chatBody.getBoundingClientRect();
-
     for (const clone of clones) {
-      const targetRect = clone.target.getBoundingClientRect();
-      const targetLeft = targetRect.left - landingLayerRect.left;
-      const targetTop = targetRect.top - landingLayerRect.top;
       const detailProgress = clampUnit(
         (progress - FILE_DROP_LANDING.detailStart) / FILE_DROP_LANDING.detailSpan,
       );
 
-      clone.setX(this.interpolate(clone.startX, targetLeft, progress));
-      clone.setY(this.interpolate(clone.startY, targetTop, progress));
+      clone.setX(this.interpolate(clone.startX, clone.endX, progress));
+      clone.setY(this.interpolate(clone.startY, clone.endY, progress));
       clone.setRotation(this.interpolate(clone.startRotation, 0, progress));
       clone.setBackgroundColor(this.interpolateRgba(clone.startBackground, clone.endBackground, progress));
       clone.setBorderColor(this.interpolateRgba(clone.startBorderColor, clone.endBorderColor, progress));
@@ -2289,6 +2291,22 @@ export class ChatActor {
     return {
       left: rect.left - containerRect.left,
       top: rect.top - containerRect.top,
+    };
+  }
+
+  private getFinalFileLandingTargetRect(
+    target: HTMLElement,
+    targetRect: DOMRect,
+    container: HTMLElement,
+    finalScrollTop: number,
+  ): Pick<DOMRect, "left" | "top"> {
+    const localRect = this.getElementLocalRect(targetRect, container);
+
+    if (!this.thread.contains(target)) return localRect;
+
+    return {
+      left: localRect.left,
+      top: localRect.top + this.thread.scrollTop - finalScrollTop,
     };
   }
 
