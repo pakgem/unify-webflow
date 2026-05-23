@@ -15,9 +15,7 @@ import type {
   StrategyPlanConfig,
   ThinkingItemConfig,
   ThinkingStateConfig,
-  LoadingLogoMode,
 } from "../core/types";
-import type { LoadingLogoMoveOptions } from "../actors/LogoActor";
 
 type TimelinePosition = string | number;
 
@@ -152,8 +150,6 @@ export type StoryStep =
   | { kind: "sequenceEngagement"; config: SequenceEngagementConfig; at?: TimelinePosition }
   | { kind: "cursorMove"; target: ResponsiveTarget; options?: CursorMoveOptions; at?: TimelinePosition }
   | { kind: "cursorDrag"; target: ResponsiveTarget; options?: CursorMoveOptions; at?: TimelinePosition }
-  | { kind: "logoMove"; target: ResponsiveTarget; options?: LoadingLogoMoveOptions; at?: TimelinePosition }
-  | { kind: "logoMode"; mode: LoadingLogoMode; at?: TimelinePosition }
   | { kind: "custom"; build: (ctx: StoryContext) => gsap.core.Timeline; at?: TimelinePosition };
 
 export function exitStory(target: ResponsiveTarget = EXIT_TARGETS.right, at?: TimelinePosition): StoryStep {
@@ -286,12 +282,6 @@ function addStep(
       return;
     case "cursorDrag":
       tl.add(ctx.cursor.dragTo(step.target, step.options), step.at);
-      return;
-    case "logoMove":
-      tl.add(ctx.logo.moveTo(step.target, step.options), step.at);
-      return;
-    case "logoMode":
-      tl.add(ctx.logo.modeTo(step.mode), step.at);
       return;
     case "custom":
       tl.add(step.build(ctx), step.at);

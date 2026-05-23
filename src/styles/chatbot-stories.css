@@ -120,8 +120,6 @@ body {
   --wa-history-resume-height: 42px;
   --wa-cursor-default-width: 14px;
   --wa-cursor-default-height: 23px;
-  --wa-loading-logo-width: 26px;
-  --wa-loading-logo-height: 20px;
 
   /* Type tokens */
   --wa-title-size: clamp(38px, 3vw, 54px);
@@ -586,7 +584,14 @@ body {
   width: clamp(70px, 8.4vw, 96px);
   aspect-ratio: 18 / 11;
   margin-bottom: 4px;
+  color: var(--wa-orange);
   pointer-events: none;
+}
+
+.wa-signup-scene__logo svg {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .wa-signup-scene__title {
@@ -775,7 +780,7 @@ body {
 
 .wa-thinking {
   display: inline-grid;
-  grid-template-columns: 12px auto auto;
+  grid-template-columns: 18px auto auto;
   align-items: center;
   justify-content: start;
   gap: 8px;
@@ -793,17 +798,26 @@ body {
 .wa-thinking__glyph {
   position: relative;
   display: inline-block;
-  width: 11px;
+  width: 18px;
   height: 11px;
-  opacity: 0.82;
-  background-image: radial-gradient(circle at center, currentColor 1.1px, transparent 1.2px);
-  background-position: 0 0;
-  background-size: 4px 4px;
+  opacity: 1;
+  color: var(--wa-orange);
+  transform-origin: center;
 }
 
-.wa-chat-shell .wa-thinking__glyph {
-  opacity: 1;
-  background-image: none;
+.wa-thinking__logo-mark {
+  display: block;
+  width: 18px;
+  height: 11px;
+  overflow: visible;
+}
+
+.wa-thinking__glyph[data-logo-mode="thinking"] .wa-thinking__logo-mark {
+  animation: wa-thinking-logo-breathe 980ms ease-in-out infinite;
+}
+
+.wa-thinking__glyph[data-logo-mode="done"] {
+  opacity: 0.72;
 }
 
 .wa-thinking__title {
@@ -4799,106 +4813,7 @@ body {
 }
 
 /* --------------------------------------------------------------------------
-   8. Persistent Loading Logo
-   -------------------------------------------------------------------------- */
-
-.wa-loading-logo-viewport {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 19;
-  overflow: hidden;
-  pointer-events: none;
-  contain: layout paint style;
-  transform: translate3d(0, 0, 0);
-}
-
-.wa-loading-logo,
-.wa-loading-logo-shadow {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 19;
-  width: 1px;
-  height: 1px;
-  color: var(--wa-orange);
-  pointer-events: none;
-  transform: translate3d(0, 0, 0);
-  transform-origin: 0 0;
-  backface-visibility: hidden;
-  will-change: transform, opacity;
-}
-
-.wa-loading-logo__body,
-.wa-loading-logo-shadow__body {
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: inline-grid;
-  place-items: center;
-  width: var(--wa-loading-logo-width);
-  height: var(--wa-loading-logo-height);
-  transform: translate3d(-50%, -50%, 0);
-  transform-origin: center;
-  backface-visibility: hidden;
-}
-
-.wa-loading-logo__body::before,
-.wa-loading-logo-shadow__body::before {
-  content: "";
-  position: absolute;
-  pointer-events: none;
-}
-
-.wa-loading-logo__body::before {
-  inset: 0;
-  border-radius: 999px;
-  background: rgba(242, 59, 10, 0.1);
-  opacity: 0;
-  transform: scale(0.78);
-}
-
-.wa-loading-logo__mark {
-  position: relative;
-  z-index: 1;
-  display: block;
-  width: 18px;
-  height: 11px;
-  overflow: visible;
-}
-
-.wa-loading-logo[data-logo-mode="thinking"] .wa-loading-logo__body::before {
-  animation: wa-loading-logo-pulse 980ms ease-in-out infinite;
-}
-
-.wa-loading-logo[data-logo-mode="thinking"] .wa-loading-logo__mark {
-  animation: wa-loading-logo-breathe 980ms ease-in-out infinite;
-}
-
-.wa-loading-logo-shadow {
-  z-index: 18;
-  color: var(--wa-orange);
-  filter: saturate(0.82);
-}
-
-.wa-loading-logo-shadow__body {
-  opacity: 0.58;
-}
-
-.wa-loading-logo-shadow__body::before {
-  width: 10px;
-  height: 10px;
-  border: 1.5px solid currentColor;
-  border-radius: 999px;
-  background: rgba(242, 59, 10, 0.08);
-}
-
-.wa-loading-logo-shadow__body .wa-loading-logo__mark {
-  display: none;
-}
-
-/* --------------------------------------------------------------------------
-   9. Animated Cursor
+   8. Animated Cursor
    -------------------------------------------------------------------------- */
 
 .wa-cursor {
@@ -5053,20 +4968,7 @@ body {
   }
 }
 
-@keyframes wa-loading-logo-pulse {
-  0%,
-  100% {
-    opacity: 0;
-    transform: scale(0.78);
-  }
-
-  42% {
-    opacity: 1;
-    transform: scale(1.12);
-  }
-}
-
-@keyframes wa-loading-logo-breathe {
+@keyframes wa-thinking-logo-breathe {
   0%,
   100% {
     transform: scale(1);

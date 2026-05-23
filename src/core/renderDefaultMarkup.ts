@@ -1,3 +1,5 @@
+import { UNIFY_MARK_SVG } from "../assets/unifyMark";
+
 type RenderDefaultMarkupOptions = {
   showBuilder?: boolean;
 };
@@ -97,7 +99,7 @@ export function renderDefaultMarkup(root: HTMLElement, options: RenderDefaultMar
 
             <div class="wa-chat-shell__body">
               <div class="wa-signup-scene" data-signup-scene>
-                <span class="wa-signup-scene__logo" data-signup-logo-target aria-hidden="true"></span>
+                <span class="wa-signup-scene__logo" data-signup-logo-target aria-hidden="true">${UNIFY_MARK_SVG}</span>
                 <h3 class="wa-signup-scene__title">sign up</h3>
                 <div class="wa-signup-field" data-signup-field>
                   <span data-signup-email></span>

@@ -1,13 +1,11 @@
 import type { gsap } from "gsap";
 import type { CursorActor } from "../actors/CursorActor";
-import type { LogoActor } from "../actors/LogoActor";
 import type { ChatActor } from "../actors/ChatActor";
 import type { TargetResolver } from "./TargetResolver";
 
 export type CursorMode = "default" | "pointer" | "click" | "drag" | "release" | "text";
 export type CursorIntent = "entry" | "hover" | "click" | "drag" | "text" | "exit";
 export type CursorSpeed = "slow" | "normal" | "quick";
-export type LoadingLogoMode = "static" | "thinking" | "done";
 export type BreakpointName = "mobile" | "tablet" | "desktop" | "wide";
 export type AnchorName =
   | "center"
@@ -285,7 +283,6 @@ export type StoryContext = {
   story: StoryDefinition;
   resolver: TargetResolver;
   cursor: CursorActor;
-  logo: LogoActor;
   chat: ChatActor;
   timeline: () => gsap.core.Timeline;
 };
