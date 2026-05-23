@@ -993,10 +993,11 @@ body {
 }
 
 .wa-research-step__label-row {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 9px;
+  display: inline-flex;
   gap: var(--wa-thinking-column-gap);
   align-items: center;
+  justify-self: start;
+  max-width: 100%;
   min-width: 0;
 }
 
@@ -1109,7 +1110,7 @@ body {
 .wa-research-step__chevron {
   position: relative;
   z-index: 1;
-  justify-self: end;
+  flex: 0 0 8px;
   width: 8px;
   height: 14px;
   margin-top: 0;
