@@ -3938,9 +3938,7 @@ class Xs {
     const a = document.createElement("span");
     a.className = "wa-csv-drop__copy";
     const i = document.createElement("strong");
-    i.textContent = e.title ?? "Drop CSV to clean audience data";
-    const n = document.createElement("span");
-    return n.textContent = e.detail ?? "Accepts webinar exports, event lists, and messy attendee spreadsheets.", a.append(i, n), t.append(a), t;
+    return i.textContent = "Add files to chat", a.append(i), t.append(a), t;
   }
   revealCsvDropArea(e) {
     return m.timeline().to(

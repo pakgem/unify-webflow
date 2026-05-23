@@ -2873,7 +2873,7 @@ export class ChatActor {
     message.classList.remove("wa-message--first-active");
   }
 
-  private createCsvDropArea(options: DropAreaOptions = {}): HTMLElement {
+  private createCsvDropArea(_options: DropAreaOptions = {}): HTMLElement {
     const dropArea = document.createElement("article");
     dropArea.className = "wa-csv-drop";
     dropArea.dataset.csvDropArea = "";
@@ -2883,12 +2883,9 @@ export class ChatActor {
     copy.className = "wa-csv-drop__copy";
 
     const title = document.createElement("strong");
-    title.textContent = options.title ?? "Drop CSV to clean audience data";
+    title.textContent = "Add files to chat";
 
-    const detail = document.createElement("span");
-    detail.textContent = options.detail ?? "Accepts webinar exports, event lists, and messy attendee spreadsheets.";
-
-    copy.append(title, detail);
+    copy.append(title);
     dropArea.append(copy);
     return dropArea;
   }
