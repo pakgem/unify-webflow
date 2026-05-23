@@ -3256,7 +3256,7 @@ body {
   grid-template-rows: auto auto;
   grid-template-areas:
     "thumb title progress"
-    "thumb detail detail";
+    "thumb detail progress";
   align-items: center;
   gap: 5px 14px;
   padding: 0;
@@ -3348,6 +3348,7 @@ body {
 
 .wa-mailbox-learning__progress {
   grid-area: progress;
+  align-self: center;
   height: 4px;
   overflow: hidden;
   border-radius: 999px;
