@@ -2868,7 +2868,7 @@ export class ChatActor {
 
   private foldThinkingStep(item: HTMLElement): gsap.core.Timeline {
     const foldTargets = item.querySelectorAll<HTMLElement>(
-      ".wa-research-step__detail, .wa-sequence-thinking-progress, .wa-research-step__chevron",
+      ".wa-research-step__detail, .wa-sequence-thinking-progress",
     );
 
     return gsap

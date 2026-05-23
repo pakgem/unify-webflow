@@ -1102,8 +1102,7 @@ body {
   gap: 0;
 }
 
-.wa-research-step[data-step-state="complete"] .wa-research-step__detail,
-.wa-research-step[data-step-state="complete"] .wa-research-step__chevron {
+.wa-research-step[data-step-state="complete"] .wa-research-step__detail {
   display: none;
 }
 
@@ -1126,6 +1125,14 @@ body {
   border-top: 1px solid #aaa59d;
   border-right: 1px solid #aaa59d;
   transform: rotate(45deg);
+  transition:
+    top 160ms ease,
+    transform 160ms ease;
+}
+
+.wa-research-step[data-step-state="complete"] .wa-research-step__chevron::before {
+  top: 2px;
+  transform: rotate(135deg);
 }
 
 .wa-result-grid {
