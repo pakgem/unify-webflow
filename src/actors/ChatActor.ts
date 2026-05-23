@@ -79,6 +79,16 @@ type FileLandingClone = {
   setBackgroundColor: (value: string) => void;
   setBorderColor: (value: string) => void;
 };
+type FileLandingLabel = {
+  el: HTMLElement;
+  startX: number;
+  startY: number;
+  endX: number;
+  endY: number;
+  setX: (value: number) => void;
+  setY: (value: number) => void;
+  setOpacity: (value: number) => void;
+};
 type ComposerFrame = {
   left: number;
   bottom: number;
@@ -383,7 +393,7 @@ const MARKETING_DATA_GRID_ARTBOARD = {
 };
 
 const STREAM_SCROLL_INTERVAL_MS = 96;
-const TRANSIENT_ELEMENT_SELECTOR = ".wa-cursor-file, .wa-file-landing-clone, .wa-csv-drop";
+const TRANSIENT_ELEMENT_SELECTOR = ".wa-cursor-file, .wa-file-landing-clone, .wa-file-landing-label, .wa-csv-drop";
 const MARKETING_PANEL_SELECTOR = "[data-marketing-data-sources-grid]";
 const DATA_TABLE_SELECTOR = "[data-data-table]";
 const DATA_TABLE_ACTION_SELECTOR = "[data-table-action]";
@@ -2060,7 +2070,9 @@ export class ChatActor {
     const targets = this.queryElements(content, ".wa-uploaded-file");
     const extras = this.queryElements(content, ".wa-uploaded-files__summary");
 
-    return this.revealDroppedFilesMessage(cursorFile, message, targets, extras);
+    return this.revealDroppedFilesMessage(cursorFile, message, targets, extras, {
+      landingLabel: `You uploaded ${files.length} files`,
+    });
   }
 
   pulse(target: HTMLElement | string): gsap.core.Timeline {
@@ -2087,9 +2099,11 @@ export class ChatActor {
     message: HTMLElement,
     targets: HTMLElement[],
     extras: HTMLElement[] = [],
+    options: { landingLabel?: string } = {},
   ): gsap.core.Timeline {
     const revealTargets = [...targets, ...extras];
     let clones: FileLandingClone[] = [];
+    let label: FileLandingLabel | null = null;
     const progress = { value: 0 };
     let scrollTarget = 0;
 
@@ -2121,6 +2135,7 @@ export class ChatActor {
         });
         scrollTarget = this.getMessageScrollTarget(message);
         clones = this.createFileLandingClones(cursorFile, targets, scrollTarget);
+        label = this.createFileLandingLabel(options.landingLabel, clones);
         gsap.set(cursorFile, { autoAlpha: 0 });
       })
       .to(
@@ -2139,7 +2154,10 @@ export class ChatActor {
           value: 1,
           duration: FILE_DROP_LANDING.duration,
           ease: FILE_DROP_LANDING.ease,
-          onUpdate: () => this.renderFileLandingClones(clones, progress.value),
+          onUpdate: () => {
+            this.renderFileLandingClones(clones, progress.value);
+            this.renderFileLandingLabel(label, progress.value);
+          },
         },
         0,
       )
@@ -2157,9 +2175,11 @@ export class ChatActor {
       )
       .call(() => {
         this.renderFileLandingClones(clones, 1);
+        this.renderFileLandingLabel(label, 1);
         gsap.set(revealTargets, { autoAlpha: 1, y: 0, scale: 1 });
         gsap.set(message, { opacity: 1, visibility: "visible" });
         clones.forEach((clone) => clone.el.remove());
+        label?.el.remove();
         cursorFile.remove();
         this.animateMessageScrollIntoView(message);
       });
@@ -2263,6 +2283,77 @@ export class ChatActor {
     }
   }
 
+  private createFileLandingLabel(labelText: string | undefined, clones: FileLandingClone[]): FileLandingLabel | null {
+    if (!labelText || !clones.length) return null;
+
+    const label = document.createElement("div");
+    label.className = "wa-file-landing-label";
+    label.textContent = labelText;
+    this.chatBody.append(label);
+
+    gsap.set(label, {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      zIndex: 22,
+      pointerEvents: "none",
+      opacity: 0,
+      visibility: "visible",
+      x: 0,
+      y: 0,
+    });
+
+    const labelWidth = label.offsetWidth;
+    const labelHeight = label.offsetHeight;
+    const gap = 9;
+    const startBounds = this.getFileLandingCloneBounds(clones, "start");
+    const endBounds = this.getFileLandingCloneBounds(clones, "end");
+    const startX = startBounds.left + startBounds.width / 2 - labelWidth / 2;
+    const endX = endBounds.left + endBounds.width / 2 - labelWidth / 2;
+
+    return {
+      el: label,
+      startX,
+      startY: startBounds.top - labelHeight - gap,
+      endX,
+      endY: endBounds.top - labelHeight - gap,
+      setX: gsap.quickSetter(label, "x", "px") as (value: number) => void,
+      setY: gsap.quickSetter(label, "y", "px") as (value: number) => void,
+      setOpacity: gsap.quickSetter(label, "opacity") as (value: number) => void,
+    };
+  }
+
+  private renderFileLandingLabel(label: FileLandingLabel | null, progress: number): void {
+    if (!label) return;
+
+    const fadeIn = clampUnit(progress / 0.16);
+    const fadeOut = clampUnit((1 - progress) / 0.16);
+    label.setX(this.interpolate(label.startX, label.endX, progress));
+    label.setY(this.interpolate(label.startY, label.endY, progress));
+    label.setOpacity(Math.min(fadeIn, fadeOut));
+  }
+
+  private getFileLandingCloneBounds(
+    clones: FileLandingClone[],
+    phase: "start" | "end",
+  ): { left: number; top: number; width: number; height: number } {
+    const lefts = clones.map((clone) => (phase === "start" ? clone.startX : clone.endX));
+    const tops = clones.map((clone) => (phase === "start" ? clone.startY : clone.endY));
+    const rights = clones.map((clone, index) => lefts[index] + clone.el.offsetWidth);
+    const bottoms = clones.map((clone, index) => tops[index] + clone.el.offsetHeight);
+    const left = Math.min(...lefts);
+    const top = Math.min(...tops);
+    const right = Math.max(...rights);
+    const bottom = Math.max(...bottoms);
+
+    return {
+      left,
+      top,
+      width: right - left,
+      height: bottom - top,
+    };
+  }
+
   private getCursorFileCards(cursorFile: HTMLElement): HTMLElement[] {
     const cards = Array.from(cursorFile.querySelectorAll<HTMLElement>(".wa-cursor-file__card"));
     return cards.length ? cards : [cursorFile];
@@ -2302,6 +2393,9 @@ export class ChatActor {
   }
 
   private parseCssColor(value: string): RgbaColor | null {
+    const oklchColor = this.parseOklchColor(value);
+    if (oklchColor) return oklchColor;
+
     const matches = value.match(/[\d.]+/g);
 
     if (!matches || matches.length < 3) return null;
@@ -2312,6 +2406,52 @@ export class ChatActor {
       b: Number(matches[2]),
       a: matches[3] === undefined ? 1 : Number(matches[3]),
     };
+  }
+
+  private parseOklchColor(value: string): RgbaColor | null {
+    const match = value.match(/oklch\((.*)\)/i);
+    if (!match) return null;
+
+    const [main, alphaPart] = match[1].split("/");
+    const parts = main.trim().split(/\s+/);
+    if (parts.length < 3) return null;
+
+    const lightness = this.parseCssColorComponent(parts[0], 1);
+    const chroma = Number(parts[1]);
+    const hue = Number.parseFloat(parts[2]);
+    const alpha = alphaPart ? this.parseCssColorComponent(alphaPart.trim(), 1) : 1;
+    if (![lightness, chroma, hue, alpha].every(Number.isFinite)) return null;
+
+    const hueRadians = (hue * Math.PI) / 180;
+    const labA = chroma * Math.cos(hueRadians);
+    const labB = chroma * Math.sin(hueRadians);
+    const lPrime = lightness + 0.3963377774 * labA + 0.2158037573 * labB;
+    const mPrime = lightness - 0.1055613458 * labA - 0.0638541728 * labB;
+    const sPrime = lightness - 0.0894841775 * labA - 1.291485548 * labB;
+    const l = lPrime ** 3;
+    const m = mPrime ** 3;
+    const s = sPrime ** 3;
+    const linearR = 4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s;
+    const linearG = -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s;
+    const linearB = -0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s;
+
+    return {
+      r: this.oklchLinearToSrgb(linearR) * 255,
+      g: this.oklchLinearToSrgb(linearG) * 255,
+      b: this.oklchLinearToSrgb(linearB) * 255,
+      a: clampUnit(alpha),
+    };
+  }
+
+  private parseCssColorComponent(value: string, percentScale: number): number {
+    return value.endsWith("%") ? Number.parseFloat(value) / 100 * percentScale : Number(value);
+  }
+
+  private oklchLinearToSrgb(value: number): number {
+    const clamped = Math.min(1, Math.max(0, value));
+    const srgb = clamped <= 0.0031308 ? 12.92 * clamped : 1.055 * clamped ** (1 / 2.4) - 0.055;
+
+    return Math.min(1, Math.max(0, srgb));
   }
 
   private interpolateRgba(from: RgbaColor, to: RgbaColor, progress: number): string {
