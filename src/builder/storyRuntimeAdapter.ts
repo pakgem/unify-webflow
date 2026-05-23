@@ -551,14 +551,14 @@ function getBuilderTableShape(labels: string[]): BuilderTableShape {
       return {
         key: "name",
         label: "Prospect",
-        width: "minmax(0,0.95fr)",
+        width: "minmax(220px,0.95fr)",
       };
     }
 
     if (foldsRoleIntoName && /^via\s+connector\b/i.test(label.trim())) {
       return {
         key: "mutualConnection",
-        label: "Mutual connection",
+        label: "Best connection",
         width: "minmax(0,1.3fr)",
       };
     }
@@ -602,15 +602,25 @@ function toDataTableRow(
 
   if (shape.mutualConnectionKey) {
     const parsed = parseMutualConnection(values[shape.mutualConnectionKey] ?? "");
+    const additionalConnections = getAdditionalConnectionsBadge(rowIndex);
+
     values[shape.mutualConnectionKey] = parsed.name;
     values.mutualConnectionDetail = parsed.title;
     values.mutualConnectionContext = parsed.context;
+    if (parsed.name && additionalConnections) values.mutualConnectionBadge = additionalConnections;
   }
 
   return {
     id: `${slugId(row[0] || "row")}-${rowIndex + 1}`,
     values,
   };
+}
+
+function getAdditionalConnectionsBadge(rowIndex: number): string | null {
+  const counts = [2, 3, 7, null, 1, 12, 4, 5, null, 8, 6, 10] as const;
+  const count = counts[rowIndex % counts.length];
+
+  return count === null ? null : `+${count} more`;
 }
 
 function parseMutualConnection(value: string): { name: string; title: string; context: string } {

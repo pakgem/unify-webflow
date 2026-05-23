@@ -1812,10 +1812,37 @@ body {
   overflow: hidden;
 }
 
+.wa-data-table[data-table-variant="connections"] .wa-data-table__cell[data-column-key="mutualConnection"]:not(:empty) {
+  align-items: center;
+  gap: 8px;
+}
+
+.wa-data-table[data-table-variant="connections"] .wa-data-table__cell[data-column-key="mutualConnection"] .wa-data-table-person {
+  flex: 1 1 auto;
+  width: auto;
+}
+
 .wa-data-table[data-table-variant="connections"] .wa-data-table-person__name,
 .wa-data-table[data-table-variant="connections"] .wa-data-table-person__detail {
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.wa-data-table-cell-badge {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  min-height: 20px;
+  padding: 0 8px;
+  border: 1px solid rgba(23, 23, 20, 0.08);
+  border-radius: 999px;
+  color: #706c66;
+  background: #f0eee8;
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 430;
+  white-space: nowrap;
 }
 
 .wa-data-table__cell[data-empty="true"] {
@@ -5715,6 +5742,16 @@ body {
   .wa-data-table-person__detail {
     font-size: 7.5px;
     line-height: 1.04;
+  }
+
+  .wa-data-table[data-table-variant="connections"] .wa-data-table__cell[data-column-key="mutualConnection"]:not(:empty) {
+    gap: 4px;
+  }
+
+  .wa-data-table-cell-badge {
+    min-height: 14px;
+    padding: 0 5px;
+    font-size: 7px;
   }
 
   .wa-mailbox-connection__card {

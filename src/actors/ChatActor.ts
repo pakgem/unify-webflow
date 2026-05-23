@@ -3399,6 +3399,7 @@ export class ChatActor {
           avatarKey: "mutualConnectionAvatar",
           sourceKey: "mutualConnectionSource",
         }));
+        if (values.mutualConnectionBadge) cell.append(this.createDataTableCellBadge(values.mutualConnectionBadge));
       } else {
         const value = values[column.key] ?? "";
         const text = document.createElement("span");
@@ -3422,6 +3423,14 @@ export class ChatActor {
     }
 
     return row;
+  }
+
+  private createDataTableCellBadge(label: string): HTMLElement {
+    const badge = document.createElement("span");
+
+    badge.className = "wa-data-table-cell-badge";
+    badge.textContent = label;
+    return badge;
   }
 
   private getDataTablePages(config: DataTableConfig): Array<{ page: number; range: string; rows: DataTableConfig["rows"] }> {
