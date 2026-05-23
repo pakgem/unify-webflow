@@ -3589,8 +3589,11 @@ class js {
   uploadedFilesMessageFromCursorFile(e, t) {
     const a = this.createUploadedFiles(t), i = this.claimUserComponentMessage("file", a), n = this.queryElements(a, ".wa-uploaded-file"), o = this.queryElements(a, ".wa-uploaded-files__summary");
     return this.revealDroppedFilesMessage(e, i, n, o, {
-      landingLabel: `You uploaded ${t.length} files`
+      landingLabel: this.getUploadedFilesLandingLabel(t.length)
     });
+  }
+  getUploadedFilesLandingLabel(e) {
+    return e === 4 ? "You uploaded four files" : `You uploaded ${e} files`;
   }
   pulse(e) {
     const t = typeof e == "string" ? this.root.querySelector(e) : e, a = m.timeline();

@@ -2266,8 +2266,14 @@ export class ChatActor {
     const extras = this.queryElements(content, ".wa-uploaded-files__summary");
 
     return this.revealDroppedFilesMessage(cursorFile, message, targets, extras, {
-      landingLabel: `You uploaded ${files.length} files`,
+      landingLabel: this.getUploadedFilesLandingLabel(files.length),
     });
+  }
+
+  private getUploadedFilesLandingLabel(fileCount: number): string {
+    if (fileCount === 4) return "You uploaded four files";
+
+    return `You uploaded ${fileCount} files`;
   }
 
   pulse(target: HTMLElement | string): gsap.core.Timeline {
