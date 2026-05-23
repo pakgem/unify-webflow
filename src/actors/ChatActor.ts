@@ -2813,6 +2813,7 @@ export class ChatActor {
     gsap.set(thinking.header, { autoAlpha: 0, y: 5 });
     gsap.set(thinking.traveler, { autoAlpha: 0, x: 0, y: 0 });
     gsap.set(thinking.steps, { display: "grid", autoAlpha: 1, y: 0 });
+    this.resetThinkingGuide(thinking);
     gsap.set(items, { autoAlpha: 0, y: itemStartY, display: "none" });
   }
 
@@ -2912,10 +2913,64 @@ export class ChatActor {
     });
   }
 
+  private getThinkingGuideStart(thinking: ClaimedThinkingMessage): number {
+    const value = getComputedStyle(thinking.steps).getPropertyValue("--wa-thinking-guide-top");
+    const start = Number.parseFloat(value);
+
+    return Number.isFinite(start) ? start : 0;
+  }
+
+  private resetThinkingGuide(thinking: ClaimedThinkingMessage): void {
+    thinking.steps.style.setProperty("--wa-thinking-guide-end", `${this.getThinkingGuideStart(thinking)}px`);
+  }
+
+  private getThinkingGuideTargetPosition(
+    thinking: ClaimedThinkingMessage,
+    target: HTMLElement,
+    transformReference?: HTMLElement,
+  ): number {
+    const stepsRect = thinking.steps.getBoundingClientRect();
+    const targetRect = target.getBoundingClientRect();
+    const referenceY = transformReference ? Number(gsap.getProperty(transformReference, "y")) || 0 : 0;
+    const targetCenter = targetRect.top - stepsRect.top + targetRect.height / 2 - referenceY;
+
+    return Math.max(this.getThinkingGuideStart(thinking), targetCenter);
+  }
+
+  private moveThinkingGuideTo(
+    thinking: ClaimedThinkingMessage,
+    target: HTMLElement,
+    duration = THINKING_LOGO_TRAVEL.duration,
+    transformReference?: HTMLElement,
+  ): gsap.core.Timeline {
+    return gsap.timeline().to(thinking.steps, {
+      "--wa-thinking-guide-end": () => `${this.getThinkingGuideTargetPosition(thinking, target, transformReference)}px`,
+      duration,
+      ease: THINKING_LOGO_TRAVEL.ease,
+      overwrite: "auto",
+    } as gsap.TweenVars);
+  }
+
+  private moveThinkingGuideToStart(
+    thinking: ClaimedThinkingMessage,
+    duration = THINKING_LOGO_TRAVEL.returnDuration,
+  ): gsap.core.Timeline {
+    return gsap.timeline().to(thinking.steps, {
+      "--wa-thinking-guide-end": () => `${this.getThinkingGuideStart(thinking)}px`,
+      duration,
+      ease: THINKING_LOGO_TRAVEL.ease,
+      overwrite: "auto",
+    } as gsap.TweenVars);
+  }
+
   private moveThinkingLogoToStep(thinking: ClaimedThinkingMessage, item: HTMLElement | undefined): gsap.core.Timeline {
     const target = item?.querySelector<HTMLElement>(".wa-research-step__marker");
 
-    return target ? this.moveThinkingLogoTo(thinking, target, THINKING_LOGO_TRAVEL.duration, item) : gsap.timeline();
+    if (!target) return gsap.timeline();
+
+    return gsap.timeline()
+      .add(this.moveThinkingLogoTo(thinking, target, THINKING_LOGO_TRAVEL.duration, item), 0)
+      .add(this.moveThinkingGuideTo(thinking, target, THINKING_LOGO_TRAVEL.duration, item), 0);
   }
 
   private collapseThinkingToHeader(thinking: ClaimedThinkingMessage, items: HTMLElement[]): gsap.core.Timeline {
@@ -2929,6 +2984,7 @@ export class ChatActor {
         });
       })
       .add(this.moveThinkingLogoTo(thinking, thinking.headerGlyph, THINKING_LOGO_TRAVEL.returnDuration), 0)
+      .add(this.moveThinkingGuideToStart(thinking, THINKING_LOGO_TRAVEL.returnDuration), 0)
       .to(thinking.steps, {
         autoAlpha: 0,
         y: THINKING_BLOCK_COLLAPSE.y,

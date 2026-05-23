@@ -896,6 +896,7 @@ body {
 }
 
 .wa-research-steps {
+  --wa-thinking-guide-end: var(--wa-thinking-guide-top);
   position: relative;
   display: grid;
   align-content: start;
@@ -909,9 +910,9 @@ body {
   content: "";
   position: absolute;
   top: var(--wa-thinking-guide-top);
-  bottom: 9px;
   left: calc(var(--wa-thinking-icon-column) / 2);
   width: 1px;
+  height: max(0px, calc(var(--wa-thinking-guide-end) - var(--wa-thinking-guide-top)));
   background: #e4ded6;
 }
 
