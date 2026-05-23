@@ -398,6 +398,23 @@ const CHAT_SCROLL_MOTION = {
   followEase: "power2.out",
 };
 
+/* ─────────────────────────────────────────────────────────
+ * STORY SWITCH EXIT
+ *
+ *    0ms   live chat continues scrolling toward the bottom
+ *   40ms   visible story content drifts upward and fades
+ *  420ms   next story is allowed to reset and build
+ * ───────────────────────────────────────────────────────── */
+const STORY_SWITCH_EXIT_MOTION = {
+  scrollDistance: 160,
+  offsetY: 78,
+  scrollDuration: motionDuration(0.36),
+  contentDuration: motionDuration(0.42),
+  contentDelay: 0.04,
+  contentEase: "power3.in",
+  stagger: 0.015,
+};
+
 const MARKETING_PAGE_MOTION = {
   threadY: -176,
   threadOpacity: 0,
@@ -685,6 +702,50 @@ export class ChatActor {
     gsap.set(this.composer, this.getComposerHiddenVars());
     gsap.set(this.composerContents, this.getComposerContentsHiddenVars());
     gsap.set(this.composerText, { autoAlpha: 1, y: 0 });
+  }
+
+  animateStorySwitchExit(): gsap.core.Timeline {
+    const targets = this.getStorySwitchExitTargets();
+    const tl = gsap.timeline();
+
+    this.stopScrollMotion();
+
+    if (!targets.length) {
+      return tl.to({}, { duration: 0.001 });
+    }
+
+    const maxScroll = this.getThreadBottomScrollTarget();
+    const scrollTarget = Math.min(maxScroll, this.thread.scrollTop + STORY_SWITCH_EXIT_MOTION.scrollDistance);
+
+    gsap.killTweensOf(targets);
+
+    if (scrollTarget > this.thread.scrollTop + 0.5) {
+      tl.to(
+        this.thread,
+        {
+          scrollTop: scrollTarget,
+          duration: STORY_SWITCH_EXIT_MOTION.scrollDuration,
+          ease: "power2.inOut",
+          overwrite: "auto",
+        },
+        0,
+      );
+    }
+
+    tl.to(
+      targets,
+      {
+        y: `-=${STORY_SWITCH_EXIT_MOTION.offsetY}`,
+        autoAlpha: 0,
+        duration: STORY_SWITCH_EXIT_MOTION.contentDuration,
+        ease: STORY_SWITCH_EXIT_MOTION.contentEase,
+        stagger: STORY_SWITCH_EXIT_MOTION.stagger,
+        overwrite: "auto",
+      },
+      STORY_SWITCH_EXIT_MOTION.contentDelay,
+    );
+
+    return tl;
   }
 
   setStatus(text: string): gsap.core.Timeline {
@@ -5498,6 +5559,27 @@ export class ChatActor {
 
   private clearMarketingPanels(): void {
     this.removeElements(MARKETING_PANEL_SELECTOR);
+  }
+
+  private getStorySwitchExitTargets(): HTMLElement[] {
+    return this.compactElements(
+      this.isVisibleForStorySwitchExit(this.thread) ? this.thread : null,
+      this.composerVisible && this.isVisibleForStorySwitchExit(this.composer) ? this.composer : null,
+      this.isVisibleForStorySwitchExit(this.signupScene) ? this.signupScene : null,
+      ...this.queryElements(this.chatBody, MARKETING_PANEL_SELECTOR).filter((panel) =>
+        this.isVisibleForStorySwitchExit(panel)
+      ),
+    );
+  }
+
+  private isVisibleForStorySwitchExit(el: HTMLElement): boolean {
+    const style = window.getComputedStyle(el);
+
+    if (style.display === "none" || style.visibility === "hidden") return false;
+    if ((Number.parseFloat(style.opacity) || 0) <= 0.01) return false;
+
+    const rect = el.getBoundingClientRect();
+    return rect.width > 0 && rect.height > 0;
   }
 
   private registerTransientElement(el: HTMLElement, cleanup?: () => void): void {

@@ -33,6 +33,7 @@ export class StoryController implements ChatbotStoriesInstance {
   private autoAdvance: gsap.core.Tween | null = null;
   private seekTween: gsap.core.Tween | null = null;
   private resumeRestoreTimeline: gsap.core.Timeline | null = null;
+  private storySwitchTimeline: gsap.core.Timeline | null = null;
   private resizeObserver: ResizeObserver | null = null;
   private resizeTimer = 0;
   private observedWidth = 0;
@@ -200,10 +201,36 @@ export class StoryController implements ChatbotStoriesInstance {
 
     if (nextIndex < 0 || !this.stories[nextIndex]) return;
 
+    this.transitionToStory(nextIndex);
+  }
+
+  private transitionToStory(nextIndex: number): void {
     const startPoint = this.cursor.getPosition();
+    const shouldAnimateCurrentStoryOut = Boolean(this.activeTimeline);
+
     this.storyProgress[nextIndex] = 0;
+    this.storySwitchTimeline?.kill();
+    this.storySwitchTimeline = null;
     this.stopTimeline();
     this.setHistoryPaused(false);
+
+    if (!shouldAnimateCurrentStoryOut) {
+      this.activateStory(nextIndex, startPoint);
+      return;
+    }
+
+    this.playing = false;
+    this.updatePlayButton();
+    this.storySwitchTimeline = gsap.timeline({
+      onComplete: () => {
+        this.storySwitchTimeline = null;
+        this.activateStory(nextIndex, startPoint);
+      },
+    });
+    this.storySwitchTimeline.add(this.chat.animateStorySwitchExit());
+  }
+
+  private activateStory(nextIndex: number, startPoint: ReturnType<CursorActor["getPosition"]>): void {
     this.activeIndex = nextIndex;
     this.activeTimeline = this.buildTimeline(this.activeIndex, startPoint);
     this.activeTimeline.progress(0);
@@ -220,6 +247,8 @@ export class StoryController implements ChatbotStoriesInstance {
   }
 
   destroy(): void {
+    this.storySwitchTimeline?.kill();
+    this.storySwitchTimeline = null;
     this.stopTimeline();
     this.pausedCursorMimic?.destroy();
     this.resizeObserver?.disconnect();
