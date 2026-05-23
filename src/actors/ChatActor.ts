@@ -175,6 +175,11 @@ type ChildRevealPreset = {
 };
 type WaterfallStepState = "complete" | "failed" | "pending";
 type WaterfallRuntimeState = WaterfallStepState | "loading";
+type WaterfallServiceConfig = {
+  label: string;
+  service: string;
+  state: WaterfallStepState;
+};
 export type DataTablePageRestore = {
   tableId: string;
   currentPage: number;
@@ -474,12 +479,12 @@ const FILE_DROP_LANDING = {
   shadowAlpha: 0.18,
 };
 const ENRICHMENT_WATERFALL_MOTION = {
-  rowStartHold: motionDuration(0.16),
-  rowGapHold: motionDuration(0.18),
-  serviceRevealDuration: motionDuration(0.18),
-  serviceLoadDuration: motionDuration(0.62),
+  rowStartHold: motionDuration(0.18),
+  rowGapHold: motionDuration(0.22),
+  serviceRevealDuration: motionDuration(0.2),
+  serviceLoadDuration: motionDuration(0.7),
   serviceSettleDuration: motionDuration(0.18),
-  rowCompleteHold: motionDuration(0.18),
+  rowCompleteHold: motionDuration(0.2),
 };
 
 const COMPONENT_CHILD_REVEAL = {
@@ -1411,15 +1416,15 @@ export class ChatActor {
     const message = this.claimComponentMessage("enrichment", panel);
     const rows = this.queryElements(panel, ".wa-waterfall-row");
     const chips = this.queryElements(panel, ".wa-waterfall-chip");
+    const serviceSteps = this.queryElements(panel, ".wa-waterfall-service-step");
     const tl = this.revealPreparedItems(message, rows, COMPONENT_CHILD_REVEAL.waterfallRow);
-    const elapsed = panel.querySelector<HTMLElement>(".wa-thinking__elapsed");
     const glyph = panel.querySelector<HTMLElement>(".wa-thinking__glyph");
 
-    gsap.set(chips, { autoAlpha: 0, y: 3, scale: 0.98 });
+    gsap.set(serviceSteps, { autoAlpha: 0, y: 3, scale: 0.98 });
+    gsap.set(chips, { scale: 1 });
     tl.call(() => this.setLocalLogoMode(glyph, "thinking"), undefined, 0);
     tl.add(this.animateEnrichmentWaterfall(rows), `+=${ENRICHMENT_WATERFALL_MOTION.rowStartHold}`);
     tl.call(() => this.setLocalLogoMode(glyph, "done"));
-    if (elapsed) this.addThinkingElapsedTimer(tl, elapsed, elapsed.dataset.elapsedTarget ?? "4m 20s");
     return tl;
   }
 
@@ -4392,35 +4397,35 @@ export class ChatActor {
 
     const title = document.createElement("span");
     title.className = "wa-thinking__title";
-    title.textContent = "Enriching";
+    title.textContent = "Enriching contacts";
 
-    const elapsed = document.createElement("span");
-    elapsed.className = "wa-thinking__elapsed";
-    elapsed.dataset.elapsedTarget = "4m 20s";
-    elapsed.textContent = "0s";
-
-    header.append(icon, title, elapsed);
+    header.append(icon, title);
 
     const rows = document.createElement("div");
     rows.className = "wa-waterfall-rows";
     rows.append(
       this.createWaterfallRow("Work email", "complete", [
-        { label: "Apollo", state: "failed" },
-        { label: "ZoomInfo", state: "failed" },
-        { label: "FullEnrich", state: "complete" },
+        { label: "On Prem", service: "on-prem", state: "complete" },
+        { label: "Wiza", service: "wiza", state: "pending" },
+        { label: "ContactOut", service: "contactout", state: "pending" },
+        { label: "Prospeo", service: "prospeo", state: "pending" },
+        { label: "Waterfall", service: "waterfall", state: "pending" },
+        { label: "FullEnrich", service: "fullenrich", state: "pending" },
       ]),
-      this.createWaterfallRow("Mobile number", "complete", [
-        { label: "Apollo", state: "failed" },
-        { label: "FullEnrich", state: "complete" },
+      this.createWaterfallRow("Phone number", "complete", [
+        { label: "On Prem", service: "on-prem", state: "failed" },
+        { label: "ContactOut", service: "contactout", state: "failed" },
+        { label: "Forager", service: "forager", state: "complete" },
+        { label: "Wiza", service: "wiza", state: "pending" },
+        { label: "Prospeo", service: "prospeo", state: "pending" },
+        { label: "FullEnrich", service: "fullenrich", state: "pending" },
       ]),
-      this.createWaterfallRow("LinkedIn", "complete", [
-        { label: "Apollo", state: "complete" },
-        { label: "ZoomInfo", state: "pending" },
-      ]),
-      this.createWaterfallRow("Title", "complete", [
-        { label: "Apollo", state: "failed" },
-        { label: "ZoomInfo", state: "complete" },
-        { label: "FullEnrich", state: "pending" },
+      this.createWaterfallRow("Social profile", "complete", [
+        { label: "On Prem", service: "on-prem", state: "failed" },
+        { label: "ContactOut", service: "contactout", state: "complete" },
+        { label: "Prospeo", service: "prospeo", state: "pending" },
+        { label: "Wiza", service: "wiza", state: "pending" },
+        { label: "Forager", service: "forager", state: "pending" },
       ]),
     );
 
@@ -4431,7 +4436,7 @@ export class ChatActor {
   private createWaterfallRow(
     labelText: string,
     state: WaterfallStepState,
-    chips: Array<{ label: string; state: WaterfallStepState }>,
+    chips: WaterfallServiceConfig[],
   ): HTMLElement {
     const row = document.createElement("div");
     row.className = "wa-waterfall-row";
@@ -4448,19 +4453,88 @@ export class ChatActor {
 
     const chipList = document.createElement("span");
     chipList.className = "wa-waterfall-row__chips";
-    chipList.append(
-      ...chips.map((chip) => {
-        const item = document.createElement("span");
-        item.className = "wa-waterfall-chip";
-        item.dataset.stepState = "pending";
-        item.dataset.finalStepState = chip.state;
-        item.textContent = chip.label;
-        return item;
-      }),
-    );
+    chips.forEach((chip, index) => {
+      const step = document.createElement("span");
+      const item = this.createWaterfallServiceBadge(chip);
+
+      step.className = "wa-waterfall-service-step";
+      step.append(item);
+
+      if (index < chips.length - 1) {
+        const arrow = document.createElement("span");
+        arrow.className = "wa-waterfall-arrow";
+        arrow.textContent = "→";
+        arrow.setAttribute("aria-hidden", "true");
+        step.append(arrow);
+      }
+
+      chipList.append(step);
+    });
 
     row.append(status, label, chipList);
     return row;
+  }
+
+  private createWaterfallServiceBadge(config: WaterfallServiceConfig): HTMLElement {
+    const item = document.createElement("span");
+    const icon = document.createElement("span");
+    const label = document.createElement("span");
+
+    item.className = "wa-waterfall-chip";
+    item.dataset.service = config.service;
+    item.dataset.stepState = "pending";
+    item.dataset.finalStepState = config.state;
+    icon.className = "wa-waterfall-chip__icon";
+    icon.setAttribute("aria-hidden", "true");
+    this.appendWaterfallServiceIcon(icon, config.service);
+    label.className = "wa-waterfall-chip__label";
+    label.textContent = config.label;
+    item.append(icon, label);
+    return item;
+  }
+
+  private appendWaterfallServiceIcon(icon: HTMLElement, service: string): void {
+    if (service === "on-prem") {
+      icon.append(createUnifyMarkSvg("wa-waterfall-chip__mark"));
+      return;
+    }
+
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+
+    svg.setAttribute("viewBox", "0 0 16 16");
+    svg.setAttribute("aria-hidden", "true");
+    svg.setAttribute("focusable", "false");
+    path.setAttribute("fill", "none");
+    path.setAttribute("stroke", "currentColor");
+    path.setAttribute("stroke-width", "1.8");
+    path.setAttribute("stroke-linecap", "round");
+    path.setAttribute("stroke-linejoin", "round");
+
+    switch (service) {
+      case "wiza":
+        path.setAttribute("d", "M8 2.4 5.2 11.8h5.6L8 2.4Zm-3.8 9.4h7.6");
+        break;
+      case "contactout":
+        path.setAttribute("d", "M4.2 10.7V5.3h7.6v5.4H4.2Zm1.2-6.8h1.2m2.8 0h1.2M6 7.9h.1m3.8 0h.1");
+        break;
+      case "prospeo":
+        path.setAttribute("d", "m8 2.7 4.4 2.5v5.6L8 13.3l-4.4-2.5V5.2L8 2.7Zm0 0v5.2m4.4-2.7L8 7.9 3.6 5.2");
+        break;
+      case "waterfall":
+        path.setAttribute("d", "m3.2 6.2 3.1 3 1.7-1.6 1.7 1.6 3.1-3");
+        break;
+      case "fullenrich":
+        path.setAttribute("d", "M3.1 9.9a5 5 0 1 1 9.8 0M5.2 8.6a2.8 2.8 0 1 1 5.6 0M2.9 11.8h10.2");
+        break;
+      case "forager":
+      default:
+        path.setAttribute("d", "M3.3 4.2 8 2l4.7 2.2M3.3 7.1 8 4.9l4.7 2.2M3.3 10 8 7.8l4.7 2.2M8 7.8v5.4");
+        break;
+    }
+
+    svg.append(path);
+    icon.append(svg);
   }
 
   private animateEnrichmentWaterfall(rows: HTMLElement[]): gsap.core.Timeline {
@@ -4468,11 +4542,12 @@ export class ChatActor {
 
     rows.forEach((row, rowIndex) => {
       const chips = this.queryElements(row, ".wa-waterfall-chip");
+      const serviceSteps = this.queryElements(row, ".wa-waterfall-service-step");
       const attemptedChips = this.getAttemptedWaterfallChips(chips);
       const rowFinalState = this.getWaterfallFinalState(row);
 
       tl.call(() => this.setWaterfallState(row, "loading"), undefined, rowIndex === 0 ? 0 : `+=${ENRICHMENT_WATERFALL_MOTION.rowGapHold}`)
-        .to(chips, {
+        .to(serviceSteps, {
           autoAlpha: 1,
           y: 0,
           scale: 1,
