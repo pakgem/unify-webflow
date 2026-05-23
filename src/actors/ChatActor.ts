@@ -3422,11 +3422,29 @@ export class ChatActor {
       add.type = "button";
       add.tabIndex = -1;
       add.setAttribute("aria-label", `Add row to ${tableId}`);
-      add.textContent = "+";
+      add.append(this.createDataTableAddIcon());
       row.append(add);
     }
 
     return row;
+  }
+
+  private createDataTableAddIcon(): SVGSVGElement {
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.classList.add("wa-data-table__add-icon");
+    svg.setAttribute("width", "16");
+    svg.setAttribute("height", "16");
+    svg.setAttribute("viewBox", "0 0 24 24");
+    svg.setAttribute("aria-hidden", "true");
+    svg.setAttribute("focusable", "false");
+
+    for (const d of ["M12 5v14", "M5 12h14"]) {
+      const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      path.setAttribute("d", d);
+      svg.append(path);
+    }
+
+    return svg;
   }
 
   private createDataTableCellBadge(label: string): HTMLElement {

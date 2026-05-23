@@ -1595,9 +1595,18 @@ body {
   color: #050505;
   background: #fffffb;
   box-shadow: 0 1px 1px rgba(23, 23, 20, 0.02);
-  font-size: 18px;
-  line-height: 1;
-  font-weight: 680;
+  line-height: 0;
+}
+
+.wa-data-table__add-icon {
+  display: block;
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
 }
 
 .wa-data-table__cell-text {
