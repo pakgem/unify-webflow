@@ -600,7 +600,7 @@ body {
   font-family: var(--wa-font-feature);
   font-size: clamp(26px, 2.8vw, 34px);
   line-height: 1;
-  font-weight: 520;
+  font-weight: 400;
   letter-spacing: 0;
 }
 
