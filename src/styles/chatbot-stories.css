@@ -770,6 +770,8 @@ body {
 }
 
 .wa-thinking-block {
+  --wa-thinking-icon-column: 18px;
+  --wa-thinking-column-gap: 8px;
   display: grid;
   align-content: start;
   align-items: start;
@@ -780,10 +782,10 @@ body {
 
 .wa-thinking {
   display: inline-grid;
-  grid-template-columns: 18px auto auto;
+  grid-template-columns: var(--wa-thinking-icon-column) auto auto;
   align-items: center;
   justify-content: start;
-  gap: 8px;
+  gap: var(--wa-thinking-column-gap);
   justify-self: start;
   min-height: 18px;
   padding: 0;
@@ -846,7 +848,7 @@ body {
   position: absolute;
   top: 9px;
   bottom: 9px;
-  left: 6px;
+  left: calc(var(--wa-thinking-icon-column) / 2);
   width: 1px;
   background: #e4ded6;
 }
@@ -855,9 +857,9 @@ body {
   --wa-step-progress: 0;
   position: relative;
   display: grid;
-  grid-template-columns: 12px minmax(0, 1fr) 9px;
+  grid-template-columns: var(--wa-thinking-icon-column) minmax(0, 1fr) 9px;
   align-content: start;
-  gap: 8px;
+  gap: var(--wa-thinking-column-gap);
   align-items: start;
   min-height: 58px;
   overflow: visible;
@@ -878,6 +880,7 @@ body {
 .wa-research-step__check {
   position: relative;
   z-index: 1;
+  justify-self: center;
   width: 12px;
   height: 12px;
   margin-top: 2px;
