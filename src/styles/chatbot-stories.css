@@ -2586,7 +2586,7 @@ body {
 
 .wa-mailbox-connection__card {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 176px;
+  grid-template-columns: minmax(0, 1fr) 146px;
   gap: 14px;
   align-items: center;
   min-width: 0;
@@ -2621,6 +2621,8 @@ body {
 .wa-mailbox-connection__actions {
   display: grid;
   gap: 9px;
+  justify-self: end;
+  width: 146px;
   min-width: 0;
 }
 
@@ -5586,6 +5588,11 @@ body {
 
   .wa-mailbox-connection__copy {
     gap: 9px;
+  }
+
+  .wa-mailbox-connection__actions {
+    justify-self: stretch;
+    width: 100%;
   }
 
   .wa-mailbox-connection__title {
