@@ -1850,7 +1850,7 @@ export class ChatActor {
     return this.revealComponentItems(
       "sequence",
       panel,
-      ".wa-sequence-person-button, .wa-sequence-card, .wa-sequence-step, .wa-sequence-wait, .wa-sequence-copy-panel, .wa-engage-channel, .wa-sequence-kickoff",
+      ".wa-sequence-person-card, .wa-sequence-card, .wa-sequence-step, .wa-sequence-wait, .wa-sequence-copy-panel, .wa-engage-channel, .wa-sequence-kickoff",
       COMPONENT_CHILD_REVEAL.stackCard,
     );
   }
@@ -1943,18 +1943,16 @@ export class ChatActor {
     if (!section) return tl;
 
     const cards = this.queryElements(section, "[data-sequence-card]");
-    const buttons = this.queryElements(section, "[data-sequence-person-button]");
-    const count = section.querySelector<HTMLElement>("[data-sequence-count]");
     const activeCard = this.getSequenceDisplayCard(section);
     const targetCard = cards.find((card) => Number(card.dataset.sequenceIndex) === index);
     const currentIndex = Number(section.dataset.activeSequenceIndex ?? "0");
 
     if (!targetCard || !activeCard || currentIndex === index) {
-      this.setActiveSequencePerson(section, index);
+      this.setActiveSequencePerson(section, index, true);
       return tl;
     }
 
-    const textTargets = this.getSequenceTransitionTargets(section, activeCard);
+    const textTargets = this.getSequenceTransitionTargets(activeCard);
 
     tl.to(textTargets, {
       autoAlpha: 0,
@@ -1964,19 +1962,7 @@ export class ChatActor {
       stagger: 0.012,
     })
       .call(() => {
-        cards.forEach((card) => {
-          const active = card === activeCard;
-
-          card.dataset.active = String(active);
-          card.style.display = active ? "grid" : "none";
-        });
-        section.dataset.activeSequenceIndex = String(index);
-        this.applySequenceTemplateToDisplayCard(section, activeCard, targetCard, index);
-        buttons.forEach((button) => {
-          button.dataset.currentIndex = String(index);
-        });
-        if (count) count.textContent = this.getSequenceCountLabel(index, section.dataset.peopleCount ?? "");
-        this.updateSequencePersonIdentity(section, index);
+        this.setActiveSequencePerson(section, index, true);
         gsap.set(textTargets, { y: 4 });
       })
       .to(textTargets, {
@@ -4946,63 +4932,44 @@ export class ChatActor {
     let peopleNav: HTMLElement | null = null;
 
     if (hasSequenceSteps) {
-      peopleNav = document.createElement("div");
-      peopleNav.className = "wa-sequence-people";
-      peopleNav.setAttribute("aria-label", "Sequence people");
+      const peopleRail = document.createElement("div");
 
-      const previous = document.createElement("button");
-      const current = document.createElement("div");
-      const avatar = document.createElement("span");
-      const currentCopy = document.createElement("span");
-      const currentName = document.createElement("strong");
-      const currentMeta = document.createElement("span");
-      const actions = document.createElement("div");
-      const next = document.createElement("button");
-      const firstSequence = config.sequences[0];
+      peopleRail.className = "wa-sequence-people";
+      peopleRail.dataset.sequencePeopleRail = config.id;
+      peopleRail.setAttribute("aria-label", "Sequence people");
 
-      previous.className = "wa-sequence-person-button";
-      previous.type = "button";
-      previous.tabIndex = -1;
-      previous.dataset.sequencePersonButton = `${config.id}:prev`;
-      previous.dataset.direction = "prev";
-      previous.dataset.currentIndex = "0";
-      previous.setAttribute("aria-label", "Previous person");
-      previous.textContent = "‹";
-      previous.addEventListener("click", () => {
-        const currentIndex = Number(previous.dataset.currentIndex ?? "0");
-        const targetIndex = (currentIndex - 1 + config.sequences.length) % config.sequences.length;
+      config.sequences.forEach((sequence, index) => {
+        const person = document.createElement("button");
+        const avatar = document.createElement("span");
+        const copy = document.createElement("span");
+        const name = document.createElement("strong");
+        const meta = document.createElement("span");
 
-        this.sequencePerson(config.id, targetIndex).play();
+        person.className = "wa-sequence-person-card";
+        person.type = "button";
+        person.tabIndex = -1;
+        person.dataset.sequencePersonCard = `${config.id}:${index}`;
+        person.dataset.sequencePersonIndex = String(index);
+        person.dataset.active = String(index === 0);
+        person.setAttribute("aria-pressed", String(index === 0));
+        person.setAttribute("aria-label", `Preview sequence for ${sequence.name}`);
+        person.addEventListener("click", () => {
+          this.sequencePerson(config.id, index).play();
+        });
+
+        avatar.className = "wa-sequence-person-card__avatar";
+        avatar.dataset.avatarTone = String((index % 9) + 1);
+        this.setProfileAvatar(avatar, sequence.name, sequence.avatarUrl);
+
+        copy.className = "wa-sequence-person-card__copy";
+        name.textContent = sequence.name;
+        meta.textContent = [sequence.title, sequence.company].filter(Boolean).join(", ");
+        copy.append(name, meta);
+        person.append(avatar, copy);
+        peopleRail.append(person);
       });
 
-      current.className = "wa-sequence-person-current";
-      avatar.className = "wa-sequence-person-current__avatar";
-      avatar.dataset.avatarTone = "1";
-      this.setProfileAvatar(avatar, firstSequence?.name ?? "", firstSequence?.avatarUrl);
-      currentCopy.className = "wa-sequence-person-current__copy";
-      currentName.textContent = firstSequence?.name ?? "";
-      currentMeta.textContent = [firstSequence?.title, firstSequence?.company].filter(Boolean).join(", ");
-      currentCopy.append(currentName, currentMeta);
-      current.append(avatar, currentCopy);
-
-      next.className = "wa-sequence-person-button";
-      next.type = "button";
-      next.tabIndex = -1;
-      next.dataset.sequencePersonButton = `${config.id}:next`;
-      next.dataset.direction = "next";
-      next.dataset.currentIndex = "0";
-      next.setAttribute("aria-label", "Next person");
-      next.textContent = "›";
-      next.addEventListener("click", () => {
-        const currentIndex = Number(next.dataset.currentIndex ?? "0");
-        const targetIndex = (currentIndex + 1) % config.sequences.length;
-
-        this.sequencePerson(config.id, targetIndex).play();
-      });
-
-      actions.className = "wa-sequence-person-actions";
-      actions.append(previous, next);
-      peopleNav.append(current, actions);
+      peopleNav = peopleRail;
     }
 
     config.sequences.forEach((sequence, index) => {
@@ -5247,9 +5214,9 @@ export class ChatActor {
     return `wait ${days} ${days === 1 ? "day" : "days"}`;
   }
 
-  private setActiveSequencePerson(section: HTMLElement, index: number): void {
+  private setActiveSequencePerson(section: HTMLElement, index: number, shouldCenter = false): void {
     const cards = this.queryElements(section, "[data-sequence-card]");
-    const buttons = this.queryElements(section, "[data-sequence-person-button]");
+    const personCards = this.queryElements(section, "[data-sequence-person-card]");
     const count = section.querySelector<HTMLElement>("[data-sequence-count]");
     const displayCard = this.getSequenceDisplayCard(section);
     const templateCard = this.getSequenceTemplateCard(section, index);
@@ -5265,11 +5232,36 @@ export class ChatActor {
     });
     section.dataset.activeSequenceIndex = String(index);
     this.applySequenceTemplateToDisplayCard(section, displayCard, templateCard, index);
-    buttons.forEach((button) => {
-      button.dataset.currentIndex = String(index);
+    personCards.forEach((personCard) => {
+      const active = Number(personCard.dataset.sequencePersonIndex) === index;
+
+      personCard.dataset.active = String(active);
+      personCard.setAttribute("aria-pressed", String(active));
     });
     if (count) count.textContent = this.getSequenceCountLabel(index, section.dataset.peopleCount ?? "");
-    this.updateSequencePersonIdentity(section, index);
+    if (shouldCenter) this.centerSequencePersonCard(section, index);
+  }
+
+  private centerSequencePersonCard(section: HTMLElement, index: number): void {
+    const rail = section.querySelector<HTMLElement>("[data-sequence-people-rail]");
+    const card = rail?.querySelector<HTMLElement>(`[data-sequence-person-index="${index}"]`);
+
+    if (!rail || !card) return;
+
+    const maxScroll = Math.max(0, rail.scrollWidth - rail.clientWidth);
+    const target = Math.min(maxScroll, Math.max(0, card.offsetLeft - (rail.clientWidth - card.offsetWidth) / 2));
+
+    if (this.prefersReducedMotion || Math.abs(rail.scrollLeft - target) < 1) {
+      rail.scrollLeft = target;
+      return;
+    }
+
+    gsap.to(rail, {
+      scrollLeft: target,
+      duration: motionDuration(0.34),
+      ease: "power2.out",
+      overwrite: "auto",
+    });
   }
 
   private getSequenceCountLabel(index: number, peopleCount: string): string {
@@ -5296,11 +5288,8 @@ export class ChatActor {
     return Number(selected?.dataset.stepIndex ?? "0");
   }
 
-  private getSequenceTransitionTargets(section: HTMLElement, card: HTMLElement): HTMLElement[] {
+  private getSequenceTransitionTargets(card: HTMLElement): HTMLElement[] {
     return this.compactElements(
-      section.querySelector<HTMLElement>(".wa-sequence-person-current__avatar"),
-      section.querySelector<HTMLElement>(".wa-sequence-person-current__copy strong"),
-      section.querySelector<HTMLElement>(".wa-sequence-person-current__copy span"),
       ...this.queryElements(card, ".wa-sequence-step__copy strong"),
       card.querySelector<HTMLElement>("[data-sequence-copy-meta]"),
       card.querySelector<HTMLElement>("[data-sequence-copy-subject]"),
@@ -5390,29 +5379,6 @@ export class ChatActor {
       step.body,
       "Worth sending over a quick example?",
     ].join("\n\n");
-  }
-
-  private updateSequencePersonIdentity(section: HTMLElement, index: number): void {
-    const card = this.getSequenceTemplateCard(section, index);
-    const name =
-      card?.dataset.sequenceTemplateName ??
-      card?.dataset.sequenceName ??
-      card?.querySelector<HTMLElement>(".wa-sequence-card__identity strong")?.textContent ??
-      "";
-    const meta =
-      card?.dataset.sequenceTemplateMeta ??
-      card?.dataset.sequenceMeta ??
-      card?.querySelector<HTMLElement>(".wa-sequence-card__identity span")?.textContent ??
-      "";
-    const avatarUrl = card?.dataset.sequenceTemplateAvatarUrl;
-    const avatar = section.querySelector<HTMLElement>(".wa-sequence-person-current__avatar");
-    const currentName = section.querySelector<HTMLElement>(".wa-sequence-person-current__copy strong");
-    const currentMeta = section.querySelector<HTMLElement>(".wa-sequence-person-current__copy span");
-
-    if (avatar) avatar.dataset.avatarTone = String((index % 6) + 1);
-    if (avatar) this.setProfileAvatar(avatar, name, avatarUrl);
-    if (currentName) currentName.textContent = name;
-    if (currentMeta) currentMeta.textContent = meta;
   }
 
   private slugChannelName(channel: string): string {

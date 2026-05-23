@@ -769,6 +769,216 @@ const ENGAGEMENT_SEQUENCE_LAUNCH = {
         },
       ],
     },
+    {
+      name: "Andre Park",
+      company: "Ramp",
+      title: "Head of Sales",
+      signal: "Demo page",
+      subject: "Ramp’s demo-page visit",
+      personalization: "Andre viewed the demo page while Ramp is hiring growth roles, so the sequence ties intent to faster account prioritization.",
+      steps: [
+        {
+          channel: "email",
+          label: "open with demo intent",
+          body: "Reference the demo visit and ask whether the team is looking for cleaner signals before expanding outbound coverage.",
+        },
+        {
+          channel: "linkedin",
+          label: "share the angle",
+          body: "Mention that Unify can turn page intent into researched account clusters without stitching tabs together.",
+        },
+        {
+          channel: "email",
+          label: "send the account cut",
+          body: "Offer a small list of accounts showing hiring, tech stack, and funding signals in one view.",
+        },
+        {
+          channel: "call",
+          label: "ask about timing",
+          body: "Open by asking whether demo research is tied to a current sales expansion push.",
+        },
+      ],
+    },
+    {
+      name: "Jamie Chen",
+      company: "Square",
+      title: "VP Sales",
+      signal: "ROI calculator",
+      subject: "Square’s ROI-calculator research",
+      personalization: "Jamie used the ROI calculator, so the outreach leads with measurable pipeline coverage and better list quality.",
+      steps: [
+        {
+          channel: "email",
+          label: "lead with ROI",
+          body: "Connect the calculator visit to the cost of fragmented data and suggest a quick account-quality benchmark.",
+        },
+        {
+          channel: "linkedin",
+          label: "use one proof point",
+          body: "Share a short proof point about teams consolidating research, enrichment, and sequencing in Unify.",
+        },
+        {
+          channel: "email",
+          label: "offer benchmark",
+          body: "Offer to compare one existing target segment against Unify’s combined intent and company data.",
+        },
+        {
+          channel: "call",
+          label: "qualify the metric",
+          body: "Ask whether Square is optimizing for more contacts, better account fit, or higher rep throughput.",
+        },
+      ],
+    },
+    {
+      name: "Nina Kapoor",
+      company: "Mercury",
+      title: "Sales Director",
+      signal: "Security page",
+      subject: "Mercury’s security-page research",
+      personalization: "Nina looked at security content, so the sequence keeps the value prop practical and trust-forward.",
+      steps: [
+        {
+          channel: "email",
+          label: "acknowledge trust",
+          body: "Reference the security-page visit and frame Unify as a controlled way to operationalize external data.",
+        },
+        {
+          channel: "linkedin",
+          label: "ask the process question",
+          body: "Ask how Mercury currently reviews new data sources before putting them into outbound workflows.",
+        },
+        {
+          channel: "email",
+          label: "show governance",
+          body: "Send a short overview of how Unify routes data work while keeping reps inside one system.",
+        },
+        {
+          channel: "call",
+          label: "surface blocker",
+          body: "Ask whether security review or data quality is the larger barrier to using richer GTM data.",
+        },
+      ],
+    },
+    {
+      name: "David Kim",
+      company: "Stripe",
+      title: "Revenue Lead",
+      signal: "Docs",
+      subject: "Stripe’s docs-led research",
+      personalization: "David came through docs, so the campaign assumes a hands-on evaluation and emphasizes workflow depth.",
+      steps: [
+        {
+          channel: "email",
+          label: "start technical",
+          body: "Reference the docs visit and offer to show how Unify turns natural language into complete GTM workflows.",
+        },
+        {
+          channel: "linkedin",
+          label: "ask about workflow",
+          body: "Ask whether Stripe’s team is trying to automate research, enrichment, or sequencing first.",
+        },
+        {
+          channel: "email",
+          label: "share workflow map",
+          body: "Send a compact workflow map from prompt to table to sequence, using a Stripe-like target segment.",
+        },
+        {
+          channel: "call",
+          label: "probe use case",
+          body: "Ask whether the team wants rep-assist workflows or fully agentic list building.",
+        },
+      ],
+    },
+    {
+      name: "Sam Hollis",
+      company: "Apollo",
+      title: "VP Sales",
+      signal: "Comparison",
+      subject: "Apollo’s comparison-page visit",
+      personalization: "Sam viewed comparison content, so the outreach contrasts Unify’s unified workflow against point-tool switching.",
+      steps: [
+        {
+          channel: "email",
+          label: "frame the comparison",
+          body: "Acknowledge the comparison visit and focus on reducing tab switching across data, enrichment, and engagement.",
+        },
+        {
+          channel: "linkedin",
+          label: "ask what matters",
+          body: "Ask whether the buying criteria is coverage, workflow speed, or personalization quality.",
+        },
+        {
+          channel: "email",
+          label: "offer side-by-side",
+          body: "Offer a short side-by-side showing how one sales request becomes a researched sequence in Unify.",
+        },
+        {
+          channel: "call",
+          label: "qualify priority",
+          body: "Ask which workflow currently takes reps out of their selling motion most often.",
+        },
+      ],
+    },
+    {
+      name: "Rachel Cho",
+      company: "Retool",
+      title: "Head of Sales",
+      signal: "Pricing page",
+      subject: "Retool’s pricing-page intent",
+      personalization: "Rachel viewed pricing during a sales hiring push, so the sequence connects team scaling to better prospecting systems.",
+      steps: [
+        {
+          channel: "email",
+          label: "tie to scaling",
+          body: "Mention pricing interest and hiring signals, then ask if list building is becoming a rep-capacity bottleneck.",
+        },
+        {
+          channel: "linkedin",
+          label: "share focused proof",
+          body: "Point to teams using Unify to build smaller, higher-fit lists instead of expanding generic coverage.",
+        },
+        {
+          channel: "email",
+          label: "send a sample segment",
+          body: "Offer a sample segment with account fit, contacts, and ready-to-send messaging angles.",
+        },
+        {
+          channel: "call",
+          label: "ask about handoff",
+          body: "Ask how Retool currently hands intent signals from marketing to sales.",
+        },
+      ],
+    },
+    {
+      name: "Owen Lee",
+      company: "Linear",
+      title: "Sales Lead",
+      signal: "Demo page",
+      subject: "Linear’s demo-page research",
+      personalization: "Owen visited the demo page, so the sequence stays crisp and shows a concrete workflow rather than a broad pitch.",
+      steps: [
+        {
+          channel: "email",
+          label: "keep it direct",
+          body: "Reference the demo visit and offer one example of Unify building a clean account list from messy GTM signals.",
+        },
+        {
+          channel: "linkedin",
+          label: "ask one thing",
+          body: "Ask whether Linear’s sales team is prioritizing outbound efficiency or better personalization this quarter.",
+        },
+        {
+          channel: "email",
+          label: "show a concrete play",
+          body: "Send a specific play for identifying software teams expanding support or sales operations.",
+        },
+        {
+          channel: "call",
+          label: "connect to timing",
+          body: "Ask if the demo research is connected to an active evaluation window.",
+        },
+      ],
+    },
   ],
   channels: [],
 } satisfies SequenceEngagementConfig;
@@ -1331,8 +1541,12 @@ export const defaultStories: StoryDefinition[] = [
         {},
         false,
       );
-      const sequenceNextTarget = responsiveElementTarget(
-        '[data-sequence-person-button="visitor-outreach-sequences:next"]',
+      const sequenceSecondPersonTarget = responsiveElementTarget(
+        '[data-sequence-person-card="visitor-outreach-sequences:1"]',
+        "center",
+      );
+      const sequenceThirdPersonTarget = responsiveElementTarget(
+        '[data-sequence-person-card="visitor-outreach-sequences:2"]',
         "center",
       );
       const sequenceKickoffTarget = responsiveElementTarget(
@@ -1387,7 +1601,7 @@ export const defaultStories: StoryDefinition[] = [
         { kind: "custom", build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat + 0.24 }), at: "+=0.04" },
         {
           kind: "cursorMove",
-          target: sequenceNextTarget,
+          target: sequenceSecondPersonTarget,
           options: { mode: "pointer", intent: "click", speed: "normal", label: "preview-evan-sequence" },
         },
         { kind: "cursorClick", at: "-=0.02" },
@@ -1395,7 +1609,7 @@ export const defaultStories: StoryDefinition[] = [
         { kind: "custom", build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat + 0.24 }), at: "+=0.04" },
         {
           kind: "cursorMove",
-          target: sequenceNextTarget,
+          target: sequenceThirdPersonTarget,
           options: { mode: "pointer", intent: "click", speed: "normal", label: "preview-clara-sequence" },
         },
         { kind: "cursorClick", at: "-=0.02" },

@@ -272,8 +272,12 @@ function buildEngagementStory(ctx: StoryContext, story: BuilderStory): gsap.core
   if (thinkingStep) steps.push(toThinkingStoryStep(thinkingStep, { hold: STORY_TIMING.thinkingMedium, at: "+=0.06" }));
 
   if (sequenceConfig) {
-    const sequenceNextTarget = responsiveElementTarget(
-      '[data-sequence-person-button="visitor-outreach-sequences:next"]',
+    const sequenceSecondPersonTarget = responsiveElementTarget(
+      '[data-sequence-person-card="visitor-outreach-sequences:1"]',
+      "center",
+    );
+    const sequenceThirdPersonTarget = responsiveElementTarget(
+      '[data-sequence-person-card="visitor-outreach-sequences:2"]',
       "center",
     );
     const sequenceKickoffTarget = responsiveElementTarget(
@@ -286,7 +290,7 @@ function buildEngagementStory(ctx: StoryContext, story: BuilderStory): gsap.core
       { kind: "custom" as const, build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat + 0.24 }), at: "+=0.04" },
       {
         kind: "cursorMove" as const,
-        target: sequenceNextTarget,
+        target: sequenceSecondPersonTarget,
         options: { mode: "pointer" as const, intent: "click" as const, speed: "normal" as const, label: "preview-second-sequence" },
       },
       { kind: "cursorClick" as const, at: "-=0.02" },
@@ -294,7 +298,7 @@ function buildEngagementStory(ctx: StoryContext, story: BuilderStory): gsap.core
       { kind: "custom" as const, build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat + 0.24 }), at: "+=0.04" },
       {
         kind: "cursorMove" as const,
-        target: sequenceNextTarget,
+        target: sequenceThirdPersonTarget,
         options: { mode: "pointer" as const, intent: "click" as const, speed: "normal" as const, label: "preview-third-sequence" },
       },
       { kind: "cursorClick" as const, at: "-=0.02" },
