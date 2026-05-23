@@ -3802,7 +3802,7 @@ body {
   border-radius: 0;
   color: var(--wa-ink);
   background: transparent;
-  font-size: 18px;
+  font-size: 14px;
   line-height: 1.18;
   font-weight: 400;
   overflow-wrap: anywhere;
@@ -5889,7 +5889,7 @@ body {
 
   .wa-composer__placeholder {
     min-height: 22px;
-    font-size: 15px;
+    font-size: 14px;
   }
 
   .wa-composer__controls {
