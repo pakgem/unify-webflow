@@ -970,7 +970,7 @@ body {
   min-width: 0;
   overflow: hidden;
   color: #86817a;
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.28;
   font-weight: var(--wa-chat-detail-weight);
   white-space: normal;
@@ -5453,7 +5453,7 @@ body {
   }
 
   .wa-research-step__detail {
-    font-size: 14px;
+    font-size: 13px;
   }
 
   .wa-result-grid.has-strategy-plans {
