@@ -1853,11 +1853,11 @@ body {
   align-items: center;
   justify-content: center;
   min-height: 20px;
-  padding: 0 8px;
-  border: 1px solid rgba(23, 23, 20, 0.08);
-  border-radius: 999px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
   color: #706c66;
-  background: #f0eee8;
+  background: transparent;
   font-size: 12px;
   line-height: 1;
   font-weight: 430;
@@ -5771,7 +5771,7 @@ body {
 
   .wa-data-table-cell-badge {
     min-height: 14px;
-    padding: 0 5px;
+    padding: 0;
     font-size: 7px;
   }
 
