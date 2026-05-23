@@ -129,6 +129,7 @@ type ClaimedThinkingMessage = {
   message: HTMLElement;
   header: HTMLElement;
   headerGlyph: HTMLElement;
+  title: HTMLElement;
   traveler: HTMLElement;
   elapsed: HTMLElement;
   steps: HTMLElement;
@@ -2934,6 +2935,8 @@ export class ChatActor {
         height: 0,
         duration: THINKING_BLOCK_COLLAPSE.duration,
         ease: THINKING_BLOCK_COLLAPSE.ease,
+        onComplete: () => this.setThinkingHeaderCollapsed(thinking),
+        onReverseComplete: () => this.setThinkingHeaderActive(thinking),
       }, 0)
       .call(() => {
         gsap.set(thinking.steps, {
@@ -2944,6 +2947,33 @@ export class ChatActor {
         });
         this.animateMessageScrollIntoView(thinking.message);
       });
+  }
+
+  private getActiveThinkingTitle(titleText = DEFAULT_THINKING_TITLE): string {
+    const title = titleText.trim() || DEFAULT_THINKING_TITLE;
+
+    if (/^thinking(?:\.\.\.)?$/i.test(title)) return "Thinking...";
+
+    return title;
+  }
+
+  private setThinkingHeaderActive(thinking: ClaimedThinkingMessage): void {
+    const title = this.getActiveThinkingTitle(thinking.title.dataset.activeText);
+
+    thinking.title.dataset.fullText = title;
+    thinking.title.textContent = title;
+    delete thinking.title.dataset.streaming;
+    gsap.set(thinking.elapsed, { display: "", autoAlpha: 1 });
+  }
+
+  private setThinkingHeaderCollapsed(thinking: ClaimedThinkingMessage): void {
+    const elapsedText = thinking.elapsed.dataset.elapsedTarget || thinking.elapsed.textContent?.trim() || "";
+    const title = elapsedText ? `Thought for ${elapsedText}` : "Thought";
+
+    thinking.title.dataset.fullText = title;
+    thinking.title.textContent = title;
+    delete thinking.title.dataset.streaming;
+    gsap.set(thinking.elapsed, { display: "none" });
   }
 
   private runThinkingSequence(thinkingState: NormalizedThinkingState, options: ThinkingSequenceOptions): gsap.core.Timeline {
@@ -3008,8 +3038,11 @@ export class ChatActor {
     const traveler = this.createThinkingLogo("wa-thinking-logo-traveler");
 
     const title = document.createElement("span");
+    const activeTitle = this.getActiveThinkingTitle(titleText);
+
     title.className = "wa-thinking__title";
-    title.dataset.fullText = titleText;
+    title.dataset.activeText = titleText;
+    title.dataset.fullText = activeTitle;
     title.textContent = "";
 
     const elapsed = document.createElement("span");
@@ -3029,6 +3062,7 @@ export class ChatActor {
       message: this.claimComponentMessage("thinking", content),
       header,
       headerGlyph: glyph,
+      title,
       traveler,
       elapsed,
       steps,
