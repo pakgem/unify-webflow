@@ -424,6 +424,17 @@ const MARKETING_PAGE_MOTION = {
   cardDuration: motionDuration(0.28),
 };
 const STRATEGY_REVEAL_SCROLL_EXTRA = 4;
+const STRATEGY_REVEAL_POSITION = "-=0.22";
+const STRATEGY_TEXT_REVEAL = {
+  from: { autoAlpha: 0, y: 5 },
+  to: {
+    autoAlpha: 1,
+    y: 0,
+    duration: motionDuration(0.24),
+    ease: "power2.out",
+    stagger: 0.035,
+  },
+};
 const MARKETING_DATA_SOURCE_COLUMNS = [
   ["CRM", "Core Data", "Ad Intelligence"],
   ["Web Intent", "Product Analytics", "SMB Data", "Ecommerce"],
@@ -1402,32 +1413,38 @@ export class ChatActor {
     const grid = document.createElement("div");
     const bulletItems = cards.flatMap((card) => this.queryElements(card, ".wa-strategy-plan__bullets li"));
     const scrollAnchor = this.getLastMessageBody();
+    const cardPreset = COMPONENT_CHILD_REVEAL.strategyCard;
+    const cardRevealLabel = "strategyCardsIn";
+    const cardStagger = typeof cardPreset.to.stagger === "number" ? cardPreset.to.stagger : 0;
+    const revealTargets = [...cards, ...bulletItems];
 
     grid.className = "wa-result-grid has-strategy-plans";
     grid.dataset.strategyPlans = plans.map((plan) => plan.id).join(" ");
     grid.append(...cards);
 
-    gsap.set(bulletItems, { autoAlpha: 0, y: 5 });
+    if (cards.length) gsap.set(cards, { ...cardPreset.from });
+    gsap.set(bulletItems, { ...STRATEGY_TEXT_REVEAL.from });
 
     const message = this.claimComponentMessage("strategy", grid);
+    const tl = gsap
+      .timeline()
+      .add(this.revealMessage(message, scrollAnchor, STRATEGY_REVEAL_SCROLL_EXTRA))
+      .addLabel(cardRevealLabel, STRATEGY_REVEAL_POSITION)
+      .call(() => this.setMotionHints(revealTargets), undefined, cardRevealLabel)
+      .to(cards, { ...cardPreset.to }, cardRevealLabel);
 
-    return this.revealPreparedItems(
-      message,
-      cards,
-      COMPONENT_CHILD_REVEAL.strategyCard,
-      scrollAnchor,
-      STRATEGY_REVEAL_SCROLL_EXTRA,
-    )
-      .to(
-        bulletItems,
-        {
-          autoAlpha: 1,
-          y: 0,
-          duration: motionDuration(0.24),
-          ease: "power2.out",
-          stagger: 0.035,
-        },
-        "-=0.22",
+    cards.forEach((card, index) => {
+      const cardBullets = this.queryElements(card, ".wa-strategy-plan__bullets li");
+      if (!cardBullets.length) return;
+      tl.to(cardBullets, { ...STRATEGY_TEXT_REVEAL.to }, `${cardRevealLabel}+=${index * cardStagger}`);
+    });
+
+    return tl
+      .call(() => this.clearMotionHints(revealTargets))
+      .call(
+        () => this.animateMessageScrollIntoView(message, CHAT_SCROLL_MOTION.followDuration, scrollAnchor, STRATEGY_REVEAL_SCROLL_EXTRA),
+        undefined,
+        "+=0.02",
       );
   }
 
