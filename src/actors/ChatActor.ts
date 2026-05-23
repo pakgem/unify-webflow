@@ -2827,6 +2827,7 @@ export class ChatActor {
     gsap.set(thinking.header, { autoAlpha: 0, y: 5 });
     gsap.set(thinking.traveler, { autoAlpha: 0, x: 0, y: 0 });
     gsap.set(thinking.steps, { display: "grid", autoAlpha: 1, y: 0 });
+    thinking.title.dataset.thinkingActive = "true";
     this.resetThinkingGuide(thinking);
     gsap.set(items, { autoAlpha: 0, y: itemStartY, display: "none" });
   }
@@ -3032,6 +3033,7 @@ export class ChatActor {
 
     thinking.title.dataset.fullText = title;
     thinking.title.textContent = title;
+    thinking.title.dataset.thinkingActive = "true";
     delete thinking.title.dataset.streaming;
     gsap.set(thinking.elapsed, { display: "", autoAlpha: 1 });
   }
@@ -3042,6 +3044,7 @@ export class ChatActor {
 
     thinking.title.dataset.fullText = title;
     thinking.title.textContent = title;
+    delete thinking.title.dataset.thinkingActive;
     delete thinking.title.dataset.streaming;
     gsap.set(thinking.elapsed, { display: "none" });
   }
@@ -3113,6 +3116,7 @@ export class ChatActor {
     title.className = "wa-thinking__title";
     title.dataset.activeText = titleText;
     title.dataset.fullText = activeTitle;
+    title.dataset.thinkingActive = "true";
     title.textContent = "";
 
     const elapsed = document.createElement("span");

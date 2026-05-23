@@ -1059,6 +1059,7 @@ body {
   will-change: transform;
 }
 
+.wa-thinking__title[data-thinking-active="true"],
 .wa-thinking__title[data-streaming="true"],
 .wa-research-step__label[data-streaming="true"] {
   color: transparent;
