@@ -2781,7 +2781,7 @@ export class ChatActor {
 
   private foldThinkingStep(item: HTMLElement): gsap.core.Timeline {
     const foldTargets = item.querySelectorAll<HTMLElement>(
-      ".wa-research-step__detail, .wa-sequence-thinking-progress, .wa-research-step__disclosure, .wa-research-step__chevron",
+      ".wa-research-step__detail, .wa-sequence-thinking-progress, .wa-research-step__chevron",
     );
 
     return gsap
@@ -3201,16 +3201,12 @@ export class ChatActor {
     detail.dataset.fullText = itemConfig.detail;
     detail.textContent = "";
 
-    const disclosure = document.createElement("span");
-    disclosure.className = "wa-research-step__disclosure";
-    disclosure.textContent = itemConfig.disclosure;
-
     const chevron = document.createElement("span");
     chevron.className = "wa-research-step__chevron";
     chevron.setAttribute("aria-hidden", "true");
 
     labelRow.append(label, chevron);
-    body.append(labelRow, detail, disclosure);
+    body.append(labelRow, detail);
     item.append(marker, body);
     return item;
   }

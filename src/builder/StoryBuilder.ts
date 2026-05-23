@@ -734,16 +734,7 @@ export class StoryBuilder {
         }),
       );
 
-      const disclosure = document.createElement("div");
-      disclosure.className = "wa-research-step__disclosure wa-builder-thinking__disclosure";
-      disclosure.append(
-        this.createThinkingInput(step.id, "disclosure", thinkingItem.disclosure, {
-          itemIndex,
-          className: "wa-builder-thinking__disclosure-input",
-        }),
-      );
-
-      copy.append(label, detail, disclosure);
+      copy.append(label, detail);
       item.append(marker, copy);
       steps.append(item);
     });
