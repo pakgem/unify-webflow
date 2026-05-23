@@ -3433,6 +3433,7 @@ export class ChatActor {
     table.dataset.tableVariant = config.variant ?? "default";
     table.dataset.columnCount = String(config.columns.length);
     table.dataset.activePage = String(activePage);
+    if (config.scrollAlign) table.dataset.scrollAlign = config.scrollAlign;
     this.expectedDataTablePages.set(config.id, activePage);
     table.style.setProperty(
       "--wa-data-table-columns",
@@ -5156,6 +5157,10 @@ export class ChatActor {
   }
 
   private getMessageScrollTarget(message: HTMLElement): number {
+    const alignedTarget = this.getAlignedMessageScrollTarget(message);
+
+    if (alignedTarget !== null) return alignedTarget;
+
     const target =
       message.offsetTop +
       message.offsetHeight +
@@ -5167,6 +5172,43 @@ export class ChatActor {
     }
 
     return Math.max(0, target);
+  }
+
+  private getAlignedMessageScrollTarget(message: HTMLElement): number | null {
+    const equalInsetTarget = message.querySelector<HTMLElement>('[data-scroll-align="equal-inset"]');
+
+    if (!equalInsetTarget) return null;
+
+    const sideInset = this.getElementSideInset(equalInsetTarget);
+    const target = this.getElementOffsetTopWithinThread(equalInsetTarget) - sideInset;
+
+    return Math.min(Math.max(0, target), this.getThreadBottomScrollTarget());
+  }
+
+  private getElementSideInset(element: HTMLElement): number {
+    const elementRect = element.getBoundingClientRect();
+    const bodyRect = this.chatBody.getBoundingClientRect();
+    const fallbackInset = Number.parseFloat(getComputedStyle(this.chatBody).paddingLeft) || 0;
+    const measuredInset = elementRect.left - bodyRect.left;
+
+    return Math.max(0, Number.isFinite(measuredInset) ? measuredInset : fallbackInset);
+  }
+
+  private getElementOffsetTopWithinThread(element: HTMLElement): number {
+    let top = 0;
+    let node: HTMLElement | null = element;
+
+    while (node && node !== this.thread) {
+      top += node.offsetTop;
+      node = node.offsetParent as HTMLElement | null;
+    }
+
+    if (node === this.thread) return top;
+
+    const elementRect = element.getBoundingClientRect();
+    const threadRect = this.thread.getBoundingClientRect();
+
+    return this.thread.scrollTop + elementRect.top - threadRect.top;
   }
 
   private getThreadBottomPadding(): number {

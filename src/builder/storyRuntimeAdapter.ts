@@ -487,7 +487,10 @@ function appendComponentRuntimeStep(
   const component = step.component;
 
   if (component.kind === "table") {
-    steps.push({ kind: "dataTable", config: toDataTable(component, `${storyId}-${step.id}`), at: "-=0.04" });
+    const config = toDataTable(component, `${storyId}-${step.id}`);
+
+    if (shouldEqualInsetRevealTable(storyId, step, config)) config.scrollAlign = "equal-inset";
+    steps.push({ kind: "dataTable", config, at: "-=0.04" });
     return;
   }
 
@@ -619,6 +622,16 @@ function toDataTable(component: BuilderTableComponent, fallbackId: string): Data
         }
       : undefined,
   };
+}
+
+function shouldEqualInsetRevealTable(
+  storyId: string,
+  step: ComponentStep,
+  config: DataTableConfig,
+): boolean {
+  if (storyId !== "data-marketplace") return false;
+
+  return step.id === "data-marketplace-step-3" || slugId(config.title) === "new-hires-at-dev-tool-companies";
 }
 
 function getBuilderTableShape(labels: string[]): BuilderTableShape {

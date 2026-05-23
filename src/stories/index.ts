@@ -94,6 +94,7 @@ const DATA_MARKETPLACE_INITIAL_TABLE = {
   title: "New hires at dev-tool companies",
   eyebrow: "Natural language search",
   count: "8 records",
+  scrollAlign: "equal-inset",
   columns: DATA_MARKETPLACE_PRE_ENRICHMENT_COLUMNS,
   rows: [
     {

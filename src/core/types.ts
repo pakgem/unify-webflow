@@ -216,6 +216,7 @@ export type DataTableConfig = {
   eyebrow?: string;
   count?: string;
   variant?: "default" | "filtered" | "enriched" | "connections";
+  scrollAlign?: "equal-inset";
   columns: Array<{
     key: string;
     label: string;
