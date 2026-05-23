@@ -684,6 +684,11 @@ body {
   grid-template-columns: minmax(0, 1fr);
 }
 
+.wa-message[data-message-role="assistant"]:not(.wa-message--component) .wa-message__body {
+  padding-right: 0;
+  padding-left: 0;
+}
+
 .wa-message__avatar {
   display: none;
   width: 24px;
