@@ -2944,8 +2944,8 @@ export class ChatActor {
     if (fileName.toLowerCase().includes("context")) {
       return [
         { name: "battlecards.pdf", type: "PDF" },
+        { name: "positioning-memo.docx", type: "DOC" },
         { name: "icp-context.md", type: "MD" },
-        { name: "voice-and-tone.docx", type: "DOC" },
         { name: "outbound-playbook.pdf", type: "PDF" },
       ].slice(0, count);
     }

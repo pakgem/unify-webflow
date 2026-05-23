@@ -539,12 +539,12 @@ const DATA_MARKETPLACE_ENRICHED_TABLE = {
 const AGENT_CONTEXT_FILES = [
   {
     name: "battlecards.pdf",
-    detail: "Competitive traps, landmines, proof points",
+    detail: "Competitors, traps, objections, displacement plays",
     type: "PDF",
   },
   {
-    name: "voice-and-tone.docx",
-    detail: "Founder voice, pacing, taboo phrases",
+    name: "positioning-memo.docx",
+    detail: "Category narrative, buyer pains, proof points",
     type: "DOC",
   },
   {
@@ -575,19 +575,32 @@ const GMAIL_MAILBOX_CONNECTION = {
   signals: ["sent emails", "reply patterns", "calendar context", "signature and tone"],
 } satisfies MailboxConnectionConfig;
 
-const OUTREACH_STYLE_PROFILE = {
-  id: "learned-outreach-style",
-  title: "Learned outreach style",
-  subtitle: "The agent extracts how your team writes, qualifies, and earns replies.",
+const PYLON_BUSINESS_REPORT = {
+  id: "pylon-business-report",
+  title: "Pylon business report",
+  subtitle: "What Unify learned from the uploaded business context.",
   signals: [
-    { label: "Voice", value: "Plainspoken, specific, no inflated urgency" },
-    { label: "CTA", value: "Low-friction question before calendar asks" },
-    { label: "proof", value: "lead with trigger + relevant customer pattern" },
-    { label: "Guardrail", value: "Rejects weak ICP fit before drafting" },
+    {
+      label: "Messaging strategy",
+      value: "Lead with support-led growth: turn customer conversations into expansion, retention, and renewal signals.",
+    },
+    {
+      label: "Positioning",
+      value: "Frame Pylon as the customer intelligence layer for modern B2B teams, not another inbox or ticket queue.",
+    },
+    {
+      label: "Competitors",
+      value: "Against Intercom and Zendesk, emphasize account visibility, CRM-native handoffs, and revenue-ready workflows.",
+    },
+    {
+      label: "Best-fit ICP",
+      value: "Series A-C B2B SaaS with complex accounts, high-value customers, and support data trapped outside GTM workflows.",
+    },
   ],
   examples: [
-    "Keep the opener grounded in a real business trigger.",
-    "Avoid generic automation language unless the account shows ops pain.",
+    "Run expansion plays from support signals: stalled onboarding, repeated feature requests, and renewal risk.",
+    "Position against ticketing systems by showing how customer context becomes sales action, not just case resolution.",
+    "Avoid generic AI-agent language; anchor the pitch in account visibility, handoffs, and revenue moments.",
   ],
 } satisfies OutreachStyleProfileConfig;
 
@@ -1472,19 +1485,19 @@ export const defaultStories: StoryDefinition[] = [
         { kind: "custom", build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat }) },
         { kind: "custom", build: () => dropArea.complete() },
         { kind: "custom", build: () => cursorFile.landAsUploadedFiles(AGENT_CONTEXT_FILES), at: "<" },
-        { kind: "status", text: "Learning outreach style", at: "<" },
+        { kind: "status", text: "Learning Pylon's business", at: "<" },
         {
           kind: "thinking",
           steps: [
-            "Reading battle cards and competitive traps",
-            "Extracting voice and tone rules",
-            "Learning ICP disqualifiers",
-            "Mapping playbook CTAs and objection handling",
+            "Reading Pylon battle cards and market notes",
+            "Mapping competitors and positioning",
+            "Extracting messaging pillars and proof points",
+            "Summarizing ICP fit and GTM angles",
           ],
           hold: 0.24,
           at: `+=${STORY_TIMING.beat}`,
         },
-        { kind: "custom", build: () => ctx.chat.outreachStyleProfile(OUTREACH_STYLE_PROFILE), at: "-=0.02" },
+        { kind: "custom", build: () => ctx.chat.outreachStyleProfile(PYLON_BUSINESS_REPORT), at: "-=0.02" },
         {
           kind: "prompt",
           text: "Write a sequence for consumer fintech founders.",

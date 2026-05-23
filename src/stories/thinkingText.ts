@@ -16,6 +16,9 @@ export function getDefaultThinkingDetail(labelText: string, index: number): stri
   const label = labelText.toLowerCase();
 
   if (label.includes("source") || label.includes("data")) return "Searching across company records, contact databases, technographics, commerce signals, and local business indexes to find matches.";
+  if (label.includes("competitor") || label.includes("positioning")) return "Comparing the business context against known market alternatives, displacement angles, objections, and differentiation claims.";
+  if (label.includes("messaging") || label.includes("proof")) return "Extracting repeatable claims, customer proof, pain language, and credible hooks that can become outbound strategy.";
+  if (label.includes("pylon")) return "Reading the uploaded business context to identify category language, buyer pains, competitive traps, and GTM opportunities.";
   if (label.includes("company")) return "Reviewing public company information, website copy, firmographics, and recent external signals to understand the account context.";
   if (label.includes("icp") || label.includes("buyer")) return "Mapping personas, buying committees, seniority, department ownership, and account-fit signals from the available evidence.";
   if (label.includes("blog")) return "Reading launch notes, blog posts, category language, and positioning themes to infer the strongest outreach angles.";

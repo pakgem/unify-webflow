@@ -34,7 +34,7 @@ var he = {
 }, na = function(e) {
   return j(e) || X(e);
 }, Pn = typeof ArrayBuffer == "function" && ArrayBuffer.isView || function() {
-}, Q = Array.isArray, eo = /random\([^)]+\)/g, to = /,\s*/g, zi = /(?:-?\.?\d|\.)+/gi, In = /[-+=.]*\d+[.e\-+]*\d*[e\-+]*\d*/g, xt = /[-+=.]*\d+[.e-]*\d*[a-z%]*/g, Ia = /[-+=.]*\d+\.?\d*(?:e-|e\+)?\d*/gi, Rn = /[+-]=-?[.\d]+/, ao = /[^,'"\[\]\s]+/gi, io = /^[+\-=e\s\d]*\d+[.\d]*([a-z]*|%)\s*$/i, V, Ce, ii, vi, me = {}, ga = {}, Dn, Ln = function(e) {
+}, Q = Array.isArray, eo = /random\([^)]+\)/g, to = /,\s*/g, zi = /(?:-?\.?\d|\.)+/gi, In = /[-+=.]*\d+[.e\-+]*\d*[e\-+]*\d*/g, xt = /[-+=.]*\d+[.e-]*\d*[a-z%]*/g, Ia = /[-+=.]*\d+\.?\d*(?:e-|e\+)?\d*/gi, Rn = /[+-]=-?[.\d]+/, ao = /[^,'"\[\]\s]+/gi, io = /^[+\-=e\s\d]*\d+[.\d]*([a-z]*|%)\s*$/i, W, Ce, ii, vi, me = {}, ga = {}, Dn, Ln = function(e) {
   return (ga = Tt(e, me)) && se;
 }, ki = function(e, t) {
   return console.warn("Invalid property", e, "set to", t, "Missing plugin? gsap.registerPlugin()");
@@ -115,8 +115,8 @@ var he = {
   for (i in e)
     i in t || (a[i] = e[i]);
   return a;
-}, Vt = function(e) {
-  var t = e.parent || V, a = e.keyframes ? so(Q(e.keyframes)) : ge;
+}, Wt = function(e) {
+  var t = e.parent || W, a = e.keyframes ? so(Q(e.keyframes)) : ge;
   if (ie(e.inherit))
     for (; t; )
       a(e, t.vars.defaults), t = t.parent || t._dp;
@@ -171,10 +171,10 @@ var he = {
     e._zTime = -B;
   }
 }, Te = function(e, t, a, i) {
-  return t.parent && Je(t), t._start = U((Be(a) ? a : a || e !== V ? ye(e, a, t) : e._time) + t._delay), t._end = U(t._start + (t.totalDuration() / Math.abs(t.timeScale()) || 0)), Hn(e, t, "_first", "_last", e._sort ? "_start" : 0), oi(t) || (e._recent = t), i || Gn(e, t), e._ts < 0 && Ta(e, e._tTime), e;
+  return t.parent && Je(t), t._start = U((Be(a) ? a : a || e !== W ? ye(e, a, t) : e._time) + t._delay), t._end = U(t._start + (t.totalDuration() / Math.abs(t.timeScale()) || 0)), Hn(e, t, "_first", "_last", e._sort ? "_start" : 0), oi(t) || (e._recent = t), i || Gn(e, t), e._ts < 0 && Ta(e, e._tTime), e;
 }, Un = function(e, t) {
   return (me.ScrollTrigger || ki("scrollTrigger", t)) && me.ScrollTrigger.create(t, e);
-}, Vn = function(e, t, a, i, n) {
+}, Wn = function(e, t, a, i, n) {
   if (Mi(e, t, n), !e._initted)
     return 1;
   if (!a && e._pt && !J && (e._dur && e.vars.lazy !== !1 || !e._dur && e.vars.lazy) && qn !== ce.frame)
@@ -188,7 +188,7 @@ var he = {
 }, ho = function(e, t, a, i) {
   var n = e.ratio, o = t < 0 || !t && (!e._start && po(e) && !(!e._initted && oi(e)) || (e._ts < 0 || e._dp._ts < 0) && !oi(e)) ? 0 : 1, s = e._rDelay, l = 0, d, c, u;
   if (s && e._repeat && (l = aa(0, e._tDur, t), c = Et(l, s), e._yoyo && c & 1 && (o = 1 - o), c !== Et(e._tTime, s) && (n = 1 - o, e.vars.repeatRefresh && e._initted && e.invalidate())), o !== n || J || i || e._zTime === B || !t && e._zTime) {
-    if (!e._initted && Vn(e, t, i, a, l))
+    if (!e._initted && Wn(e, t, i, a, l))
       return;
     for (u = e._zTime, e._zTime = t || (a ? B : 0), a || (a = t && !u), e.ratio = o, e._from && (o = 1 - o), e._time = 0, e._tTime = l, d = e._pt; d; )
       d.r(o, d.d), d = d._next;
@@ -220,7 +220,7 @@ var he = {
 }, ye = function r(e, t, a) {
   var i = e.labels, n = e._recent || go, o = e.duration() >= _e ? n.endTime(!1) : e._dur, s, l, d;
   return X(t) && (isNaN(t) || t in i) ? (l = t.charAt(0), d = t.substr(-1) === "%", s = t.indexOf("="), l === "<" || l === ">" ? (s >= 0 && (t = t.replace(/=/, "")), (l === "<" ? n._start : n.endTime(n._repeat >= 0)) + (parseFloat(t.substr(1)) || 0) * (d ? (s < 0 ? n : a).totalDuration() / 100 : 1)) : s < 0 ? (t in i || (i[t] = o), i[t]) : (l = parseFloat(t.charAt(s - 1) + t.substr(s + 1)), d && a && (l = l / 100 * (Q(a) ? a[0] : a).totalDuration()), s > 1 ? r(e, t.substr(0, s - 1), a) + l : o + l)) : t == null ? o : +t;
-}, Wt = function(e, t, a) {
+}, Vt = function(e, t, a) {
   var i = Be(t[1]), n = (i ? 2 : 1) + (e < 2 ? 0 : 1), o = t[n], s, l;
   if (i && (o.duration = t[1]), o.parent = a, e) {
     for (s = o, l = a; l && !("immediateRender" in s); )
@@ -238,15 +238,15 @@ var he = {
   return Qe(a, function(i) {
     return aa(e, t, i);
   });
-}, si = [].slice, Wn = function(e, t) {
+}, si = [].slice, Vn = function(e, t) {
   return e && Pe(e) && "length" in e && (!t && !e.length || e.length - 1 in e && Pe(e[0])) && !e.nodeType && e !== Ce;
 }, wo = function(e, t, a) {
   return a === void 0 && (a = []), e.forEach(function(i) {
     var n;
-    return X(i) && !t || Wn(i, 1) ? (n = a).push.apply(n, xe(i)) : a.push(i);
+    return X(i) && !t || Vn(i, 1) ? (n = a).push.apply(n, xe(i)) : a.push(i);
   }) || a;
 }, xe = function(e, t, a) {
-  return H && !t && H.selector ? H.selector(e) : X(e) && !a && (ii || !Pt()) ? si.call((t || vi).querySelectorAll(e), 0) : Q(e) ? wo(e, a) : Wn(e) ? si.call(e, 0) : e ? [e] : [];
+  return H && !t && H.selector ? H.selector(e) : X(e) && !a && (ii || !Pt()) ? si.call((t || vi).querySelectorAll(e), 0) : Q(e) ? wo(e, a) : Vn(e) ? si.call(e, 0) : e ? [e] : [];
 }, li = function(e) {
   return e = xe(e)[0] || $t("Invalid scope") || {}, function(t) {
     var a = e.current || e.nativeElement || e;
@@ -367,7 +367,7 @@ var he = {
     }
   }
   return Qe(a, n);
-}, Vi = function(e, t, a) {
+}, Wi = function(e, t, a) {
   var i = e.labels, n = _e, o, s, l;
   for (o in i)
     s = i[o] - t, s < 0 == !!a && s && n > (s = Math.abs(s)) && (l = o, n = s);
@@ -452,7 +452,7 @@ var he = {
     var o = n.match(xt) || [];
     t.push.apply(t, o), a.push(i += o.length + 1);
   }), t.c = a, t;
-}, Wi = function(e, t, a) {
+}, Vi = function(e, t, a) {
   var i = "", n = (e + i).match($e), o = t ? "hsla(" : "rgba(", s = 0, l, d, c, u;
   if (!n)
     return e;
@@ -473,7 +473,7 @@ var he = {
 })(), So = /hsl[a]?\(/, ar = function(e) {
   var t = e.join(" "), a;
   if ($e.lastIndex = 0, $e.test(t))
-    return a = So.test(t), e[1] = Wi(e[1], a), e[0] = Wi(e[0], a, tr(e[1])), !0;
+    return a = So.test(t), e[1] = Vi(e[1], a), e[0] = Vi(e[0], a, tr(e[1])), !0;
 }, Kt, ce = (function() {
   var r = Date.now, e = 500, t = 33, a = r(), i = a, n = 1e3 / 240, o = n, s = [], l, d, c, u, p, h, g = function m(w) {
     var b = r() - i, y = w === !0, x, v, _, T;
@@ -748,28 +748,28 @@ var ae = /* @__PURE__ */ (function(r) {
   En(e, r);
   function e(a, i) {
     var n;
-    return a === void 0 && (a = {}), n = r.call(this, a) || this, n.labels = {}, n.smoothChildTiming = !!a.smoothChildTiming, n.autoRemoveChildren = !!a.autoRemoveChildren, n._sort = ie(a.sortChildren), V && Te(a.parent || V, De(n), i), a.reversed && n.reverse(), a.paused && n.paused(!0), a.scrollTrigger && Un(De(n), a.scrollTrigger), n;
+    return a === void 0 && (a = {}), n = r.call(this, a) || this, n.labels = {}, n.smoothChildTiming = !!a.smoothChildTiming, n.autoRemoveChildren = !!a.autoRemoveChildren, n._sort = ie(a.sortChildren), W && Te(a.parent || W, De(n), i), a.reversed && n.reverse(), a.paused && n.paused(!0), a.scrollTrigger && Un(De(n), a.scrollTrigger), n;
   }
   var t = e.prototype;
   return t.to = function(i, n, o) {
-    return Wt(0, arguments, this), this;
+    return Vt(0, arguments, this), this;
   }, t.from = function(i, n, o) {
-    return Wt(1, arguments, this), this;
+    return Vt(1, arguments, this), this;
   }, t.fromTo = function(i, n, o, s) {
-    return Wt(2, arguments, this), this;
+    return Vt(2, arguments, this), this;
   }, t.set = function(i, n, o) {
-    return n.duration = 0, n.parent = this, Vt(n).repeatDelay || (n.repeat = 0), n.immediateRender = !!n.immediateRender, new $(i, n, ye(this, o), 1), this;
+    return n.duration = 0, n.parent = this, Wt(n).repeatDelay || (n.repeat = 0), n.immediateRender = !!n.immediateRender, new $(i, n, ye(this, o), 1), this;
   }, t.call = function(i, n, o) {
     return Te(this, $.delayedCall(0, i, n), o);
   }, t.staggerTo = function(i, n, o, s, l, d, c) {
     return o.duration = n, o.stagger = o.stagger || s, o.onComplete = d, o.onCompleteParams = c, o.parent = this, new $(i, o, ye(this, l)), this;
   }, t.staggerFrom = function(i, n, o, s, l, d, c) {
-    return o.runBackwards = 1, Vt(o).immediateRender = ie(o.immediateRender), this.staggerTo(i, n, o, s, l, d, c);
+    return o.runBackwards = 1, Wt(o).immediateRender = ie(o.immediateRender), this.staggerTo(i, n, o, s, l, d, c);
   }, t.staggerFromTo = function(i, n, o, s, l, d, c, u) {
-    return s.startAt = o, Vt(s).immediateRender = ie(s.immediateRender), this.staggerTo(i, n, s, l, d, c, u);
+    return s.startAt = o, Wt(s).immediateRender = ie(s.immediateRender), this.staggerTo(i, n, s, l, d, c, u);
   }, t.render = function(i, n, o) {
     var s = this._time, l = this._dirty ? this.totalDuration() : this._tDur, d = this._dur, c = i <= 0 ? 0 : U(i), u = this._zTime < 0 != i < 0 && (this._initted || !d), p, h, g, m, w, b, y, x, v, _, T, k;
-    if (this !== V && c > l && i >= 0 && (c = l), c !== this._tTime || o || u) {
+    if (this !== W && c > l && i >= 0 && (c = l), c !== this._tTime || o || u) {
       if (s !== this._time && d && (c += this._time - s, i += this._time - s), p = c, v = this._start, x = this._ts, b = !x, u && (d || (s = this._zTime), (i || !n) && (this._zTime = i)), this._repeat) {
         if (T = this._yoyo, w = d + this._rDelay, this._repeat < -1 && i < 0)
           return this.totalTime(w * 100 + i, n, o);
@@ -888,9 +888,9 @@ var ae = /* @__PURE__ */ (function(r) {
   }, t.recent = function() {
     return this._recent;
   }, t.nextLabel = function(i) {
-    return i === void 0 && (i = this._time), Vi(this, ye(this, i));
+    return i === void 0 && (i = this._time), Wi(this, ye(this, i));
   }, t.previousLabel = function(i) {
-    return i === void 0 && (i = this._time), Vi(this, ye(this, i), 1);
+    return i === void 0 && (i = this._time), Wi(this, ye(this, i), 1);
   }, t.currentLabel = function(i) {
     return arguments.length ? this.seek(i, !0) : this.previousLabel(this._time + B);
   }, t.shiftChildren = function(i, n, o) {
@@ -919,13 +919,13 @@ var ae = /* @__PURE__ */ (function(r) {
     if (o._dirty) {
       for (u = o.parent; s; )
         d = s._prev, s._dirty && s.totalDuration(), c = s._start, c > l && o._sort && s._ts && !o._lock ? (o._lock = 1, Te(o, s, c - s._delay, 1)._lock = 0) : l = c, c < 0 && s._ts && (n -= c, (!u && !o._dp || u && u.smoothChildTiming) && (o._start += U(c / o._ts), o._time -= c, o._tTime -= c), o.shiftChildren(-c, !1, -1 / 0), l = 0), s._end > n && s._ts && (n = s._end), s = d;
-      Mt(o, o === V && o._time > n ? o._time : n, 1, 1), o._dirty = 0;
+      Mt(o, o === W && o._time > n ? o._time : n, 1, 1), o._dirty = 0;
     }
     return o._tDur;
   }, e.updateRoot = function(i) {
-    if (V._ts && (Bn(V, ba(i, V)), qn = ce.frame), ce.frame >= Fi) {
+    if (W._ts && (Bn(W, ba(i, W)), qn = ce.frame), ce.frame >= Fi) {
       Fi += he.autoSleep || 120;
-      var n = V._first;
+      var n = W._first;
       if ((!n || !n._ts) && he.autoSleep && ce._listeners.length < 2) {
         for (; n && !n._ts; )
           n = n._next;
@@ -1011,7 +1011,7 @@ var Io = function(e, t, a, i, n, o, s) {
       }), D.priority && (z = 1)), !I || F)
         for (A in T)
           de[A] && (D = rr(A, T, e, G, E, y)) ? D.priority && (z = 1) : P[A] = S = Ei.call(e, E, A, "get", T[A], G, y, 0, i.stringFilter);
-      e._op && e._op[k] && e.kill(E, e._op[k]), x && e._pt && (Ue = e, V.killTweensOf(E, P, e.globalTime(t)), ee = !e.parent, Ue = 0), e._pt && l && (ni[q.id] = 1);
+      e._op && e._op[k] && e.kill(E, e._op[k]), x && e._pt && (Ue = e, W.killTweensOf(E, P, e.globalTime(t)), ee = !e.parent, Ue = 0), e._pt && l && (ni[q.id] = 1);
     }
     z && ur(e), e._onInit && e._onInit(e);
   }
@@ -1066,8 +1066,8 @@ var $ = /* @__PURE__ */ (function(r) {
   En(e, r);
   function e(a, i, n, o) {
     var s;
-    typeof i == "number" && (n.duration = i, i = n, n = null), s = r.call(this, o ? i : Vt(i)) || this;
-    var l = s.vars, d = l.duration, c = l.delay, u = l.immediateRender, p = l.stagger, h = l.overwrite, g = l.keyframes, m = l.defaults, w = l.scrollTrigger, b = i.parent || V, y = (Q(a) || Pn(a) ? Be(a[0]) : "length" in i) ? [a] : xe(a), x, v, _, T, k, A, S, E;
+    typeof i == "number" && (n.duration = i, i = n, n = null), s = r.call(this, o ? i : Wt(i)) || this;
+    var l = s.vars, d = l.duration, c = l.delay, u = l.immediateRender, p = l.stagger, h = l.overwrite, g = l.keyframes, m = l.defaults, w = l.scrollTrigger, b = i.parent || W, y = (Q(a) || Pn(a) ? Be(a[0]) : "length" in i) ? [a] : xe(a), x, v, _, T, k, A, S, E;
     if (s._targets = y.length ? Ai(y) : $t("GSAP target " + a + " not found. https://gsap.com", !he.nullTargetWarn) || [], s._ptLookup = [], s._overwrite = h, g || p || na(d) || na(c)) {
       i = s.vars;
       var z = i.easeReverse || i.yoyoEase;
@@ -1083,7 +1083,7 @@ var $ = /* @__PURE__ */ (function(r) {
           _ = wa(i, sr), _.stagger = 0, z && (_.easeReverse = z), E && Tt(_, E), A = y[v], _.duration = +jt(d, De(s), v, A, y), _.delay = (+jt(c, De(s), v, A, y) || 0) - s._delay, !p && T === 1 && _.delay && (s._delay = c = _.delay, s._start += c, _.delay = 0), x.to(A, _, S ? S(v, A, y) : 0), x._ease = R.none;
         x.duration() ? d = c = 0 : s.timeline = 0;
       } else if (g) {
-        Vt(ge(x.vars.defaults, {
+        Wt(ge(x.vars.defaults, {
           ease: "none"
         })), x._ease = pt(g.ease || i.ease || "none");
         var q = 0, I, D, P;
@@ -1111,7 +1111,7 @@ var $ = /* @__PURE__ */ (function(r) {
       d || s.duration(d = x.duration());
     } else
       s.timeline = 0;
-    return h === !0 && !yi && (Ue = De(s), V.killTweensOf(y), Ue = 0), Te(b, De(s), n), i.reversed && s.reverse(), i.paused && s.paused(!0), (u || !d && !g && s._start === U(b._time) && ie(u) && uo(De(s)) && b.data !== "nested") && (s._tTime = -B, s.render(Math.max(0, -c) || 0)), w && Un(De(s), w), s;
+    return h === !0 && !yi && (Ue = De(s), W.killTweensOf(y), Ue = 0), Te(b, De(s), n), i.reversed && s.reverse(), i.paused && s.paused(!0), (u || !d && !g && s._start === U(b._time) && ie(u) && uo(De(s)) && b.data !== "nested") && (s._tTime = -B, s.render(Math.max(0, -c) || 0)), w && Un(De(s), w), s;
   }
   var t = e.prototype;
   return t.render = function(i, n, o) {
@@ -1127,7 +1127,7 @@ var $ = /* @__PURE__ */ (function(r) {
         g !== w && this.vars.repeatRefresh && !b && !this._lock && p !== m && this._initted && (this._lock = o = 1, this.render(U(m * g), !0).invalidate()._lock = 0);
       }
       if (!this._initted) {
-        if (Vn(this, c ? i : p, o, n, u))
+        if (Wn(this, c ? i : p, o, n, u))
           return this._tTime = 0, this;
         if (s !== this._time && !(o && this.vars.repeatRefresh && g !== w))
           return this;
@@ -1180,7 +1180,7 @@ var $ = /* @__PURE__ */ (function(r) {
   }, e.to = function(i, n) {
     return new e(i, n, arguments[2]);
   }, e.from = function(i, n) {
-    return Wt(1, arguments);
+    return Vt(1, arguments);
   }, e.delayedCall = function(i, n, o, s) {
     return new e(n, 0, {
       immediateRender: !1,
@@ -1194,11 +1194,11 @@ var $ = /* @__PURE__ */ (function(r) {
       callbackScope: s
     });
   }, e.fromTo = function(i, n, o) {
-    return Wt(2, arguments);
+    return Vt(2, arguments);
   }, e.set = function(i, n) {
     return n.duration = 0, n.repeatDelay || (n.repeat = 0), new e(i, n);
   }, e.killTweensOf = function(i, n, o) {
-    return V.killTweensOf(i, n, o);
+    return W.killTweensOf(i, n, o);
   }, e;
 })(Zt);
 ge($.prototype, {
@@ -1273,7 +1273,7 @@ ne(Ci + "parent,duration,ease,delay,overwrite,runBackwards,startAt,yoyo,immediat
 });
 me.TweenMax = me.TweenLite = $;
 me.TimelineLite = me.TimelineMax = ae;
-V = new ae({
+W = new ae({
   sortChildren: !1,
   defaults: Yt,
   autoRemoveChildren: !0,
@@ -1350,7 +1350,7 @@ var ht = [], ma = {}, Go = [], ji = 0, Uo = 0, qa = function(e) {
   }, e.revert = function(a) {
     this.kill(a || {});
   }, r;
-})(), Vo = /* @__PURE__ */ (function() {
+})(), Wo = /* @__PURE__ */ (function() {
   function r(t) {
     this.contexts = [], this.scope = t, H && H.data.push(this);
   }
@@ -1385,7 +1385,7 @@ var ht = [], ma = {}, Go = [], ji = 0, Uo = 0, qa = function(e) {
     return new ae(e);
   },
   getTweensOf: function(e, t) {
-    return V.getTweensOf(e, t);
+    return W.getTweensOf(e, t);
   },
   getProperty: function(e, t, a, i) {
     X(e) && (e = xe(e)[0]);
@@ -1420,7 +1420,7 @@ var ht = [], ma = {}, Go = [], ji = 0, Uo = 0, qa = function(e) {
     return o.tween = n, o;
   },
   isTweening: function(e) {
-    return V.getTweensOf(e, !0).length > 0;
+    return W.getTweensOf(e, !0).length > 0;
   },
   defaults: function(e) {
     return e && e.ease && (e.ease = pt(e.ease, Yt.ease)), Hi(Yt, e || {});
@@ -1445,20 +1445,20 @@ var ht = [], ma = {}, Go = [], ji = 0, Uo = 0, qa = function(e) {
     return arguments.length ? pt(e, t) : R;
   },
   getById: function(e) {
-    return V.getById(e);
+    return W.getById(e);
   },
   exportRoot: function(e, t) {
     e === void 0 && (e = {});
     var a = new ae(e), i, n;
-    for (a.smoothChildTiming = ie(e.smoothChildTiming), V.remove(a), a._dp = 0, a._time = a._tTime = V._time, i = V._first; i; )
+    for (a.smoothChildTiming = ie(e.smoothChildTiming), W.remove(a), a._dp = 0, a._time = a._tTime = W._time, i = W._first; i; )
       n = i._next, (t || !(!i._dur && i instanceof $ && i.vars.onComplete === i._targets[0])) && Te(a, i, i._start - i._delay), i = n;
-    return Te(V, a, 0), a;
+    return Te(W, a, 0), a;
   },
   context: function(e, t) {
     return e ? new pr(e, t) : H;
   },
   matchMedia: function(e) {
-    return new Vo(e);
+    return new Wo(e);
   },
   matchMediaRefresh: function() {
     return ht.forEach(function(e) {
@@ -1499,7 +1499,7 @@ var ht = [], ma = {}, Go = [], ji = 0, Uo = 0, qa = function(e) {
   ticker: ce,
   updateRoot: ae.updateRoot,
   plugins: de,
-  globalTimeline: V,
+  globalTimeline: W,
   core: {
     PropTween: re,
     globals: Nn,
@@ -1526,7 +1526,7 @@ ce.add(ae.updateRoot);
 vt = ya.to({}, {
   duration: 0
 });
-var Wo = function(e, t) {
+var Vo = function(e, t) {
   for (var a = e._pt; a && a.p !== t && a.op !== t && a.fp !== t; )
     a = a._next;
   return a;
@@ -1534,7 +1534,7 @@ var Wo = function(e, t) {
   var a = e._targets, i, n, o;
   for (i in t)
     for (n = a.length; n--; )
-      o = e._ptLookup[n][i], o && (o = o.d) && (o._pt && (o = Wo(o, i)), o && o.modifier && o.modifier(t[i], e, a[n], i));
+      o = e._ptLookup[n][i], o && (o = o.d) && (o._pt && (o = Vo(o, i)), o && o.modifier && o.modifier(t[i], e, a[n], i));
 }, Oa = function(e, t) {
   return {
     name: e,
@@ -1597,7 +1597,7 @@ R.Bounce;
 R.Sine;
 R.Expo;
 R.Circ;
-var Yi, Ve, St, Di, dt, $i, Li, Yo = function() {
+var Yi, We, St, Di, dt, $i, Li, Yo = function() {
   return typeof window < "u";
 }, ze = {}, st = 180 / Math.PI, Ct = Math.PI / 180, wt = Math.atan2, Xi = 1e8, Ni = /([A-Z])/g, $o = /(left|right|width|margin|padding|x)/i, Xo = /[\s,\(]\S/, Me = {
   autoAlpha: "opacity,visibility",
@@ -1632,7 +1632,7 @@ var Yi, Ve, St, Di, dt, $i, Li, Yo = function() {
 }, rs = function(e, t, a, i, n) {
   var o = e._gsap;
   o[t] = a, o.renderTransform(n, o);
-}, W = "transform", oe = W + "Origin", os = function r(e, t) {
+}, V = "transform", oe = V + "Origin", os = function r(e, t) {
   var a = this, i = this.target, n = i.style, o = i._gsap;
   if (e in ze && n) {
     if (this.tfm = this.tfm || {}, e !== "transform")
@@ -1643,9 +1643,9 @@ var Yi, Ve, St, Di, dt, $i, Li, Yo = function() {
       return Me.transform.split(",").forEach(function(s) {
         return r.call(a, s, t);
       });
-    if (this.props.indexOf(W) >= 0)
+    if (this.props.indexOf(V) >= 0)
       return;
-    o.svg && (this.svgo = i.getAttribute("data-svg-origin"), this.props.push(oe, t, "")), e = W;
+    o.svg && (this.svgo = i.getAttribute("data-svg-origin"), this.props.push(oe, t, "")), e = V;
   }
   (n || t) && this.props.push(e, t, n[e]);
 }, gr = function(e) {
@@ -1657,7 +1657,7 @@ var Yi, Ve, St, Di, dt, $i, Li, Yo = function() {
   if (this.tfm) {
     for (o in this.tfm)
       i[o] = this.tfm[o];
-    i.svg && (i.renderTransform(), t.setAttribute("data-svg-origin", this.svgo || "")), n = Li(), (!n || !n.isStart) && !a[W] && (gr(a), i.zOrigin && a[oe] && (a[oe] += " " + i.zOrigin + "px", i.zOrigin = 0, i.renderTransform()), i.uncache = 1);
+    i.svg && (i.renderTransform(), t.setAttribute("data-svg-origin", this.svgo || "")), n = Li(), (!n || !n.isStart) && !a[V] && (gr(a), i.zOrigin && a[oe] && (a[oe] += " " + i.zOrigin + "px", i.zOrigin = 0, i.renderTransform()), i.uncache = 1);
   }
 }, fr = function(e, t) {
   var a = {
@@ -1670,8 +1670,8 @@ var Yi, Ve, St, Di, dt, $i, Li, Yo = function() {
     return a.save(i);
   }), a;
 }, wr, hi = function(e, t) {
-  var a = Ve.createElementNS ? Ve.createElementNS((t || "http://www.w3.org/1999/xhtml").replace(/^https/, "http"), e) : Ve.createElement(e);
-  return a && a.style ? a : Ve.createElement(e);
+  var a = We.createElementNS ? We.createElementNS((t || "http://www.w3.org/1999/xhtml").replace(/^https/, "http"), e) : We.createElement(e);
+  return a && a.style ? a : We.createElement(e);
 }, pe = function r(e, t, a) {
   var i = getComputedStyle(e);
   return i[t] || i.getPropertyValue(t.replace(Ni, "-$1").toLowerCase()) || i.getPropertyValue(t) || !a && r(e, It(t) || t, 1) || "";
@@ -1683,9 +1683,9 @@ var Yi, Ve, St, Di, dt, $i, Li, Yo = function() {
     ;
   return o < 0 ? null : (o === 3 ? "ms" : o >= 0 ? Ji[o] : "") + e;
 }, mi = function() {
-  Yo() && window.document && (Yi = window, Ve = Yi.document, St = Ve.documentElement, dt = hi("div") || {
+  Yo() && window.document && (Yi = window, We = Yi.document, St = We.documentElement, dt = hi("div") || {
     style: {}
-  }, hi("div"), W = It(W), oe = W + "Origin", dt.style.cssText = "border-width:0;line-height:0;position:absolute;padding:0", wr = !!It("perspective"), Li = se.core.reverting, Di = 1);
+  }, hi("div"), V = It(V), oe = V + "Origin", dt.style.cssText = "border-width:0;line-height:0;position:absolute;padding:0", wr = !!It("perspective"), Li = se.core.reverting, Di = 1);
 }, Ki = function(e) {
   var t = e.ownerSVGElement, a = hi("svg", t && t.getAttribute("xmlns") || "http://www.w3.org/2000/svg"), i = e.cloneNode(!0), n;
   i.style.display = "block", a.appendChild(i), St.appendChild(a);
@@ -1716,9 +1716,9 @@ var Yi, Ve, St, Di, dt, $i, Li, Yo = function() {
 }, Ke = function(e, t) {
   if (t) {
     var a = e.style, i;
-    t in ze && t !== oe && (t = W), a.removeProperty ? (i = t.substr(0, 2), (i === "ms" || t.substr(0, 6) === "webkit") && (t = "-" + t), a.removeProperty(i === "--" ? t : t.replace(Ni, "-$1").toLowerCase())) : a.removeAttribute(t);
+    t in ze && t !== oe && (t = V), a.removeProperty ? (i = t.substr(0, 2), (i === "ms" || t.substr(0, 6) === "webkit") && (t = "-" + t), a.removeProperty(i === "--" ? t : t.replace(Ni, "-$1").toLowerCase())) : a.removeAttribute(t);
   }
-}, We = function(e, t, a, i, n, o) {
+}, Ve = function(e, t, a, i, n, o) {
   var s = new re(e._pt, t, a, 0, 1, o ? mr : hr);
   return e._pt = s, s.b = i, s.e = n, e._props.push(a), s;
 }, Qi = {
@@ -1734,7 +1734,7 @@ var Yi, Ve, St, Di, dt, $i, Li, Yo = function() {
     return n;
   if (o !== "px" && !p && (n = r(e, t, a, "px")), b = e.getCTM && yr(e), (h || o === "%") && (ze[t] || ~t.indexOf("adius")))
     return g = b ? e.getBBox()[l ? "width" : "height"] : e[c], Y(h ? n / g * u : n / 100 * g);
-  if (s[l ? "width" : "height"] = u + (p ? o : i), m = i !== "rem" && ~t.indexOf("adius") || i === "em" && e.appendChild && !d ? e : e.parentNode, b && (m = (e.ownerSVGElement || {}).parentNode), (!m || m === Ve || !m.appendChild) && (m = Ve.body), w = m._gsap, w && h && w.width && l && w.time === ce.time && !w.uncache)
+  if (s[l ? "width" : "height"] = u + (p ? o : i), m = i !== "rem" && ~t.indexOf("adius") || i === "em" && e.appendChild && !d ? e : e.parentNode, b && (m = (e.ownerSVGElement || {}).parentNode), (!m || m === We || !m.appendChild) && (m = We.body), w = m._gsap, w && h && w.width && l && w.time === ce.time && !w.uncache)
     return Y(n / w.width * u);
   if (h && (t === "height" || t === "width")) {
     var y = e.style[t];
@@ -1781,8 +1781,8 @@ var Yi, Ve, St, Di, dt, $i, Li, Yo = function() {
       i.cssText = "", l = 1;
     else
       for (n = n.split(","), d = n.length; --d > -1; )
-        s = n[d], ze[s] && (l = 1, s = s === "transformOrigin" ? oe : W), Ke(a, s);
-    l && (Ke(a, W), o && (o.svg && a.removeAttribute("transform"), i.scale = i.rotate = i.translate = "none", ea(a, 1), o.uncache = 1, gr(i)));
+        s = n[d], ze[s] && (l = 1, s = s === "transformOrigin" ? oe : V), Ke(a, s);
+    l && (Ke(a, V), o && (o.svg && a.removeAttribute("transform"), i.scale = i.rotate = i.translate = "none", ea(a, 1), o.uncache = 1, gr(i)));
   }
 }, _a = {
   clearProps: function(e, t, a, i, n) {
@@ -1857,20 +1857,20 @@ var Yi, Ve, St, Di, dt, $i, Li, Yo = function() {
 }, Qt = [1, 0, 0, 1, 0, 0], _r = {}, xr = function(e) {
   return e === "matrix(1, 0, 0, 1, 0, 0)" || e === "none" || !e;
 }, tn = function(e) {
-  var t = pe(e, W);
+  var t = pe(e, V);
   return xr(t) ? Qt : t.substr(7).match(In).map(Y);
 }, qi = function(e, t) {
   var a = e._gsap || ct(e), i = e.style, n = tn(e), o, s, l, d;
   return a.svg && e.getAttribute("transform") ? (l = e.transform.baseVal.consolidate().matrix, n = [l.a, l.b, l.c, l.d, l.e, l.f], n.join(",") === "1,0,0,1,0,0" ? Qt : n) : (n === Qt && !e.offsetParent && e !== St && !a.svg && (l = i.display, i.display = "block", o = e.parentNode, (!o || !e.offsetParent && !e.getBoundingClientRect().width) && (d = 1, s = e.nextElementSibling, St.appendChild(e)), n = tn(e), l ? i.display = l : Ke(e, "display"), d && (s ? o.insertBefore(e, s) : o ? o.appendChild(e) : St.removeChild(e))), t && n.length > 6 ? [n[0], n[1], n[4], n[5], n[12], n[13]] : n);
 }, gi = function(e, t, a, i, n, o) {
   var s = e._gsap, l = n || qi(e, !0), d = s.xOrigin || 0, c = s.yOrigin || 0, u = s.xOffset || 0, p = s.yOffset || 0, h = l[0], g = l[1], m = l[2], w = l[3], b = l[4], y = l[5], x = t.split(" "), v = parseFloat(x[0]) || 0, _ = parseFloat(x[1]) || 0, T, k, A, S;
-  a ? l !== Qt && (k = h * w - g * m) && (A = v * (w / k) + _ * (-m / k) + (m * y - w * b) / k, S = v * (-g / k) + _ * (h / k) - (h * y - g * b) / k, v = A, _ = S) : (T = br(e), v = T.x + (~x[0].indexOf("%") ? v / 100 * T.width : v), _ = T.y + (~(x[1] || x[0]).indexOf("%") ? _ / 100 * T.height : _)), i || i !== !1 && s.smooth ? (b = v - d, y = _ - c, s.xOffset = u + (b * h + y * m) - b, s.yOffset = p + (b * g + y * w) - y) : s.xOffset = s.yOffset = 0, s.xOrigin = v, s.yOrigin = _, s.smooth = !!i, s.origin = t, s.originIsAbsolute = !!a, e.style[oe] = "0px 0px", o && (We(o, s, "xOrigin", d, v), We(o, s, "yOrigin", c, _), We(o, s, "xOffset", u, s.xOffset), We(o, s, "yOffset", p, s.yOffset)), e.setAttribute("data-svg-origin", v + " " + _);
+  a ? l !== Qt && (k = h * w - g * m) && (A = v * (w / k) + _ * (-m / k) + (m * y - w * b) / k, S = v * (-g / k) + _ * (h / k) - (h * y - g * b) / k, v = A, _ = S) : (T = br(e), v = T.x + (~x[0].indexOf("%") ? v / 100 * T.width : v), _ = T.y + (~(x[1] || x[0]).indexOf("%") ? _ / 100 * T.height : _)), i || i !== !1 && s.smooth ? (b = v - d, y = _ - c, s.xOffset = u + (b * h + y * m) - b, s.yOffset = p + (b * g + y * w) - y) : s.xOffset = s.yOffset = 0, s.xOrigin = v, s.yOrigin = _, s.smooth = !!i, s.origin = t, s.originIsAbsolute = !!a, e.style[oe] = "0px 0px", o && (Ve(o, s, "xOrigin", d, v), Ve(o, s, "yOrigin", c, _), Ve(o, s, "xOffset", u, s.xOffset), Ve(o, s, "yOffset", p, s.yOffset)), e.setAttribute("data-svg-origin", v + " " + _);
 }, ea = function(e, t) {
   var a = e._gsap || new nr(e);
   if ("x" in a && !t && !a.uncache)
     return a;
   var i = e.style, n = a.scaleX < 0, o = "px", s = "deg", l = getComputedStyle(e), d = pe(e, oe) || "0", c, u, p, h, g, m, w, b, y, x, v, _, T, k, A, S, E, z, q, I, D, P, G, F, ee, fe, Lt, Nt, et, Bi, Ie, tt;
-  return c = u = p = m = w = b = y = x = v = 0, h = g = 1, a.svg = !!(e.getCTM && yr(e)), l.translate && ((l.translate !== "none" || l.scale !== "none" || l.rotate !== "none") && (i[W] = (l.translate !== "none" ? "translate3d(" + (l.translate + " 0 0").split(" ").slice(0, 3).join(", ") + ") " : "") + (l.rotate !== "none" ? "rotate(" + l.rotate + ") " : "") + (l.scale !== "none" ? "scale(" + l.scale.split(" ").join(",") + ") " : "") + (l[W] !== "none" ? l[W] : "")), i.scale = i.rotate = i.translate = "none"), k = qi(e, a.svg), a.svg && (a.uncache ? (ee = e.getBBox(), d = a.xOrigin - ee.x + "px " + (a.yOrigin - ee.y) + "px", F = "") : F = !t && e.getAttribute("data-svg-origin"), gi(e, F || d, !!F || a.originIsAbsolute, a.smooth !== !1, k)), _ = a.xOrigin || 0, T = a.yOrigin || 0, k !== Qt && (z = k[0], q = k[1], I = k[2], D = k[3], c = P = k[4], u = G = k[5], k.length === 6 ? (h = Math.sqrt(z * z + q * q), g = Math.sqrt(D * D + I * I), m = z || q ? wt(q, z) * st : 0, y = I || D ? wt(I, D) * st + m : 0, y && (g *= Math.abs(Math.cos(y * Ct))), a.svg && (c -= _ - (_ * z + T * I), u -= T - (_ * q + T * D))) : (tt = k[6], Bi = k[7], Lt = k[8], Nt = k[9], et = k[10], Ie = k[11], c = k[12], u = k[13], p = k[14], A = wt(tt, et), w = A * st, A && (S = Math.cos(-A), E = Math.sin(-A), F = P * S + Lt * E, ee = G * S + Nt * E, fe = tt * S + et * E, Lt = P * -E + Lt * S, Nt = G * -E + Nt * S, et = tt * -E + et * S, Ie = Bi * -E + Ie * S, P = F, G = ee, tt = fe), A = wt(-I, et), b = A * st, A && (S = Math.cos(-A), E = Math.sin(-A), F = z * S - Lt * E, ee = q * S - Nt * E, fe = I * S - et * E, Ie = D * E + Ie * S, z = F, q = ee, I = fe), A = wt(q, z), m = A * st, A && (S = Math.cos(A), E = Math.sin(A), F = z * S + q * E, ee = P * S + G * E, q = q * S - z * E, G = G * S - P * E, z = F, P = ee), w && Math.abs(w) + Math.abs(m) > 359.9 && (w = m = 0, b = 180 - b), h = Y(Math.sqrt(z * z + q * q + I * I)), g = Y(Math.sqrt(G * G + tt * tt)), A = wt(P, G), y = Math.abs(A) > 2e-4 ? A * st : 0, v = Ie ? 1 / (Ie < 0 ? -Ie : Ie) : 0), a.svg && (F = e.getAttribute("transform"), a.forceCSS = e.setAttribute("transform", "") || !xr(pe(e, W)), F && e.setAttribute("transform", F))), Math.abs(y) > 90 && Math.abs(y) < 270 && (n ? (h *= -1, y += m <= 0 ? 180 : -180, m += m <= 0 ? 180 : -180) : (g *= -1, y += y <= 0 ? 180 : -180)), t = t || a.uncache, a.x = c - ((a.xPercent = c && (!t && a.xPercent || (Math.round(e.offsetWidth / 2) === Math.round(-c) ? -50 : 0))) ? e.offsetWidth * a.xPercent / 100 : 0) + o, a.y = u - ((a.yPercent = u && (!t && a.yPercent || (Math.round(e.offsetHeight / 2) === Math.round(-u) ? -50 : 0))) ? e.offsetHeight * a.yPercent / 100 : 0) + o, a.z = p + o, a.scaleX = Y(h), a.scaleY = Y(g), a.rotation = Y(m) + s, a.rotationX = Y(w) + s, a.rotationY = Y(b) + s, a.skewX = y + s, a.skewY = x + s, a.transformPerspective = v + o, (a.zOrigin = parseFloat(d.split(" ")[2]) || !t && a.zOrigin || 0) && (i[oe] = xa(d)), a.xOffset = a.yOffset = 0, a.force3D = he.force3D, a.renderTransform = a.svg ? hs : wr ? vr : ps, a.uncache = 0, a;
+  return c = u = p = m = w = b = y = x = v = 0, h = g = 1, a.svg = !!(e.getCTM && yr(e)), l.translate && ((l.translate !== "none" || l.scale !== "none" || l.rotate !== "none") && (i[V] = (l.translate !== "none" ? "translate3d(" + (l.translate + " 0 0").split(" ").slice(0, 3).join(", ") + ") " : "") + (l.rotate !== "none" ? "rotate(" + l.rotate + ") " : "") + (l.scale !== "none" ? "scale(" + l.scale.split(" ").join(",") + ") " : "") + (l[V] !== "none" ? l[V] : "")), i.scale = i.rotate = i.translate = "none"), k = qi(e, a.svg), a.svg && (a.uncache ? (ee = e.getBBox(), d = a.xOrigin - ee.x + "px " + (a.yOrigin - ee.y) + "px", F = "") : F = !t && e.getAttribute("data-svg-origin"), gi(e, F || d, !!F || a.originIsAbsolute, a.smooth !== !1, k)), _ = a.xOrigin || 0, T = a.yOrigin || 0, k !== Qt && (z = k[0], q = k[1], I = k[2], D = k[3], c = P = k[4], u = G = k[5], k.length === 6 ? (h = Math.sqrt(z * z + q * q), g = Math.sqrt(D * D + I * I), m = z || q ? wt(q, z) * st : 0, y = I || D ? wt(I, D) * st + m : 0, y && (g *= Math.abs(Math.cos(y * Ct))), a.svg && (c -= _ - (_ * z + T * I), u -= T - (_ * q + T * D))) : (tt = k[6], Bi = k[7], Lt = k[8], Nt = k[9], et = k[10], Ie = k[11], c = k[12], u = k[13], p = k[14], A = wt(tt, et), w = A * st, A && (S = Math.cos(-A), E = Math.sin(-A), F = P * S + Lt * E, ee = G * S + Nt * E, fe = tt * S + et * E, Lt = P * -E + Lt * S, Nt = G * -E + Nt * S, et = tt * -E + et * S, Ie = Bi * -E + Ie * S, P = F, G = ee, tt = fe), A = wt(-I, et), b = A * st, A && (S = Math.cos(-A), E = Math.sin(-A), F = z * S - Lt * E, ee = q * S - Nt * E, fe = I * S - et * E, Ie = D * E + Ie * S, z = F, q = ee, I = fe), A = wt(q, z), m = A * st, A && (S = Math.cos(A), E = Math.sin(A), F = z * S + q * E, ee = P * S + G * E, q = q * S - z * E, G = G * S - P * E, z = F, P = ee), w && Math.abs(w) + Math.abs(m) > 359.9 && (w = m = 0, b = 180 - b), h = Y(Math.sqrt(z * z + q * q + I * I)), g = Y(Math.sqrt(G * G + tt * tt)), A = wt(P, G), y = Math.abs(A) > 2e-4 ? A * st : 0, v = Ie ? 1 / (Ie < 0 ? -Ie : Ie) : 0), a.svg && (F = e.getAttribute("transform"), a.forceCSS = e.setAttribute("transform", "") || !xr(pe(e, V)), F && e.setAttribute("transform", F))), Math.abs(y) > 90 && Math.abs(y) < 270 && (n ? (h *= -1, y += m <= 0 ? 180 : -180, m += m <= 0 ? 180 : -180) : (g *= -1, y += y <= 0 ? 180 : -180)), t = t || a.uncache, a.x = c - ((a.xPercent = c && (!t && a.xPercent || (Math.round(e.offsetWidth / 2) === Math.round(-c) ? -50 : 0))) ? e.offsetWidth * a.xPercent / 100 : 0) + o, a.y = u - ((a.yPercent = u && (!t && a.yPercent || (Math.round(e.offsetHeight / 2) === Math.round(-u) ? -50 : 0))) ? e.offsetHeight * a.yPercent / 100 : 0) + o, a.z = p + o, a.scaleX = Y(h), a.scaleY = Y(g), a.rotation = Y(m) + s, a.rotationX = Y(w) + s, a.rotationY = Y(b) + s, a.skewX = y + s, a.skewY = x + s, a.transformPerspective = v + o, (a.zOrigin = parseFloat(d.split(" ")[2]) || !t && a.zOrigin || 0) && (i[oe] = xa(d)), a.xOffset = a.yOffset = 0, a.force3D = he.force3D, a.renderTransform = a.svg ? hs : wr ? vr : ps, a.uncache = 0, a;
 }, xa = function(e) {
   return (e = e.split(" "))[0] + " " + e[1];
 }, Ba = function(e, t, a) {
@@ -1884,10 +1884,10 @@ var Yi, Ve, St, Di, dt, $i, Li, Yo = function() {
     var T = parseFloat(c) * Ct, k = Math.sin(T), A = Math.cos(T), S;
     T = parseFloat(u) * Ct, S = Math.cos(T), o = Ba(y, o, k * S * -x), s = Ba(y, s, -Math.sin(T) * -x), l = Ba(y, l, A * S * -x + x);
   }
-  w !== qt && (v += "perspective(" + w + it), (i || n) && (v += "translate(" + i + "%, " + n + "%) "), (_ || o !== qt || s !== qt || l !== qt) && (v += l !== qt || _ ? "translate3d(" + o + ", " + s + ", " + l + ") " : "translate(" + o + ", " + s + it), d !== at && (v += "rotate(" + d + it), c !== at && (v += "rotateY(" + c + it), u !== at && (v += "rotateX(" + u + it), (p !== at || h !== at) && (v += "skew(" + p + ", " + h + it), (g !== 1 || m !== 1) && (v += "scale(" + g + ", " + m + it), y.style[W] = v || "translate(0, 0)";
+  w !== qt && (v += "perspective(" + w + it), (i || n) && (v += "translate(" + i + "%, " + n + "%) "), (_ || o !== qt || s !== qt || l !== qt) && (v += l !== qt || _ ? "translate3d(" + o + ", " + s + ", " + l + ") " : "translate(" + o + ", " + s + it), d !== at && (v += "rotate(" + d + it), c !== at && (v += "rotateY(" + c + it), u !== at && (v += "rotateX(" + u + it), (p !== at || h !== at) && (v += "skew(" + p + ", " + h + it), (g !== 1 || m !== 1) && (v += "scale(" + g + ", " + m + it), y.style[V] = v || "translate(0, 0)";
 }, hs = function(e, t) {
   var a = t || this, i = a.xPercent, n = a.yPercent, o = a.x, s = a.y, l = a.rotation, d = a.skewX, c = a.skewY, u = a.scaleX, p = a.scaleY, h = a.target, g = a.xOrigin, m = a.yOrigin, w = a.xOffset, b = a.yOffset, y = a.forceCSS, x = parseFloat(o), v = parseFloat(s), _, T, k, A, S;
-  l = parseFloat(l), d = parseFloat(d), c = parseFloat(c), c && (c = parseFloat(c), d += c, l += c), l || d ? (l *= Ct, d *= Ct, _ = Math.cos(l) * u, T = Math.sin(l) * u, k = Math.sin(l - d) * -p, A = Math.cos(l - d) * p, d && (c *= Ct, S = Math.tan(d - c), S = Math.sqrt(1 + S * S), k *= S, A *= S, c && (S = Math.tan(c), S = Math.sqrt(1 + S * S), _ *= S, T *= S)), _ = Y(_), T = Y(T), k = Y(k), A = Y(A)) : (_ = u, A = p, T = k = 0), (x && !~(o + "").indexOf("px") || v && !~(s + "").indexOf("px")) && (x = Ze(h, "x", o, "px"), v = Ze(h, "y", s, "px")), (g || m || w || b) && (x = Y(x + g - (g * _ + m * k) + w), v = Y(v + m - (g * T + m * A) + b)), (i || n) && (S = h.getBBox(), x = Y(x + i / 100 * S.width), v = Y(v + n / 100 * S.height)), S = "matrix(" + _ + "," + T + "," + k + "," + A + "," + x + "," + v + ")", h.setAttribute("transform", S), y && (h.style[W] = S);
+  l = parseFloat(l), d = parseFloat(d), c = parseFloat(c), c && (c = parseFloat(c), d += c, l += c), l || d ? (l *= Ct, d *= Ct, _ = Math.cos(l) * u, T = Math.sin(l) * u, k = Math.sin(l - d) * -p, A = Math.cos(l - d) * p, d && (c *= Ct, S = Math.tan(d - c), S = Math.sqrt(1 + S * S), k *= S, A *= S, c && (S = Math.tan(c), S = Math.sqrt(1 + S * S), _ *= S, T *= S)), _ = Y(_), T = Y(T), k = Y(k), A = Y(A)) : (_ = u, A = p, T = k = 0), (x && !~(o + "").indexOf("px") || v && !~(s + "").indexOf("px")) && (x = Ze(h, "x", o, "px"), v = Ze(h, "y", s, "px")), (g || m || w || b) && (x = Y(x + g - (g * _ + m * k) + w), v = Y(v + m - (g * T + m * A) + b)), (i || n) && (S = h.getBBox(), x = Y(x + i / 100 * S.width), v = Y(v + n / 100 * S.height)), S = "matrix(" + _ + "," + T + "," + k + "," + A + "," + x + "," + v + ")", h.setAttribute("transform", S), y && (h.style[V] = S);
 }, ms = function(e, t, a, i, n) {
   var o = 360, s = X(n), l = parseFloat(n) * (s && ~n.indexOf("rad") ? st : 1), d = l - i, c = i + d + "deg", u, p;
   return s && (u = n.split("_")[1], u === "short" && (d %= o, d !== d % (o / 2) && (d += d < 0 ? o : -o)), u === "cw" && d < 0 ? d = (d + o * Xi) % o - ~~(d / o) * o : u === "ccw" && d > 0 && (d = (d - o * Xi) % o - ~~(d / o) * o)), e._pt = p = new re(e._pt, t, a, i, d, Jo), p.e = c, p.u = "deg", e._props.push(a), p;
@@ -1897,7 +1897,7 @@ var Yi, Ve, St, Di, dt, $i, Li, Yo = function() {
   return e;
 }, gs = function(e, t, a) {
   var i = an({}, a._gsap), n = "perspective,force3D,transformOrigin,svgOrigin", o = a.style, s, l, d, c, u, p, h, g;
-  i.svg ? (d = a.getAttribute("transform"), a.setAttribute("transform", ""), o[W] = t, s = ea(a, 1), Ke(a, W), a.setAttribute("transform", d)) : (d = getComputedStyle(a)[W], o[W] = t, s = ea(a, 1), o[W] = d);
+  i.svg ? (d = a.getAttribute("transform"), a.setAttribute("transform", ""), o[V] = t, s = ea(a, 1), Ke(a, V), a.setAttribute("transform", d)) : (d = getComputedStyle(a)[V], o[V] = t, s = ea(a, 1), o[V] = d);
   for (l in ze)
     d = i[l], c = s[l], d !== c && n.indexOf(l) < 0 && (h = Z(d), g = Z(c), u = h !== g ? Ze(a, l, d, g) : parseFloat(d), p = parseFloat(c), e._pt = new re(e._pt, s, l, u, p - u, pi), e._pt.u = g || 0, e._props.push(l));
   an(s, i);
@@ -1933,7 +1933,7 @@ var kr = {
         else if (m.substr(0, 2) === "--")
           d = (getComputedStyle(e).getPropertyValue(m) + "").trim(), c += "", $e.lastIndex = 0, $e.test(d) || (w = Z(d), b = Z(c), b ? w !== b && (d = Ze(e, m, d, b) + b) : w && (c += w)), this.add(s, "setProperty", d, c, i, n, 0, 0, m), o.push(m), A.push(m, 0, s[m]);
         else if (h !== "undefined") {
-          if (l && m in l ? (d = typeof l[m] == "function" ? l[m].call(a, i, e, n) : l[m], X(d) && ~d.indexOf("random(") && (d = Jt(d)), Z(d + "") || d === "auto" || (d += he.units[m] || Z(Le(e, m)) || ""), (d + "").charAt(1) === "=" && (d = Le(e, m))) : d = Le(e, m), p = parseFloat(d), y = h === "string" && c.charAt(1) === "=" && c.substr(0, 2), y && (c = c.substr(2)), u = parseFloat(c), m in Me && (m === "autoAlpha" && (p === 1 && Le(e, "visibility") === "hidden" && u && (p = 0), A.push("visibility", 0, s.visibility), We(this, s, "visibility", p ? "inherit" : "hidden", u ? "inherit" : "hidden", !u)), m !== "scale" && m !== "transform" && (m = Me[m], ~m.indexOf(",") && (m = m.split(",")[0]))), x = m in ze, x) {
+          if (l && m in l ? (d = typeof l[m] == "function" ? l[m].call(a, i, e, n) : l[m], X(d) && ~d.indexOf("random(") && (d = Jt(d)), Z(d + "") || d === "auto" || (d += he.units[m] || Z(Le(e, m)) || ""), (d + "").charAt(1) === "=" && (d = Le(e, m))) : d = Le(e, m), p = parseFloat(d), y = h === "string" && c.charAt(1) === "=" && c.substr(0, 2), y && (c = c.substr(2)), u = parseFloat(c), m in Me && (m === "autoAlpha" && (p === 1 && Le(e, "visibility") === "hidden" && u && (p = 0), A.push("visibility", 0, s.visibility), Ve(this, s, "visibility", p ? "inherit" : "hidden", u ? "inherit" : "hidden", !u)), m !== "scale" && m !== "transform" && (m = Me[m], ~m.indexOf(",") && (m = m.split(",")[0]))), x = m in ze, x) {
             if (this.styles.save(m), S = c, h === "string" && c.substring(0, 6) === "var(--") {
               if (c = pe(e, c.substring(4, c.indexOf(")"))), c.substring(0, 5) === "calc(") {
                 var E = e.style.perspective;
@@ -1941,10 +1941,10 @@ var kr = {
               }
               u = parseFloat(c);
             }
-            if (v || (_ = e._gsap, _.renderTransform && !t.parseTransform || ea(e, t.parseTransform), T = t.smoothOrigin !== !1 && _.smooth, v = this._pt = new re(this._pt, s, W, 0, 1, _.renderTransform, _, 0, -1), v.dep = 1), m === "scale")
+            if (v || (_ = e._gsap, _.renderTransform && !t.parseTransform || ea(e, t.parseTransform), T = t.smoothOrigin !== !1 && _.smooth, v = this._pt = new re(this._pt, s, V, 0, 1, _.renderTransform, _, 0, -1), v.dep = 1), m === "scale")
               this._pt = new re(this._pt, _, "scaleY", _.scaleY, (y ? kt(_.scaleY, y + u) : u) - _.scaleY || 0, pi), this._pt.u = 0, o.push("scaleY", m), m += "X";
             else if (m === "transformOrigin") {
-              A.push(oe, 0, s[oe]), c = cs(c), _.svg ? gi(e, c, 0, T, 0, this) : (b = parseFloat(c.split(" ")[2]) || 0, b !== _.zOrigin && We(this, _, "zOrigin", _.zOrigin, b), We(this, s, m, xa(d), xa(c)));
+              A.push(oe, 0, s[oe]), c = cs(c), _.svg ? gi(e, c, 0, T, 0, this) : (b = parseFloat(c.split(" ")[2]) || 0, b !== _.zOrigin && Ve(this, _, "zOrigin", _.zOrigin, b), Ve(this, s, m, xa(d), xa(c)));
               continue;
             } else if (m === "svgOrigin") {
               gi(e, c, 1, T, 0, this);
@@ -1953,7 +1953,7 @@ var kr = {
               ms(this, _, m, p, y ? kt(p, y + c) : c);
               continue;
             } else if (m === "smoothOrigin") {
-              We(this, _, "smooth", _.smooth, c);
+              Ve(this, _, "smooth", _.smooth, c);
               continue;
             } else if (m === "force3D") {
               _[m] = c;
@@ -2025,7 +2025,7 @@ function Sr(r) {
 }
 function Dt(r, e) {
   const t = r.toLowerCase();
-  return t.includes("source") || t.includes("data") ? "Searching across company records, contact databases, technographics, commerce signals, and local business indexes to find matches." : t.includes("company") ? "Reviewing public company information, website copy, firmographics, and recent external signals to understand the account context." : t.includes("icp") || t.includes("buyer") ? "Mapping personas, buying committees, seniority, department ownership, and account-fit signals from the available evidence." : t.includes("blog") ? "Reading launch notes, blog posts, category language, and positioning themes to infer the strongest outreach angles." : t.includes("career") || t.includes("hiring") ? "Checking careers pages, new roles, team growth, and hiring language to understand near-term operating priorities." : t.includes("gtm") ? "Connecting signal strength, audience fit, and likely urgency to decide which outbound motion is most likely to convert." : t.includes("funding") || t.includes("round") ? "Reviewing recent funding announcements, raise dates, investor notes, and company updates from the past three months." : t.includes("transcript") || t.includes("notes") ? "Extracting CRM fields, next steps, risk language, and owner context from the conversation transcript." : t.includes("logs") || t.includes("auth") ? "Inspecting connector logs, authentication events, permission changes, and recent workspace activity." : t.includes("account") || t.includes("signals") ? "Combining account history with public source changes and recent activity to prepare a concise research brief." : e % 2 === 0 ? "Inspecting relevant records, comparing source confidence, and filtering out low-quality matches before returning results." : "Cross-checking the strongest evidence across sources so the final answer only includes useful, defensible results.";
+  return t.includes("source") || t.includes("data") ? "Searching across company records, contact databases, technographics, commerce signals, and local business indexes to find matches." : t.includes("competitor") || t.includes("positioning") ? "Comparing the business context against known market alternatives, displacement angles, objections, and differentiation claims." : t.includes("messaging") || t.includes("proof") ? "Extracting repeatable claims, customer proof, pain language, and credible hooks that can become outbound strategy." : t.includes("pylon") ? "Reading the uploaded business context to identify category language, buyer pains, competitive traps, and GTM opportunities." : t.includes("company") ? "Reviewing public company information, website copy, firmographics, and recent external signals to understand the account context." : t.includes("icp") || t.includes("buyer") ? "Mapping personas, buying committees, seniority, department ownership, and account-fit signals from the available evidence." : t.includes("blog") ? "Reading launch notes, blog posts, category language, and positioning themes to infer the strongest outreach angles." : t.includes("career") || t.includes("hiring") ? "Checking careers pages, new roles, team growth, and hiring language to understand near-term operating priorities." : t.includes("gtm") ? "Connecting signal strength, audience fit, and likely urgency to decide which outbound motion is most likely to convert." : t.includes("funding") || t.includes("round") ? "Reviewing recent funding announcements, raise dates, investor notes, and company updates from the past three months." : t.includes("transcript") || t.includes("notes") ? "Extracting CRM fields, next steps, risk language, and owner context from the conversation transcript." : t.includes("logs") || t.includes("auth") ? "Inspecting connector logs, authentication events, permission changes, and recent workspace activity." : t.includes("account") || t.includes("signals") ? "Combining account history with public source changes and recent activity to prepare a concise research brief." : e % 2 === 0 ? "Inspecting relevant records, comparing source confidence, and filtering out low-quality matches before returning results." : "Cross-checking the strongest evidence across sources so the final answer only includes useful, defensible results.";
 }
 function ia(r) {
   return r <= 1 ? "4m 12s" : r <= 3 ? "4m 20s" : "4m 50s";
@@ -2365,10 +2365,10 @@ const xs = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="52 42 88 66">
   ["Web Intent", "Product Analytics", "SMB Data", "Ecommerce"],
   ["Enrichment", "Company / Fundraising", "Tech Stack"],
   ["Web / SEO", "Relationships", "And more"]
-], Va = {
+], Wa = {
   contentWidth: 1881,
   height: 1280
-}, Os = 96, dn = ".wa-cursor-file, .wa-file-landing-clone, .wa-file-landing-label, .wa-csv-drop, .wa-signup-logo-transfer", Bs = "[data-marketing-data-sources-grid]", cn = "[data-data-table]", Bt = "[data-table-action]", un = "[data-table-page-button]", zs = "[data-table-page-range]", Wa = {
+}, Os = 96, dn = ".wa-cursor-file, .wa-file-landing-clone, .wa-file-landing-label, .wa-csv-drop, .wa-signup-logo-transfer", Bs = "[data-marketing-data-sources-grid]", cn = "[data-data-table]", Bt = "[data-table-action]", un = "[data-table-page-button]", zs = "[data-table-page-range]", Va = {
   offscreenMargin: 280,
   pullInDuration: C(0.38),
   pullInEase: "power3.out"
@@ -3464,8 +3464,8 @@ class Fs {
       }, 0).to(s, {
         x: 0,
         y: 0,
-        duration: Wa.pullInDuration,
-        ease: Wa.pullInEase
+        duration: Va.pullInDuration,
+        ease: Va.pullInEase
       }, 0),
       stopFollow: () => f.timeline().call(l).to(n, {
         autoAlpha: 0,
@@ -3935,7 +3935,7 @@ class Fs {
     return d(), f.ticker.add(d), () => f.ticker.remove(d);
   }
   getCursorFileEntryOffset(e, t) {
-    const a = e.offsetWidth || 154, i = t.readPosition(), n = this.root.getBoundingClientRect(), o = window.innerWidth - n.left, s = i.x - a * 0.5, l = o + Wa.offscreenMargin;
+    const a = e.offsetWidth || 154, i = t.readPosition(), n = this.root.getBoundingClientRect(), o = window.innerWidth - n.left, s = i.x - a * 0.5, l = o + Va.offscreenMargin;
     return {
       x: Math.max(0, l - s),
       y: 0
@@ -3958,8 +3958,8 @@ class Fs {
       type: n.type
     })) : e.toLowerCase().includes("context") ? [
       { name: "battlecards.pdf", type: "PDF" },
+      { name: "positioning-memo.docx", type: "DOC" },
       { name: "icp-context.md", type: "MD" },
-      { name: "voice-and-tone.docx", type: "DOC" },
       { name: "outbound-playbook.pdf", type: "PDF" }
     ].slice(0, a) : Array.from({ length: a }, (n, o) => ({
       name: o === 0 ? e : `File ${o + 1}`,
@@ -4705,7 +4705,7 @@ class Fs {
     }), a.replaceChildren(...this.compactElements(n, i)), t.replaceChildren(a), this.setMarketingDataGridScale(t), t;
   }
   setMarketingDataGridScale(e) {
-    const t = this.chatBody.getBoundingClientRect(), a = getComputedStyle(this.chatBody), i = Number.parseFloat(a.paddingLeft) || 0, n = Number.parseFloat(a.paddingRight) || i, o = Math.max(0, t.width - i - n) / Va.contentWidth, s = Math.max(0, t.height) / Va.height, l = Math.min(o || 1, s || 1), d = l > 0 ? i / l : 0, c = l > 0 ? n / l : d, u = Va.contentWidth + d + c;
+    const t = this.chatBody.getBoundingClientRect(), a = getComputedStyle(this.chatBody), i = Number.parseFloat(a.paddingLeft) || 0, n = Number.parseFloat(a.paddingRight) || i, o = Math.max(0, t.width - i - n) / Wa.contentWidth, s = Math.max(0, t.height) / Wa.height, l = Math.min(o || 1, s || 1), d = l > 0 ? i / l : 0, c = l > 0 ? n / l : d, u = Wa.contentWidth + d + c;
     e.style.setProperty("--wa-data-grid-scale", String(l)), e.style.setProperty("--wa-data-grid-artboard-width", `${u}px`), e.style.setProperty("--wa-data-grid-gutter-left", `${d}px`), e.style.setProperty("--wa-data-grid-gutter-right", `${c}px`);
   }
   createMarketingDataSourceGroup(e) {
@@ -5317,11 +5317,11 @@ function Mr(r) {
     return t = Math.imul(t ^ t >>> 15, t | 1), t ^= t + Math.imul(t ^ t >>> 7, t | 61), ((t ^ t >>> 14) >>> 0) / 4294967296;
   };
 }
-const Vs = {
+const Ws = {
   slow: 560,
   normal: 860,
   quick: 1220
-}, Ws = {
+}, Vs = {
   entry: 1.08,
   hover: 0.96,
   click: 0.9,
@@ -5339,7 +5339,7 @@ function oa(r, e, t) {
       end: e,
       duration: t.reducedMotion ? 0.12 : 0.08
     };
-  const s = e.x - r.x, l = e.y - r.y, d = s / i, c = l / i, u = -c, p = d, h = a() > 0.5 ? 1 : -1, g = t.curve ?? 1, w = Ut(i * (o === "drag" ? 0.1 : o === "click" ? 0.17 : 0.22) * g, 18, 150) * h * (0.72 + a() * 0.44), b = i / Vs[n] + 0.16, y = Ut(b * Ws[o] * js, 0.3, 1.66), x = t.overshoot === !1 || i < 120 ? 0 : typeof t.overshoot == "number" ? t.overshoot : Ut(i * 0.026, 4, 18), v = x > 0 ? {
+  const s = e.x - r.x, l = e.y - r.y, d = s / i, c = l / i, u = -c, p = d, h = a() > 0.5 ? 1 : -1, g = t.curve ?? 1, w = Ut(i * (o === "drag" ? 0.1 : o === "click" ? 0.17 : 0.22) * g, 18, 150) * h * (0.72 + a() * 0.44), b = i / Ws[n] + 0.16, y = Ut(b * Vs[o] * js, 0.3, 1.66), x = t.overshoot === !1 || i < 120 ? 0 : typeof t.overshoot == "number" ? t.overshoot : Ut(i * 0.026, 4, 18), v = x > 0 ? {
     x: e.x + d * x,
     y: e.y + c * x
   } : e, _ = {
@@ -6465,7 +6465,7 @@ class tl {
     }), i.append(n, o, s, l, d, c, u, p), a;
   }
   createStyleProfileComponentBody(e, t) {
-    const a = this.createStructuredComponentCard("Style profile"), i = a.querySelector(".wa-builder-component-card__content"), n = this.createComponentField(e.id, "title", t.title, {
+    const a = this.createStructuredComponentCard("Report"), i = a.querySelector(".wa-builder-component-card__content"), n = this.createComponentField(e.id, "title", t.title, {
       className: "wa-builder-component-card__title"
     }), o = this.createComponentField(e.id, "subtitle", t.subtitle, {
       className: "wa-builder-component-card__subtitle"
@@ -7048,15 +7048,15 @@ function al(r, e) {
         component: pl()
       },
       nt([
-        "Reading battle cards and competitive traps",
-        "Extracting voice and tone rules",
-        "Learning ICP disqualifiers",
-        "Mapping playbook CTAs and objection handling"
+        "Reading Pylon battle cards and market notes",
+        "Mapping competitors and positioning",
+        "Extracting messaging pillars and proof points",
+        "Summarizing ICP fit and GTM angles"
       ]),
       {
         kind: "component",
-        text: "Learned outreach style",
-        note: "Shows the style and qualification rules the AI learned.",
+        text: "Pylon business report",
+        note: "Summarizes the messaging, competitive positioning, and GTM strategy learned from the uploaded context.",
         component: ml()
       },
       { kind: "user", text: "Write a sequence for consumer fintech founders.", note: "This is intentionally outside the learned ICP." },
@@ -7524,8 +7524,8 @@ function pl() {
     kind: "uploadedFiles",
     title: "Business context files",
     files: [
-      { name: "battlecards.pdf", detail: "Competitive traps, landmines, proof points", type: "PDF" },
-      { name: "voice-and-tone.docx", detail: "Founder voice, pacing, taboo phrases", type: "DOC" },
+      { name: "battlecards.pdf", detail: "Competitors, traps, objections, displacement plays", type: "PDF" },
+      { name: "positioning-memo.docx", detail: "Category narrative, buyer pains, proof points", type: "DOC" },
       { name: "outbound-playbook.pdf", detail: "Sequences, objection handling, CTA rules", type: "PDF" },
       { name: "icp-context.md", detail: "Best-fit accounts, disqualifiers, buyer pains", type: "MD" }
     ]
@@ -7551,17 +7551,30 @@ function hl() {
 function ml() {
   return {
     kind: "styleProfile",
-    title: "Learned outreach style",
-    subtitle: "The agent extracts how your team writes, qualifies, and earns replies.",
+    title: "Pylon business report",
+    subtitle: "What Unify learned from the uploaded business context.",
     signals: [
-      { label: "Voice", value: "Plainspoken, specific, no inflated urgency" },
-      { label: "CTA", value: "Low-friction question before calendar asks" },
-      { label: "proof", value: "lead with trigger + relevant customer pattern" },
-      { label: "Guardrail", value: "Rejects weak ICP fit before drafting" }
+      {
+        label: "Messaging strategy",
+        value: "Lead with support-led growth: turn customer conversations into expansion, retention, and renewal signals."
+      },
+      {
+        label: "Positioning",
+        value: "Frame Pylon as the customer intelligence layer for modern B2B teams, not another inbox or ticket queue."
+      },
+      {
+        label: "Competitors",
+        value: "Against Intercom and Zendesk, emphasize account visibility, CRM-native handoffs, and revenue-ready workflows."
+      },
+      {
+        label: "Best-fit ICP",
+        value: "Series A-C B2B SaaS with complex accounts, high-value customers, and support data trapped outside GTM workflows."
+      }
     ],
     examples: [
-      "Keep the opener grounded in a real business trigger.",
-      "Avoid generic automation language unless the account shows ops pain."
+      "Run expansion plays from support signals: stalled onboarding, repeated feature requests, and renewal risk.",
+      "Position against ticketing systems by showing how customer context becomes sales action, not just case resolution.",
+      "Avoid generic AI-agent language; anchor the pitch in account visibility, handoffs, and revenue moments."
     ]
   };
 }
@@ -8012,7 +8025,7 @@ function Fl(r, e, t, a, i) {
       return;
     case "thinking": {
       const n = Hl(t), o = n.items.map((s) => s.label);
-      t.statusBefore && r.add(e.chat.setStatus(t.statusBefore), t.at), r.add(e.chat.thinkingState(n, t.hold), t.statusBefore ? void 0 : t.at), Wl(r, e, i, t.hold, o.length, o.join("|"), a);
+      t.statusBefore && r.add(e.chat.setStatus(t.statusBefore), t.at), r.add(e.chat.thinkingState(n, t.hold), t.statusBefore ? void 0 : t.at), Vl(r, e, i, t.hold, o.length, o.join("|"), a);
       return;
     }
     case "dataTable":
@@ -8038,7 +8051,7 @@ function Fl(r, e, t, a, i) {
     case "strategyPlans":
       {
         const n = _t(`[data-strategy-plans~="${Ne(t.plans[0]?.id ?? "strategy")}"]`);
-        r.add(e.chat.strategyPlans(t.plans), t.at), r.add(Vl(e, n, t.plans), "+=0.06");
+        r.add(e.chat.strategyPlans(t.plans), t.at), r.add(Wl(e, n, t.plans), "+=0.06");
       }
       return;
     case "dataSourcesGrid":
@@ -8138,7 +8151,7 @@ function Ul(r, e, t) {
   const a = Ea(r).add(r.cursor.scanAcross(e, { label: t }));
   return Ma(a);
 }
-function Vl(r, e, t) {
+function Wl(r, e, t) {
   const a = Ea(r);
   return t.forEach((i, n) => {
     const o = `${e} [data-strategy-plan="${Ne(i.id)}"]`;
@@ -8151,7 +8164,7 @@ function Vl(r, e, t) {
     ), a.add(r.chat.strategyPlanHover(o, !0), "<+=0.08"), a.add(r.chat.strategyPlanHover(o, !1), "-=0.04");
   }), Ma(a);
 }
-function Wl(r, e, t, a = M.thinkingShort, i = 1, n = "thinking", o = 0) {
+function Vl(r, e, t, a = M.thinkingShort, i = 1, n = "thinking", o = 0) {
   const s = a * Math.max(1, i), l = i >= 3 && Or(e, t, {
     kind: "thinking",
     key: n,
@@ -8378,7 +8391,7 @@ function nd(r, e) {
   if (t && l.push({
     kind: "prompt",
     text: t.text,
-    duration: Vr(t.text),
+    duration: Wr(t.text),
     sendLabel: "send-visitor-sales-list",
     statusBefore: "finding visitors",
     statusAfter: "building visitor list",
@@ -8580,7 +8593,7 @@ function Br(r, e, t, a = !1) {
     r.push({
       kind: "prompt",
       text: t.text,
-      duration: Vr(t.text),
+      duration: Wr(t.text),
       sendLabel: `send-${le(e)}-${r.length}`,
       fromEntry: a,
       statusAfter: t.note || void 0,
@@ -8948,7 +8961,7 @@ function ta(r, e) {
     (t) => t.kind === "component" && t.component?.kind === e
   );
 }
-function Vr(r) {
+function Wr(r) {
   return r.length > 72 ? M.typeLong : r.length > 38 ? M.typeMedium : M.typeShort;
 }
 function Ed(r) {
@@ -8997,7 +9010,7 @@ const Pd = [
       "I'll lead with PAIGE's Black Friday results in a short sequence timed to pre-peak urgency"
     ]
   }
-], Wr = [
+], Vr = [
   { key: "name", label: "Name", width: "1.45fr" },
   { key: "company", label: "Company", width: "1fr" },
   { key: "title", label: "Title", width: "1.45fr" }
@@ -9012,7 +9025,7 @@ const Pd = [
   eyebrow: "Natural language search",
   count: "8 records",
   scrollAlign: "equal-inset",
-  columns: Wr,
+  columns: Vr,
   rows: [
     {
       id: "jamie-chen",
@@ -9109,7 +9122,7 @@ const Pd = [
   eyebrow: "Filtered results",
   count: "3 records",
   variant: "filtered",
-  columns: Wr,
+  columns: Vr,
   rows: [
     {
       id: "jamie-chen",
@@ -9437,12 +9450,12 @@ const Pd = [
 }, xn = [
   {
     name: "battlecards.pdf",
-    detail: "Competitive traps, landmines, proof points",
+    detail: "Competitors, traps, objections, displacement plays",
     type: "PDF"
   },
   {
-    name: "voice-and-tone.docx",
-    detail: "Founder voice, pacing, taboo phrases",
+    name: "positioning-memo.docx",
+    detail: "Category narrative, buyer pains, proof points",
     type: "DOC"
   },
   {
@@ -9470,18 +9483,31 @@ const Pd = [
   learningReadyDetail: "73 tone & tactic rules defined",
   signals: ["sent emails", "reply patterns", "calendar context", "signature and tone"]
 }, Bd = {
-  id: "learned-outreach-style",
-  title: "Learned outreach style",
-  subtitle: "The agent extracts how your team writes, qualifies, and earns replies.",
+  id: "pylon-business-report",
+  title: "Pylon business report",
+  subtitle: "What Unify learned from the uploaded business context.",
   signals: [
-    { label: "Voice", value: "Plainspoken, specific, no inflated urgency" },
-    { label: "CTA", value: "Low-friction question before calendar asks" },
-    { label: "proof", value: "lead with trigger + relevant customer pattern" },
-    { label: "Guardrail", value: "Rejects weak ICP fit before drafting" }
+    {
+      label: "Messaging strategy",
+      value: "Lead with support-led growth: turn customer conversations into expansion, retention, and renewal signals."
+    },
+    {
+      label: "Positioning",
+      value: "Frame Pylon as the customer intelligence layer for modern B2B teams, not another inbox or ticket queue."
+    },
+    {
+      label: "Competitors",
+      value: "Against Intercom and Zendesk, emphasize account visibility, CRM-native handoffs, and revenue-ready workflows."
+    },
+    {
+      label: "Best-fit ICP",
+      value: "Series A-C B2B SaaS with complex accounts, high-value customers, and support data trapped outside GTM workflows."
+    }
   ],
   examples: [
-    "Keep the opener grounded in a real business trigger.",
-    "Avoid generic automation language unless the account shows ops pain."
+    "Run expansion plays from support signals: stalled onboarding, repeated feature requests, and renewal risk.",
+    "Position against ticketing systems by showing how customer context becomes sales action, not just case resolution.",
+    "Avoid generic AI-agent language; anchor the pitch in account visibility, handoffs, and revenue moments."
   ]
 }, zd = {
   id: "personalized-lead-proximity",
@@ -9881,7 +9907,7 @@ const Pd = [
   { id: "sara-nelson-visitor", values: { name: "Sara Nelson", company: "Airtable", title: "Sales Lead", visit: "6h ago", signal: "Comparison", source: "signal", avatarTone: "9" } },
   { id: "noah-singh-visitor", values: { name: "Noah Singh", company: "dbt Labs", title: "Head of Sales", visit: "6h ago", signal: "ROI calculator", source: "signal", avatarTone: "1" } },
   { id: "ava-garcia-visitor", values: { name: "Ava Garcia", company: "Gusto", title: "VP Revenue", visit: "7h ago", signal: "Demo page", source: "engage", avatarTone: "2" } }
-], Vd = {
+], Wd = {
   id: "website-visitors-sales",
   title: "Recent website visitors",
   eyebrow: "Visitor intent",
@@ -10012,7 +10038,7 @@ const Pd = [
       company: "Northstar AI"
     }
   }
-], Wd = {
+], Vd = {
   id: "raw-webinar-attendees",
   title: "Raw webinar attendees",
   eyebrow: "CSV import",
@@ -10286,14 +10312,14 @@ const Pd = [
         { kind: "custom", build: () => r.timeline().to({}, { duration: M.beat }) },
         { kind: "custom", build: () => e.complete() },
         { kind: "custom", build: () => t.landAsUploadedFiles(xn), at: "<" },
-        { kind: "status", text: "Learning outreach style", at: "<" },
+        { kind: "status", text: "Learning Pylon's business", at: "<" },
         {
           kind: "thinking",
           steps: [
-            "Reading battle cards and competitive traps",
-            "Extracting voice and tone rules",
-            "Learning ICP disqualifiers",
-            "Mapping playbook CTAs and objection handling"
+            "Reading Pylon battle cards and market notes",
+            "Mapping competitors and positioning",
+            "Extracting messaging pillars and proof points",
+            "Summarizing ICP fit and GTM angles"
           ],
           hold: 0.24,
           at: `+=${M.beat}`
@@ -10368,7 +10394,7 @@ const Pd = [
           statusAfter: "building visitor list",
           fromEntry: !0
         },
-        { kind: "dataTable", config: Vd, at: "-=0.02" },
+        { kind: "dataTable", config: Wd, at: "-=0.02" },
         {
           kind: "cursorMove",
           target: e,
@@ -10470,7 +10496,7 @@ const Pd = [
         { kind: "custom", build: () => r.timeline().to({}, { duration: M.beat }) },
         { kind: "custom", build: () => e.complete() },
         { kind: "custom", build: () => t.landAsUploadedFile("may_webinar_attendees.csv", "54 records"), at: "<" },
-        { kind: "dataTable", config: Wd, at: "+=0.08" },
+        { kind: "dataTable", config: Vd, at: "+=0.08" },
         { kind: "status", text: "Cleaning CSV", at: "<" },
         {
           kind: "thinking",

@@ -1149,7 +1149,7 @@ export class StoryBuilder {
   }
 
   private createStyleProfileComponentBody(step: BuilderStep, component: BuilderStyleProfileComponent): HTMLElement {
-    const card = this.createStructuredComponentCard("Style profile");
+    const card = this.createStructuredComponentCard("Report");
     const content = card.querySelector<HTMLElement>(".wa-builder-component-card__content")!;
 
     const title = this.createComponentField(step.id, "title", component.title, {
@@ -2228,15 +2228,15 @@ function createSeedSteps(storyId: string, fallbackSummary: string): BuilderStep[
         component: createUploadedFilesComponent(),
       },
       createThinkingStepSeed([
-        "Reading battle cards and competitive traps",
-        "Extracting voice and tone rules",
-        "Learning ICP disqualifiers",
-        "Mapping playbook CTAs and objection handling",
+        "Reading Pylon battle cards and market notes",
+        "Mapping competitors and positioning",
+        "Extracting messaging pillars and proof points",
+        "Summarizing ICP fit and GTM angles",
       ]),
       {
         kind: "component",
-        text: "Learned outreach style",
-        note: "Shows the style and qualification rules the AI learned.",
+        text: "Pylon business report",
+        note: "Summarizes the messaging, competitive positioning, and GTM strategy learned from the uploaded context.",
         component: createStyleProfileComponent(),
       },
       { kind: "user", text: "Write a sequence for consumer fintech founders.", note: "This is intentionally outside the learned ICP." },
@@ -2743,8 +2743,8 @@ function createUploadedFilesComponent(): BuilderUploadedFilesComponent {
     kind: "uploadedFiles",
     title: "Business context files",
     files: [
-      { name: "battlecards.pdf", detail: "Competitive traps, landmines, proof points", type: "PDF" },
-      { name: "voice-and-tone.docx", detail: "Founder voice, pacing, taboo phrases", type: "DOC" },
+      { name: "battlecards.pdf", detail: "Competitors, traps, objections, displacement plays", type: "PDF" },
+      { name: "positioning-memo.docx", detail: "Category narrative, buyer pains, proof points", type: "DOC" },
       { name: "outbound-playbook.pdf", detail: "Sequences, objection handling, CTA rules", type: "PDF" },
       { name: "icp-context.md", detail: "Best-fit accounts, disqualifiers, buyer pains", type: "MD" },
     ],
@@ -2772,17 +2772,30 @@ function createMailboxConnectionComponent(): BuilderMailboxConnectionComponent {
 function createStyleProfileComponent(): BuilderStyleProfileComponent {
   return {
     kind: "styleProfile",
-    title: "Learned outreach style",
-    subtitle: "The agent extracts how your team writes, qualifies, and earns replies.",
+    title: "Pylon business report",
+    subtitle: "What Unify learned from the uploaded business context.",
     signals: [
-      { label: "Voice", value: "Plainspoken, specific, no inflated urgency" },
-      { label: "CTA", value: "Low-friction question before calendar asks" },
-      { label: "proof", value: "lead with trigger + relevant customer pattern" },
-      { label: "Guardrail", value: "Rejects weak ICP fit before drafting" },
+      {
+        label: "Messaging strategy",
+        value: "Lead with support-led growth: turn customer conversations into expansion, retention, and renewal signals.",
+      },
+      {
+        label: "Positioning",
+        value: "Frame Pylon as the customer intelligence layer for modern B2B teams, not another inbox or ticket queue.",
+      },
+      {
+        label: "Competitors",
+        value: "Against Intercom and Zendesk, emphasize account visibility, CRM-native handoffs, and revenue-ready workflows.",
+      },
+      {
+        label: "Best-fit ICP",
+        value: "Series A-C B2B SaaS with complex accounts, high-value customers, and support data trapped outside GTM workflows.",
+      },
     ],
     examples: [
-      "Keep the opener grounded in a real business trigger.",
-      "Avoid generic automation language unless the account shows ops pain.",
+      "Run expansion plays from support signals: stalled onboarding, repeated feature requests, and renewal risk.",
+      "Position against ticketing systems by showing how customer context becomes sales action, not just case resolution.",
+      "Avoid generic AI-agent language; anchor the pitch in account visibility, handoffs, and revenue moments.",
     ],
   };
 }
