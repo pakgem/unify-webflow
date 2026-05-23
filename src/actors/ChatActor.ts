@@ -462,6 +462,35 @@ const DATA_TABLE_SELECTOR = "[data-data-table]";
 const DATA_TABLE_ACTION_SELECTOR = "[data-table-action]";
 const DATA_TABLE_PAGE_BUTTON_SELECTOR = "[data-table-page-button]";
 const DATA_TABLE_PAGE_RANGE_SELECTOR = "[data-table-page-range]";
+const COMPANY_LOGO_DOMAINS: Record<string, string> = {
+  "airtable": "airtable.com",
+  "apollo": "apollo.io",
+  "apollo io": "apollo.io",
+  "apolloio": "apollo.io",
+  "brex": "brex.com",
+  "bright layer": "brightlayer.com",
+  "brightlayer": "brightlayer.com",
+  "census": "getcensus.com",
+  "clearbit": "clearbit.com",
+  "clearbit inc": "clearbit.com",
+  "dbt labs": "getdbt.com",
+  "figma": "figma.com",
+  "gusto": "gusto.com",
+  "hex": "hex.tech",
+  "linear": "linear.app",
+  "mercury": "mercury.com",
+  "northstar ai": "northstar.ai",
+  "northstar dev": "northstardev.com",
+  "notion": "notion.so",
+  "orbitgrid": "orbitgrid.com",
+  "ramp": "ramp.com",
+  "retool": "retool.com",
+  "rippling": "rippling.com",
+  "square": "squareup.com",
+  "stripe": "stripe.com",
+  "vercel": "vercel.com",
+  "webflow": "webflow.com",
+};
 const CURSOR_FILE_ENTRY = {
   offscreenMargin: 280,
   pullInDuration: motionDuration(0.38),
@@ -4004,6 +4033,7 @@ export class ChatActor {
           avatarUrlKey: "mutualConnectionAvatarUrl",
           avatarKey: "mutualConnectionAvatar",
           sourceKey: "mutualConnectionSource",
+          companyKey: "mutualConnectionCompany",
         }));
         if (values.mutualConnectionBadge) cell.append(this.createDataTableCellBadge(values.mutualConnectionBadge));
       } else {
@@ -4301,6 +4331,7 @@ export class ChatActor {
       avatarUrlKey?: string;
       avatarKey?: string;
       sourceKey?: string;
+      companyKey?: string;
     } = {},
   ): HTMLElement {
     const person = document.createElement("span");
@@ -4319,10 +4350,7 @@ export class ChatActor {
       values[options.avatarKey ?? "avatar"],
     );
 
-    const source = document.createElement("span");
-    source.className = "wa-data-table-person__source";
-    source.dataset.source = values[options.sourceKey ?? "source"] ?? "default";
-    source.setAttribute("aria-hidden", "true");
+    const source = this.createDataTablePersonSourceBadge(values, options);
 
     const label = document.createElement("span");
     label.className = "wa-data-table-person__name";
@@ -4343,6 +4371,114 @@ export class ChatActor {
 
     person.append(avatarWrap, copy);
     return person;
+  }
+
+  private createDataTablePersonSourceBadge(
+    values: Record<string, string>,
+    options: { detailKey?: string; sourceKey?: string; companyKey?: string } = {},
+  ): HTMLElement {
+    const badge = document.createElement("span");
+    const company = this.getPersonBadgeCompany(values, options);
+    const logoUrl = this.getCompanyLogoUrl(company, values);
+
+    badge.className = "wa-data-table-person__source";
+    badge.dataset.source = values[options.sourceKey ?? "source"] ?? "default";
+    badge.setAttribute("aria-hidden", "true");
+
+    if (!company) return badge;
+
+    badge.dataset.source = "company";
+    badge.dataset.company = company;
+    badge.title = company;
+
+    if (!logoUrl) {
+      badge.dataset.hasLogo = "false";
+      badge.textContent = this.getInitials(company).slice(0, 1);
+      return badge;
+    }
+
+    const img = document.createElement("img");
+    img.className = "wa-data-table-person__source-logo";
+    img.alt = "";
+    img.decoding = "async";
+    img.referrerPolicy = "no-referrer";
+    img.src = logoUrl;
+    img.addEventListener("load", () => {
+      badge.dataset.hasLogo = "true";
+    }, { once: true });
+    img.addEventListener("error", () => {
+      if (!badge.contains(img)) return;
+      img.remove();
+      badge.dataset.hasLogo = "false";
+      badge.textContent = this.getInitials(company).slice(0, 1);
+    }, { once: true });
+    badge.append(img);
+    return badge;
+  }
+
+  private getPersonBadgeCompany(
+    values: Record<string, string>,
+    options: { detailKey?: string; companyKey?: string } = {},
+  ): string {
+    const directCompany = values[options.companyKey ?? "company"]?.trim();
+
+    if (directCompany) return directCompany;
+
+    const detail = values[options.detailKey ?? "prospectDetail"] || values.personDetail || "";
+    const fromDetail = detail.match(/\bat\s+([^,()]+)$/i)?.[1]?.trim();
+
+    if (fromDetail) return fromDetail;
+
+    const fromEmail = this.getCompanyNameFromEmailValues(values);
+
+    return fromEmail;
+  }
+
+  private getCompanyLogoUrl(company: string, values: Record<string, string>): string {
+    const explicitLogo = values.companyLogo || values.logoUrl;
+
+    if (explicitLogo) return explicitLogo;
+
+    const domain = values.companyDomain || this.getCompanyLogoDomain(company) || this.getEmailDomainFromValues(values);
+
+    return domain ? `https://logo.clearbit.com/${encodeURIComponent(domain)}` : "";
+  }
+
+  private getCompanyLogoDomain(company: string): string {
+    if (!company) return "";
+
+    return COMPANY_LOGO_DOMAINS[this.getCompanyKey(company)] ?? "";
+  }
+
+  private getCompanyKey(company: string): string {
+    return company
+      .toLowerCase()
+      .replace(/\b(inc|llc|ltd|corp|corporation|company)\b\.?/g, "")
+      .replace(/[^a-z0-9]+/g, " ")
+      .trim();
+  }
+
+  private getCompanyNameFromEmailValues(values: Record<string, string>): string {
+    const domain = this.getEmailDomainFromValues(values);
+
+    if (!domain) return "";
+
+    const domainStem = domain.split(".")[0] ?? "";
+
+    return domainStem
+      .split(/[-_]+/)
+      .filter(Boolean)
+      .map((part) => part[0]?.toUpperCase() + part.slice(1))
+      .join(" ");
+  }
+
+  private getEmailDomainFromValues(values: Record<string, string>): string {
+    const email = Object.entries(values)
+      .find(([key, value]) => key.toLowerCase().includes("email") && value.includes("@"))?.[1]
+      ?.trim();
+    const domain = email?.split("@").pop()?.toLowerCase().replace(/[^a-z0-9.-]/g, "") ?? "";
+
+    return domain;
   }
 
   private getInitials(name: string): string {
