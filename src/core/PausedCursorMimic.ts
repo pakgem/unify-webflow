@@ -85,6 +85,7 @@ export class PausedCursorMimic {
   private velocity: Point = { x: 0, y: 0 };
   private frame = 0;
   private lastMoveAt = 0;
+  private chatShell: HTMLElement | null = null;
 
   constructor(
     private root: HTMLElement,
@@ -504,7 +505,7 @@ export class PausedCursorMimic {
   }
 
   private isCursorTooFarFromBrowser(): boolean {
-    const shellRect = this.root.querySelector<HTMLElement>("[data-chat-shell]")?.getBoundingClientRect();
+    const shellRect = this.getChatShell()?.getBoundingClientRect();
 
     if (!shellRect) return false;
 
@@ -516,6 +517,13 @@ export class PausedCursorMimic {
     };
 
     return distanceToRect(viewportCursor, shellRect) > MIMIC_FOLLOW.maxBrowserDistance;
+  }
+
+  private getChatShell(): HTMLElement | null {
+    if (this.chatShell?.isConnected) return this.chatShell;
+
+    this.chatShell = this.root.querySelector<HTMLElement>("[data-chat-shell]");
+    return this.chatShell;
   }
 
   private isPointNearStoryCursor(point: Point, radius = MIMIC_TRIGGER.radius): boolean {
@@ -549,12 +557,22 @@ export class PausedCursorMimic {
   }
 
   private pruneSamples(now: number): void {
-    this.samples = this.samples.filter((sample) => now - sample.time <= MIMIC_TRIGGER.sampleWindowMs);
+    this.pruneSampleList(this.samples, now, MIMIC_TRIGGER.sampleWindowMs);
   }
 
   private trackDismissShake(point: Point, now: number): void {
     this.dismissSamples.push({ ...point, time: now });
-    this.dismissSamples = this.dismissSamples.filter((sample) => now - sample.time <= MIMIC_DISMISS.sampleWindowMs);
+    this.pruneSampleList(this.dismissSamples, now, MIMIC_DISMISS.sampleWindowMs);
+  }
+
+  private pruneSampleList(samples: PointerSample[], now: number, maxAgeMs: number): void {
+    let removeCount = 0;
+
+    while (removeCount < samples.length && now - samples[removeCount].time > maxAgeMs) {
+      removeCount += 1;
+    }
+
+    if (removeCount > 0) samples.splice(0, removeCount);
   }
 
   private hasMimicGesture(): boolean {

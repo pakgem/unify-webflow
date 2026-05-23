@@ -383,6 +383,10 @@ const MARKETING_DATA_GRID_ARTBOARD = {
 const STREAM_SCROLL_INTERVAL_MS = 96;
 const TRANSIENT_ELEMENT_SELECTOR = ".wa-cursor-file, .wa-file-landing-clone, .wa-csv-drop";
 const MARKETING_PANEL_SELECTOR = "[data-marketing-data-sources-grid]";
+const DATA_TABLE_SELECTOR = "[data-data-table]";
+const DATA_TABLE_ACTION_SELECTOR = "[data-table-action]";
+const DATA_TABLE_PAGE_BUTTON_SELECTOR = "[data-table-page-button]";
+const DATA_TABLE_PAGE_RANGE_SELECTOR = "[data-table-page-range]";
 const CURSOR_FILE_ENTRY = {
   offscreenMargin: 96,
   pullInDuration: motionDuration(0.38),
@@ -535,7 +539,7 @@ export class ChatActor {
 
     if (!pageButton) return;
 
-    const table = pageButton.closest<HTMLElement>("[data-data-table]");
+    const table = pageButton.closest<HTMLElement>(DATA_TABLE_SELECTOR);
     const tableId = table?.dataset.dataTable;
     const page = Number(pageButton.dataset.tablePageButton);
 
@@ -572,12 +576,8 @@ export class ChatActor {
     this.signupEmail = this.required("[data-signup-email]");
     this.status = this.root.querySelector<HTMLElement>("[data-chat-status]");
     this.prefersReducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
-    this.root.querySelectorAll("[data-thinking], [data-research-steps], [data-result-grid]").forEach((el) => {
-      el.remove();
-    });
-    this.root.querySelectorAll(TRANSIENT_ELEMENT_SELECTOR).forEach((el) => {
-      el.remove();
-    });
+    this.removeElements("[data-thinking], [data-research-steps], [data-result-grid]");
+    this.removeElements(TRANSIENT_ELEMENT_SELECTOR);
     this.clearMarketingPanels();
   }
 
@@ -1109,9 +1109,9 @@ export class ChatActor {
         if (updateExpected) this.expectedDataTablePages.set(tableId, page);
         state.currentRows = state.table ? this.getVisibleDataTableRows(state.table) : [];
         state.targetRows = state.table ? this.queryElements(state.table, `.wa-data-table__row[data-page="${page}"]`) : [];
-        state.buttons = state.table ? this.queryElements(state.table, "[data-table-page-button]") : [];
+        state.buttons = state.table ? this.queryElements(state.table, DATA_TABLE_PAGE_BUTTON_SELECTOR) : [];
         state.targetButton = state.buttons.find((button) => Number(button.dataset.tablePageButton) === page);
-        state.range = state.table?.querySelector<HTMLElement>("[data-table-page-range]") ?? null;
+        state.range = state.table?.querySelector<HTMLElement>(DATA_TABLE_PAGE_RANGE_SELECTOR) ?? null;
         state.canSwitch = Boolean(
           state.table &&
           state.targetRows.length &&
@@ -1209,7 +1209,7 @@ export class ChatActor {
         return;
       }
 
-      const buttons = this.queryElements(table, "[data-table-action]");
+      const buttons = this.queryElements(table, DATA_TABLE_ACTION_SELECTOR);
       buttons.forEach((button) => {
         const active = button.dataset.tableAction === actionId && visible;
         button.dataset.tooltipVisible = String(active);
@@ -3777,16 +3777,16 @@ export class ChatActor {
   private hideDataTableControlTooltip(): void {
     this.tableControlTooltip.dataset.visible = "false";
     this.tableControlTooltip.dataset.hasBadge = "false";
-    this.queryElements(this.chatShell, "[data-table-action]").forEach((control) => {
+    this.queryElements(this.chatShell, DATA_TABLE_ACTION_SELECTOR).forEach((control) => {
       control.dataset.tooltipVisible = "false";
     });
   }
 
   private setDataTableControlTooltipVisible(activeControl: HTMLElement): void {
-    const table = activeControl.closest<HTMLElement>("[data-data-table]");
+    const table = activeControl.closest<HTMLElement>(DATA_TABLE_SELECTOR);
     const controls = table
-      ? this.queryElements(table, "[data-table-action]")
-      : this.queryElements(this.chatShell, "[data-table-action]");
+      ? this.queryElements(table, DATA_TABLE_ACTION_SELECTOR)
+      : this.queryElements(this.chatShell, DATA_TABLE_ACTION_SELECTOR);
 
     controls.forEach((control) => {
       control.dataset.tooltipVisible = String(control === activeControl);
@@ -3801,20 +3801,26 @@ export class ChatActor {
 
   private findDataTableControl(target: EventTarget | null): HTMLElement | null {
     if (!(target instanceof Element)) return null;
-    return target.closest<HTMLElement>("[data-table-action]");
+    return target.closest<HTMLElement>(DATA_TABLE_ACTION_SELECTOR);
   }
 
   private findDataTablePageButton(target: EventTarget | null): HTMLElement | null {
     if (!(target instanceof Element)) return null;
-    return target.closest<HTMLElement>("[data-table-page-button]");
+    return target.closest<HTMLElement>(DATA_TABLE_PAGE_BUTTON_SELECTOR);
   }
 
   private findDataTable(tableId: string): HTMLElement | null {
-    return this.queryElements(this.root, "[data-data-table]").find((table) => table.dataset.dataTable === tableId) ?? null;
+    return this.root.querySelector<HTMLElement>(`[data-data-table="${this.escapeSelectorValue(tableId)}"]`);
   }
 
   private getVisibleDataTableRows(table: HTMLElement): HTMLElement[] {
-    return this.queryElements(table, ".wa-data-table__row[data-page]").filter((row) => row.style.display !== "none");
+    const rows: HTMLElement[] = [];
+
+    for (const row of table.querySelectorAll<HTMLElement>(".wa-data-table__row[data-page]")) {
+      if (row.style.display !== "none") rows.push(row);
+    }
+
+    return rows;
   }
 
   private createDataTablePerson(
@@ -5139,7 +5145,13 @@ export class ChatActor {
   }
 
   private compactElements(...elements: Array<HTMLElement | null | undefined>): HTMLElement[] {
-    return elements.filter((element): element is HTMLElement => Boolean(element));
+    const compact: HTMLElement[] = [];
+
+    for (const element of elements) {
+      if (element) compact.push(element);
+    }
+
+    return compact;
   }
 
   private getSwipeCards(game: HTMLElement | null | undefined): HTMLElement[] {
@@ -5153,16 +5165,13 @@ export class ChatActor {
   }
 
   private clearCustomResults(): void {
-    this.root.querySelectorAll("[data-result-grid] .wa-strategy-plan, [data-result-grid] .wa-data-table, [data-result-grid] .wa-enrichment-panel").forEach((el) => {
-      el.remove();
-    });
+    this.removeElements(
+      "[data-result-grid] .wa-strategy-plan, [data-result-grid] .wa-data-table, [data-result-grid] .wa-enrichment-panel",
+    );
   }
 
   private clearMarketingPanels(): void {
-    this.root.querySelectorAll<HTMLElement>(MARKETING_PANEL_SELECTOR).forEach((el) => {
-      gsap.killTweensOf(el);
-      el.remove();
-    });
+    this.removeElements(MARKETING_PANEL_SELECTOR);
   }
 
   private registerTransientElement(el: HTMLElement, cleanup?: () => void): void {
@@ -5176,7 +5185,11 @@ export class ChatActor {
   private clearTransientElements(): void {
     for (const cleanup of this.transientCleanups) cleanup();
     this.transientCleanups = [];
-    this.root.querySelectorAll(TRANSIENT_ELEMENT_SELECTOR).forEach((el) => {
+    this.removeElements(TRANSIENT_ELEMENT_SELECTOR);
+  }
+
+  private removeElements(selector: string): void {
+    this.root.querySelectorAll<HTMLElement>(selector).forEach((el) => {
       gsap.killTweensOf(el);
       el.remove();
     });

@@ -61,6 +61,7 @@ export class CursorActor {
   private lastModeSyncAt = 0;
   private lastModeSyncPoint: Point = { x: Number.NaN, y: Number.NaN };
   private modeWatchFrame = 0;
+  private chatShell: HTMLElement | null = null;
 
   constructor(
     private root: HTMLElement,
@@ -520,7 +521,7 @@ export class CursorActor {
 
   private resolveHistoryParkPoint(): Point {
     const rootRect = this.root.getBoundingClientRect();
-    const shellRect = this.root.querySelector<HTMLElement>("[data-chat-shell]")?.getBoundingClientRect();
+    const shellRect = this.getChatShellRect();
 
     if (!shellRect) return { ...this.currentPosition };
 
@@ -607,7 +608,7 @@ export class CursorActor {
     const random = this.seededScanRandom(seed);
     const rootRect = this.root.getBoundingClientRect();
     const rect = element.getBoundingClientRect();
-    const shellRect = this.root.querySelector<HTMLElement>("[data-chat-shell]")?.getBoundingClientRect();
+    const shellRect = this.getChatShellRect();
     const left = shellRect ? Math.max(rect.left, shellRect.left + 18) : rect.left;
     const right = shellRect ? Math.min(rect.right, shellRect.right - 18) : rect.right;
     const top = shellRect ? Math.max(rect.top, shellRect.top + 58) : rect.top;
@@ -624,21 +625,48 @@ export class CursorActor {
   }
 
   private findVisibleScanElement(selector: string, match: CursorScanOptions["match"] = "first"): HTMLElement | null {
-    const elements = Array.from(this.root.querySelectorAll<HTMLElement>(selector));
-    const visible = elements.filter((element) => {
-      const style = window.getComputedStyle(element);
-      const rect = element.getBoundingClientRect();
+    const elements = this.root.querySelectorAll<HTMLElement>(selector);
 
-      return (
-        style.display !== "none" &&
-        style.visibility !== "hidden" &&
-        Number(style.opacity) > 0.01 &&
-        rect.width > 0 &&
-        rect.height > 0
-      );
-    });
+    if (match === "last") {
+      for (let index = elements.length - 1; index >= 0; index -= 1) {
+        const element = elements.item(index);
 
-    return match === "last" ? visible[visible.length - 1] ?? null : visible[0] ?? null;
+        if (element && this.isVisibleScanElement(element)) return element;
+      }
+
+      return null;
+    }
+
+    for (const element of elements) {
+      if (this.isVisibleScanElement(element)) return element;
+    }
+
+    return null;
+  }
+
+  private isVisibleScanElement(element: HTMLElement): boolean {
+    return Boolean(this.getVisibleRect(element));
+  }
+
+  private getVisibleRect(element: Element): DOMRect | null {
+    const style = window.getComputedStyle(element);
+
+    if (style.display === "none" || style.visibility === "hidden" || Number(style.opacity) <= 0.01) return null;
+
+    const rect = element.getBoundingClientRect();
+
+    return rect.width > 0 && rect.height > 0 ? rect : null;
+  }
+
+  private getChatShell(): HTMLElement | null {
+    if (this.chatShell?.isConnected) return this.chatShell;
+
+    this.chatShell = this.root.querySelector<HTMLElement>("[data-chat-shell]");
+    return this.chatShell;
+  }
+
+  private getChatShellRect(): DOMRect | null {
+    return this.getChatShell()?.getBoundingClientRect() ?? null;
   }
 
   private seededScanRandom(seed: string): () => number {
@@ -855,24 +883,22 @@ export class CursorActor {
   }
 
   private findLocalHit(candidates: Element[], point: Point, rootRect: DOMRect, selector: string): Element | null {
-    return (
-      candidates.find((candidate) => {
-        if (!candidate.matches(selector)) return false;
+    for (const candidate of candidates) {
+      if (!candidate.matches(selector)) continue;
 
-        const style = window.getComputedStyle(candidate);
-        if (style.display === "none" || style.visibility === "hidden" || Number(style.opacity) < 0.01) return false;
+      const rect = this.getVisibleRect(candidate);
 
-        const rect = candidate.getBoundingClientRect();
-        if (rect.width <= 0 || rect.height <= 0) return false;
+      if (!rect) continue;
 
-        const left = rect.left - rootRect.left;
-        const right = rect.right - rootRect.left;
-        const top = rect.top - rootRect.top;
-        const bottom = rect.bottom - rootRect.top;
+      const left = rect.left - rootRect.left;
+      const right = rect.right - rootRect.left;
+      const top = rect.top - rootRect.top;
+      const bottom = rect.bottom - rootRect.top;
 
-        return point.x >= left && point.x <= right && point.y >= top && point.y <= bottom;
-      }) ?? null
-    );
+      if (point.x >= left && point.x <= right && point.y >= top && point.y <= bottom) return candidate;
+    }
+
+    return null;
   }
 
   private refreshModeTargetCache(): void {

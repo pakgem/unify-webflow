@@ -536,12 +536,21 @@ export class StoryBuilder {
     const refs = this.refs;
 
     if (!refs) return;
+    if (this.isExportHidden()) return;
 
-    refs.export.value = JSON.stringify({
+    refs.export.value = this.getExportJson();
+    this.autoSize(refs.export);
+  }
+
+  private getExportJson(): string {
+    return JSON.stringify({
       schemaVersion: BUILDER_DRAFT_SCHEMA_VERSION,
       stories: this.stories,
     }, null, 2);
-    this.autoSize(refs.export);
+  }
+
+  private isExportHidden(): boolean {
+    return Boolean(this.refs?.export.closest(".wa-builder-export")?.hasAttribute("hidden"));
   }
 
   private async copyExportJson(): Promise<void> {
@@ -549,7 +558,7 @@ export class StoryBuilder {
 
     if (!refs) return;
 
-    const text = refs.export.value;
+    const text = refs.export.value || this.getExportJson();
     let copied = false;
 
     try {
@@ -1898,14 +1907,20 @@ export class StoryBuilder {
 
     if (!refs) return;
 
-    const field = Array.from(refs.thread.querySelectorAll<HTMLTextAreaElement>("[data-builder-step-field]")).find(
-      (candidate) => candidate.dataset.builderStepField === stepId,
+    const field = refs.thread.querySelector<HTMLTextAreaElement>(
+      `[data-builder-step-field="${this.escapeSelectorValue(stepId)}"]`,
     );
 
     if (!field || field.value === value) return;
 
     field.value = value;
     this.autoSize(field);
+  }
+
+  private escapeSelectorValue(value: string): string {
+    return typeof CSS !== "undefined" && "escape" in CSS
+      ? CSS.escape(value)
+      : value.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
   }
 
   private syncThreadThinking(step: BuilderStep): void {
@@ -3197,7 +3212,7 @@ function cloneStep(step: BuilderStep): BuilderStep {
 }
 
 function cloneComponent(component: BuilderComponent): BuilderComponent {
-  return JSON.parse(JSON.stringify(component)) as BuilderComponent;
+  return clonePlainObject(component);
 }
 
 export function normalizeBuilderDraftPayload(payload: unknown): { schemaVersion: number; stories: BuilderStory[] } | null {
@@ -3259,10 +3274,14 @@ function normalizeBuilderStep(step: unknown): BuilderStep | null {
       : kind === "thinking"
         ? createThinkingState(text ?? "", note ?? "")
         : undefined,
-    component: isRecord(step.component)
-      ? JSON.parse(JSON.stringify(step.component)) as BuilderComponent
-      : undefined,
+    component: isRecord(step.component) ? clonePlainObject(step.component as BuilderComponent) : undefined,
   };
+}
+
+function clonePlainObject<T>(value: T): T {
+  return typeof structuredClone === "function"
+    ? structuredClone(value)
+    : JSON.parse(JSON.stringify(value)) as T;
 }
 
 function normalizeThinkingState(value: Record<string, unknown>, fallbackText: string, fallbackNote: string): BuilderThinkingState {
