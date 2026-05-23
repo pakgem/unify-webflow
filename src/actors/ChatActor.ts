@@ -509,11 +509,12 @@ const FILE_DROP_LANDING = {
 };
 const ENRICHMENT_WATERFALL_MOTION = {
   rowStartHold: motionDuration(0.18),
-  rowGapHold: motionDuration(0.22),
-  serviceRevealDuration: motionDuration(0.2),
-  serviceLoadDuration: motionDuration(0.7),
-  serviceSettleDuration: motionDuration(0.18),
-  rowCompleteHold: motionDuration(0.2),
+  serviceRevealDuration: motionDuration(0.16),
+  serviceLoadDuration: motionDuration(0.68),
+  serviceLoadVariance: motionDuration(0.14),
+  serviceSettleDuration: motionDuration(0.14),
+  rowCompleteHold: motionDuration(0.16),
+  rowOffsets: [0, motionDuration(0.08), motionDuration(0.14)],
 };
 
 const COMPONENT_CHILD_REVEAL = {
@@ -4609,8 +4610,8 @@ export class ChatActor {
       if (index < chips.length - 1) {
         const arrow = document.createElement("span");
         arrow.className = "wa-waterfall-arrow";
-        arrow.textContent = "→";
         arrow.setAttribute("aria-hidden", "true");
+        arrow.append(this.createTablerIcon("arrow-right", 16));
         step.append(arrow);
       }
 
@@ -4633,10 +4634,46 @@ export class ChatActor {
     icon.className = "wa-waterfall-chip__icon";
     icon.setAttribute("aria-hidden", "true");
     this.appendWaterfallServiceIcon(icon, config.service);
+    const stateIcon = document.createElement("span");
+    stateIcon.className = "wa-waterfall-chip__state-icon";
+    stateIcon.setAttribute("aria-hidden", "true");
+    stateIcon.append(
+      this.createTablerIcon("check", 14),
+      this.createTablerIcon("x", 14),
+    );
     label.className = "wa-waterfall-chip__label";
     label.textContent = config.label;
-    item.append(icon, label);
+    item.append(icon, stateIcon, label);
     return item;
+  }
+
+  private createTablerIcon(name: "arrow-right" | "check" | "x", size: number): SVGSVGElement {
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    const paths = name === "arrow-right"
+      ? ["M5 12h14", "M13 18l6 -6", "M13 6l6 6"]
+      : name === "check"
+        ? ["M5 12l5 5l10 -10"]
+        : ["M18 6l-12 12", "M6 6l12 12"];
+
+    svg.setAttribute("width", String(size));
+    svg.setAttribute("height", String(size));
+    svg.setAttribute("viewBox", "0 0 24 24");
+    svg.setAttribute("aria-hidden", "true");
+    svg.setAttribute("focusable", "false");
+
+    for (const d of paths) {
+      const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+
+      path.setAttribute("d", d);
+      path.setAttribute("fill", "none");
+      path.setAttribute("stroke", "currentColor");
+      path.setAttribute("stroke-width", "2");
+      path.setAttribute("stroke-linecap", "round");
+      path.setAttribute("stroke-linejoin", "round");
+      svg.append(path);
+    }
+
+    return svg;
   }
 
   private appendWaterfallServiceIcon(icon: HTMLElement, service: string): void {
@@ -4691,8 +4728,15 @@ export class ChatActor {
       const serviceSteps = this.queryElements(row, ".wa-waterfall-service-step");
       const attemptedChips = this.getAttemptedWaterfallChips(chips);
       const rowFinalState = this.getWaterfallFinalState(row);
+      const rowTimeline = gsap.timeline();
+      const rowOffset = ENRICHMENT_WATERFALL_MOTION.rowOffsets[rowIndex % ENRICHMENT_WATERFALL_MOTION.rowOffsets.length] ?? 0;
+      const serviceLoadDuration = ENRICHMENT_WATERFALL_MOTION.serviceLoadDuration
+        + (rowIndex % 2 === 0
+          ? ENRICHMENT_WATERFALL_MOTION.serviceLoadVariance
+          : -ENRICHMENT_WATERFALL_MOTION.serviceLoadVariance);
 
-      tl.call(() => this.setWaterfallState(row, "loading"), undefined, rowIndex === 0 ? 0 : `+=${ENRICHMENT_WATERFALL_MOTION.rowGapHold}`)
+      rowTimeline
+        .call(() => this.setWaterfallState(row, "loading"))
         .to(serviceSteps, {
           autoAlpha: 1,
           y: 0,
@@ -4705,13 +4749,13 @@ export class ChatActor {
       attemptedChips.forEach((chip) => {
         const finalState = this.getWaterfallFinalState(chip);
 
-        tl.call(() => this.setWaterfallState(chip, "loading"))
+        rowTimeline.call(() => this.setWaterfallState(chip, "loading"))
           .to(chip, {
-            scale: 1.04,
+            scale: 1.025,
             duration: ENRICHMENT_WATERFALL_MOTION.serviceSettleDuration,
             ease: "power2.out",
           }, "<")
-          .to({}, { duration: ENRICHMENT_WATERFALL_MOTION.serviceLoadDuration })
+          .to({}, { duration: serviceLoadDuration })
           .call(() => this.setWaterfallState(chip, finalState))
           .to(chip, {
             scale: 1,
@@ -4720,8 +4764,10 @@ export class ChatActor {
           });
       });
 
-      tl.call(() => this.setWaterfallState(row, rowFinalState))
+      rowTimeline.call(() => this.setWaterfallState(row, rowFinalState))
         .to({}, { duration: ENRICHMENT_WATERFALL_MOTION.rowCompleteHold });
+
+      tl.add(rowTimeline, rowOffset);
     });
 
     return tl;

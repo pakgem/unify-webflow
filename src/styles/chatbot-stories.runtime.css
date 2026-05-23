@@ -2328,9 +2328,9 @@ body {
   position: relative;
   display: grid;
   grid-template-columns: var(--wa-thinking-icon-column) 100px max-content;
-  gap: var(--wa-thinking-column-gap) 8px;
+  gap: var(--wa-thinking-column-gap) 7px;
   align-items: center;
-  min-height: 32px;
+  min-height: 30px;
   color: #11110f;
   font-size: 14px;
   line-height: 1;
@@ -2370,7 +2370,7 @@ body {
 .wa-waterfall-row__chips {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 6px;
   min-width: 0;
   overflow: visible;
 }
@@ -2378,25 +2378,34 @@ body {
 .wa-waterfall-service-step {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 6px;
   flex: 0 0 auto;
 }
 
 .wa-waterfall-arrow {
+  display: inline-grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
   color: #bbb3a9;
-  font-size: 16px;
   line-height: 1;
   font-weight: 400;
+}
+
+.wa-waterfall-arrow svg {
+  display: block;
+  width: 16px;
+  height: 16px;
 }
 
 .wa-waterfall-chip {
   position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
   max-width: none;
-  min-height: 32px;
-  padding: 0 11px 0 10px;
+  min-height: 26px;
+  padding: 0 8px;
   overflow: hidden;
   border: 1px solid #e5ded5;
   border-radius: 5px;
@@ -2431,6 +2440,21 @@ body {
   display: block;
   width: 16px;
   height: auto;
+}
+
+.wa-waterfall-chip__state-icon {
+  display: none;
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
+  place-items: center;
+  color: currentColor;
+}
+
+.wa-waterfall-chip__state-icon svg {
+  display: none;
+  width: 14px;
+  height: 14px;
 }
 
 .wa-waterfall-chip__label {
@@ -2483,51 +2507,23 @@ body {
   color: #2f8f4c;
 }
 
-.wa-waterfall-chip[data-step-state="complete"] .wa-waterfall-chip__icon svg,
-.wa-waterfall-chip[data-step-state="complete"] .wa-waterfall-chip__mark,
-.wa-waterfall-chip[data-step-state="failed"] .wa-waterfall-chip__icon svg,
-.wa-waterfall-chip[data-step-state="failed"] .wa-waterfall-chip__mark {
-  opacity: 0;
+.wa-waterfall-chip[data-step-state="complete"] .wa-waterfall-chip__icon,
+.wa-waterfall-chip[data-step-state="failed"] .wa-waterfall-chip__icon {
+  display: none;
 }
 
-.wa-waterfall-chip[data-step-state="complete"] .wa-waterfall-chip__icon::before,
-.wa-waterfall-chip[data-step-state="failed"] .wa-waterfall-chip__icon::before,
-.wa-waterfall-chip[data-step-state="failed"] .wa-waterfall-chip__icon::after {
-  content: "";
-  position: absolute;
+.wa-waterfall-chip[data-step-state="complete"] .wa-waterfall-chip__state-icon,
+.wa-waterfall-chip[data-step-state="failed"] .wa-waterfall-chip__state-icon {
+  display: inline-grid;
 }
 
-.wa-waterfall-chip[data-step-state="complete"] .wa-waterfall-chip__icon::before {
-  top: 4px;
-  left: 3px;
-  width: 9px;
-  height: 5px;
-  border-bottom: 1.8px solid #16a060;
-  border-left: 1.8px solid #16a060;
-  border-radius: 0;
-  transform: rotate(-45deg);
+.wa-waterfall-chip[data-step-state="complete"] .wa-waterfall-chip__state-icon svg:first-child,
+.wa-waterfall-chip[data-step-state="failed"] .wa-waterfall-chip__state-icon svg:last-child {
+  display: block;
 }
 
 .wa-waterfall-chip[data-step-state="failed"] {
   color: #bf4941;
-}
-
-.wa-waterfall-chip[data-step-state="failed"] .wa-waterfall-chip__icon::before,
-.wa-waterfall-chip[data-step-state="failed"] .wa-waterfall-chip__icon::after {
-  top: 7px;
-  left: 3px;
-  width: 10px;
-  height: 1.8px;
-  border-radius: 999px;
-  background: #ef4c45;
-}
-
-.wa-waterfall-chip[data-step-state="failed"] .wa-waterfall-chip__icon::before {
-  transform: rotate(45deg);
-}
-
-.wa-waterfall-chip[data-step-state="failed"] .wa-waterfall-chip__icon::after {
-  transform: rotate(-45deg);
 }
 
 @keyframes wa-waterfall-service-poll {
@@ -5280,14 +5276,14 @@ body {
 
   .wa-waterfall-row {
     grid-template-columns: var(--wa-thinking-icon-column) 100px max-content;
-    gap: 8px;
-    min-height: 32px;
+    gap: 7px;
+    min-height: 30px;
     font-size: 14px;
   }
 
   .wa-waterfall-chip {
-    min-height: 28px;
-    padding: 0 8px 0 7px;
+    min-height: 26px;
+    padding: 0 8px;
     gap: 5px;
     font-size: 11px;
   }
@@ -5302,8 +5298,20 @@ body {
     width: 13px;
   }
 
+  .wa-waterfall-chip__state-icon {
+    flex-basis: 14px;
+    width: 14px;
+    height: 14px;
+  }
+
+  .wa-waterfall-chip__state-icon svg {
+    width: 14px;
+    height: 14px;
+  }
+
   .wa-waterfall-arrow {
-    font-size: 14px;
+    width: 16px;
+    height: 16px;
   }
 
   .wa-waterfall-service-step {
