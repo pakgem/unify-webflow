@@ -177,6 +177,7 @@ const SEQUENCE_WAIT_DAY_DEFAULTS = [2, 3, 2];
 const MAILBOX_CONNECT_MOTION = {
   pressDuration: motionDuration(0.09),
   releaseDuration: motionDuration(0.2),
+  loadingHoldDuration: motionDuration(0.78),
   successHoldDuration: motionDuration(0.12),
   learningRevealDuration: motionDuration(0.34),
   detailSwapDuration: 0.16,
@@ -1446,6 +1447,7 @@ export class ChatActor {
         duration: MAILBOX_CONNECT_MOTION.releaseDuration,
         ease: "back.out(2.6)",
       })
+      .to({}, { duration: MAILBOX_CONNECT_MOTION.loadingHoldDuration })
       .call(() => {
         section.dataset.mailboxState = "connected";
         button.disabled = true;

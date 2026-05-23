@@ -2812,6 +2812,7 @@ body {
 
 .wa-mailbox-connection__button {
   position: relative;
+  isolation: isolate;
   display: grid;
   grid-template-columns: 20px max-content;
   align-items: center;
@@ -2831,9 +2832,54 @@ body {
   font-weight: 430;
   letter-spacing: 0;
   cursor: default;
-  overflow: hidden;
+  overflow: visible;
   transform: translateZ(0);
   will-change: transform, opacity;
+}
+
+.wa-mailbox-connection__button::before,
+.wa-mailbox-connection__button::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.wa-mailbox-connection__button::before {
+  inset: -1px;
+  z-index: 0;
+  border-radius: inherit;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(234, 67, 53, 0.82), transparent 34%),
+    linear-gradient(90deg, rgba(234, 67, 53, 0), rgba(234, 67, 53, 0.4), rgba(234, 67, 53, 0));
+  background-position: 0% 50%, 0% 50%;
+  background-size: 220% 100%, 220% 100%;
+  filter: blur(7px);
+}
+
+.wa-mailbox-connection__button::after {
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  padding: 1px;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(234, 67, 53, 0.95), rgba(234, 67, 53, 0.26) 34%, transparent 54%),
+    linear-gradient(90deg, transparent, rgba(234, 67, 53, 0.52), transparent);
+  background-position: 0% 50%, 0% 50%;
+  background-size: 220% 100%, 220% 100%;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+
+.wa-mailbox-connection__button > * {
+  position: relative;
+  z-index: 2;
 }
 
 .wa-mailbox-connection__button:disabled {
@@ -2887,6 +2933,22 @@ body {
   display: block;
   opacity: 1;
   transform: translateY(0);
+}
+
+.wa-mailbox-connection[data-mailbox-state="loading"] [data-mailbox-connect] {
+  border-color: rgba(234, 67, 53, 0.38);
+}
+
+.wa-mailbox-connection[data-mailbox-state="loading"] [data-mailbox-connect]::before {
+  opacity: 1;
+  animation:
+    wa-mailbox-gmail-radiate 1.16s ease-in-out infinite,
+    wa-mailbox-gmail-pulse 1.72s ease-in-out infinite;
+}
+
+.wa-mailbox-connection[data-mailbox-state="loading"] [data-mailbox-connect]::after {
+  opacity: 1;
+  animation: wa-mailbox-gmail-radiate 1.16s ease-in-out infinite;
 }
 
 .wa-mailbox-connection[data-mailbox-state="connected"] [data-mailbox-connect] {
@@ -5160,6 +5222,31 @@ body {
 
   to {
     background-position: -120% 50%;
+  }
+}
+
+@keyframes wa-mailbox-gmail-radiate {
+  0% {
+    background-position: 0% 50%, 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%, 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%, 0% 50%;
+  }
+}
+
+@keyframes wa-mailbox-gmail-pulse {
+  0%,
+  100% {
+    transform: scale(0.98);
+  }
+
+  50% {
+    transform: scale(1.08);
   }
 }
 
