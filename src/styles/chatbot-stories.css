@@ -104,7 +104,7 @@ body {
   --wa-window-height: 530px;
   --wa-chat-x-padding: 24px;
   --wa-chat-entry-gap: 16px;
-  --wa-chat-top-fade: var(--wa-chat-x-padding);
+  --wa-chat-top-fade: calc(var(--wa-chat-x-padding) + 4px);
   --wa-chat-bottom-clearance: 110px;
   --wa-chat-first-entry-offset: var(--wa-chat-x-padding);
   --wa-ai-message-max-width: 540px;
