@@ -113,6 +113,7 @@ body {
   --wa-chat-thinking-header-weight: 430;
   --wa-chat-thinking-weight: 400;
   --wa-chat-detail-weight: 400;
+  --wa-thinking-logo-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 11'%3E%3Cpath fill='black' d='M5.71835 3.84074V0H0V5.12789C0 7.97387 2.13981 10.9988 6.10463 10.9988H8.4998V5.49938L7.40298 5.48406C6.46808 5.4708 5.71706 4.7386 5.71706 3.8395L5.71835 3.84074Z'/%3E%3Cpath fill='black' d='M11.2814 7.15899V10.9997H16.9998V5.87225C16.9998 3.02586 14.86 0.000976562 10.8952 0.000976562H8.5V5.50036L9.59682 5.51568C10.5317 5.52893 11.2827 6.26113 11.2827 7.16023L11.2814 7.15899Z'/%3E%3C/svg%3E");
   --wa-composer-side-inset: -21px;
   --wa-composer-bottom-outset: -21px;
   --wa-composer-height: 128px;
@@ -813,6 +814,33 @@ body {
   transform-origin: center;
 }
 
+.wa-thinking__glyph::after,
+.wa-thinking-logo-traveler::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 18px;
+  height: 11px;
+  opacity: 0;
+  background:
+    linear-gradient(
+      100deg,
+      #67635f 0%,
+      #67635f 30%,
+      #f23b0a 48%,
+      #c8c3bb 58%,
+      #67635f 74%,
+      #67635f 100%
+    );
+  background-position: 120% 50%;
+  background-size: 260% 100%;
+  pointer-events: none;
+  -webkit-mask: var(--wa-thinking-logo-mask) center / 18px 11px no-repeat;
+  mask: var(--wa-thinking-logo-mask) center / 18px 11px no-repeat;
+  will-change: background-position, opacity;
+}
+
 .wa-thinking__glyph[data-logo-role="shadow"] {
   color: #c8c3bb;
   opacity: 0.88;
@@ -841,7 +869,13 @@ body {
 
 .wa-thinking__glyph[data-logo-mode="thinking"]:not([data-logo-role="shadow"]) .wa-thinking__logo-mark,
 .wa-thinking-logo-traveler[data-logo-mode="thinking"] .wa-thinking__logo-mark {
-  animation: wa-thinking-logo-breathe 980ms ease-in-out infinite;
+  opacity: 0;
+}
+
+.wa-thinking__glyph[data-logo-mode="thinking"]:not([data-logo-role="shadow"])::after,
+.wa-thinking-logo-traveler[data-logo-mode="thinking"]::after {
+  opacity: 1;
+  animation: wa-thinking-logo-gradient 1280ms linear infinite;
 }
 
 .wa-thinking__glyph[data-logo-mode="done"]:not([data-logo-role="shadow"]),
@@ -5059,14 +5093,13 @@ body {
   }
 }
 
-@keyframes wa-thinking-logo-breathe {
-  0%,
-  100% {
-    transform: scale(1);
+@keyframes wa-thinking-logo-gradient {
+  from {
+    background-position: 120% 50%;
   }
 
-  48% {
-    transform: scale(1.08);
+  to {
+    background-position: -120% 50%;
   }
 }
 
