@@ -3165,6 +3165,13 @@ export class ChatActor {
     stack.className = "wa-uploaded-files";
     stack.dataset.uploadedFileCount = String(files.length);
 
+    if (files.length > 1) {
+      const summary = document.createElement("span");
+      summary.className = "wa-uploaded-files__summary";
+      summary.textContent = this.getUploadedFilesLandingLabel(files.length);
+      stack.append(summary);
+    }
+
     const list = document.createElement("div");
     list.className = "wa-uploaded-files__list";
     files.forEach((fileConfig) => {

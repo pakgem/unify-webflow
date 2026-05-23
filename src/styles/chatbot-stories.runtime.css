@@ -1502,6 +1502,7 @@ body {
 }
 
 .wa-uploaded-files__summary {
+  justify-self: start;
   color: #716d66;
   font-size: 10.5px;
   line-height: 1;
