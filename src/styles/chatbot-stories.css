@@ -532,7 +532,7 @@ body {
 
 .wa-chat-shell__title {
   color: var(--wa-color-text);
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1;
   font-weight: 560;
 }
@@ -6076,7 +6076,7 @@ body {
 
   .wa-composer__placeholder {
     min-height: 22px;
-    font-size: 14px;
+    font-size: 16px;
   }
 
   .wa-composer__controls {
