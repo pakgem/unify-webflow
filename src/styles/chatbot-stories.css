@@ -1419,7 +1419,7 @@ body {
 
 .wa-data-table__row[data-header="true"] .wa-data-table__cell {
   color: #555452;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1;
   font-weight: 560;
   text-transform: none;
@@ -1634,7 +1634,7 @@ body {
 
 .wa-data-table__cell[data-column-key="name"],
 .wa-data-table__cell[data-column-key="contact"] {
-  overflow: hidden;
+  overflow: visible;
   color: #050505;
   font-weight: 400;
   white-space: nowrap;
@@ -1666,7 +1666,7 @@ body {
   align-items: start;
   width: 100%;
   min-width: 0;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .wa-data-table-person__avatar-wrap {
@@ -1810,13 +1810,13 @@ body {
 
 .wa-data-table-person__name {
   min-width: 0;
-  overflow: hidden;
+  overflow: visible;
   color: #050505;
   font-size: 14px;
   line-height: 1.05;
   font-weight: 400;
   overflow-wrap: normal;
-  text-overflow: ellipsis;
+  text-overflow: clip;
   white-space: nowrap;
 }
 
