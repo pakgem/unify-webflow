@@ -1248,6 +1248,7 @@ export class ChatActor {
     const cards = plans.map((plan) => this.createStrategyPlan(plan));
     const grid = document.createElement("div");
     const bulletItems = cards.flatMap((card) => this.queryElements(card, ".wa-strategy-plan__bullets li"));
+    const scrollAnchor = this.getLastMessageBody();
 
     grid.className = "wa-result-grid has-strategy-plans";
     grid.dataset.strategyPlans = plans.map((plan) => plan.id).join(" ");
@@ -1255,7 +1256,9 @@ export class ChatActor {
 
     gsap.set(bulletItems, { autoAlpha: 0, y: 5 });
 
-    return this.revealComponentItems("strategy", grid, cards, COMPONENT_CHILD_REVEAL.strategyCard)
+    const message = this.claimComponentMessage("strategy", grid);
+
+    return this.revealPreparedItems(message, cards, COMPONENT_CHILD_REVEAL.strategyCard, scrollAnchor)
       .to(
         bulletItems,
         {
@@ -2327,8 +2330,9 @@ export class ChatActor {
     targets: gsap.TweenTarget,
     vars: gsap.TweenVars,
     position: string | number = "-=0.22",
+    scrollAnchor: HTMLElement | null = null,
   ): gsap.core.Timeline {
-    return gsap.timeline().add(this.revealMessage(message)).to(targets, vars, position);
+    return gsap.timeline().add(this.revealMessage(message, scrollAnchor)).to(targets, vars, position);
   }
 
   private revealMessageWithChildFrom(
@@ -2378,17 +2382,18 @@ export class ChatActor {
     message: HTMLElement,
     targets: HTMLElement[],
     preset: ChildRevealPreset,
+    scrollAnchor: HTMLElement | null = null,
   ): gsap.core.Timeline {
     if (targets.length) gsap.set(targets, { ...preset.from });
 
-    return this.revealMessageWithChildren(message, targets, { ...preset.to }, preset.position).call(
-      () => this.animateMessageScrollIntoView(message),
+    return this.revealMessageWithChildren(message, targets, { ...preset.to }, preset.position, scrollAnchor).call(
+      () => this.animateMessageScrollIntoView(message, CHAT_SCROLL_MOTION.followDuration, scrollAnchor),
       undefined,
       "+=0.02",
     );
   }
 
-  private revealMessage(message: HTMLElement): gsap.core.Timeline {
+  private revealMessage(message: HTMLElement, scrollAnchor: HTMLElement | null = null): gsap.core.Timeline {
     let scrollTarget = 0;
 
     return gsap
@@ -2398,7 +2403,7 @@ export class ChatActor {
         this.scrollTween = null;
         message.style.display = "grid";
         if (this.composerVisible) this.pinThreadToBottom();
-        scrollTarget = this.getMessageScrollTarget(message);
+        scrollTarget = this.getMessageScrollTarget(message, scrollAnchor);
       })
       .to(
         this.thread,
@@ -3259,6 +3264,12 @@ export class ChatActor {
 
     this.messageBodies.set(message, body);
     return body;
+  }
+
+  private getLastMessageBody(): HTMLElement | null {
+    const message = this.messagePool[this.messageIndex - 1];
+
+    return message ? this.getMessageBody(message) : null;
   }
 
   private createThinkingStep(itemConfig: NormalizedThinkingItem, index: number): HTMLElement {
@@ -5195,8 +5206,10 @@ export class ChatActor {
     });
   }
 
-  private getMessageScrollTarget(message: HTMLElement): number {
-    const alignedTarget = this.getAlignedMessageScrollTarget(message);
+  private getMessageScrollTarget(message: HTMLElement, alignElement: HTMLElement | null = null): number {
+    const alignedTarget = alignElement
+      ? this.getAlignedElementScrollTarget(alignElement)
+      : this.getAlignedMessageScrollTarget(message);
 
     if (alignedTarget !== null) return alignedTarget;
 
@@ -5214,12 +5227,18 @@ export class ChatActor {
   }
 
   private getAlignedMessageScrollTarget(message: HTMLElement): number | null {
-    const equalInsetTarget = message.querySelector<HTMLElement>('[data-scroll-align="equal-inset"]');
+    const equalInsetTarget = message.matches('[data-scroll-align="equal-inset"]')
+      ? message
+      : message.querySelector<HTMLElement>('[data-scroll-align="equal-inset"]');
 
     if (!equalInsetTarget) return null;
 
-    const sideInset = this.getElementSideInset(equalInsetTarget);
-    const target = this.getElementOffsetTopWithinThread(equalInsetTarget) - sideInset;
+    return this.getAlignedElementScrollTarget(equalInsetTarget);
+  }
+
+  private getAlignedElementScrollTarget(element: HTMLElement): number {
+    const sideInset = this.getElementSideInset(element);
+    const target = this.getElementOffsetTopWithinThread(element) - sideInset;
 
     return Math.min(Math.max(0, target), this.getThreadBottomScrollTarget());
   }
@@ -5265,8 +5284,9 @@ export class ChatActor {
   private animateMessageScrollIntoView(
     message: HTMLElement,
     duration = CHAT_SCROLL_MOTION.followDuration,
+    scrollAnchor: HTMLElement | null = null,
   ): void {
-    const target = this.getMessageScrollTarget(message);
+    const target = this.getMessageScrollTarget(message, scrollAnchor);
 
     if (this.prefersReducedMotion || Math.abs(this.thread.scrollTop - target) < 1) {
       this.thread.scrollTop = target;
