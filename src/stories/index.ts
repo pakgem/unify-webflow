@@ -93,7 +93,7 @@ const DATA_MARKETPLACE_INITIAL_TABLE = {
   id: "dev-tool-new-hires",
   title: "New hires at dev-tool companies",
   eyebrow: "Natural language search",
-  count: "9 records",
+  count: "8 records",
   columns: DATA_MARKETPLACE_PRE_ENRICHMENT_COLUMNS,
   rows: [
     {
@@ -181,17 +181,6 @@ const DATA_MARKETPLACE_INITIAL_TABLE = {
         title: "Head of Chaos",
         avatarTone: "8",
         avatarUrl: "https://i.pravatar.cc/64?img=15",
-        source: "engage",
-      },
-    },
-    {
-      id: "natalie-dank",
-      values: {
-        name: "Natalie Dank",
-        company: "Stripe",
-        title: "Money Manager",
-        avatarTone: "9",
-        avatarUrl: "https://i.pravatar.cc/64?img=49",
         source: "engage",
       },
     },

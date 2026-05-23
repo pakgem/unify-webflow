@@ -6679,9 +6679,8 @@ function Us(n, e) {
           ["Ellen Nelle", "Square", "Growth Engineer"],
           ["Chadley Dupre", "Square", "Head of Revops"],
           ["Patrick Bateman", "Stripe", "COO"],
-          ["Miles Kibble III", "Stripe", "Head of Chaos"],
-          ["Natalie Dank", "Stripe", "Money Manager"]
-        ], { eyebrow: "Natural language search", count: "9 records" })
+          ["Miles Kibble III", "Stripe", "Head of Chaos"]
+        ], { eyebrow: "Natural language search", count: "8 records" })
       },
       { kind: "user", text: "Filter to the ones that have raised in the past three months.", note: "" },
       rt(["Checking rounds announced since February 2026"]),
@@ -8591,7 +8590,7 @@ const pd = [
   id: "dev-tool-new-hires",
   title: "New hires at dev-tool companies",
   eyebrow: "Natural language search",
-  count: "9 records",
+  count: "8 records",
   columns: Nn,
   rows: [
     {
@@ -8679,17 +8678,6 @@ const pd = [
         title: "Head of Chaos",
         avatarTone: "8",
         avatarUrl: "https://i.pravatar.cc/64?img=15",
-        source: "engage"
-      }
-    },
-    {
-      id: "natalie-dank",
-      values: {
-        name: "Natalie Dank",
-        company: "Stripe",
-        title: "Money Manager",
-        avatarTone: "9",
-        avatarUrl: "https://i.pravatar.cc/64?img=49",
         source: "engage"
       }
     }
