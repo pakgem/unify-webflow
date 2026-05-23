@@ -6793,7 +6793,7 @@ function Us(n, e) {
     ],
     "csv-import-cleanup": [
       { kind: "cursor", text: "Cursor exits right and drags a CSV into the browser.", note: "Drop overlay appears as soon as the file enters." },
-      { kind: "file", text: "webinar_attendees.csv", note: "File appears as a user-side message after release." },
+      { kind: "file", text: "webinar_attendees.csv", note: "6 normalized records" },
       it([
         "Parsing webinar attendee CSV",
         "Normalizing email addresses",
@@ -7907,7 +7907,7 @@ function Fl(n, e, t) {
   if (e.id === "crm-update") return Gl(n, e);
   if (e.id === "research-brief") return Ul(n, e);
   if (e.id === "csv-import-cleanup") return Vl(n, e);
-  const a = Wl(e);
+  const a = $l(e);
   return a.length ? Te(n, [...a, Ve(De.bottomRight, "+=0.18")]) : t.build(n);
 }
 function Hl(n, e) {
@@ -8065,7 +8065,7 @@ function Ul(n, e) {
   return Te(n, l);
 }
 function Vl(n, e) {
-  const t = Le(e, "file"), a = Le(e, "thinking"), i = Le(e, "assistant"), r = Nt(e, "table"), o = t?.text || "webinar_attendees.csv", s = t?.note || "CSV uploaded", l = n.chat.prepareCsvDropArea(), d = n.chat.prepareCursorFile(o, n.cursor), c = F("[data-chat-shell]", "center", {
+  const t = Le(e, "file"), a = Le(e, "thinking"), i = Le(e, "assistant"), r = Nt(e, "table"), o = t?.text || "webinar_attendees.csv", s = Wl(t, r?.component), l = n.chat.prepareCsvDropArea(), d = n.chat.prepareCursorFile(o, n.cursor), c = F("[data-chat-shell]", "center", {
     desktop: { x: 0, y: 82 },
     tablet: { x: 0, y: 72 },
     mobile: { x: 0, y: 64 }
@@ -8090,14 +8090,30 @@ function Vl(n, e) {
     Ve(De.bottomRight, "+=0.18")
   ]);
 }
-function Wl(n) {
-  const e = [], t = n.id === "data-marketplace" ? jl(n.steps) : n.steps;
+function Wl(n, e) {
+  const t = jl(e);
+  if (t) return t;
+  const a = n?.note?.trim();
+  return !a || Yl(a) ? "CSV uploaded" : a;
+}
+function jl(n) {
+  if (!n || n.kind !== "table") return null;
+  const e = n.count?.trim();
+  if (e) return e;
+  const t = n.rows.length;
+  return t <= 0 ? null : `${t} ${t === 1 ? "record" : "records"}`;
+}
+function Yl(n) {
+  return /user-side message|after release|drop overlay|appears as/i.test(n);
+}
+function $l(n) {
+  const e = [], t = n.id === "data-marketplace" ? Xl(n.steps) : n.steps;
   let a = 0;
   for (const i of t)
     a += i.kind === "user" ? 1 : 0, An(e, n.id, i, a === 1);
   return e;
 }
-function jl(n) {
+function Xl(n) {
   const e = [];
   let t = 0;
   for (; t < n.length; ) {
@@ -8109,11 +8125,11 @@ function jl(n) {
     const i = [];
     for (; t < n.length && n[t].kind === "thinking"; )
       i.push(n[t]), t += 1;
-    e.push(i.length > 1 ? Yl(i) : a);
+    e.push(i.length > 1 ? Kl(i) : a);
   }
   return e;
 }
-function Yl(n) {
+function Kl(n) {
   const e = n[0], a = n.flatMap(
     (i) => i.thinking?.items.length ? i.thinking.items : [{
       label: i.text || "Thinking",
@@ -8165,9 +8181,9 @@ function An(n, e, t, a = !1) {
     n.push({ kind: "custom", build: (i) => i.chat.uploadedFileMessage(t.text, t.note || "uploaded") });
     return;
   }
-  t.kind !== "component" || !t.component || $l(n, e, t);
+  t.kind !== "component" || !t.component || Jl(n, e, t);
 }
-function $l(n, e, t) {
+function Jl(n, e, t) {
   const a = t.component;
   if (a.kind === "table") {
     n.push({ kind: "dataTable", config: Ri(a, `${e}-${t.id}`), at: "-=0.04" });
@@ -8178,11 +8194,11 @@ function $l(n, e, t) {
     return;
   }
   if (a.kind === "enrichment") {
-    n.push({ kind: "enrichmentPanel", config: ad(a), at: "+=0.12" });
+    n.push({ kind: "enrichmentPanel", config: nd(a), at: "+=0.12" });
     return;
   }
   if (a.kind === "dataSources") {
-    const i = id(a);
+    const i = od(a);
     n.push({
       kind: e === "data-marketplace" ? "marketingDataSourcesGrid" : "dataSourcesGrid",
       config: i,
@@ -8199,15 +8215,15 @@ function $l(n, e, t) {
     return;
   }
   if (a.kind === "styleProfile") {
-    n.push({ kind: "custom", build: (i) => i.chat.outreachStyleProfile(rd(a)), at: "-=0.02" });
+    n.push({ kind: "custom", build: (i) => i.chat.outreachStyleProfile(sd(a)), at: "-=0.02" });
     return;
   }
   if (a.kind === "proximityList") {
-    n.push({ kind: "custom", build: (i) => i.chat.proximityLeadList(nd(a)), at: "-=0.04" });
+    n.push({ kind: "custom", build: (i) => i.chat.proximityLeadList(ld(a)), at: "-=0.04" });
     return;
   }
   if (a.kind === "personalizationSwipeGame") {
-    n.push({ kind: "personalizationSwipeGame", config: od(a), at: "+=0.06" });
+    n.push({ kind: "personalizationSwipeGame", config: dd(a), at: "+=0.06" });
     return;
   }
   if (a.kind === "sequenceEngagement") {
@@ -8220,12 +8236,12 @@ function $l(n, e, t) {
 function Ca(n, e = {}) {
   return {
     kind: "thinking",
-    thinking: Xl(n.thinking, n.text, n.note),
+    thinking: Ql(n.thinking, n.text, n.note),
     hold: e.hold,
     at: e.at
   };
 }
-function Xl(n, e, t) {
+function Ql(n, e, t) {
   return n?.items.length ? {
     title: n.title,
     elapsed: n.elapsed,
@@ -8244,7 +8260,7 @@ function Xl(n, e, t) {
   };
 }
 function Ri(n, e) {
-  const t = Kl(n.columns), a = n.rows.map((o, s) => Ql(o, t, s)), i = Math.min(10, a.length || 10), r = n.pagination?.ranges.map((o, s) => ({
+  const t = Zl(n.columns), a = n.rows.map((o, s) => td(o, t, s)), i = Math.min(10, a.length || 10), r = n.pagination?.ranges.map((o, s) => ({
     page: s + 1,
     range: o,
     rows: a.slice(s * i, (s + 1) * i)
@@ -8254,19 +8270,19 @@ function Ri(n, e) {
     title: n.title,
     eyebrow: n.eyebrow,
     count: n.count,
-    variant: t.variant ?? sd(n),
+    variant: t.variant ?? cd(n),
     columns: t.columns,
     rows: r[0]?.rows ?? a,
-    actions: n.actions?.map(td),
+    actions: n.actions?.map(rd),
     pagination: r.length > 1 ? {
       pageSize: i,
-      totalRows: ld(n, a.length),
+      totalRows: ud(n, a.length),
       activePage: 1,
       pages: r
     } : void 0
   };
 }
-function Kl(n) {
+function Zl(n) {
   const e = n.findIndex((o) => o.trim().toLowerCase() === "name"), t = e >= 0 ? n.findIndex((o, s) => s > e && /^role\b/i.test(o.trim())) : -1, a = e >= 0 && t >= 0, i = n.map((o, s) => s).filter((o) => o !== t), r = i.map((o) => {
     const s = n[o] || `Column ${o + 1}`;
     return a && o === e ? {
@@ -8280,7 +8296,7 @@ function Kl(n) {
     } : {
       key: ge(s || `column-${o + 1}`),
       label: s,
-      width: Jl(s, a)
+      width: ed(s, a)
     };
   });
   return {
@@ -8291,17 +8307,17 @@ function Kl(n) {
     variant: r.some((o) => o.key === "mutualConnection") ? "connections" : void 0
   };
 }
-function Jl(n, e) {
+function ed(n, e) {
   if (!e) return;
   const t = n.toLowerCase();
   return t.includes("connector") || t.includes("connection") ? "minmax(300px,1.45fr)" : t.includes("email") || t.includes("mobile") ? "minmax(150px,0.88fr)" : "minmax(130px,1fr)";
 }
-function Ql(n, e, t) {
+function td(n, e, t) {
   const a = {};
   if (e.columns.forEach((i, r) => {
     a[i.key] = n[e.sourceIndexes[r]] ?? "";
   }), e.foldedRoleIndex !== void 0 && (a.prospectDetail = n[e.foldedRoleIndex] ?? ""), e.mutualConnectionKey) {
-    const i = ed(a[e.mutualConnectionKey] ?? ""), r = Zl(t);
+    const i = id(a[e.mutualConnectionKey] ?? ""), r = ad(t);
     a[e.mutualConnectionKey] = i.name, a.mutualConnectionDetail = i.title, a.mutualConnectionContext = i.context, i.name && r && (a.mutualConnectionBadge = r);
   }
   return {
@@ -8309,11 +8325,11 @@ function Ql(n, e, t) {
     values: a
   };
 }
-function Zl(n) {
+function ad(n) {
   const e = [2, 3, 7, null, 1, 12, 4, 5, null, 8, 6, 10], t = e[n % e.length];
   return t === null ? null : `+${t} more`;
 }
-function ed(n) {
+function id(n) {
   const [e = "", t = ""] = n.split(/\s+[—–]\s+/, 2), a = e.trim().match(/^(.+?)(?:\s*\((.+)\))?$/);
   return {
     name: a?.[1]?.trim() || n.trim(),
@@ -8321,7 +8337,7 @@ function ed(n) {
     context: t.trim()
   };
 }
-function td(n) {
+function rd(n) {
   const e = n.label.toLowerCase().includes("dial") ? "power-dialer" : "email-sequence";
   return {
     id: e,
@@ -8339,7 +8355,7 @@ function Tn(n) {
     summary: e.summary
   }));
 }
-function ad(n) {
+function nd(n) {
   return {
     id: ge(n.title || "enrichment"),
     title: n.title,
@@ -8348,7 +8364,7 @@ function ad(n) {
     fields: n.fields
   };
 }
-function id(n) {
+function od(n) {
   return {
     id: ge(n.title || "data-sources"),
     title: n.title,
@@ -8432,7 +8448,7 @@ function Pn(n, e) {
     }
   );
 }
-function rd(n) {
+function sd(n) {
   return {
     id: ge(n.title || "style-profile"),
     title: n.title,
@@ -8441,7 +8457,7 @@ function rd(n) {
     examples: n.examples
   };
 }
-function nd(n) {
+function ld(n) {
   return {
     id: ge(n.title || "proximity-list"),
     title: n.title,
@@ -8449,7 +8465,7 @@ function nd(n) {
     leads: n.leads
   };
 }
-function od(n) {
+function dd(n) {
   return {
     id: ge(n.title || "personalization-swipe"),
     title: n.title,
@@ -8497,25 +8513,25 @@ function Nt(n, e) {
 function Rn(n) {
   return n.length > 72 ? M.typeLong : n.length > 38 ? M.typeMedium : M.typeShort;
 }
-function sd(n) {
+function cd(n) {
   const e = `${n.title} ${n.eyebrow ?? ""}`.toLowerCase();
   if (e.includes("enrich")) return "enriched";
   if (e.includes("filter") || e.includes("raised")) return "filtered";
 }
-function ld(n, e) {
+function ud(n, e) {
   const t = n.pagination?.ranges ?? [], i = t[t.length - 1]?.match(/of\s+(\d+)/i);
   return i ? Number(i[1]) : e;
 }
 function ge(n) {
   return n.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "item";
 }
-const dd = [
+const pd = [
   "Researching the company profile",
   "Learning the ICP and buyer roles",
   "Reading blog posts for positioning",
   "Scanning careers pages for priorities",
   "Mapping current GTM signals"
-], cd = [
+], hd = [
   {
     id: "founder-signal",
     label: "Strategy one",
@@ -8538,13 +8554,13 @@ const dd = [
   { key: "name", label: "Name", width: "1.45fr" },
   { key: "company", label: "Company", width: "1fr" },
   { key: "title", label: "Title", width: "1.45fr" }
-], ud = [
+], md = [
   { key: "name", label: "Name", width: "1.55fr" },
   { key: "company", label: "Company", width: "0.9fr" },
   { key: "title", label: "Title", width: "1.35fr" },
   { key: "email", label: "Email", width: "1.28fr" },
   { key: "number", label: "Number", width: "1.48fr" }
-], pd = {
+], gd = {
   id: "dev-tool-new-hires",
   title: "New hires at dev-tool companies",
   eyebrow: "Natural language search",
@@ -8651,7 +8667,7 @@ const dd = [
       }
     }
   ]
-}, hd = {
+}, fd = {
   id: "recently-funded-dev-tools",
   title: "Raised in the past three months",
   eyebrow: "Filtered results",
@@ -8704,7 +8720,7 @@ const dd = [
       }
     }
   ]
-}, md = {
+}, wd = {
   id: "contact-enrichment",
   title: "I’m about to run an enrichment",
   subtitle: "Up to 84 credits could be spent across 2 fields on 14 records.",
@@ -8719,7 +8735,7 @@ const dd = [
       steps: ["Unify Data", "5-Step Waterfall", "FullEnrich"]
     }
   ]
-}, gd = {
+}, bd = {
   id: "data-marketplace-sources",
   title: "Ask complex questions across diverse data sets",
   subtitle: "Unify routes each search across the right partner sources for the job.",
@@ -8921,13 +8937,13 @@ const dd = [
       logoSrc: "/data-logos/BuyerCaddy.svg"
     }
   ]
-}, fd = {
+}, yd = {
   id: "enriched-dev-tool-contacts",
   title: "Enriched contacts",
   eyebrow: "ready to engage",
   count: "3 contacts",
   variant: "enriched",
-  columns: ud,
+  columns: md,
   rows: [
     {
       id: "jamie-chen",
@@ -9047,7 +9063,7 @@ const dd = [
       }
     }
   ]
-}, wd = [
+}, _d = [
   {
     name: "battlecards.pdf",
     detail: "Competitive traps, landmines, proof points",
@@ -9081,7 +9097,7 @@ const dd = [
   learningTitle: "Learning your style",
   learningDetail: "Analyzing vocabulary...",
   signals: ["sent emails", "reply patterns", "calendar context", "signature and tone"]
-}, bd = {
+}, xd = {
   id: "learned-outreach-style",
   title: "Learned outreach style",
   subtitle: "The agent extracts how your team writes, qualifies, and earns replies.",
@@ -9095,7 +9111,7 @@ const dd = [
     "Keep the opener grounded in a real business trigger.",
     "Avoid generic automation language unless the account shows ops pain."
   ]
-}, yd = {
+}, vd = {
   id: "personalized-lead-proximity",
   title: "Ranked leads with proximity fields",
   subtitle: "Each lead gets a relationship-aware reason to personalize the first touch.",
@@ -9137,7 +9153,7 @@ const dd = [
       score: "76"
     }
   ]
-}, _d = {
+}, kd = {
   id: "visitor-outreach-sequences",
   title: "Personalized sequence preview",
   subtitle: "Each visitor gets a channel plan based on company fit, page intent, and the person’s role.",
@@ -9236,7 +9252,7 @@ const dd = [
     }
   ],
   channels: []
-}, xd = {
+}, Sd = {
   id: "visitor-sequence-build",
   title: "building outbound sequence",
   subtitle: "Using Unify’s offering, visitor intent, and role-level context to draft the campaign.",
@@ -9255,7 +9271,7 @@ const dd = [
       detail: "Checking role, seniority, likely ownership, and channel-specific personalization angles."
     }
   ]
-}, vd = [
+}, Cd = [
   { key: "name", label: "Name", width: "1.2fr" },
   { key: "company", label: "Company", width: "0.95fr" },
   { key: "title", label: "Title", width: "1.15fr" },
@@ -9272,7 +9288,7 @@ const dd = [
   { id: "sam-hollis-visitor", values: { name: "Sam Hollis", company: "Apollo", title: "VP Sales", visit: "1h ago", signal: "Comparison", source: "signal", avatarTone: "8" } },
   { id: "rachel-cho-visitor", values: { name: "Rachel Cho", company: "Retool", title: "Head of Sales", visit: "2h ago", signal: "Pricing page", source: "database", avatarTone: "9" } },
   { id: "owen-lee-visitor", values: { name: "Owen Lee", company: "Linear", title: "Sales Lead", visit: "2h ago", signal: "Demo page", source: "signal", avatarTone: "1" } }
-], kd = [
+], Ad = [
   { id: "fatima-ali-visitor", values: { name: "Fatima Ali", company: "Vercel", title: "VP Sales", visit: "2h ago", signal: "Enterprise", source: "signal", avatarTone: "2" } },
   { id: "leo-martin-visitor", values: { name: "Leo Martin", company: "Hex", title: "Head of Sales", visit: "3h ago", signal: "Blog", source: "database", avatarTone: "3" } },
   { id: "priya-rao-visitor", values: { name: "Priya Rao", company: "Census", title: "Sales Director", visit: "3h ago", signal: "Demo page", source: "engage", avatarTone: "4" } },
@@ -9283,13 +9299,13 @@ const dd = [
   { id: "sara-nelson-visitor", values: { name: "Sara Nelson", company: "Airtable", title: "Sales Lead", visit: "6h ago", signal: "Comparison", source: "signal", avatarTone: "9" } },
   { id: "noah-singh-visitor", values: { name: "Noah Singh", company: "dbt Labs", title: "Head of Sales", visit: "6h ago", signal: "ROI calculator", source: "signal", avatarTone: "1" } },
   { id: "ava-garcia-visitor", values: { name: "Ava Garcia", company: "Gusto", title: "VP Revenue", visit: "7h ago", signal: "Demo page", source: "engage", avatarTone: "2" } }
-], Sd = {
+], Td = {
   id: "website-visitors-sales",
   title: "Recent website visitors",
   eyebrow: "Visitor intent",
   count: "50 sales leaders",
   variant: "filtered",
-  columns: vd,
+  columns: Cd,
   rows: pr,
   pagination: {
     pageSize: 10,
@@ -9297,7 +9313,7 @@ const dd = [
     activePage: 1,
     pages: [
       { page: 1, range: "1-10 of 50 people", rows: pr },
-      { page: 2, range: "11-20 of 50 people", rows: kd }
+      { page: 2, range: "11-20 of 50 people", rows: Ad }
     ]
   },
   actions: [
@@ -9317,7 +9333,7 @@ const dd = [
       variant: "secondary"
     }
   ]
-}, Cd = {
+}, Ed = {
   id: "clean-webinar-attendees",
   title: "Cleaned webinar attendees",
   eyebrow: "CSV cleanup",
@@ -9405,10 +9421,10 @@ const dd = [
       { kind: "status", text: "Building workspace", at: "-=0.16" },
       { kind: "transitionSignupToChat", at: `+=${M.beat}` },
       { kind: "status", text: "Researching Acme", at: "<" },
-      { kind: "thinking", steps: dd, hold: 0.46, at: "+=0.04" },
+      { kind: "thinking", steps: pd, hold: 0.46, at: "+=0.04" },
       { kind: "assistant", text: "I found three GTM paths worth testing first." },
       { kind: "status", text: "Game plans ready", at: "<" },
-      { kind: "strategyPlans", plans: cd, at: "-=0.08" },
+      { kind: "strategyPlans", plans: hd, at: "-=0.08" },
       Ve(De.right, "+=0.18")
     ])
   },
@@ -9436,7 +9452,7 @@ const dd = [
         label: "Searching hiring signals, headcount, and company data",
         hold: M.thinkingMedium
       },
-      { kind: "dataTable", config: pd, at: "-=0.04" },
+      { kind: "dataTable", config: gd, at: "-=0.04" },
       {
         kind: "prompt",
         text: "Filter to the ones that have raised in the past three months.",
@@ -9450,7 +9466,7 @@ const dd = [
         label: "Checking rounds announced since February 2026",
         hold: M.thinkingShort
       },
-      { kind: "dataTable", config: hd, at: "-=0.04" },
+      { kind: "dataTable", config: fd, at: "-=0.04" },
       {
         kind: "prompt",
         text: "Okay, enrich these contacts.",
@@ -9459,10 +9475,10 @@ const dd = [
         statusAfter: "Preparing enrichment",
         at: `+=${M.beat}`
       },
-      { kind: "enrichmentPanel", config: md, at: "+=0.12" },
+      { kind: "enrichmentPanel", config: wd, at: "+=0.12" },
       { kind: "status", text: "Contacts enriched", at: "+=0.86" },
-      { kind: "dataTable", config: fd, at: "-=0.02" },
-      { kind: "marketingDataSourcesGrid", config: gd, at: "+=0.44" },
+      { kind: "dataTable", config: yd, at: "-=0.02" },
+      { kind: "marketingDataSourcesGrid", config: bd, at: "+=0.44" },
       Ve(De.bottomRight, "+=3")
     ])
   },
@@ -9550,7 +9566,7 @@ const dd = [
         },
         { kind: "custom", build: () => e.activate(), at: "<+=0.02" },
         { kind: "custom", build: () => e.complete(), at: "-=0.18" },
-        { kind: "custom", build: () => t.landAsUploadedFiles(wd), at: "<" },
+        { kind: "custom", build: () => t.landAsUploadedFiles(_d), at: "<" },
         { kind: "status", text: "Learning outreach style", at: "<" },
         {
           kind: "thinking",
@@ -9563,7 +9579,7 @@ const dd = [
           hold: 0.24,
           at: `+=${M.beat}`
         },
-        { kind: "custom", build: () => n.chat.outreachStyleProfile(bd), at: "-=0.02" },
+        { kind: "custom", build: () => n.chat.outreachStyleProfile(xd), at: "-=0.02" },
         {
           kind: "prompt",
           text: "Write a sequence for consumer fintech founders.",
@@ -9586,7 +9602,7 @@ const dd = [
           label: "Scoring shared schools, fields of study, mutual contacts, and warm signals",
           hold: M.thinkingMedium
         },
-        { kind: "custom", build: () => n.chat.proximityLeadList(yd), at: "-=0.04" },
+        { kind: "custom", build: () => n.chat.proximityLeadList(vd), at: "-=0.04" },
         Ve(De.bottomRight, "+=0.16")
       ]);
     }
@@ -9630,7 +9646,7 @@ const dd = [
           statusAfter: "building visitor list",
           fromEntry: !0
         },
-        { kind: "dataTable", config: Sd, at: "-=0.02" },
+        { kind: "dataTable", config: Td, at: "-=0.02" },
         {
           kind: "cursorMove",
           target: e,
@@ -9662,8 +9678,8 @@ const dd = [
         { kind: "cursorClick", at: "+=0.18" },
         { kind: "custom", build: () => n.chat.dataTableActionTooltip("website-visitors-sales", "email-sequence", !1), at: "<+=0.02" },
         { kind: "status", text: "building outreach sequence", at: "<" },
-        { kind: "custom", build: () => n.chat.sequenceBuildThinking(xd), at: "+=0.06" },
-        { kind: "sequenceEngagement", config: _d, at: "-=0.02" },
+        { kind: "custom", build: () => n.chat.sequenceBuildThinking(Sd), at: "+=0.06" },
+        { kind: "sequenceEngagement", config: kd, at: "-=0.02" },
         { kind: "custom", build: () => n.timeline().to({}, { duration: M.beat + 0.24 }), at: "+=0.04" },
         {
           kind: "cursorMove",
@@ -9736,7 +9752,7 @@ const dd = [
           at: `+=${M.beat}`
         },
         { kind: "assistant", text: "I cleaned the attendee list and normalized the fields that matter for routing and follow-up." },
-        { kind: "dataTable", config: Cd, at: "-=0.04" },
+        { kind: "dataTable", config: Ed, at: "-=0.04" },
         Ve(De.bottomRight, "+=0.18")
       ]);
     }
@@ -9785,7 +9801,7 @@ const dd = [
   amplitude: 18,
   arriveDistance: 3.5
 };
-class Ad {
+class Md {
   constructor(e, t, a = {}) {
     this.root = e, this.cursor = t, this.options = a;
   }
@@ -9883,7 +9899,7 @@ class Ad {
       return;
     }
     if (this.mode === "return") {
-      const t = this.getReturnHomePoint(), a = Td((e - this.returnStartedAt) / ja.durationMs), i = this.getReturnWavePoint(a, t), r = this.getReturnWavePoint(Math.min(1, a + 0.035), t);
+      const t = this.getReturnHomePoint(), a = Pd((e - this.returnStartedAt) / ja.durationMs), i = this.getReturnWavePoint(a, t), r = this.getReturnWavePoint(Math.min(1, a + 0.035), t);
       if (this.target = t, this.cursor.mimicViewportPoint(i, 1, a < 1 ? r : t), a >= 1 || ze(this.getCursorViewportPoint(), t) <= ja.arriveDistance) {
         this.cursor.mimicViewportPoint(t, 1, t), this.completeReturn();
         return;
@@ -9916,7 +9932,7 @@ class Ad {
       i > 1.5 && (this.trailDirection = {
         x: a.x / i,
         y: a.y / i
-      }, this.velocity = Rd(a, J.maxMomentumStep));
+      }, this.velocity = Ld(a, J.maxMomentumStep));
     }
     const t = {
       x: e.x - this.trailDirection.x * J.trailDistance,
@@ -9935,7 +9951,7 @@ class Ad {
       x: this.pointer.x + Math.cos(a) * Be.radiusX,
       y: this.pointer.y + Math.sin(a * 1.28) * Be.radiusY + i * Be.bobY
     };
-    this.target = Md(r, this.pointer, Be.minPointerDistance, Be.viewportInset);
+    this.target = Rd(r, this.pointer, Be.minPointerDistance, Be.viewportInset);
   }
   resumeFollowing(e) {
     this.mode = "follow", this.sniffAnchor = null, this.nextSniffAt = 0, this.sniffIndex = 0, this.playStartedAt = 0, this.playPhase = 0, this.returnAt = 0, this.lastPointer = e, this.updateFollowTarget(e), this.dismissSamples = [], this.lastMoveAt = performance.now();
@@ -9973,7 +9989,7 @@ class Ad {
     return this.cursor.getHistoryParkViewportPoint();
   }
   getReturnWavePoint(e, t) {
-    const a = this.returnStart ?? this.getCursorViewportPoint(), i = Ed(e), r = t.x - a.x, o = t.y - a.y, s = Math.hypot(r, o), l = {
+    const a = this.returnStart ?? this.getCursorViewportPoint(), i = Id(e), r = t.x - a.x, o = t.y - a.y, s = Math.hypot(r, o), l = {
       x: a.x + r * i,
       y: a.y + o * i
     };
@@ -9994,7 +10010,7 @@ class Ad {
       x: t.left + a.x,
       y: t.top + a.y
     };
-    return Id(i, e) > J.maxBrowserDistance;
+    return Dd(i, e) > J.maxBrowserDistance;
   }
   isPointNearStoryCursor(e, t = oa.radius) {
     const a = this.root.getBoundingClientRect(), i = this.cursor.readPosition(), r = {
@@ -10050,13 +10066,13 @@ class Ad {
 function ze(n, e) {
   return Math.hypot(e.x - n.x, e.y - n.y);
 }
-function Td(n) {
+function Pd(n) {
   return Math.min(1, Math.max(0, n));
 }
 function hr(n, e, t) {
   return Math.min(t, Math.max(e, n));
 }
-function Ed(n) {
+function Id(n) {
   return -(Math.cos(Math.PI * n) - 1) / 2;
 }
 function mr(n, e) {
@@ -10065,8 +10081,8 @@ function mr(n, e) {
     y: hr(n.y, e, window.innerHeight - e)
   };
 }
-function Md(n, e, t, a) {
-  const i = mr(Pd(n, e, t), a);
+function Rd(n, e, t, a) {
+  const i = mr(Nd(n, e, t), a);
   if (ze(i, e) >= t * 0.86) return i;
   const r = {
     x: window.innerWidth / 2 - e.x,
@@ -10077,7 +10093,7 @@ function Md(n, e, t, a) {
     y: e.y + r.y / o * t
   }, a);
 }
-function Pd(n, e, t) {
+function Nd(n, e, t) {
   const a = n.x - e.x, i = n.y - e.y, r = Math.hypot(a, i);
   if (r >= t) return n;
   const o = -Math.PI * 0.28, s = r > 0.01 ? a / r : Math.cos(o), l = r > 0.01 ? i / r : Math.sin(o);
@@ -10086,11 +10102,11 @@ function Pd(n, e, t) {
     y: e.y + l * t
   };
 }
-function Id(n, e) {
+function Dd(n, e) {
   const t = Math.max(e.left - n.x, 0, n.x - e.right), a = Math.max(e.top - n.y, 0, n.y - e.bottom);
   return Math.hypot(t, a);
 }
-function Rd(n, e) {
+function Ld(n, e) {
   const t = Math.hypot(n.x, n.y);
   return t <= e || t === 0 ? n : {
     x: n.x / t * e,
@@ -10103,9 +10119,9 @@ function gr(n) {
 const fr = {
   minPixelDelta: 0.5
 };
-class Nd {
+class qd {
   constructor(e, t, a, i, r, o) {
-    this.root = e, this.stories = t, this.resolver = a, this.cursor = i, this.chat = r, this.options = o, this.storyProgress = this.stories.map(() => 0), this.pausedCursorMimic = new Ad(this.root, this.cursor, {
+    this.root = e, this.stories = t, this.resolver = a, this.cursor = i, this.chat = r, this.options = o, this.storyProgress = this.stories.map(() => 0), this.pausedCursorMimic = new Md(this.root, this.cursor, {
       onMimicStart: () => this.cancelHistoryParkMotion()
     });
   }
@@ -10192,7 +10208,7 @@ class Nd {
   }
   updateStories(e, t = {}) {
     if (!e.length) return;
-    const a = this.stories[this.activeIndex]?.id, i = this.stories, r = new Map(this.stories.map((d, c) => [d.id, this.storyProgress[c] ?? 0])), o = this.cursor.getPosition(), s = this.playing, l = Dd(i, e);
+    const a = this.stories[this.activeIndex]?.id, i = this.stories, r = new Map(this.stories.map((d, c) => [d.id, this.storyProgress[c] ?? 0])), o = this.cursor.getPosition(), s = this.playing, l = Od(i, e);
     if (this.stories = e, this.storyProgress = this.stories.map((d) => r.get(d.id) ?? 0), this.activeIndex = Math.max(0, this.resolveStoryIndex(a ?? this.stories[0].id)), l && this.renderStoryTabs(), t.restartActive) {
       this.stopTimeline(), this.setHistoryPaused(!1), this.activeTimeline = this.buildTimeline(this.activeIndex, o), this.activeTimeline.progress(0), this.playing = s || this.options.autoplay, this.updateStoryMeta(), this.updateProgress(), this.updatePlayButton(), this.playing && this.activeTimeline.play();
       return;
@@ -10453,14 +10469,14 @@ function Ln(n, e, t) {
 function la(n) {
   return Ln(n, 0, 1);
 }
-function Dd(n, e) {
+function Od(n, e) {
   return n.length !== e.length ? !0 : e.some((t, a) => {
     const i = n[a];
     return !i || i.id !== t.id || i.label !== t.label || i.navLabel !== t.navLabel || i.navDescription !== t.navDescription;
   });
 }
 const da = ["mobile", "tablet", "desktop", "wide"];
-class Ld {
+class Bd {
   constructor(e) {
     this.root = e;
   }
@@ -10572,7 +10588,7 @@ class Ld {
     }
   }
 }
-function qd(n, e = {}) {
+function zd(n, e = {}) {
   if (n.classList.add("wa-section"), n.querySelector("[data-chat-shell]")) return;
   const t = e.showBuilder === !1 ? "" : `
       <div class="wa-builder" data-story-builder>
@@ -10707,9 +10723,9 @@ function qd(n, e = {}) {
     </div>
   `;
 }
-function Od(n, e = {}) {
-  qd(n, { showBuilder: e.showBuilder !== !1 });
-  const t = e.stories?.length ? e.stories : Dn, a = e.builderDraftEndpoint ?? "/api/story-draft", i = e.reducedMotion ?? window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? !1, r = new Ld(n), o = new As(n), s = new qs(n, r, { reducedMotion: i }), l = new Nd(n, t, r, s, o, {
+function Fd(n, e = {}) {
+  zd(n, { showBuilder: e.showBuilder !== !1 });
+  const t = e.stories?.length ? e.stories : Dn, a = e.builderDraftEndpoint ?? "/api/story-draft", i = e.reducedMotion ?? window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? !1, r = new Bd(n), o = new As(n), s = new qs(n, r, { reducedMotion: i }), l = new qd(n, t, r, s, o, {
     autoplay: e.autoplay ?? !0,
     loop: e.loop ?? !0,
     autoAdvanceDelay: e.autoAdvanceDelay ?? 3.2,
@@ -10725,7 +10741,7 @@ function Od(n, e = {}) {
     draftEndpoint: a,
     draftAutoSave: e.builderDraftAutoSave
   });
-  return l.mount(), u?.mount(), !u && a && Bd(a, d), {
+  return l.mount(), u?.mount(), !u && a && Hd(a, d), {
     play: l.play.bind(l),
     pause: l.pause.bind(l),
     next: l.next.bind(l),
@@ -10737,7 +10753,7 @@ function Od(n, e = {}) {
     }
   };
 }
-async function Bd(n, e) {
+async function Hd(n, e) {
   try {
     const t = await fetch(n, {
       method: "GET",
@@ -10761,7 +10777,7 @@ function qn() {
   const e = document.createElement("style");
   e.id = wr, e.textContent = Ya, document.head.append(e);
 }
-function zd(n) {
+function Gd(n) {
   if (n instanceof HTMLElement) return n;
   const e = document.querySelector(n);
   if (!e)
@@ -10769,14 +10785,14 @@ function zd(n) {
   return e;
 }
 function On(n = "[data-chatbot-stories]", e = {}) {
-  return e.injectStyles !== !1 && qn(), Od(zd(n), e);
+  return e.injectStyles !== !1 && qn(), Fd(Gd(n), e);
 }
-const Fd = {
+const Ud = {
   init: On,
   defaultStories: Dn
 };
 if (typeof window < "u") {
-  window.ChatbotStories = Fd;
+  window.ChatbotStories = Ud;
   const n = () => {
     document.querySelector("[data-chatbot-stories][data-auto-init]") && qn(), document.querySelectorAll("[data-chatbot-stories][data-auto-init]").forEach((e) => {
       e.dataset.chatbotStoriesMounted || (e.dataset.chatbotStoriesMounted = "true", On(e));

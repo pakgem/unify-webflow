@@ -2290,7 +2290,7 @@ function createSeedSteps(storyId: string, fallbackSummary: string): BuilderStep[
     ],
     "csv-import-cleanup": [
       { kind: "cursor", text: "Cursor exits right and drags a CSV into the browser.", note: "Drop overlay appears as soon as the file enters." },
-      { kind: "file", text: "webinar_attendees.csv", note: "File appears as a user-side message after release." },
+      { kind: "file", text: "webinar_attendees.csv", note: "6 normalized records" },
       createThinkingStepSeed([
         "Parsing webinar attendee CSV",
         "Normalizing email addresses",

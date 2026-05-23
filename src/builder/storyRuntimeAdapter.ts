@@ -310,7 +310,7 @@ function buildCsvCleanupStory(ctx: StoryContext, story: BuilderStory): gsap.core
   const assistantStep = firstStep(story, "assistant");
   const tableStep = firstComponent(story, "table");
   const fileName = fileStep?.text || "webinar_attendees.csv";
-  const fileDetail = fileStep?.note || "CSV uploaded";
+  const fileDetail = getCsvUploadDetail(fileStep, tableStep?.component);
   const dropArea = ctx.chat.prepareCsvDropArea();
   const cursorFile = ctx.chat.prepareCursorFile(fileName, ctx.cursor);
   const dropTarget = responsiveElementTarget("[data-chat-shell]", "center", {
@@ -338,6 +338,32 @@ function buildCsvCleanupStory(ctx: StoryContext, story: BuilderStory): gsap.core
     ...(tableStep ? [{ kind: "dataTable" as const, config: toDataTable(tableStep.component, "cleaned-webinar-attendees"), at: "-=0.04" }] : []),
     exitStory(EXIT_TARGETS.bottomRight, "+=0.18"),
   ]);
+}
+
+function getCsvUploadDetail(fileStep: BuilderStep | undefined, tableComponent: BuilderComponent | undefined): string {
+  const tableSummary = getTableComponentSummary(tableComponent);
+  if (tableSummary) return tableSummary;
+
+  const note = fileStep?.note?.trim();
+  if (!note || isInstructionalFileNote(note)) return "CSV uploaded";
+
+  return note;
+}
+
+function getTableComponentSummary(component: BuilderComponent | undefined): string | null {
+  if (!component || component.kind !== "table") return null;
+
+  const count = component.count?.trim();
+  if (count) return count;
+
+  const rowCount = component.rows.length;
+  if (rowCount <= 0) return null;
+
+  return `${rowCount} ${rowCount === 1 ? "record" : "records"}`;
+}
+
+function isInstructionalFileNote(note: string): boolean {
+  return /user-side message|after release|drop overlay|appears as/i.test(note);
 }
 
 function createGenericStorySteps(story: BuilderStory): StoryStep[] {
