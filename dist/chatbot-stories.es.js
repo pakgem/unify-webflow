@@ -5543,7 +5543,20 @@ function ia(r, e, t) {
     } : void 0
   };
 }
-const ja = "button, a, [role='button'], [data-send-button], [data-result-action]", Xa = "[data-chat-input][data-visible='true'], [data-signup-field], input, textarea, [contenteditable='true']", $a = {
+const ja = [
+  "button:not(:disabled)",
+  "a[href]",
+  "[role='button']:not([aria-disabled='true'])",
+  "[data-send-button]",
+  "[data-result-action]",
+  "[data-table-action]",
+  "[data-table-page-button]",
+  "[data-swipe-action]",
+  "[data-sequence-person-card]",
+  "[data-sequence-kickoff]",
+  "[data-strategy-plan]",
+  ".wa-sequence-step"
+].join(", "), Xa = "[data-chat-input][data-visible='true'], [data-signup-field], input, textarea, [contenteditable='true']", $a = {
   delay: 0.42,
   returnDuration: 0.18,
   segments: [

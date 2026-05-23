@@ -15,7 +15,20 @@ type CursorScanOptions = {
   passes?: number;
 };
 
-const POINTER_TARGET_SELECTOR = "button, a, [role='button'], [data-send-button], [data-result-action]";
+const POINTER_TARGET_SELECTOR = [
+  "button:not(:disabled)",
+  "a[href]",
+  "[role='button']:not([aria-disabled='true'])",
+  "[data-send-button]",
+  "[data-result-action]",
+  "[data-table-action]",
+  "[data-table-page-button]",
+  "[data-swipe-action]",
+  "[data-sequence-person-card]",
+  "[data-sequence-kickoff]",
+  "[data-strategy-plan]",
+  ".wa-sequence-step",
+].join(", ");
 const TEXT_TARGET_SELECTOR =
   "[data-chat-input][data-visible='true'], [data-signup-field], input, textarea, [contenteditable='true']";
 const IDLE_FLOAT = {
