@@ -652,13 +652,8 @@ export class ChatActor {
     this.cardIndex = 0;
     this.composerText.textContent = "";
     gsap.killTweensOf([this.composer, this.composerText, ...this.composerContents, this.thread]);
-    this.setComposerFocusState(false);
-    this.setComposerVisibleState(false);
-    this.activeTablePageTimelines.forEach((timeline) => timeline.kill());
-    this.activeTablePageTimelines.clear();
-    this.expectedDataTablePages.clear();
+    this.clearDataTableState();
     this.transferSignupLogoOnNextThinking = false;
-    this.hideDataTableControlTooltip();
     this.signupEmail.textContent = "";
     this.setSignupEmailFilled(false);
     this.status?.replaceChildren(document.createTextNode("Ready"));
@@ -675,9 +670,7 @@ export class ChatActor {
       y: 0,
       display: "",
     });
-    gsap.set(this.composer, this.getComposerHiddenVars());
-    gsap.set(this.composerContents, this.getComposerContentsHiddenVars());
-    gsap.set(this.composerText, { autoAlpha: 1, y: 0 });
+    this.resetComposerPresentation();
 
     for (const message of this.messagePool) {
       message.style.display = "none";
@@ -692,16 +685,11 @@ export class ChatActor {
     this.chatShell.removeEventListener("pointerover", this.handleDataTableControlPointerOver);
     this.chatShell.removeEventListener("pointerout", this.handleDataTableControlPointerOut);
     this.chatShell.removeEventListener("click", this.handleDataTableControlClick);
-    this.activeTablePageTimelines.forEach((timeline) => timeline.kill());
-    this.activeTablePageTimelines.clear();
+    this.clearDataTableState();
   }
 
   prepareStoryStart(): void {
-    this.setComposerFocusState(false);
-    this.setComposerVisibleState(false);
-    gsap.set(this.composer, this.getComposerHiddenVars());
-    gsap.set(this.composerContents, this.getComposerContentsHiddenVars());
-    gsap.set(this.composerText, { autoAlpha: 1, y: 0 });
+    this.resetComposerPresentation();
   }
 
   animateStorySwitchExit(): gsap.core.Timeline {
@@ -953,6 +941,21 @@ export class ChatActor {
       this.composerText.textContent = "";
       gsap.set(this.composerText, { autoAlpha: 1, y: 0 });
     });
+  }
+
+  private resetComposerPresentation(): void {
+    this.setComposerFocusState(false);
+    this.setComposerVisibleState(false);
+    gsap.set(this.composer, this.getComposerHiddenVars());
+    gsap.set(this.composerContents, this.getComposerContentsHiddenVars());
+    gsap.set(this.composerText, { autoAlpha: 1, y: 0 });
+  }
+
+  private clearDataTableState(): void {
+    this.activeTablePageTimelines.forEach((timeline) => timeline.kill());
+    this.activeTablePageTimelines.clear();
+    this.expectedDataTablePages.clear();
+    this.hideDataTableControlTooltip();
   }
 
   private setComposerFocusState(focused: boolean): void {

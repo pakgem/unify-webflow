@@ -781,15 +781,7 @@ export class StoryBuilder {
       return this.createSequenceEngagementComponentBody(step, step.component);
     }
 
-    const card = document.createElement("div");
-    card.className = "wa-builder-component-card";
-
-    const content = document.createElement("div");
-    content.className = "wa-builder-component-card__content";
-
-    const label = document.createElement("span");
-    label.className = "wa-builder-step__kind";
-    label.textContent = "Component";
+    const { card, content } = this.createStructuredComponentParts("Component");
 
     const title = this.createComponentField(step.id, "title", step.component.title, {
       className: "wa-builder-component-card__title",
@@ -806,21 +798,12 @@ export class StoryBuilder {
       );
     });
 
-    content.append(label, title, items);
-    card.append(content);
+    content.append(title, items);
     return card;
   }
 
   private createTableComponentBody(step: BuilderStep, component: BuilderTableComponent): HTMLElement {
-    const card = document.createElement("div");
-    card.className = "wa-builder-component-card wa-builder-component-card--table";
-
-    const content = document.createElement("div");
-    content.className = "wa-builder-component-card__content";
-
-    const label = document.createElement("span");
-    label.className = "wa-builder-step__kind";
-    label.textContent = "Table";
+    const { card, content } = this.createStructuredComponentParts("Table", "table");
 
     const title = this.createComponentField(step.id, "title", component.title, {
       className: "wa-builder-component-card__title",
@@ -900,21 +883,12 @@ export class StoryBuilder {
       );
     });
 
-    content.append(label, title, eyebrow, count, table, footerFields);
-    card.append(content);
+    content.append(title, eyebrow, count, table, footerFields);
     return card;
   }
 
   private createStrategyComponentBody(step: BuilderStep, component: BuilderStrategyComponent): HTMLElement {
-    const card = document.createElement("div");
-    card.className = "wa-builder-component-card wa-builder-component-card--strategy";
-
-    const content = document.createElement("div");
-    content.className = "wa-builder-component-card__content";
-
-    const label = document.createElement("span");
-    label.className = "wa-builder-step__kind";
-    label.textContent = "Strategy cards";
+    const { card, content } = this.createStructuredComponentParts("Strategy cards", "strategy");
 
     const title = this.createComponentField(step.id, "title", component.title, {
       className: "wa-builder-component-card__title",
@@ -945,21 +919,12 @@ export class StoryBuilder {
       grid.append(strategyCard);
     });
 
-    content.append(label, title, grid);
-    card.append(content);
+    content.append(title, grid);
     return card;
   }
 
   private createEnrichmentComponentBody(step: BuilderStep, component: BuilderEnrichmentComponent): HTMLElement {
-    const card = document.createElement("div");
-    card.className = "wa-builder-component-card wa-builder-component-card--enrichment";
-
-    const content = document.createElement("div");
-    content.className = "wa-builder-component-card__content";
-
-    const label = document.createElement("span");
-    label.className = "wa-builder-step__kind";
-    label.textContent = "Enrichment";
+    const { card, content } = this.createStructuredComponentParts("Enrichment", "enrichment");
 
     const title = this.createComponentField(step.id, "title", component.title, {
       className: "wa-builder-component-card__title",
@@ -994,21 +959,12 @@ export class StoryBuilder {
       fields.append(group);
     });
 
-    content.append(label, title, subtitle, fields);
-    card.append(content);
+    content.append(title, subtitle, fields);
     return card;
   }
 
   private createDataSourcesComponentBody(step: BuilderStep, component: BuilderDataSourcesComponent): HTMLElement {
-    const card = document.createElement("div");
-    card.className = "wa-builder-component-card wa-builder-component-card--sources";
-
-    const content = document.createElement("div");
-    content.className = "wa-builder-component-card__content";
-
-    const label = document.createElement("span");
-    label.className = "wa-builder-step__kind";
-    label.textContent = "Data sources";
+    const { card, content } = this.createStructuredComponentParts("Data sources", "sources");
 
     const title = this.createComponentField(step.id, "title", component.title, {
       className: "wa-builder-component-card__title",
@@ -1040,14 +996,12 @@ export class StoryBuilder {
       grid.append(sourceCard);
     });
 
-    content.append(label, title, subtitle, grid);
-    card.append(content);
+    content.append(title, subtitle, grid);
     return card;
   }
 
   private createUploadedFilesComponentBody(step: BuilderStep, component: BuilderUploadedFilesComponent): HTMLElement {
-    const card = this.createStructuredComponentCard("Files");
-    const content = card.querySelector<HTMLElement>(".wa-builder-component-card__content")!;
+    const { card, content } = this.createStructuredComponentParts("Files");
 
     const title = this.createComponentField(step.id, "title", component.title, {
       className: "wa-builder-component-card__title",
@@ -1083,8 +1037,7 @@ export class StoryBuilder {
     step: BuilderStep,
     component: BuilderMailboxConnectionComponent,
   ): HTMLElement {
-    const card = this.createStructuredComponentCard("Mailbox connection");
-    const content = card.querySelector<HTMLElement>(".wa-builder-component-card__content")!;
+    const { card, content } = this.createStructuredComponentParts("Mailbox connection");
 
     const title = this.createComponentField(step.id, "title", component.title, {
       className: "wa-builder-component-card__title",
@@ -1149,8 +1102,7 @@ export class StoryBuilder {
   }
 
   private createStyleProfileComponentBody(step: BuilderStep, component: BuilderStyleProfileComponent): HTMLElement {
-    const card = this.createStructuredComponentCard("Report");
-    const content = card.querySelector<HTMLElement>(".wa-builder-component-card__content")!;
+    const { card, content } = this.createStructuredComponentParts("Report");
 
     const title = this.createComponentField(step.id, "title", component.title, {
       className: "wa-builder-component-card__title",
@@ -1193,8 +1145,7 @@ export class StoryBuilder {
   }
 
   private createProximityListComponentBody(step: BuilderStep, component: BuilderProximityListComponent): HTMLElement {
-    const card = this.createStructuredComponentCard("Proximity list");
-    const content = card.querySelector<HTMLElement>(".wa-builder-component-card__content")!;
+    const { card, content } = this.createStructuredComponentParts("Proximity list");
 
     const title = this.createComponentField(step.id, "title", component.title, {
       className: "wa-builder-component-card__title",
@@ -1249,8 +1200,7 @@ export class StoryBuilder {
     step: BuilderStep,
     component: BuilderPersonalizationSwipeComponent,
   ): HTMLElement {
-    const card = this.createStructuredComponentCard("Personalization swipe game");
-    const content = card.querySelector<HTMLElement>(".wa-builder-component-card__content")!;
+    const { card, content } = this.createStructuredComponentParts("Personalization swipe game");
 
     const title = this.createComponentField(step.id, "title", component.title, {
       className: "wa-builder-component-card__title",
@@ -1292,8 +1242,7 @@ export class StoryBuilder {
     step: BuilderStep,
     component: BuilderSequenceEngagementComponent,
   ): HTMLElement {
-    const card = this.createStructuredComponentCard("Sequence engagement");
-    const content = card.querySelector<HTMLElement>(".wa-builder-component-card__content")!;
+    const { card, content } = this.createStructuredComponentParts("Sequence engagement");
 
     const title = this.createComponentField(step.id, "title", component.title, {
       className: "wa-builder-component-card__title",
@@ -1394,9 +1343,13 @@ export class StoryBuilder {
     return card;
   }
 
-  private createStructuredComponentCard(labelText: string): HTMLElement {
+  private createStructuredComponentParts(
+    labelText: string,
+    modifier?: string,
+  ): { card: HTMLElement; content: HTMLElement } {
     const card = document.createElement("div");
     card.className = "wa-builder-component-card";
+    if (modifier) card.classList.add(`wa-builder-component-card--${modifier}`);
 
     const content = document.createElement("div");
     content.className = "wa-builder-component-card__content";
@@ -1407,7 +1360,7 @@ export class StoryBuilder {
 
     content.append(label);
     card.append(content);
-    return card;
+    return { card, content };
   }
 
   private createThinkingField(

@@ -182,13 +182,10 @@ export class StoryController implements ChatbotStoriesInstance {
     if (options.restartActive) {
       this.stopTimeline();
       this.setHistoryPaused(false);
-      this.activeTimeline = this.buildTimeline(this.activeIndex, startPoint);
-      this.activeTimeline.progress(0);
+      this.rebuildActiveStoryTimeline(this.activeIndex, startPoint);
       this.playing = wasPlaying || this.options.autoplay;
-      this.updateStoryMeta();
-      this.updateProgress();
       this.updatePlayButton();
-      if (this.playing) this.activeTimeline.play();
+      if (this.playing) this.activeTimeline?.play();
       return;
     }
 
@@ -231,18 +228,14 @@ export class StoryController implements ChatbotStoriesInstance {
   }
 
   private activateStory(nextIndex: number, startPoint: ReturnType<CursorActor["getPosition"]>): void {
-    this.activeIndex = nextIndex;
-    this.activeTimeline = this.buildTimeline(this.activeIndex, startPoint);
-    this.activeTimeline.progress(0);
+    this.rebuildActiveStoryTimeline(nextIndex, startPoint);
     this.playing = this.options.autoplay;
 
-    this.updateStoryMeta();
-    this.updateProgress();
     this.updatePlayButton();
     this.options.onStoryChange?.(this.stories[this.activeIndex], this.activeIndex);
 
     if (this.options.autoplay) {
-      this.activeTimeline.play();
+      this.activeTimeline?.play();
     }
   }
 
@@ -307,6 +300,18 @@ export class StoryController implements ChatbotStoriesInstance {
     this.chat.prepareStoryStart();
 
     return tl;
+  }
+
+  private rebuildActiveStoryTimeline(
+    storyIndex: number,
+    startPoint: ReturnType<CursorActor["getPosition"]>,
+    progress = 0,
+  ): void {
+    this.activeIndex = storyIndex;
+    this.activeTimeline = this.buildTimeline(this.activeIndex, startPoint);
+    this.activeTimeline.progress(progress).pause();
+    this.updateStoryMeta();
+    this.updateProgress();
   }
 
   private stopTimeline(): void {
@@ -732,10 +737,7 @@ export class StoryController implements ChatbotStoriesInstance {
     const startPoint = this.cursor.getPosition();
 
     this.stopTimeline();
-    this.activeTimeline = this.buildTimeline(this.activeIndex, startPoint);
-    this.activeTimeline.progress(progress).pause();
-    this.updateStoryMeta();
-    this.updateProgress();
+    this.rebuildActiveStoryTimeline(this.activeIndex, startPoint, progress);
 
     if (wasPlaying) this.play();
   }
