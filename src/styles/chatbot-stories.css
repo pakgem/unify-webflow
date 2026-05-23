@@ -1406,7 +1406,7 @@ body {
   overflow: visible;
   border-left: 0;
   color: #555452;
-  font-size: 11px;
+  font-size: 14px;
   line-height: 1.14;
   font-weight: 500;
   overflow-wrap: anywhere;
@@ -1636,7 +1636,7 @@ body {
 .wa-data-table__cell[data-column-key="contact"] {
   overflow: hidden;
   color: #050505;
-  font-weight: 520;
+  font-weight: 400;
   white-space: nowrap;
 }
 
@@ -1812,9 +1812,9 @@ body {
   min-width: 0;
   overflow: hidden;
   color: #050505;
-  font-size: 11px;
+  font-size: 14px;
   line-height: 1.05;
-  font-weight: 520;
+  font-weight: 400;
   overflow-wrap: normal;
   text-overflow: ellipsis;
   white-space: nowrap;
