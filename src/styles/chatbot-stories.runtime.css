@@ -3096,6 +3096,25 @@ body {
   transform: translateY(0);
 }
 
+.wa-mailbox-connection[data-mailbox-state="connected"] [data-mailbox-connect] .wa-mailbox-connection__button-label[data-mailbox-button-label="connected"] {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.wa-mailbox-connection__connected-icon {
+  display: block;
+  width: 16px;
+  height: 16px;
+  color: currentColor;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex: 0 0 16px;
+}
+
 .wa-mailbox-connection[data-mailbox-state="loading"] [data-mailbox-connect] {
   grid-template-columns: max-content;
   border-color: rgba(234, 67, 53, 0.38);

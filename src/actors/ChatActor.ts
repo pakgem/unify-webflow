@@ -4776,10 +4776,23 @@ export class ChatActor {
       loadingLabel.textContent = normalizeMailboxStateLabel(options.loadingLabel, "Connecting");
 
       const connectedLabel = document.createElement("span");
+      const connectedIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      const connectedPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      const connectedText = document.createElement("span");
+
       connectedLabel.className = "wa-mailbox-connection__button-label";
       connectedLabel.dataset.mailboxButtonLabel = "connected";
       connectedLabel.setAttribute("aria-hidden", "true");
-      connectedLabel.textContent = options.connectedLabel ?? "Gmail";
+      connectedIcon.classList.add("wa-mailbox-connection__connected-icon");
+      connectedIcon.setAttribute("width", "16");
+      connectedIcon.setAttribute("height", "16");
+      connectedIcon.setAttribute("viewBox", "0 0 24 24");
+      connectedIcon.setAttribute("aria-hidden", "true");
+      connectedIcon.setAttribute("focusable", "false");
+      connectedPath.setAttribute("d", "M5 12l5 5l10 -10");
+      connectedIcon.append(connectedPath);
+      connectedText.textContent = options.connectedLabel ?? "Gmail";
+      connectedLabel.append(connectedIcon, connectedText);
 
       labelStack.append(loadingLabel, connectedLabel);
     }
