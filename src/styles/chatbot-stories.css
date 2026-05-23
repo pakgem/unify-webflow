@@ -1287,7 +1287,7 @@ body {
 .wa-cursor-file__card,
 .wa-uploaded-file {
   --wa-file-color: #916135;
-  --wa-file-bg: #faf1e8;
+  --wa-file-bg: #fdf8f2;
   --wa-file-border: #dedbd3;
 }
 
@@ -1360,69 +1360,69 @@ body {
 .wa-cursor-file__card[data-file-tone="spreadsheet"],
 .wa-uploaded-file[data-file-tone="spreadsheet"] {
   --wa-file-color: #2a8050;
-  --wa-file-bg: #eff9f2;
+  --wa-file-bg: #f7fcf8;
 }
 
 .wa-cursor-file__card[data-file-tone="pdf"],
 .wa-uploaded-file[data-file-tone="pdf"] {
   --wa-file-color: #c04436;
-  --wa-file-bg: #fff0ed;
+  --wa-file-bg: #fff7f6;
 }
 
 .wa-cursor-file__card[data-file-tone="doc"],
 .wa-uploaded-file[data-file-tone="doc"] {
   --wa-file-color: #2c66d8;
-  --wa-file-bg: #eff5ff;
+  --wa-file-bg: #f7faff;
 }
 
 .wa-cursor-file__card[data-file-tone="text"],
 .wa-uploaded-file[data-file-tone="text"] {
   --wa-file-color: #6f6a63;
-  --wa-file-bg: #f4f3ef;
+  --wa-file-bg: #faf9f6;
 }
 
 .wa-cursor-file__card[data-file-tone="ppt"],
 .wa-uploaded-file[data-file-tone="ppt"] {
   --wa-file-color: #b5671c;
-  --wa-file-bg: #fff4e5;
+  --wa-file-bg: #fff9f1;
 }
 
 @supports (color: oklch(0.5 0.1 120)) {
   .wa-cursor-file__card,
   .wa-uploaded-file {
     --wa-file-color: oklch(0.49 0.105 55);
-    --wa-file-bg: oklch(0.965 0.024 65);
+    --wa-file-bg: oklch(0.986 0.012 65);
     --wa-file-border: oklch(0.88 0.008 80);
   }
 
   .wa-cursor-file__card[data-file-tone="spreadsheet"],
   .wa-uploaded-file[data-file-tone="spreadsheet"] {
     --wa-file-color: oklch(0.51 0.12 150);
-    --wa-file-bg: oklch(0.965 0.032 150);
+    --wa-file-bg: oklch(0.986 0.014 150);
   }
 
   .wa-cursor-file__card[data-file-tone="pdf"],
   .wa-uploaded-file[data-file-tone="pdf"] {
     --wa-file-color: oklch(0.52 0.15 29);
-    --wa-file-bg: oklch(0.965 0.031 29);
+    --wa-file-bg: oklch(0.986 0.014 29);
   }
 
   .wa-cursor-file__card[data-file-tone="doc"],
   .wa-uploaded-file[data-file-tone="doc"] {
     --wa-file-color: oklch(0.52 0.145 257);
-    --wa-file-bg: oklch(0.965 0.029 257);
+    --wa-file-bg: oklch(0.986 0.013 257);
   }
 
   .wa-cursor-file__card[data-file-tone="text"],
   .wa-uploaded-file[data-file-tone="text"] {
     --wa-file-color: oklch(0.52 0.018 82);
-    --wa-file-bg: oklch(0.956 0.008 82);
+    --wa-file-bg: oklch(0.982 0.004 82);
   }
 
   .wa-cursor-file__card[data-file-tone="ppt"],
   .wa-uploaded-file[data-file-tone="ppt"] {
     --wa-file-color: oklch(0.56 0.13 57);
-    --wa-file-bg: oklch(0.966 0.038 64);
+    --wa-file-bg: oklch(0.986 0.016 64);
   }
 }
 
@@ -1448,7 +1448,7 @@ body {
   border: 1px solid var(--wa-file-border, #dedbd3);
   border-radius: 8px;
   color: var(--wa-ink);
-  background: var(--wa-color-user-message);
+  background: #faf9f4;
 }
 
 .wa-uploaded-file__icon {

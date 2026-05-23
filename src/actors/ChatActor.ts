@@ -65,8 +65,14 @@ type FileLandingClone = {
   el: HTMLElement;
   startX: number;
   startY: number;
+  startWidth: number;
+  startHeight: number;
   endX: number;
   endY: number;
+  endWidth: number;
+  endHeight: number;
+  startScaleX: number;
+  startScaleY: number;
   startRotation: number;
   startBackground: RgbaColor;
   endBackground: RgbaColor;
@@ -75,6 +81,8 @@ type FileLandingClone = {
   detailEls: HTMLElement[];
   setX: (value: number) => void;
   setY: (value: number) => void;
+  setScaleX: (value: number) => void;
+  setScaleY: (value: number) => void;
   setRotation: (value: number) => void;
   setBackgroundColor: (value: string) => void;
   setBorderColor: (value: string) => void;
@@ -2177,6 +2185,8 @@ export class ChatActor {
     return gsap
       .timeline()
       .call(() => {
+        const initialScrollTop = this.thread.scrollTop;
+
         this.scrollTween?.kill();
         this.scrollTween = null;
         message.style.display = "grid";
@@ -2188,7 +2198,9 @@ export class ChatActor {
           transformOrigin: "right center",
         });
         scrollTarget = this.getMessageScrollTarget(message);
-        clones = this.createFileLandingClones(cursorFile, targets, scrollTarget);
+        this.thread.scrollTop = scrollTarget;
+        clones = this.createFileLandingClones(cursorFile, targets);
+        this.thread.scrollTop = initialScrollTop;
         label = this.createFileLandingLabel(options.landingLabel, clones);
         gsap.set(cursorFile, { autoAlpha: 0 });
       })
@@ -2230,19 +2242,18 @@ export class ChatActor {
       .call(() => {
         this.renderFileLandingClones(clones, 1);
         this.renderFileLandingLabel(label, 1);
+        this.thread.scrollTop = scrollTarget;
         gsap.set(revealTargets, { autoAlpha: 1, y: 0, scale: 1 });
         gsap.set(message, { opacity: 1, visibility: "visible" });
         clones.forEach((clone) => clone.el.remove());
         label?.el.remove();
         cursorFile.remove();
-        this.animateMessageScrollIntoView(message);
       });
   }
 
   private createFileLandingClones(
     cursorFile: HTMLElement,
     targets: HTMLElement[],
-    finalScrollTop: number,
   ): FileLandingClone[] {
     const sourceCards = this.getCursorFileCards(cursorFile);
     const landingLayer = this.chatBody;
@@ -2252,9 +2263,11 @@ export class ChatActor {
       const sourceRect = sourceCard.getBoundingClientRect();
       const targetRect = target.getBoundingClientRect();
       const sourceLocalRect = this.getElementLocalRect(sourceRect, landingLayer);
-      const targetLocalRect = this.getFinalFileLandingTargetRect(target, targetRect, landingLayer, finalScrollTop);
+      const targetLocalRect = this.getElementLocalRect(targetRect, landingLayer);
       const clone = target.cloneNode(true) as HTMLElement;
       const startRotation = this.getCursorFileCardRotation(index, sourceCards.length);
+      const startScaleX = targetRect.width ? sourceRect.width / targetRect.width : 1;
+      const startScaleY = targetRect.height ? sourceRect.height / targetRect.height : 1;
       const sourceStyle = window.getComputedStyle(sourceCard);
       const targetStyle = window.getComputedStyle(target);
       const startBackground = this.parseCssColor(sourceStyle.backgroundColor) ?? { r: 255, g: 255, b: 249, a: 0.96 };
@@ -2275,8 +2288,8 @@ export class ChatActor {
         height: targetRect.height,
         x: sourceLocalRect.left,
         y: sourceLocalRect.top,
-        scaleX: 1,
-        scaleY: 1,
+        scaleX: startScaleX,
+        scaleY: startScaleY,
         rotation: startRotation,
         transformOrigin: "left top",
         pointerEvents: "none",
@@ -2295,8 +2308,14 @@ export class ChatActor {
         el: clone,
         startX: sourceLocalRect.left,
         startY: sourceLocalRect.top,
+        startWidth: sourceRect.width,
+        startHeight: sourceRect.height,
         endX: targetLocalRect.left,
         endY: targetLocalRect.top,
+        endWidth: targetRect.width,
+        endHeight: targetRect.height,
+        startScaleX,
+        startScaleY,
         startRotation,
         startBackground,
         endBackground,
@@ -2305,6 +2324,8 @@ export class ChatActor {
         detailEls,
         setX: gsap.quickSetter(clone, "x", "px") as (value: number) => void,
         setY: gsap.quickSetter(clone, "y", "px") as (value: number) => void,
+        setScaleX: gsap.quickSetter(clone, "scaleX") as (value: number) => void,
+        setScaleY: gsap.quickSetter(clone, "scaleY") as (value: number) => void,
         setRotation: gsap.quickSetter(clone, "rotation", "deg") as (value: number) => void,
         setBackgroundColor: gsap.quickSetter(clone, "backgroundColor") as (value: string) => void,
         setBorderColor: gsap.quickSetter(clone, "borderColor") as (value: string) => void,
@@ -2320,6 +2341,8 @@ export class ChatActor {
 
       clone.setX(this.interpolate(clone.startX, clone.endX, progress));
       clone.setY(this.interpolate(clone.startY, clone.endY, progress));
+      clone.setScaleX(this.interpolate(clone.startScaleX, 1, progress));
+      clone.setScaleY(this.interpolate(clone.startScaleY, 1, progress));
       clone.setRotation(this.interpolate(clone.startRotation, 0, progress));
       clone.setBackgroundColor(this.interpolateRgba(clone.startBackground, clone.endBackground, progress));
       clone.setBorderColor(this.interpolateRgba(clone.startBorderColor, clone.endBorderColor, progress));
@@ -2393,8 +2416,10 @@ export class ChatActor {
   ): { left: number; top: number; width: number; height: number } {
     const lefts = clones.map((clone) => (phase === "start" ? clone.startX : clone.endX));
     const tops = clones.map((clone) => (phase === "start" ? clone.startY : clone.endY));
-    const rights = clones.map((clone, index) => lefts[index] + clone.el.offsetWidth);
-    const bottoms = clones.map((clone, index) => tops[index] + clone.el.offsetHeight);
+    const widths = clones.map((clone) => (phase === "start" ? clone.startWidth : clone.endWidth));
+    const heights = clones.map((clone) => (phase === "start" ? clone.startHeight : clone.endHeight));
+    const rights = clones.map((_clone, index) => lefts[index] + widths[index]);
+    const bottoms = clones.map((_clone, index) => tops[index] + heights[index]);
     const left = Math.min(...lefts);
     const top = Math.min(...tops);
     const right = Math.max(...rights);
@@ -2423,22 +2448,6 @@ export class ChatActor {
     return {
       left: rect.left - containerRect.left,
       top: rect.top - containerRect.top,
-    };
-  }
-
-  private getFinalFileLandingTargetRect(
-    target: HTMLElement,
-    targetRect: DOMRect,
-    container: HTMLElement,
-    finalScrollTop: number,
-  ): Pick<DOMRect, "left" | "top"> {
-    const localRect = this.getElementLocalRect(targetRect, container);
-
-    if (!this.thread.contains(target)) return localRect;
-
-    return {
-      left: localRect.left,
-      top: localRect.top + this.thread.scrollTop - finalScrollTop,
     };
   }
 
