@@ -1532,26 +1532,26 @@ body {
   padding-right: 48px;
 }
 
-.wa-data-table__add {
+.wa-section .wa-data-table__add {
   position: sticky;
   z-index: 2;
   grid-column: 1 / -1;
   grid-row: 1;
   align-self: center;
   justify-self: end;
-  right: 6px;
+  right: 3px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 22px;
-  height: 18px;
+  width: 28px;
+  height: 26px;
   padding: 0 0 1px;
   border: 1px solid #eee6df;
-  border-radius: 5px;
+  border-radius: 7px;
   color: #050505;
   background: #fffffb;
   box-shadow: 0 1px 1px rgba(23, 23, 20, 0.02);
-  font-size: 14px;
+  font-size: 18px;
   line-height: 1;
   font-weight: 680;
 }
@@ -5557,12 +5557,12 @@ body {
     padding-right: 26px;
   }
 
-  .wa-data-table__add {
-    right: 4px;
-    width: 18px;
-    height: 16px;
-    border-radius: 4px;
-    font-size: 12px;
+  .wa-section .wa-data-table__add {
+    right: 2px;
+    width: 22px;
+    height: 20px;
+    border-radius: 5px;
+    font-size: 15px;
   }
 
   .wa-data-table__footer {
