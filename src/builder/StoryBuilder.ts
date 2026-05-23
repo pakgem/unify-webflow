@@ -2704,7 +2704,7 @@ function createMailboxConnectionComponent(): BuilderMailboxConnectionComponent {
     subtitle: "Unify will recent emails, replies, and meeting context to learn how you actually communicate",
     provider: "Gmail",
     account: "joel@unifygtm.com",
-    status: "Gmail",
+    status: "Connected",
     ctaLabel: "Gmail",
     secondaryCtaLabel: "Outlook",
     loadingLabel: "connecting",

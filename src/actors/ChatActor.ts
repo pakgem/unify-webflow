@@ -1426,12 +1426,13 @@ export class ChatActor {
 
     tl.call(() => {
       section.dataset.mailboxState = "loading";
-      learning.dataset.mailboxLearningState = "loading";
       button.disabled = true;
       button.setAttribute("aria-busy", "true");
       button.setAttribute("aria-label", button.dataset.mailboxLoadingLabel ?? "connecting");
+      learning.dataset.mailboxLearningState = "idle";
       titleText.textContent = MAILBOX_LEARNING_TITLE;
       detail.textContent = MAILBOX_LEARNING_STAGES[0].detail;
+      gsap.set(learning, { display: "none", autoAlpha: 0, y: 8, scale: 0.992 });
       this.updateMailboxThumbprintFill(thumbprintFillPaths, 0);
       gsap.set(progressFill, { scaleX: 0, transformOrigin: "left center" });
       gsap.set(thumbprintFrame, { scale: 1, transformOrigin: "center center" });
@@ -1451,7 +1452,8 @@ export class ChatActor {
         section.dataset.mailboxState = "connected";
         button.disabled = true;
         button.removeAttribute("aria-busy");
-        button.setAttribute("aria-label", button.dataset.mailboxConnectedLabel ?? "Gmail");
+        button.setAttribute("aria-label", button.dataset.mailboxConnectedLabel ?? "Connected");
+        learning.dataset.mailboxLearningState = "loading";
       })
       .to({}, { duration: MAILBOX_CONNECT_MOTION.successHoldDuration })
       .set(learning, { display: "grid", height: "auto" }, "-=0.04")
@@ -5192,7 +5194,7 @@ function normalizeMailboxProviderButtonLabel(
 ): string {
   const fallback = provider === "gmail" ? "Gmail" : "Outlook";
   const normalized = value?.trim();
-  if (!normalized) return fallback;
+  if (!normalized) return state === "connected" ? "Connected" : fallback;
 
   const providerLabel = fallback.toLowerCase();
   const lower = normalized.toLowerCase().replace(/\s+/g, " ");
@@ -5203,8 +5205,8 @@ function normalizeMailboxProviderButtonLabel(
     `connected ${providerLabel}`,
   ]);
 
+  if (state === "connected" && (providerStates.has(lower) || lower === "connected")) return "Connected";
   if (providerStates.has(lower)) return fallback;
-  if (state === "connected" && lower === "connected") return fallback;
 
   return normalized;
 }
