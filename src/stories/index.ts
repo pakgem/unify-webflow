@@ -1395,7 +1395,7 @@ export const defaultStories: StoryDefinition[] = [
         { kind: "enrichmentPanel", config: DATA_MARKETPLACE_ENRICHMENT, at: "+=0.12" },
         { kind: "status", text: "Contacts enriched", at: "+=0.86" },
         { kind: "dataTable", config: DATA_MARKETPLACE_ENRICHED_TABLE, at: "-=0.02" },
-        { kind: "marketingDataSourcesGrid", config: DATA_MARKETPLACE_SOURCES, at: "+=0.44" },
+        { kind: "marketingDataSourcesGrid", config: DATA_MARKETPLACE_SOURCES, at: "+=1.44" },
         exitStory(EXIT_TARGETS.bottomRight, "+=3"),
       ]);
     },

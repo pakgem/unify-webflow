@@ -592,7 +592,7 @@ function appendComponentRuntimeStep(
     steps.push({
       kind: storyId === "data-marketplace" ? "marketingDataSourcesGrid" : "dataSourcesGrid",
       config,
-      at: storyId === "data-marketplace" ? "+=0.44" : "-=0.04",
+      at: storyId === "data-marketplace" ? "+=1.44" : "-=0.04",
     });
     return;
   }

@@ -7151,7 +7151,7 @@ function Xl(r, e, t) {
     r.push({
       kind: e === "data-marketplace" ? "marketingDataSourcesGrid" : "dataSourcesGrid",
       config: i,
-      at: e === "data-marketplace" ? "+=0.44" : "-=0.04"
+      at: e === "data-marketplace" ? "+=1.44" : "-=0.04"
     });
     return;
   }
@@ -8771,7 +8771,7 @@ const pc = [
       { kind: "enrichmentPanel", config: fc, at: "+=0.12" },
       { kind: "status", text: "Contacts enriched", at: "+=0.86" },
       { kind: "dataTable", config: Tn, at: "-=0.02" },
-      { kind: "marketingDataSourcesGrid", config: Cn, at: "+=0.44" },
+      { kind: "marketingDataSourcesGrid", config: Cn, at: "+=1.44" },
       $e(ze.bottomRight, "+=3")
     ])
   },
