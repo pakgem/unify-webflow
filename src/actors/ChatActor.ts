@@ -1319,6 +1319,30 @@ export class ChatActor {
     return this.revealComponentItems("table", table, ".wa-data-table__row", COMPONENT_CHILD_REVEAL.tableRow, scrollAnchor);
   }
 
+  scrollDataTableToFooter(tableId: string, duration = CHAT_SCROLL_MOTION.revealDuration): gsap.core.Timeline {
+    const tl = gsap.timeline();
+
+    tl.call(() => {
+      this.stopScrollMotion();
+    });
+
+    tl.to(this.thread, {
+      scrollTop: () => {
+        const table = this.findDataTable(tableId);
+
+        return table ? this.getElementBottomScrollTarget(table) : this.getThreadBottomScrollTarget();
+      },
+      duration,
+      ease: CHAT_SCROLL_MOTION.revealEase,
+      overwrite: "auto",
+      onComplete: () => {
+        this.scrollTween = null;
+      },
+    });
+
+    return tl;
+  }
+
   dataTablePage(tableId: string, page: number, options: { updateExpected?: boolean } = {}): gsap.core.Timeline {
     const tl = gsap.timeline();
     const fadeOut = { value: 0 };

@@ -246,6 +246,8 @@ function buildEngagementStory(ctx: StoryContext, story: BuilderStory): gsap.core
   const sequenceConfig = sequenceStep ? toSequenceEngagement(sequenceStep.component, "visitor-outreach-sequences") : null;
   const steps: StoryStep[] = [];
 
+  if (tableConfig) tableConfig.scrollAlign = "equal-inset";
+
   if (promptStep) {
     steps.push({
       kind: "prompt" as const,
@@ -258,7 +260,16 @@ function buildEngagementStory(ctx: StoryContext, story: BuilderStory): gsap.core
     });
   }
 
-  if (tableConfig) steps.push({ kind: "dataTable" as const, config: tableConfig, at: "-=0.02" });
+  if (tableConfig) {
+    steps.push(
+      { kind: "dataTable" as const, config: tableConfig, at: "-=0.02" },
+      {
+        kind: "custom" as const,
+        build: () => ctx.chat.scrollDataTableToFooter("website-visitors-sales", STORY_TIMING.beat + 0.18),
+        at: "+=0.08",
+      },
+    );
+  }
 
   if (tableConfig?.pagination && tableConfig.pagination.pages.length > 1) {
     const pageTwoTarget = responsiveElementTarget(

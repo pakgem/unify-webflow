@@ -1065,6 +1065,7 @@ const WEBSITE_VISITOR_SALES_TABLE = {
   eyebrow: "Visitor intent",
   count: "50 sales leaders",
   variant: "filtered",
+  scrollAlign: "equal-inset",
   columns: WEBSITE_VISITOR_SALES_COLUMNS,
   rows: WEBSITE_VISITOR_SALES_PAGE_ONE,
   pagination: {
@@ -1594,6 +1595,11 @@ export const defaultStories: StoryDefinition[] = [
           fromEntry: true,
         },
         { kind: "dataTable", config: WEBSITE_VISITOR_SALES_TABLE, at: "-=0.02" },
+        {
+          kind: "custom",
+          build: () => ctx.chat.scrollDataTableToFooter("website-visitors-sales", STORY_TIMING.beat + 0.18),
+          at: "+=0.08",
+        },
         {
           kind: "cursorMove",
           target: pageTwoTarget,
