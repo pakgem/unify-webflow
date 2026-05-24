@@ -500,6 +500,7 @@ const DATA_TABLE_PAGE_BUTTON_SELECTOR = "[data-table-page-button]";
 const DATA_TABLE_PAGE_RANGE_SELECTOR = "[data-table-page-range]";
 const DATA_TABLE_PAGE_CELL_MOTION = {
   duration: motionDuration(0.12),
+  incomingLag: motionDuration(0.2),
   rowStagger: motionDuration(0.03),
   columnStagger: motionDuration(0.07),
   totalDuration: motionDuration(0.95),
@@ -1608,12 +1609,16 @@ export class ChatActor {
     const elapsed = progress * DATA_TABLE_PAGE_CELL_MOTION.totalDuration;
 
     state.cellSwaps.forEach((swap) => {
-      const localProgress = clampUnit(
+      const outgoingLocalProgress = clampUnit(
         (elapsed - swap.delay) /
           DATA_TABLE_PAGE_CELL_MOTION.duration,
       );
-      const incomingProgress = DATA_TABLE_PAGE_CELL_EASE.in(localProgress);
-      const outgoingProgress = DATA_TABLE_PAGE_CELL_EASE.out(localProgress);
+      const incomingLocalProgress = clampUnit(
+        (elapsed - swap.delay - DATA_TABLE_PAGE_CELL_MOTION.incomingLag) /
+          DATA_TABLE_PAGE_CELL_MOTION.duration,
+      );
+      const incomingProgress = DATA_TABLE_PAGE_CELL_EASE.in(incomingLocalProgress);
+      const outgoingProgress = DATA_TABLE_PAGE_CELL_EASE.out(outgoingLocalProgress);
 
       this.setDataTablePageCellSwapState(
         swap.currentContent,
