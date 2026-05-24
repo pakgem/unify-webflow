@@ -568,6 +568,7 @@ function appendComponentRuntimeStep(
   if (component.kind === "table") {
     const config = toDataTable(component, `${storyId}-${step.id}`);
 
+    if (storyId === "data-marketplace") normalizeDataMarketplaceProspectTable(config);
     if (shouldEqualInsetRevealTable(storyId, step, config)) config.scrollAlign = "equal-inset";
     steps.push({ kind: "dataTable", config, at: "-=0.04" });
     return;
@@ -729,6 +730,55 @@ function withCsvCleanTableScroll(config: DataTableConfig): DataTableConfig {
     ...config,
     scrollAnchor: "previous-message",
   };
+}
+
+function normalizeDataMarketplaceProspectTable(config: DataTableConfig): void {
+  config.rows.forEach((row) => normalizeDataMarketplaceProspectValues(row.values));
+  config.pagination?.pages.forEach((page) => {
+    page.rows.forEach((row) => normalizeDataMarketplaceProspectValues(row.values));
+  });
+}
+
+function normalizeDataMarketplaceProspectValues(values: Record<string, string>): void {
+  if (values.name && "company" in values) values.company = "Stripe";
+  if (values.prospectDetail) values.prospectDetail = normalizeProspectDetailToStripe(values.prospectDetail);
+  if (values.connector) values.connector = normalizeConnectorLabel(values.connector);
+}
+
+function normalizeProspectDetailToStripe(detail: string): string {
+  const cleanDetail = detail.trim();
+
+  if (!cleanDetail) return "";
+
+  if (/(?:@|\bat\s+)[A-Z][A-Za-z0-9& .-]+(?:\s*\([^()]*\))?$/i.test(cleanDetail)) {
+    return cleanDetail.replace(
+      /(?:@|\bat\s+)([A-Z][A-Za-z0-9& .-]+?)(\s*\([^()]*\))?$/i,
+      (_match, _company, suffix = "") => `at Stripe${formatTrailingParenthetical(suffix)}`,
+    );
+  }
+
+  if (/,\s*[A-Z][A-Za-z0-9& .-]+(?:\s*\([^()]*\))?$/.test(cleanDetail)) {
+    return cleanDetail.replace(
+      /,\s*([A-Z][A-Za-z0-9& .-]+?)(\s*\([^()]*\))?$/,
+      (_match, _company, suffix = "") => `, Stripe${formatTrailingParenthetical(suffix)}`,
+    );
+  }
+
+  return /stripe/i.test(cleanDetail) ? cleanDetail : `${cleanDetail} at Stripe`;
+}
+
+function formatTrailingParenthetical(value: string): string {
+  const suffix = value.trim();
+
+  return suffix ? ` ${suffix}` : "";
+}
+
+function normalizeConnectorLabel(value: string): string {
+  const parsed = parseMutualConnection(value);
+
+  if (!parsed.name || !parsed.title) return value;
+
+  return `${parsed.name} (${parsed.title})${parsed.context ? ` — ${parsed.context}` : ""}`;
 }
 
 function isCsvCleanupTableId(tableId: string): boolean {
@@ -921,14 +971,15 @@ function normalizeMutualConnectionTitle(
   context: string,
 ): { title: string; company: string } {
   const inferredCompany = inferConnectionCompany(context);
+  const inferredCompanyIsWorkplace = inferredCompany && !/^(?:Stanford GSB|Wharton)$/i.test(inferredCompany);
 
-  if (normalized && (!sourceTitle || /\bUnify\b/i.test(sourceTitle))) return normalized;
-  if (sourceTitle && inferredCompany && /\bUnify\b/i.test(sourceTitle)) {
+  if (sourceTitle && inferredCompanyIsWorkplace && /\bUnify\b/i.test(sourceTitle)) {
     return {
       title: sourceTitle.replace(/\bUnify\b/g, inferredCompany),
       company: inferredCompany,
     };
   }
+  if (normalized && (!sourceTitle || /\bUnify\b/i.test(sourceTitle))) return normalized;
   if (sourceTitle) {
     return {
       title: sourceTitle,

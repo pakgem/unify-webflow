@@ -120,7 +120,7 @@ const DATA_MARKETPLACE_INITIAL_TABLE = {
       id: "jamie-chen",
       values: {
         name: "Jamie Chen",
-        company: "Ramp",
+        company: "Stripe",
         title: "VP of Sales",
         avatarTone: "1",
         avatarUrl: "https://i.pravatar.cc/64?img=12",
@@ -131,7 +131,7 @@ const DATA_MARKETPLACE_INITIAL_TABLE = {
       id: "andre-park",
       values: {
         name: "Andre Park",
-        company: "Ramp",
+        company: "Stripe",
         title: "Head of Growth",
         avatarTone: "2",
         avatarUrl: "https://i.pravatar.cc/64?img=52",
@@ -142,7 +142,7 @@ const DATA_MARKETPLACE_INITIAL_TABLE = {
       id: "david-kim",
       values: {
         name: "David Kim",
-        company: "Ramp",
+        company: "Stripe",
         title: "Head of Revenue",
         avatarTone: "3",
         avatarUrl: "https://i.pravatar.cc/64?img=33",
@@ -153,7 +153,7 @@ const DATA_MARKETPLACE_INITIAL_TABLE = {
       id: "chandler-bree",
       values: {
         name: "Chandler Bree",
-        company: "Square",
+        company: "Stripe",
         title: "VP of Sales",
         avatarTone: "4",
         avatarUrl: "https://i.pravatar.cc/64?img=11",
@@ -164,7 +164,7 @@ const DATA_MARKETPLACE_INITIAL_TABLE = {
       id: "ellen-nelle",
       values: {
         name: "Ellen Nelle",
-        company: "Square",
+        company: "Stripe",
         title: "Growth Engineer",
         avatarTone: "5",
         avatarUrl: "https://i.pravatar.cc/64?img=47",
@@ -175,7 +175,7 @@ const DATA_MARKETPLACE_INITIAL_TABLE = {
       id: "chadley-dupre",
       values: {
         name: "Chadley Dupre",
-        company: "Square",
+        company: "Stripe",
         title: "Head of Revops",
         avatarTone: "6",
         avatarUrl: "https://i.pravatar.cc/64?img=59",
@@ -220,7 +220,7 @@ const DATA_MARKETPLACE_FUNDED_TABLE = {
       id: "jamie-chen",
       values: {
         name: "Jamie Chen",
-        company: "Ramp",
+        company: "Stripe",
         title: "VP of Sales",
         avatarTone: "1",
         avatarUrl: "https://i.pravatar.cc/64?img=12",
@@ -231,7 +231,7 @@ const DATA_MARKETPLACE_FUNDED_TABLE = {
       id: "andre-park",
       values: {
         name: "Andre Park",
-        company: "Ramp",
+        company: "Stripe",
         title: "Head of Growth",
         avatarTone: "2",
         avatarUrl: "https://i.pravatar.cc/64?img=52",
@@ -242,7 +242,7 @@ const DATA_MARKETPLACE_FUNDED_TABLE = {
       id: "david-kim",
       values: {
         name: "David Kim",
-        company: "Ramp",
+        company: "Stripe",
         title: "Head of Revenue",
         avatarTone: "3",
         avatarUrl: "https://i.pravatar.cc/64?img=33",
@@ -496,8 +496,8 @@ const DATA_MARKETPLACE_ENRICHED_TABLE = {
       id: "jamie-chen",
       values: {
         name: "Jamie Chen",
-        prospectDetail: "VP of Sales at Ramp",
-        email: "jamie@ramp.com",
+        prospectDetail: "VP of Sales at Stripe",
+        email: "jamie@stripe.com",
         number: "+1 (628) 240-2744",
         connector: "Priya Shah (VP Sales @ Plaid)",
         avatarTone: "1",
@@ -509,8 +509,8 @@ const DATA_MARKETPLACE_ENRICHED_TABLE = {
       id: "andre-park",
       values: {
         name: "Andre Park",
-        prospectDetail: "Head of Growth at Ramp",
-        email: "andre@ramp.com",
+        prospectDetail: "Head of Growth at Stripe",
+        email: "andre@stripe.com",
         number: "+1 (210) 555-2341",
         connector: "Marco Liu (Partner @ Sequoia)",
         avatarTone: "2",
@@ -522,8 +522,8 @@ const DATA_MARKETPLACE_ENRICHED_TABLE = {
       id: "david-kim",
       values: {
         name: "David Kim",
-        prospectDetail: "Head of Revenue at Ramp",
-        email: "david@ramp.com",
+        prospectDetail: "Head of Revenue at Stripe",
+        email: "david@stripe.com",
         number: "+1 (628) 230-9962",
         connector: "Dev Singh (RevOps Lead @ Brex)",
         avatarTone: "3",
@@ -535,8 +535,8 @@ const DATA_MARKETPLACE_ENRICHED_TABLE = {
       id: "chandler-bree",
       values: {
         name: "Chandler Bree",
-        prospectDetail: "VP of Sales at Square",
-        email: "jamie@ramp.com",
+        prospectDetail: "VP of Sales at Stripe",
+        email: "chandler@stripe.com",
         number: "+1 (628) 240-2744",
         connector: "Jenna Park (VP Marketing @ Square)",
         avatarTone: "4",
