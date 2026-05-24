@@ -2229,6 +2229,10 @@ body {
   display: none;
 }
 
+.wa-data-table-person__source[data-source="company"][data-has-logo="false"] {
+  display: none;
+}
+
 .wa-data-table-person__source-logo {
   display: block;
   width: 100%;

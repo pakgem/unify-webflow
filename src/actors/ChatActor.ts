@@ -464,7 +464,31 @@ const DATA_TABLE_SELECTOR = "[data-data-table]";
 const DATA_TABLE_ACTION_SELECTOR = "[data-table-action]";
 const DATA_TABLE_PAGE_BUTTON_SELECTOR = "[data-table-page-button]";
 const DATA_TABLE_PAGE_RANGE_SELECTOR = "[data-table-page-range]";
+const SIMPLE_ICON_CDN_BASE = "https://cdn.jsdelivr.net/npm/simple-icons@latest/icons";
+const GOOGLE_FAVICON_BASE = "https://www.google.com/s2/favicons";
+const COMPANY_LOGO_ICON_SLUGS: Record<string, string> = {
+  "adyen": "adyen",
+  "airtable": "airtable",
+  "brex": "brex",
+  "dbt labs": "dbt",
+  "figma": "figma",
+  "gusto": "gusto",
+  "hubspot": "hubspot",
+  "linear": "linear",
+  "linkedin": "linkedin",
+  "notion": "notion",
+  "paypal": "paypal",
+  "posthog": "posthog",
+  "retool": "retool",
+  "salesforce": "salesforce",
+  "square": "square",
+  "stripe": "stripe",
+  "tesla": "tesla",
+  "vercel": "vercel",
+  "webflow": "webflow",
+};
 const COMPANY_LOGO_DOMAINS: Record<string, string> = {
+  "adyen": "adyen.com",
   "airtable": "airtable.com",
   "apollo": "apollo.io",
   "apollo io": "apollo.io",
@@ -475,21 +499,33 @@ const COMPANY_LOGO_DOMAINS: Record<string, string> = {
   "census": "getcensus.com",
   "clearbit": "clearbit.com",
   "clearbit inc": "clearbit.com",
+  "demandbase": "demandbase.com",
   "dbt labs": "getdbt.com",
   "figma": "figma.com",
   "gusto": "gusto.com",
   "hex": "hex.tech",
+  "hubspot": "hubspot.com",
   "linear": "linear.app",
+  "linkedin": "linkedin.com",
   "mercury": "mercury.com",
   "northstar ai": "northstar.ai",
   "northstar dev": "northstardev.com",
   "notion": "notion.so",
   "orbitgrid": "orbitgrid.com",
+  "paypal": "paypal.com",
+  "plaid": "plaid.com",
+  "posthog": "posthog.com",
   "ramp": "ramp.com",
   "retool": "retool.com",
   "rippling": "rippling.com",
+  "salesforce": "salesforce.com",
+  "segment": "segment.com",
+  "snitcher": "snitcher.com",
   "square": "squareup.com",
   "stripe": "stripe.com",
+  "tesla": "tesla.com",
+  "unify": "unifygtm.com",
+  "unify gtm": "unifygtm.com",
   "vercel": "vercel.com",
   "webflow": "webflow.com",
 };
@@ -4423,7 +4459,6 @@ export class ChatActor {
 
     if (!logoUrl) {
       badge.dataset.hasLogo = "false";
-      badge.textContent = this.getInitials(company).slice(0, 1);
       return badge;
     }
 
@@ -4432,7 +4467,6 @@ export class ChatActor {
     img.alt = "";
     img.decoding = "async";
     img.referrerPolicy = "no-referrer";
-    img.src = logoUrl;
     img.addEventListener("load", () => {
       badge.dataset.hasLogo = "true";
     }, { once: true });
@@ -4440,8 +4474,8 @@ export class ChatActor {
       if (!badge.contains(img)) return;
       img.remove();
       badge.dataset.hasLogo = "false";
-      badge.textContent = this.getInitials(company).slice(0, 1);
     }, { once: true });
+    img.src = logoUrl;
     badge.append(img);
     return badge;
   }
@@ -4455,7 +4489,7 @@ export class ChatActor {
     if (directCompany) return directCompany;
 
     const detail = values[options.detailKey ?? "prospectDetail"] || values.personDetail || "";
-    const fromDetail = detail.match(/\bat\s+([^,()]+)$/i)?.[1]?.trim();
+    const fromDetail = this.getCompanyNameFromPersonDetail(detail);
 
     if (fromDetail) return fromDetail;
 
@@ -4469,9 +4503,19 @@ export class ChatActor {
 
     if (explicitLogo) return explicitLogo;
 
+    const iconSlug = values.companyLogoSlug || this.getCompanyLogoIconSlug(company);
+
+    if (iconSlug) return `${SIMPLE_ICON_CDN_BASE}/${encodeURIComponent(iconSlug)}.svg`;
+
     const domain = values.companyDomain || this.getCompanyLogoDomain(company) || this.getEmailDomainFromValues(values);
 
-    return domain ? `https://logo.clearbit.com/${encodeURIComponent(domain)}` : "";
+    return domain ? `${GOOGLE_FAVICON_BASE}?domain=${encodeURIComponent(domain)}&sz=64` : "";
+  }
+
+  private getCompanyLogoIconSlug(company: string): string {
+    if (!company) return "";
+
+    return COMPANY_LOGO_ICON_SLUGS[this.getCompanyKey(company)] ?? "";
   }
 
   private getCompanyLogoDomain(company: string): string {
@@ -4486,6 +4530,25 @@ export class ChatActor {
       .replace(/\b(inc|llc|ltd|corp|corporation|company)\b\.?/g, "")
       .replace(/[^a-z0-9]+/g, " ")
       .trim();
+  }
+
+  private getCompanyNameFromPersonDetail(detail: string): string {
+    const cleanDetail = detail.trim();
+
+    if (!cleanDetail) return "";
+
+    const atCompany = cleanDetail.match(/(?:@|\bat\s+)([A-Z][A-Za-z0-9& .-]+)$/)?.[1]?.trim();
+
+    if (atCompany) return atCompany;
+
+    const parenthetical = cleanDetail.match(/\(([^()]+)\)\s*$/)?.[1]?.trim();
+
+    if (!parenthetical) return "";
+    if (/(?:\d+\s*(?:yrs?|years?|mos?|months?)|mba|gsb|school|studied)/i.test(parenthetical)) return "";
+
+    const parentheticalCompany = parenthetical.match(/(?:@|\bat\s+)([A-Z][A-Za-z0-9& .-]+)$/)?.[1]?.trim();
+
+    return parentheticalCompany || parenthetical;
   }
 
   private getCompanyNameFromEmailValues(values: Record<string, string>): string {
