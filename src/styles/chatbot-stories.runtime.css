@@ -630,7 +630,7 @@ body {
 }
 
 .wa-signup-field [data-signup-email] {
-  transform: translateY(-1px);
+  transform: translateY(-3px);
 }
 
 .wa-signup-field [data-signup-email]::after {
