@@ -500,7 +500,7 @@ const DATA_TABLE_PAGE_BUTTON_SELECTOR = "[data-table-page-button]";
 const DATA_TABLE_PAGE_RANGE_SELECTOR = "[data-table-page-range]";
 const DATA_TABLE_PAGE_CELL_MOTION = {
   duration: motionDuration(0.12),
-  incomingLag: motionDuration(0.2),
+  incomingLag: motionDuration(0.1),
   rowStagger: motionDuration(0.03),
   columnStagger: motionDuration(0.07),
   totalDuration: motionDuration(0.95),

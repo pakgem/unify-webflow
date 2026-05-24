@@ -2443,7 +2443,7 @@ const _l = [
   height: 1280
 }, Nl = 96, _n = ".wa-cursor-file, .wa-file-landing-clone, .wa-file-landing-label, .wa-csv-drop, .wa-signup-logo-transfer", An = "[data-marketing-data-sources-grid]", vn = "[data-data-table]", Lt = "[data-table-action]", ja = "[data-table-page-button]", Ka = "[data-table-page-range]", Ce = {
   duration: S(0.12),
-  incomingLag: S(0.2),
+  incomingLag: S(0.1),
   rowStagger: S(0.03),
   columnStagger: S(0.07),
   totalDuration: S(0.95),
