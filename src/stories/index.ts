@@ -1113,7 +1113,7 @@ const CSV_RAW_ROWS = [
   {
     id: "raw-maya-rodriguez",
     values: {
-      rawName: "Maya R.",
+      name: "Maya R.",
       email: "MAYA.RODRIGUEZ@NorthStar.ai ",
       company: "northstar ai",
     },
@@ -1121,7 +1121,7 @@ const CSV_RAW_ROWS = [
   {
     id: "raw-ethan-cho",
     values: {
-      rawName: "Ethan Cho",
+      name: "Ethan Cho",
       email: "ethan.cho@gmail.com",
       company: "Clearbit Inc.",
     },
@@ -1129,7 +1129,7 @@ const CSV_RAW_ROWS = [
   {
     id: "raw-priya-shah",
     values: {
-      rawName: "Priya Shah",
+      name: "Priya Shah",
       email: "priya.shah+webinar@orbitgrid.com",
       company: "Orbitgrid",
     },
@@ -1137,7 +1137,7 @@ const CSV_RAW_ROWS = [
   {
     id: "raw-lucas-meyer",
     values: {
-      rawName: "Lucas",
+      name: "Lucas",
       email: "",
       company: "Ramp",
     },
@@ -1145,7 +1145,7 @@ const CSV_RAW_ROWS = [
   {
     id: "raw-nina-kapoor",
     values: {
-      rawName: "N. Kapoor",
+      name: "N. Kapoor",
       email: "nina@yahoo.com",
       company: "Mercury",
     },
@@ -1153,7 +1153,7 @@ const CSV_RAW_ROWS = [
   {
     id: "raw-sam-hollis",
     values: {
-      rawName: "sam hollis",
+      name: "sam hollis",
       email: "sam.hollis@apollo.io",
       company: "Apollo.io",
     },
@@ -1161,7 +1161,7 @@ const CSV_RAW_ROWS = [
   {
     id: "raw-anna-li",
     values: {
-      rawName: "Anna Li",
+      name: "Anna Li",
       email: "",
       company: "Linear",
     },
@@ -1169,7 +1169,7 @@ const CSV_RAW_ROWS = [
   {
     id: "raw-devon-park",
     values: {
-      rawName: "Devon Park",
+      name: "Devon Park",
       email: "devon.park@brex.com",
       company: "Brex",
     },
@@ -1177,7 +1177,7 @@ const CSV_RAW_ROWS = [
   {
     id: "raw-rachel-cho",
     values: {
-      rawName: "Rachel C.",
+      name: "Rachel C.",
       email: "rcho@figma.com",
       company: "Figma",
     },
@@ -1185,7 +1185,7 @@ const CSV_RAW_ROWS = [
   {
     id: "raw-owen-lee",
     values: {
-      rawName: "Owen Lee",
+      name: "Owen Lee",
       email: "owen.lee@icloud.com",
       company: "Notion",
     },
@@ -1193,7 +1193,7 @@ const CSV_RAW_ROWS = [
   {
     id: "raw-clara-wong",
     values: {
-      rawName: "Clara Wong",
+      name: "Clara Wong",
       email: "clara.wong@brightlayer.com",
       company: "Bright Layer",
     },
@@ -1201,7 +1201,7 @@ const CSV_RAW_ROWS = [
   {
     id: "raw-maya-rodriguez-duplicate",
     values: {
-      rawName: "Maya Rodriguez",
+      name: "Maya Rodriguez",
       email: "maya.rodriguez@northstar.ai",
       company: "Northstar AI",
     },
@@ -1214,7 +1214,7 @@ const CSV_RAW_TABLE = {
   eyebrow: "CSV import",
   count: "54 records",
   columns: [
-    { key: "rawName", label: "Name", width: "minmax(130px,0.85fr)" },
+    { key: "name", label: "Name", width: "minmax(130px,0.85fr)" },
     { key: "email", label: "Email", width: "max-content" },
     { key: "company", label: "Company", width: "minmax(120px,0.8fr)" },
   ],
@@ -1237,7 +1237,7 @@ const CSV_CLEAN_TABLE = {
   count: "54 records",
   scrollAnchor: "previous-message",
   columns: [
-    { key: "cleanName", label: "Full name", width: "1.25fr" },
+    { key: "full-name", label: "Full name", width: "1.25fr" },
     { key: "work-email", label: "Work email", width: "max-content" },
     { key: "company", label: "Company", width: "1fr" },
     { key: "title", label: "Title", width: "1.1fr" },
@@ -1246,7 +1246,7 @@ const CSV_CLEAN_TABLE = {
     {
       id: "maya-rodriguez",
       values: {
-        cleanName: "Maya Rodriguez",
+        "full-name": "Maya Rodriguez",
         "work-email": "maya.rodriguez@northstar.ai",
         company: "Northstar AI",
         title: "VP Marketing",
@@ -1255,7 +1255,7 @@ const CSV_CLEAN_TABLE = {
     {
       id: "ethan-cho",
       values: {
-        cleanName: "Ethan Cho",
+        "full-name": "Ethan Cho",
         "work-email": "ethan.cho@clearbit.com",
         company: "Clearbit",
         title: "Head of Demand Gen",
@@ -1264,7 +1264,7 @@ const CSV_CLEAN_TABLE = {
     {
       id: "priya-shah",
       values: {
-        cleanName: "Priya Shah",
+        "full-name": "Priya Shah",
         "work-email": "priya.shah@orbitgrid.com",
         company: "OrbitGrid",
         title: "Head of Growth",
@@ -1273,7 +1273,7 @@ const CSV_CLEAN_TABLE = {
     {
       id: "lucas-meyer",
       values: {
-        cleanName: "Lucas Meyer",
+        "full-name": "Lucas Meyer",
         "work-email": "lucas.meyer@ramp.com",
         company: "Ramp",
         title: "Revenue Operations",
@@ -1282,7 +1282,7 @@ const CSV_CLEAN_TABLE = {
     {
       id: "nina-kapoor",
       values: {
-        cleanName: "Nina Kapoor",
+        "full-name": "Nina Kapoor",
         "work-email": "nina.kapoor@mercury.com",
         company: "Mercury",
         title: "Sales Director",
@@ -1291,7 +1291,7 @@ const CSV_CLEAN_TABLE = {
     {
       id: "sam-hollis",
       values: {
-        cleanName: "Sam Hollis",
+        "full-name": "Sam Hollis",
         "work-email": "sam.hollis@apollo.io",
         company: "Apollo",
         title: "VP Sales",

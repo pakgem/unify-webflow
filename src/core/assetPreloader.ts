@@ -52,11 +52,25 @@ function addDataTableRowAssetUrls(urls: Set<string>, values: Record<string, stri
   for (const key of ["name", "contact", "prospect", "fullName", "mutualConnection", "connector"]) {
     const name = values[key];
     if (!name) continue;
+    if (!shouldPreloadDataTablePerson(key, values)) continue;
 
     const explicit = key === "mutualConnection" || key === "connector" ? values.mutualConnectionAvatarUrl : values.avatarUrl;
     const url = getProfilePhotoUrl(name, explicit);
     if (isAssetUrl(url)) urls.add(url);
   }
+}
+
+function shouldPreloadDataTablePerson(key: string, values: Record<string, string>): boolean {
+  if (key === "mutualConnection" || key === "connector") return true;
+
+  return Boolean(
+    values.avatarUrl ||
+    values.avatar ||
+    values.avatarTone ||
+    values.source ||
+    values.personDetail ||
+    values.prospectDetail,
+  );
 }
 
 function preloadImage(url: string): void {

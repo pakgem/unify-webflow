@@ -813,8 +813,6 @@ function shouldEqualInsetRevealTable(
 }
 
 function getBuilderTableShape(component: BuilderTableComponent, fallbackId: string): BuilderTableShape {
-  if (isRawCsvImportTable(component, fallbackId)) return getRawCsvTableShape(component.columns);
-
   const labels = component.columns;
   const nameIndex = labels.findIndex((label) => label.trim().toLowerCase() === "name");
   const roleIndex = nameIndex >= 0
@@ -854,44 +852,6 @@ function getBuilderTableShape(component: BuilderTableComponent, fallbackId: stri
     foldedRoleIndex: foldsRoleIntoName ? roleIndex : undefined,
     mutualConnectionKey: columns.some((column) => column.key === "mutualConnection") ? "mutualConnection" : undefined,
     variant: columns.some((column) => column.key === "mutualConnection") ? "connections" : undefined,
-  };
-}
-
-function isRawCsvImportTable(component: BuilderTableComponent, fallbackId: string): boolean {
-  if (fallbackId === "raw-webinar-attendees") return true;
-
-  const text = `${component.eyebrow ?? ""} ${component.title}`.toLowerCase();
-  return text.includes("csv import") && text.includes("raw");
-}
-
-function getRawCsvTableShape(labels: string[]): BuilderTableShape {
-  return {
-    columns: labels.map((label, index) => {
-      const normalized = label.trim().toLowerCase();
-
-      if (normalized === "name") {
-        return {
-          key: "rawName",
-          label,
-          width: "minmax(130px,0.85fr)",
-        };
-      }
-
-      if (normalized === "email") {
-        return {
-          key: "email",
-          label,
-          width: "max-content",
-        };
-      }
-
-      return {
-        key: slugId(label || `column-${index + 1}`),
-        label,
-        width: normalized === "company" ? "minmax(120px,0.8fr)" : undefined,
-      };
-    }),
-    sourceIndexes: labels.map((_label, index) => index),
   };
 }
 
