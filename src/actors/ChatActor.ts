@@ -52,6 +52,14 @@ type PreparedCursorFile = {
   landAsUploadedFile: (fileName: string, detail?: string) => gsap.core.Timeline;
   landAsUploadedFiles: (files: UploadedFileConfig[]) => gsap.core.Timeline;
 };
+type ComponentRevealOptions = {
+  scrollAlign?: "equal-inset";
+};
+type ChatElementScrollOptions = {
+  duration?: number;
+  offset?: number;
+  match?: "first" | "last";
+};
 type CursorFileFollowOffset = {
   x: number;
   y: number;
@@ -1343,6 +1351,39 @@ export class ChatActor {
     return tl;
   }
 
+  scrollChatElementIntoView(
+    selector: string,
+    options: ChatElementScrollOptions = {},
+  ): gsap.core.Timeline {
+    const tl = gsap.timeline();
+    let scrollTarget = this.thread.scrollTop;
+
+    tl.call(() => {
+      const matches = this.queryElements(this.root, selector);
+      const element = options.match === "last" ? matches[matches.length - 1] : matches[0];
+
+      if (!element) {
+        scrollTarget = this.thread.scrollTop;
+        return;
+      }
+
+      this.stopScrollMotion();
+      scrollTarget = this.getAlignedElementScrollTarget(element, options.offset ?? 0);
+    });
+
+    tl.to(this.thread, {
+      scrollTop: () => scrollTarget,
+      duration: options.duration ?? CHAT_SCROLL_MOTION.revealDuration,
+      ease: CHAT_SCROLL_MOTION.revealEase,
+      overwrite: "auto",
+      onComplete: () => {
+        this.scrollTween = null;
+      },
+    });
+
+    return tl;
+  }
+
   dataTablePage(tableId: string, page: number, options: { updateExpected?: boolean } = {}): gsap.core.Timeline {
     const tl = gsap.timeline();
     const fadeOut = { value: 0 };
@@ -1660,8 +1701,13 @@ export class ChatActor {
       );
   }
 
-  outreachStyleProfile(config: OutreachStyleProfileConfig): gsap.core.Timeline {
+  outreachStyleProfile(
+    config: OutreachStyleProfileConfig,
+    options: ComponentRevealOptions = {},
+  ): gsap.core.Timeline {
     const profile = this.createOutreachStyleProfile(config);
+
+    if (options.scrollAlign) profile.dataset.scrollAlign = options.scrollAlign;
 
     return this.revealComponentItems(
       "style",
@@ -3100,7 +3146,7 @@ export class ChatActor {
       const nextX = point.x - fileWidth * 0.5 + offset.x;
       const nextY = point.y - fileHeight * 0.5 + offset.y;
 
-      if (cursor.el.dataset.cursorMode !== "drag") cursor.setMode("drag");
+      if (cursor.isPayloadDragging() && cursor.el.dataset.cursorMode !== "drag") cursor.setMode("drag");
 
       if (nextX !== transformState.x) {
         transformState.x = nextX;

@@ -29,6 +29,7 @@ import {
   SIGNUP_ENTRY_LEAD_TIME,
   SIGNUP_SUBMIT_TARGET,
   STORY_TIMING,
+  styleProfilePerusalSteps,
 } from "./storySystem";
 
 /* --------------------------------------------------------------------------
@@ -1513,7 +1514,12 @@ export const defaultStories: StoryDefinition[] = [
           hold: 0.24,
           at: `+=${STORY_TIMING.beat}`,
         },
-        { kind: "custom", build: () => ctx.chat.outreachStyleProfile(PYLON_BUSINESS_REPORT), at: "-=0.02" },
+        {
+          kind: "custom",
+          build: () => ctx.chat.outreachStyleProfile(PYLON_BUSINESS_REPORT, { scrollAlign: "equal-inset" }),
+          at: "-=0.02",
+        },
+        ...styleProfilePerusalSteps(PYLON_BUSINESS_REPORT.id),
         {
           kind: "prompt",
           text: "Write a sequence for consumer fintech founders.",

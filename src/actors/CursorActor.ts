@@ -126,6 +126,10 @@ export class CursorActor {
     };
   }
 
+  isPayloadDragging(): boolean {
+    return this.payloadDragActive;
+  }
+
   beginMimicControl(): void {
     this.stopIdleFloat(true);
     this.modeOverride = "default";
@@ -207,6 +211,7 @@ export class CursorActor {
     tl.call(() => {
       this.stopIdleFloat();
       this.resetRotation();
+      if (targetMode !== "drag") this.clearPayloadDragState();
     }, undefined, 0);
     tl.set(this.el, { autoAlpha: 1 }, 0);
 
@@ -290,6 +295,7 @@ export class CursorActor {
       this.stopIdleFloat(true);
       gsap.killTweensOf([this.el, this.floatLayer]);
       this.resetRotation(true);
+      this.clearPayloadDragState();
       this.modeOverride = "default";
       this.setMode("default");
     }, undefined, 0);
@@ -323,6 +329,7 @@ export class CursorActor {
 
     tl.call(() => {
       this.stopIdleFloat();
+      this.clearPayloadDragState();
       this.modeOverride = "default";
       this.setMode("default");
     });
@@ -349,6 +356,7 @@ export class CursorActor {
 
     tl.call(() => {
       this.stopIdleFloat();
+      this.clearPayloadDragState();
       const canShowClick = this.getModeForPoint(this.currentPosition) === "pointer";
       this.modeOverride = canShowClick ? "click" : null;
       if (canShowClick) {
@@ -484,13 +492,25 @@ export class CursorActor {
   resetInteraction(): void {
     this.stopIdleFloat(true);
     this.modeOverride = null;
-    this.payloadDragActive = false;
+    this.clearPayloadDragState();
     delete this.el.dataset.cursorMimicking;
     gsap.killTweensOf(this.el);
     gsap.set(this.el, { scale: 1 });
     this.resetRotation(true);
     this.syncModeToPoint(this.currentPosition);
     this.queueIdleFloat();
+  }
+
+  clearTransientInteraction(): void {
+    this.clearPayloadDragState();
+    this.modeOverride = null;
+    gsap.killTweensOf(this.el, "scale");
+    gsap.set(this.el, { scale: 1 });
+    this.syncModeToPoint(this.currentPosition);
+  }
+
+  private clearPayloadDragState(): void {
+    this.payloadDragActive = false;
   }
 
   private pathTween(

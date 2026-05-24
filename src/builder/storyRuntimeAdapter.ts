@@ -33,6 +33,7 @@ import {
   buildStorySteps,
   exitStory,
   responsiveElementTarget,
+  styleProfilePerusalSteps,
   type StoryStep,
 } from "../stories/storySystem";
 import { getThinkingElapsedLabel } from "../stories/thinkingText";
@@ -607,7 +608,14 @@ function appendComponentRuntimeStep(
   }
 
   if (component.kind === "styleProfile") {
-    steps.push({ kind: "custom", build: (ctx: StoryContext) => ctx.chat.outreachStyleProfile(toStyleProfile(component)), at: "-=0.02" });
+    const config = toStyleProfile(component);
+
+    steps.push({
+      kind: "custom",
+      build: (ctx: StoryContext) => ctx.chat.outreachStyleProfile(config, { scrollAlign: "equal-inset" }),
+      at: "-=0.02",
+    });
+    if (storyId === "crm-update") steps.push(...styleProfilePerusalSteps(config.id));
     return;
   }
 

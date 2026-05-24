@@ -163,6 +163,57 @@ export function exitStory(target: ResponsiveTarget = EXIT_TARGETS.right, at?: Ti
   };
 }
 
+export function styleProfilePerusalSteps(profileId: string): StoryStep[] {
+  const selector = chatThreadSelector(`[data-style-profile="${escapeAttributeValue(profileId)}"]`);
+  const label = slugLabel(profileId);
+
+  return [
+    {
+      kind: "custom",
+      build: (ctx) =>
+        ctx.cursor.scanAcross(`${selector} .wa-style-profile__row:nth-of-type(1)`, {
+          duration: 0.58,
+          label: `${label}-top-row`,
+        }),
+      at: "+=0.08",
+    },
+    {
+      kind: "custom",
+      build: (ctx) =>
+        ctx.chat.scrollChatElementIntoView(`${selector} .wa-style-profile__row:nth-of-type(3)`, {
+          duration: 0.56,
+        }),
+      at: "+=0.04",
+    },
+    {
+      kind: "custom",
+      build: (ctx) =>
+        ctx.cursor.scanAcross(`${selector} .wa-style-profile__row:nth-of-type(3)`, {
+          duration: 0.58,
+          label: `${label}-middle-row`,
+        }),
+      at: "+=0.02",
+    },
+    {
+      kind: "custom",
+      build: (ctx) =>
+        ctx.chat.scrollChatElementIntoView(`${selector} .wa-style-profile__examples`, {
+          duration: 0.56,
+        }),
+      at: "+=0.04",
+    },
+    {
+      kind: "custom",
+      build: (ctx) =>
+        ctx.cursor.scanAcross(`${selector} .wa-style-profile__example:nth-of-type(1)`, {
+          duration: 0.66,
+          label: `${label}-examples`,
+        }),
+      at: "+=0.02",
+    },
+  ];
+}
+
 export function buildStorySteps(ctx: StoryContext, steps: StoryStep[]): gsap.core.Timeline {
   const tl = createBuildTimeline(ctx);
   const attention = createAttentionState();

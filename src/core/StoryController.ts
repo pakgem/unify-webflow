@@ -584,6 +584,7 @@ export class StoryController implements ChatbotStoriesInstance {
     this.resumeRestoreTimeline = null;
     this.setHistoryPaused(false);
     this.chat.stopScrollMotion();
+    this.cursor.clearTransientInteraction();
     this.activeTimeline?.pause();
     this.updatePlayButton();
   }
@@ -623,6 +624,7 @@ export class StoryController implements ChatbotStoriesInstance {
     scrub.marker.removeAttribute("data-scrubbing");
     this.storyProgressScrub = null;
     this.playing = restorePlayback ? scrub.wasPlaying : this.playing;
+    this.cursor.clearTransientInteraction();
 
     if (restorePlayback && scrub.wasPlaying) {
       this.resumeActiveTimeline();
@@ -702,6 +704,7 @@ export class StoryController implements ChatbotStoriesInstance {
     this.activeTimeline?.pause();
     this.chat.stopScrollMotion();
     this.chat.prepareForChatHistoryPause();
+    this.cursor.clearTransientInteraction();
     this.cancelHistoryParkMotion();
     this.historyParkTimeline = this.cursor.parkForChatHistory();
     this.setHistoryPaused(true);

@@ -1206,16 +1206,20 @@ body {
 }
 
 .wa-message--strategy,
-.wa-message--strategy .wa-message__body {
+.wa-message--strategy .wa-message__body,
+.wa-message--style,
+.wa-message--style .wa-message__body {
   overflow-x: visible;
 }
 
-.wa-chat-shell__body:has(.wa-result-grid.has-strategy-plans) {
+.wa-chat-shell__body:has(.wa-result-grid.has-strategy-plans),
+.wa-chat-shell__body:has(.wa-style-profile) {
   overflow: visible;
   clip-path: inset(0 -32px 0 -32px);
 }
 
-.wa-thread:has(.wa-result-grid.has-strategy-plans) {
+.wa-thread:has(.wa-result-grid.has-strategy-plans),
+.wa-thread:has(.wa-style-profile) {
   overflow: visible;
 }
 
