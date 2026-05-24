@@ -21,9 +21,11 @@ import { getPreviewSequenceIndexes } from "../core/sequenceSelection";
 import {
   buildStorySteps,
   CHAT_INPUT_TARGETS,
+  dataTableFooterPerusalStep,
   EXIT_TARGETS,
   exitStory,
   INPUT_ENTRY_LEAD_TIME,
+  mailboxConnectionSteps,
   responsiveElementTarget,
   SIGNUP_EMAIL_TARGET,
   SIGNUP_ENTRY_LEAD_TIME,
@@ -1419,16 +1421,6 @@ export const defaultStories: StoryDefinition[] = [
         detail: "Battle cards, playbooks, ICP notes, voice docs, and messaging context.",
       });
       const cursorFile = ctx.chat.prepareCursorFile("4 context files", ctx.cursor, "DOC", AGENT_CONTEXT_FILES);
-      const mailboxButtonTarget = responsiveElementTarget(
-        `[data-mailbox-connect="${GMAIL_MAILBOX_CONNECTION.id}"]`,
-        "center",
-        {
-          desktop: { x: 2, y: 0 },
-          tablet: { x: 1, y: 0 },
-          mobile: { x: 0, y: 0 },
-        },
-        false,
-      );
       const contextFilePickupTarget = {
         desktop: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 420, y: -74 }, humanOffset: false },
         tablet: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 360, y: -58 }, humanOffset: false },
@@ -1441,32 +1433,7 @@ export const defaultStories: StoryDefinition[] = [
       });
 
       return buildStorySteps(ctx, [
-        { kind: "status", text: "connect mailbox" },
-        { kind: "custom", build: () => ctx.chat.mailboxConnection(GMAIL_MAILBOX_CONNECTION), at: "+=0.04" },
-        {
-          kind: "custom",
-          build: () =>
-            ctx.cursor.scanAcross(`[data-mailbox-connection="${GMAIL_MAILBOX_CONNECTION.id}"]`, {
-              label: `mailbox-cta-skim-${GMAIL_MAILBOX_CONNECTION.id}`,
-              duration: 0.68,
-            }),
-          at: "+=0.16",
-        },
-        {
-          kind: "cursorMove",
-          target: mailboxButtonTarget,
-          options: {
-            mode: "pointer",
-            intent: "hover",
-            speed: "normal",
-            overshoot: false,
-            settle: true,
-            label: `mailbox-connect-${GMAIL_MAILBOX_CONNECTION.id}`,
-          },
-          at: "+=0.08",
-        },
-        { kind: "cursorClick", at: "-=0.02" },
-        { kind: "custom", build: () => ctx.chat.connectMailbox(GMAIL_MAILBOX_CONNECTION.id), at: "<+=0.08" },
+        ...mailboxConnectionSteps(GMAIL_MAILBOX_CONNECTION),
         { kind: "status", text: "waiting for context", at: `+=${STORY_TIMING.beat}` },
         {
           kind: "cursorMove",
@@ -1599,11 +1566,7 @@ export const defaultStories: StoryDefinition[] = [
           fromEntry: true,
         },
         { kind: "dataTable", config: WEBSITE_VISITOR_SALES_TABLE, at: "-=0.02" },
-        {
-          kind: "custom",
-          build: () => ctx.chat.scrollDataTableToFooter("website-visitors-sales", STORY_TIMING.beat + 0.18),
-          at: "+=0.08",
-        },
+        dataTableFooterPerusalStep("website-visitors-sales", STORY_TIMING.beat + 0.18, "+=0.08"),
         {
           kind: "cursorMove",
           target: pageTwoTarget,

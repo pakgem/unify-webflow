@@ -7,6 +7,7 @@ import type {
   DataSourceGridConfig,
   DataTableConfig,
   EnrichmentConfig,
+  MailboxConnectionConfig,
   Offset,
   PersonalizationSwipeGameConfig,
   ResponsiveTarget,
@@ -128,6 +129,19 @@ type ThinkingStep = {
   | { steps: Array<string | ThinkingItemConfig>; label?: never; thinking?: never }
   | { thinking: ThinkingStateConfig; label?: never; steps?: never }
 );
+type ElementPerusalItem = {
+  selector: string;
+  label: string;
+  scanSelector?: string;
+  scanLabel?: string;
+  scanDuration?: number;
+  scanMatch?: "first" | "last";
+  scrollBeforeScan?: boolean;
+  scrollDuration?: number;
+  scrollOffset?: number;
+  scrollAlign?: "top" | "bottom";
+  at?: TimelinePosition;
+};
 
 export const EXIT_TARGETS = {
   right: { target: "[data-chat-shell]", anchor: "right", outside: "right" },
@@ -163,55 +177,125 @@ export function exitStory(target: ResponsiveTarget = EXIT_TARGETS.right, at?: Ti
   };
 }
 
+export function mailboxConnectionSteps(config: MailboxConnectionConfig): StoryStep[] {
+  const buttonTarget = responsiveElementTarget(
+    `[data-mailbox-connect="${escapeAttributeValue(config.id)}"]`,
+    "center",
+    {
+      desktop: { x: 2, y: 0 },
+      tablet: { x: 1, y: 0 },
+      mobile: { x: 0, y: 0 },
+    },
+    false,
+  );
+
+  return [
+    { kind: "status", text: "connect mailbox" },
+    {
+      kind: "custom",
+      build: (ctx) => ctx.chat.mailboxConnection(config),
+      at: "+=0.04",
+    },
+    ...elementPerusalSteps([
+      {
+        selector: `[data-mailbox-connection="${escapeAttributeValue(config.id)}"]`,
+        label: `mailbox-cta-skim-${config.id}`,
+        scanDuration: 0.68,
+        at: "+=0.16",
+      },
+    ]),
+    {
+      kind: "cursorMove",
+      target: buttonTarget,
+      options: {
+        mode: "pointer",
+        intent: "hover",
+        speed: "normal",
+        overshoot: false,
+        settle: true,
+        label: `mailbox-connect-${config.id}`,
+      },
+      at: "+=0.08",
+    },
+    { kind: "cursorClick", at: "-=0.02" },
+    {
+      kind: "custom",
+      build: (ctx) => ctx.chat.connectMailbox(config.id),
+      at: "<+=0.08",
+    },
+  ];
+}
+
 export function styleProfilePerusalSteps(profileId: string): StoryStep[] {
   const selector = chatThreadSelector(`[data-style-profile="${escapeAttributeValue(profileId)}"]`);
   const label = slugLabel(profileId);
 
-  return [
+  return elementPerusalSteps([
     {
-      kind: "custom",
-      build: (ctx) =>
-        ctx.cursor.scanAcross(`${selector} .wa-style-profile__row:nth-of-type(1)`, {
-          duration: 0.58,
-          label: `${label}-top-row`,
-        }),
+      selector: `${selector} .wa-style-profile__row:nth-of-type(1)`,
+      label: `${label}-top-row`,
+      scanDuration: 0.58,
       at: "+=0.08",
     },
     {
-      kind: "custom",
-      build: (ctx) =>
-        ctx.chat.scrollChatElementIntoView(`${selector} .wa-style-profile__row:nth-of-type(3)`, {
-          duration: 0.56,
-        }),
+      selector: `${selector} .wa-style-profile__row:nth-of-type(3)`,
+      label: `${label}-middle-row`,
+      scanDuration: 0.58,
+      scrollBeforeScan: true,
+      scrollDuration: 0.56,
       at: "+=0.04",
     },
     {
-      kind: "custom",
-      build: (ctx) =>
-        ctx.cursor.scanAcross(`${selector} .wa-style-profile__row:nth-of-type(3)`, {
-          duration: 0.58,
-          label: `${label}-middle-row`,
-        }),
-      at: "+=0.02",
-    },
-    {
-      kind: "custom",
-      build: (ctx) =>
-        ctx.chat.scrollChatElementIntoView(`${selector} .wa-style-profile__examples`, {
-          duration: 0.56,
-        }),
+      selector: `${selector} .wa-style-profile__examples`,
+      scanSelector: `${selector} .wa-style-profile__example:nth-of-type(1)`,
+      label: `${label}-examples-section`,
+      scanLabel: `${label}-examples`,
+      scanDuration: 0.66,
+      scrollBeforeScan: true,
+      scrollDuration: 0.56,
       at: "+=0.04",
     },
-    {
+  ]);
+}
+
+export function elementPerusalSteps(items: ElementPerusalItem[]): StoryStep[] {
+  return items.flatMap((item) => {
+    const steps: StoryStep[] = [];
+
+    if (item.scrollBeforeScan) {
+      steps.push({
+        kind: "custom",
+        build: (ctx) =>
+          ctx.chat.scrollChatElementIntoView(item.selector, {
+            align: item.scrollAlign,
+            duration: item.scrollDuration,
+            offset: item.scrollOffset,
+          }),
+        at: item.at,
+      });
+    }
+
+    steps.push({
       kind: "custom",
       build: (ctx) =>
-        ctx.cursor.scanAcross(`${selector} .wa-style-profile__example:nth-of-type(1)`, {
-          duration: 0.66,
-          label: `${label}-examples`,
+        ctx.cursor.scanAcross(item.scanSelector ?? item.selector, {
+          duration: item.scanDuration,
+          label: item.scanLabel ?? item.label,
+          match: item.scanMatch,
         }),
-      at: "+=0.02",
-    },
-  ];
+      at: item.scrollBeforeScan ? "+=0.02" : item.at,
+    });
+
+    return steps;
+  });
+}
+
+export function dataTableFooterPerusalStep(tableId: string, duration = STORY_TIMING.beat + 0.18, at?: TimelinePosition): StoryStep {
+  return {
+    kind: "custom",
+    build: (ctx) => ctx.chat.scrollDataTableToFooter(tableId, duration),
+    at,
+  };
 }
 
 export function buildStorySteps(ctx: StoryContext, steps: StoryStep[]): gsap.core.Timeline {

@@ -59,7 +59,12 @@ type ChatElementScrollOptions = {
   duration?: number;
   offset?: number;
   match?: "first" | "last";
+  align?: "top" | "bottom";
 };
+type ChatScrollTargetOptions = Required<Pick<ChatElementScrollOptions, "align" | "duration">> &
+  Pick<ChatElementScrollOptions, "offset"> & {
+    fallback?: "bottom" | "current";
+  };
 type CursorFileFollowOffset = {
   x: number;
   y: number;
@@ -1311,19 +1316,47 @@ export class ChatActor {
   }
 
   scrollDataTableToFooter(tableId: string, duration = CHAT_SCROLL_MOTION.revealDuration): gsap.core.Timeline {
+    return this.scrollChatTarget(() => this.findDataTable(tableId), {
+      align: "bottom",
+      duration,
+      fallback: "bottom",
+    });
+  }
+
+  scrollChatElementIntoView(
+    selector: string,
+    options: ChatElementScrollOptions = {},
+  ): gsap.core.Timeline {
+    return this.scrollChatTarget(() => {
+      const matches = this.queryElements(this.root, selector);
+      return options.match === "last" ? matches[matches.length - 1] ?? null : matches[0] ?? null;
+    }, {
+      align: options.align ?? "top",
+      duration: options.duration ?? CHAT_SCROLL_MOTION.revealDuration,
+      offset: options.offset,
+      fallback: "current",
+    });
+  }
+
+  private scrollChatTarget(
+    resolveElement: () => HTMLElement | null,
+    options: ChatScrollTargetOptions,
+  ): gsap.core.Timeline {
     const tl = gsap.timeline();
+    let scrollTarget = this.thread.scrollTop;
 
     tl.call(() => {
+      const element = resolveElement();
+
       this.stopScrollMotion();
+      scrollTarget = element
+        ? this.getElementScrollTarget(element, options)
+        : this.getMissingScrollTarget(options.fallback ?? "current");
     });
 
     tl.to(this.thread, {
-      scrollTop: () => {
-        const table = this.findDataTable(tableId);
-
-        return table ? this.getElementBottomScrollTarget(table) : this.getThreadBottomScrollTarget();
-      },
-      duration,
+      scrollTop: () => scrollTarget,
+      duration: options.duration,
       ease: CHAT_SCROLL_MOTION.revealEase,
       overwrite: "auto",
       onComplete: () => {
@@ -1334,37 +1367,14 @@ export class ChatActor {
     return tl;
   }
 
-  scrollChatElementIntoView(
-    selector: string,
-    options: ChatElementScrollOptions = {},
-  ): gsap.core.Timeline {
-    const tl = gsap.timeline();
-    let scrollTarget = this.thread.scrollTop;
+  private getElementScrollTarget(element: HTMLElement, options: Pick<ChatScrollTargetOptions, "align" | "offset">): number {
+    return options.align === "bottom"
+      ? this.getElementBottomScrollTarget(element, options.offset ?? 0)
+      : this.getAlignedElementScrollTarget(element, options.offset ?? 0);
+  }
 
-    tl.call(() => {
-      const matches = this.queryElements(this.root, selector);
-      const element = options.match === "last" ? matches[matches.length - 1] : matches[0];
-
-      if (!element) {
-        scrollTarget = this.thread.scrollTop;
-        return;
-      }
-
-      this.stopScrollMotion();
-      scrollTarget = this.getAlignedElementScrollTarget(element, options.offset ?? 0);
-    });
-
-    tl.to(this.thread, {
-      scrollTop: () => scrollTarget,
-      duration: options.duration ?? CHAT_SCROLL_MOTION.revealDuration,
-      ease: CHAT_SCROLL_MOTION.revealEase,
-      overwrite: "auto",
-      onComplete: () => {
-        this.scrollTween = null;
-      },
-    });
-
-    return tl;
+  private getMissingScrollTarget(fallback: NonNullable<ChatScrollTargetOptions["fallback"]>): number {
+    return fallback === "bottom" ? this.getThreadBottomScrollTarget() : this.thread.scrollTop;
   }
 
   dataTablePage(tableId: string, page: number, options: { updateExpected?: boolean } = {}): gsap.core.Timeline {
@@ -6136,13 +6146,14 @@ export class ChatActor {
     return Math.max(0, this.thread.scrollHeight - this.thread.clientHeight);
   }
 
-  private getElementBottomScrollTarget(element: HTMLElement): number {
+  private getElementBottomScrollTarget(element: HTMLElement, extraScroll = 0): number {
     return Math.max(
       0,
       this.getElementOffsetTopWithinThread(element) +
         element.offsetHeight +
         this.getThreadBottomPadding() -
-        this.thread.clientHeight,
+        this.thread.clientHeight +
+        extraScroll,
     );
   }
 

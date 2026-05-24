@@ -31,7 +31,9 @@ import {
   SIGNUP_SUBMIT_TARGET,
   STORY_TIMING,
   buildStorySteps,
+  dataTableFooterPerusalStep,
   exitStory,
+  mailboxConnectionSteps,
   responsiveElementTarget,
   styleProfilePerusalSteps,
   type StoryStep,
@@ -263,11 +265,7 @@ function buildEngagementStory(ctx: StoryContext, story: BuilderStory): gsap.core
   if (tableConfig) {
     steps.push(
       { kind: "dataTable" as const, config: tableConfig, at: "-=0.02" },
-      {
-        kind: "custom" as const,
-        build: () => ctx.chat.scrollDataTableToFooter("website-visitors-sales", STORY_TIMING.beat + 0.18),
-        at: "+=0.08",
-      },
+      dataTableFooterPerusalStep("website-visitors-sales", STORY_TIMING.beat + 0.18, "+=0.08"),
     );
   }
 
@@ -967,53 +965,7 @@ function toMailboxConnection(component: BuilderMailboxConnectionComponent): Mail
 }
 
 function appendMailboxConnectionFlow(steps: StoryStep[], config: MailboxConnectionConfig): void {
-  const buttonTarget = responsiveElementTarget(
-    `[data-mailbox-connect="${config.id}"]`,
-    "center",
-    {
-      desktop: { x: 2, y: 0 },
-      tablet: { x: 1, y: 0 },
-      mobile: { x: 0, y: 0 },
-    },
-    false,
-  );
-
-  steps.push(
-    { kind: "status" as const, text: "connect mailbox" },
-    {
-      kind: "custom" as const,
-      build: (ctx: StoryContext) => ctx.chat.mailboxConnection(config),
-      at: "+=0.04",
-    },
-    {
-      kind: "custom" as const,
-      build: (ctx: StoryContext) =>
-        ctx.cursor.scanAcross(`[data-mailbox-connection="${config.id}"]`, {
-          label: `mailbox-cta-skim-${config.id}`,
-          duration: 0.68,
-        }),
-      at: "+=0.16",
-    },
-    {
-      kind: "cursorMove" as const,
-      target: buttonTarget,
-      options: {
-        mode: "pointer" as const,
-        intent: "hover" as const,
-        speed: "normal" as const,
-        overshoot: false,
-        settle: true,
-        label: `mailbox-connect-${config.id}`,
-      },
-      at: "+=0.08",
-    },
-    { kind: "cursorClick" as const, at: "-=0.02" },
-    {
-      kind: "custom" as const,
-      build: (ctx: StoryContext) => ctx.chat.connectMailbox(config.id),
-      at: "<+=0.08",
-    },
-  );
+  steps.push(...mailboxConnectionSteps(config));
 }
 
 function toStyleProfile(component: Extract<BuilderComponent, { kind: "styleProfile" }>): OutreachStyleProfileConfig {
