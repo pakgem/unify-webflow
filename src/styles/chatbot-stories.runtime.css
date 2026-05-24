@@ -1653,6 +1653,19 @@ body {
   --wa-data-table-scroll-width: 760px;
 }
 
+.wa-data-table[data-data-table="raw-webinar-attendees"] .wa-data-table__cell,
+.wa-data-table[data-data-table="clean-webinar-attendees"] .wa-data-table__cell,
+.wa-data-table[data-data-table="cleaned-webinar-attendees"] .wa-data-table__cell {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.wa-data-table[data-data-table="raw-webinar-attendees"] .wa-data-table__cell-text,
+.wa-data-table[data-data-table="clean-webinar-attendees"] .wa-data-table__cell-text,
+.wa-data-table[data-data-table="cleaned-webinar-attendees"] .wa-data-table__cell-text {
+  text-align: left;
+}
+
 .wa-data-table__row:first-child {
   border-top: 0;
 }

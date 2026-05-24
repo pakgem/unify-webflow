@@ -1119,7 +1119,7 @@ const CSV_RAW_ROWS = [
   {
     id: "raw-ethan-cho",
     values: {
-      rawName: "Ethan / Cho",
+      rawName: "Ethan Cho",
       email: "ethan.cho@gmail.com",
       company: "Clearbit Inc.",
     },
@@ -1211,7 +1211,6 @@ const CSV_RAW_TABLE = {
   title: "Raw webinar attendees",
   eyebrow: "CSV import",
   count: "54 records",
-  variant: "default",
   columns: [
     { key: "rawName", label: "Name", width: "minmax(130px,0.85fr)" },
     { key: "email", label: "Email", width: "max-content" },

@@ -2259,7 +2259,7 @@ function createRawWebinarAttendeesTableComponent(): BuilderTableComponent {
     columns: ["Name", "Email", "Company"],
     rows: [
       ["Maya R.", "MAYA.RODRIGUEZ@NorthStar.ai ", "northstar ai"],
-      ["Ethan / Cho", "ethan.cho@gmail.com", "Clearbit Inc."],
+      ["Ethan Cho", "ethan.cho@gmail.com", "Clearbit Inc."],
       ["Priya Shah", "priya.shah+webinar@orbitgrid.com", "Orbitgrid"],
       ["Lucas", "", "Ramp"],
       ["N. Kapoor", "nina@yahoo.com", "Mercury"],
