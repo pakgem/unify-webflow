@@ -3831,9 +3831,24 @@ body {
   overflow: visible;
 }
 
+.wa-sequence-people-wrap::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 0;
+  height: 1px;
+  background: rgba(17, 17, 15, 0.28);
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 34px, #000 calc(100% - 34px), transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 34px, #000 calc(100% - 34px), transparent 100%);
+}
+
 .wa-sequence-people {
   --wa-sequence-person-card-min-width: 112px;
   position: relative;
+  z-index: 1;
   isolation: isolate;
   display: flex;
   gap: 4px;
@@ -3842,7 +3857,6 @@ body {
   max-width: 100%;
   margin: 0;
   padding: 3px max(16px, calc(50% - var(--wa-sequence-person-card-min-width) / 2)) 0;
-  border-bottom: 1px solid rgba(17, 17, 15, 0.28);
   overflow-x: auto;
   overflow-y: visible;
   scroll-snap-type: x mandatory;
@@ -3869,10 +3883,11 @@ body {
   min-height: 46px;
   padding: 8px 10px 9px;
   border: 1px solid var(--wa-line-08);
-  border-bottom: 0;
+  border-bottom-color: transparent;
   border-radius: 9px 9px 0 0;
   color: var(--wa-ink);
   background: color-mix(in srgb, var(--wa-panel) 82%, #f1f0eb);
+  background-clip: padding-box;
   font: inherit;
   text-align: left;
   opacity: 0.66;
@@ -3896,22 +3911,14 @@ body {
 
 .wa-sequence-person-card[data-active="true"] {
   z-index: 3;
-  margin-bottom: -1px;
   border-color: rgba(17, 17, 15, 0.24);
-  border-bottom: 1px solid var(--wa-panel);
+  border-bottom-color: var(--wa-panel);
   box-shadow: none;
+  background-clip: border-box;
 }
 
 .wa-sequence-person-card[data-active="true"]::after {
-  content: "";
-  position: absolute;
-  right: -1px;
-  bottom: -1px;
-  left: -1px;
-  z-index: 2;
-  height: 2px;
-  background: var(--wa-panel);
-  pointer-events: none;
+  content: none;
 }
 
 .wa-sequence-person-card__avatar {
