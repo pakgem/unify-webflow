@@ -1111,7 +1111,7 @@ const CSV_RAW_ROWS = [
     id: "raw-maya-rodriguez",
     values: {
       rawName: "Maya R.",
-      rawEmail: "MAYA.RODRIGUEZ@NorthStar.ai ",
+      email: "MAYA.RODRIGUEZ@NorthStar.ai ",
       company: "northstar ai",
     },
   },
@@ -1119,7 +1119,7 @@ const CSV_RAW_ROWS = [
     id: "raw-ethan-cho",
     values: {
       rawName: "Ethan / Cho",
-      rawEmail: "ethan.cho@gmail.com",
+      email: "ethan.cho@gmail.com",
       company: "Clearbit Inc.",
     },
   },
@@ -1127,7 +1127,7 @@ const CSV_RAW_ROWS = [
     id: "raw-priya-shah",
     values: {
       rawName: "Priya Shah",
-      rawEmail: "priya.shah+webinar@orbitgrid.com",
+      email: "priya.shah+webinar@orbitgrid.com",
       company: "Orbitgrid",
     },
   },
@@ -1135,7 +1135,7 @@ const CSV_RAW_ROWS = [
     id: "raw-lucas-meyer",
     values: {
       rawName: "Lucas",
-      rawEmail: "",
+      email: "",
       company: "Ramp",
     },
   },
@@ -1143,7 +1143,7 @@ const CSV_RAW_ROWS = [
     id: "raw-nina-kapoor",
     values: {
       rawName: "N. Kapoor",
-      rawEmail: "nina@yahoo.com",
+      email: "nina@yahoo.com",
       company: "Mercury",
     },
   },
@@ -1151,7 +1151,7 @@ const CSV_RAW_ROWS = [
     id: "raw-sam-hollis",
     values: {
       rawName: "sam hollis",
-      rawEmail: "sam.hollis@apollo.io",
+      email: "sam.hollis@apollo.io",
       company: "Apollo.io",
     },
   },
@@ -1159,7 +1159,7 @@ const CSV_RAW_ROWS = [
     id: "raw-anna-li",
     values: {
       rawName: "Anna Li",
-      rawEmail: "",
+      email: "",
       company: "Linear",
     },
   },
@@ -1167,7 +1167,7 @@ const CSV_RAW_ROWS = [
     id: "raw-devon-park",
     values: {
       rawName: "Devon Park",
-      rawEmail: "devon.park@brex.com",
+      email: "devon.park@brex.com",
       company: "Brex",
     },
   },
@@ -1175,7 +1175,7 @@ const CSV_RAW_ROWS = [
     id: "raw-rachel-cho",
     values: {
       rawName: "Rachel C.",
-      rawEmail: "rcho@figma.com",
+      email: "rcho@figma.com",
       company: "Figma",
     },
   },
@@ -1183,7 +1183,7 @@ const CSV_RAW_ROWS = [
     id: "raw-owen-lee",
     values: {
       rawName: "Owen Lee",
-      rawEmail: "owen.lee@icloud.com",
+      email: "owen.lee@icloud.com",
       company: "Notion",
     },
   },
@@ -1191,7 +1191,7 @@ const CSV_RAW_ROWS = [
     id: "raw-clara-wong",
     values: {
       rawName: "Clara Wong",
-      rawEmail: "clara.wong@brightlayer.com",
+      email: "clara.wong@brightlayer.com",
       company: "Bright Layer",
     },
   },
@@ -1199,7 +1199,7 @@ const CSV_RAW_ROWS = [
     id: "raw-maya-rodriguez-duplicate",
     values: {
       rawName: "Maya Rodriguez",
-      rawEmail: "maya.rodriguez@northstar.ai",
+      email: "maya.rodriguez@northstar.ai",
       company: "Northstar AI",
     },
   },
@@ -1213,7 +1213,7 @@ const CSV_RAW_TABLE = {
   variant: "default",
   columns: [
     { key: "rawName", label: "Name", width: "minmax(130px,0.85fr)" },
-    { key: "rawEmail", label: "Email", width: "max-content" },
+    { key: "email", label: "Email", width: "max-content" },
     { key: "company", label: "Company", width: "minmax(120px,0.8fr)" },
   ],
   rows: CSV_RAW_ROWS,
