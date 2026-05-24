@@ -9,7 +9,8 @@
     "build:app": "vite build --mode app",
     "preview": "vite preview --host 127.0.0.1",
     "typecheck": "tsc --noEmit",
-    "audit:layout": "node scripts/audit-layout.mjs"
+    "audit:layout": "node scripts/audit-layout.mjs",
+    "test:pressure": "node scripts/pressure-test.mjs"
   },
   "dependencies": {
     "@vercel/blob": "^2.4.0",

@@ -1,4 +1,5 @@
 import { createEngine } from "./core/createEngine";
+import { createPublicInitializer } from "./core/createPublicInitializer";
 import type { ChatbotStoriesConfig, ChatbotStoriesInstance } from "./core/types";
 import { defaultStories } from "./stories";
 import builderStyles from "./styles/chatbot-stories.builder.css?inline";
@@ -13,25 +14,13 @@ function injectStyles(): void {
   injectStyleText(BUILDER_STYLE_ID, builderStyles);
 }
 
-function resolveRoot(target: string | HTMLElement): HTMLElement {
-  if (target instanceof HTMLElement) return target;
-
-  const root = document.querySelector<HTMLElement>(target);
-
-  if (!root) {
-    throw new Error(`ChatbotStories: root element not found for selector "${target}"`);
-  }
-
-  return root;
-}
+const initializer = createPublicInitializer(createEngine, { injectStyles });
 
 export function init(
   target: string | HTMLElement = "[data-chatbot-stories]",
   config: ChatbotStoriesConfig = {},
 ): ChatbotStoriesInstance {
-  if (config.injectStyles !== false) injectStyles();
-
-  return createEngine(resolveRoot(target), config);
+  return initializer.init(target, config);
 }
 
 export { defaultStories };
@@ -51,20 +40,10 @@ declare global {
 if (typeof window !== "undefined") {
   window.ChatbotStories = api;
 
-  const autoInit = () => {
-    if (document.querySelector("[data-chatbot-stories][data-auto-init]")) injectStyles();
-
-    document.querySelectorAll<HTMLElement>("[data-chatbot-stories][data-auto-init]").forEach((root) => {
-      if (root.dataset.chatbotStoriesMounted) return;
-      root.dataset.chatbotStoriesMounted = "true";
-      init(root);
-    });
-  };
-
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", autoInit, { once: true });
+    document.addEventListener("DOMContentLoaded", initializer.autoInit, { once: true });
   } else {
-    autoInit();
+    initializer.autoInit();
   }
 }
 
