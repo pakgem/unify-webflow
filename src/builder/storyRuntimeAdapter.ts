@@ -711,6 +711,7 @@ function toDataTable(component: BuilderTableComponent, fallbackId: string): Data
     eyebrow: component.eyebrow,
     count: component.count,
     variant: shape.variant ?? inferTableVariant(component),
+    renderPeople: shouldRenderTablePeople(fallbackId),
     columns: shape.columns,
     rows: pages[0]?.rows ?? rows,
     actions: component.actions?.map(toDataTableAction),
@@ -814,6 +815,7 @@ function shouldEqualInsetRevealTable(
 
 function getBuilderTableShape(component: BuilderTableComponent, fallbackId: string): BuilderTableShape {
   const labels = component.columns;
+  const useDefaultColumnWidths = shouldUseDefaultColumnWidths(fallbackId);
   const nameIndex = labels.findIndex((label) => label.trim().toLowerCase() === "name");
   const roleIndex = nameIndex >= 0
     ? labels.findIndex((label, index) => index > nameIndex && /^role\b/i.test(label.trim()))
@@ -842,7 +844,7 @@ function getBuilderTableShape(component: BuilderTableComponent, fallbackId: stri
     return {
       key: slugId(label || `column-${sourceIndex + 1}`),
       label,
-      width: getBuilderTableColumnWidth(label, foldsRoleIntoName),
+      width: useDefaultColumnWidths ? undefined : getBuilderTableColumnWidth(label, foldsRoleIntoName),
     };
   });
 
@@ -865,6 +867,14 @@ function getBuilderTableColumnWidth(label: string, foldsRoleIntoName: boolean): 
   if (normalized.includes("email")) return "minmax(190px,0.95fr)";
   if (normalized.includes("mobile")) return "minmax(150px,0.72fr)";
   return "minmax(130px,1fr)";
+}
+
+function shouldUseDefaultColumnWidths(fallbackId: string): boolean {
+  return fallbackId === "raw-webinar-attendees" || fallbackId === "cleaned-webinar-attendees";
+}
+
+function shouldRenderTablePeople(fallbackId: string): boolean {
+  return fallbackId !== "raw-webinar-attendees" && fallbackId !== "cleaned-webinar-attendees";
 }
 
 function toDataTableRow(

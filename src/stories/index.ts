@@ -1213,10 +1213,11 @@ const CSV_RAW_TABLE = {
   title: "Raw webinar attendees",
   eyebrow: "CSV import",
   count: "54 records",
+  renderPeople: false,
   columns: [
-    { key: "name", label: "Name", width: "minmax(130px,0.85fr)" },
-    { key: "email", label: "Email", width: "max-content" },
-    { key: "company", label: "Company", width: "minmax(120px,0.8fr)" },
+    { key: "name", label: "Name" },
+    { key: "email", label: "Email" },
+    { key: "company", label: "Company" },
   ],
   rows: CSV_RAW_ROWS,
   pagination: {
@@ -1236,11 +1237,12 @@ const CSV_CLEAN_TABLE = {
   eyebrow: "CSV cleanup",
   count: "54 records",
   scrollAnchor: "previous-message",
+  renderPeople: false,
   columns: [
-    { key: "full-name", label: "Full name", width: "1.25fr" },
-    { key: "work-email", label: "Work email", width: "max-content" },
-    { key: "company", label: "Company", width: "1fr" },
-    { key: "title", label: "Title", width: "1.1fr" },
+    { key: "full-name", label: "Full name" },
+    { key: "work-email", label: "Work email" },
+    { key: "company", label: "Company" },
+    { key: "title", label: "Title" },
   ],
   rows: [
     {

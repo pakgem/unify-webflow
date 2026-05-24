@@ -218,6 +218,7 @@ export type DataTableConfig = {
   count?: string;
   variant?: "default" | "filtered" | "enriched" | "connections";
   scrollAlign?: "equal-inset";
+  renderPeople?: boolean;
   columns: Array<{
     key: string;
     label: string;

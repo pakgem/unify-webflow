@@ -4012,11 +4012,13 @@ export class ChatActor {
 
     const grid = document.createElement("div");
     grid.className = "wa-data-table__grid";
-    grid.append(this.createDataTableRow("header", config.columns, {}, config.id));
+    const renderPeople = config.renderPeople !== false;
+
+    grid.append(this.createDataTableRow("header", config.columns, {}, config.id, undefined, renderPeople));
 
     for (const page of pages) {
       for (const row of page.rows) {
-        const rowEl = this.createDataTableRow(row.id, config.columns, row.values, config.id, page.page);
+        const rowEl = this.createDataTableRow(row.id, config.columns, row.values, config.id, page.page, renderPeople);
 
         if (page.page !== activePage) {
           rowEl.style.display = "none";
@@ -4042,6 +4044,7 @@ export class ChatActor {
     values: Record<string, string>,
     tableId: string,
     page?: number,
+    renderPeople = true,
   ): HTMLElement {
     const row = document.createElement("div");
     row.className = "wa-data-table__row";
@@ -4060,7 +4063,7 @@ export class ChatActor {
 
       if (isHeader) {
         cell.textContent = column.label;
-      } else if (this.shouldRenderDataTablePerson(column.key, values)) {
+      } else if (renderPeople && this.shouldRenderDataTablePerson(column.key)) {
         cell.append(this.createDataTablePerson(values, values[column.key] ?? ""));
       } else if (column.key === "mutualConnection") {
         cell.append(this.createDataTablePerson(values, values[column.key] ?? "", {
@@ -4106,17 +4109,8 @@ export class ChatActor {
     return columnKey === "name" || columnKey === "contact" || columnKey === "fullName";
   }
 
-  private shouldRenderDataTablePerson(columnKey: string, values: Record<string, string>): boolean {
-    if (!this.isPersonNameColumn(columnKey)) return false;
-
-    return Boolean(
-      values.avatarUrl ||
-      values.avatar ||
-      values.avatarTone ||
-      values.source ||
-      values.personDetail ||
-      values.prospectDetail,
-    );
+  private shouldRenderDataTablePerson(columnKey: string): boolean {
+    return this.isPersonNameColumn(columnKey);
   }
 
   private createDataTableAddIcon(): SVGSVGElement {
