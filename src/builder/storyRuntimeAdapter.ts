@@ -680,6 +680,18 @@ type BuilderTableShape = {
   variant?: DataTableConfig["variant"];
 };
 
+const MUTUAL_CONNECTION_COMPANY_BY_NAME: Record<string, { title: string; company: string }> = {
+  "dev singh": { title: "RevOps Lead @ Brex", company: "Brex" },
+  "evan brooks": { title: "Growth Lead @ PayPal", company: "PayPal" },
+  "jenna park": { title: "VP Marketing @ Square", company: "Square" },
+  "marco liu": { title: "Partner @ Sequoia", company: "Sequoia" },
+  "noah singh": { title: "Head of Sales @ Adyen", company: "Adyen" },
+  "owen lee": { title: "Principal @ Sequoia", company: "Sequoia" },
+  "priya shah": { title: "VP Sales @ Plaid", company: "Plaid" },
+  "rachel cho": { title: "Head of Sales @ Stripe", company: "Stripe" },
+  "sam hollis": { title: "VP Sales @ Ramp", company: "Ramp" },
+};
+
 function toDataTable(component: BuilderTableComponent, fallbackId: string): DataTableConfig {
   const shape = getBuilderTableShape(component, fallbackId);
   const rows = component.rows
@@ -864,6 +876,7 @@ function toDataTableRow(
     values[shape.mutualConnectionKey] = parsed.name;
     values.mutualConnectionDetail = parsed.title;
     values.mutualConnectionContext = parsed.context;
+    values.mutualConnectionCompany = parsed.company;
     if (parsed.name && additionalConnections) values.mutualConnectionBadge = additionalConnections;
   }
 
@@ -880,15 +893,61 @@ function getAdditionalConnectionsBadge(rowIndex: number): string | null {
   return count === null ? null : `+${count} more`;
 }
 
-function parseMutualConnection(value: string): { name: string; title: string; context: string } {
+function parseMutualConnection(value: string): { name: string; title: string; context: string; company: string } {
   const [personPart = "", context = ""] = value.split(/\s+[—–]\s+/, 2);
   const match = personPart.trim().match(/^(.+?)(?:\s*\((.+)\))?$/);
+  const name = match?.[1]?.trim() || value.trim();
+  const contextText = context.trim();
+  const normalized = MUTUAL_CONNECTION_COMPANY_BY_NAME[slugId(name).replace(/-/g, " ")];
+  const title = normalizeMutualConnectionTitle(match?.[2]?.trim() || "", normalized, contextText);
 
   return {
-    name: match?.[1]?.trim() || value.trim(),
-    title: match?.[2]?.trim() || "",
-    context: context.trim(),
+    name,
+    title: title.title,
+    context: contextText,
+    company: title.company,
   };
+}
+
+function normalizeMutualConnectionTitle(
+  sourceTitle: string,
+  normalized: { title: string; company: string } | undefined,
+  context: string,
+): { title: string; company: string } {
+  const inferredCompany = inferConnectionCompany(context);
+
+  if (normalized && (!sourceTitle || /\bUnify\b/i.test(sourceTitle))) return normalized;
+  if (sourceTitle && inferredCompany && /\bUnify\b/i.test(sourceTitle)) {
+    return {
+      title: sourceTitle.replace(/\bUnify\b/g, inferredCompany),
+      company: inferredCompany,
+    };
+  }
+  if (sourceTitle) {
+    return {
+      title: sourceTitle,
+      company: inferConnectionCompany(sourceTitle) || inferredCompany || "",
+    };
+  }
+
+  return {
+    title: normalized?.title ?? (inferredCompany ? `Warm intro @ ${inferredCompany}` : ""),
+    company: normalized?.company ?? inferredCompany,
+  };
+}
+
+function inferConnectionCompany(text: string): string {
+  const normalized = text.trim();
+
+  if (!normalized) return "";
+
+  const directMatch = normalized.match(/(?:@|\bat\s+|Both at |Shared investor:\s*)([A-Z][A-Za-z0-9& .-]+?)(?:\s*\(|$)/);
+
+  if (directMatch?.[1]) return directMatch[1].trim();
+  if (/Wharton/i.test(normalized)) return "Wharton";
+  if (/Stanford/i.test(normalized)) return "Stanford GSB";
+
+  return "";
 }
 
 function toDataTableAction(action: NonNullable<BuilderTableComponent["actions"]>[number]): NonNullable<DataTableConfig["actions"]>[number] {

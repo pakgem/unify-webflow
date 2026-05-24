@@ -4536,9 +4536,15 @@ export class ChatActor {
 
     if (!cleanDetail) return "";
 
-    const atCompany = cleanDetail.match(/(?:@|\bat\s+)([A-Z][A-Za-z0-9& .-]+)$/)?.[1]?.trim();
+    const atCompany = cleanDetail.match(/(?:@|\bat\s+)([A-Z][A-Za-z0-9& .-]+)(?:\s*\([^()]*\))?$/)?.[1]?.trim();
 
     if (atCompany) return atCompany;
+
+    const commaCompany = cleanDetail.match(/,\s*([A-Z][A-Za-z0-9& .-]+?)(?:\s*\([^()]*\))?$/)?.[1]?.trim();
+
+    if (commaCompany && !/(?:\d+\s*(?:yrs?|years?|mos?|months?)|mba|gsb|school|studied)/i.test(commaCompany)) {
+      return commaCompany;
+    }
 
     const parenthetical = cleanDetail.match(/\(([^()]+)\)\s*$/)?.[1]?.trim();
 
