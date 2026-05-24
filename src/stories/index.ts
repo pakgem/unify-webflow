@@ -210,6 +210,7 @@ const DATA_MARKETPLACE_FUNDED_TABLE = {
   eyebrow: "Filtered results",
   count: "3 records",
   variant: "filtered",
+  scrollAlign: "equal-inset",
   columns: DATA_MARKETPLACE_PRE_ENRICHMENT_COLUMNS,
   rows: [
     {

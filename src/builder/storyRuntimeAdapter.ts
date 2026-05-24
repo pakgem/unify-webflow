@@ -724,7 +724,15 @@ function shouldEqualInsetRevealTable(
 ): boolean {
   if (storyId !== "data-marketplace") return false;
 
-  return step.id === "data-marketplace-step-3" || slugId(config.title) === "new-hires-at-dev-tool-companies";
+  const titleSlug = slugId(config.title);
+
+  return (
+    step.id === "data-marketplace-step-3" ||
+    step.id === "data-marketplace-step-6" ||
+    titleSlug === "new-hires-at-dev-tool-companies" ||
+    titleSlug === "raised-in-the-past-three-months" ||
+    titleSlug === "warmest-paths-into-stripe-active-in-past-90-days"
+  );
 }
 
 function getBuilderTableShape(labels: string[]): BuilderTableShape {

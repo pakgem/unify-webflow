@@ -402,6 +402,8 @@ const CHAT_BOTTOM_CLEARANCE = 110;
 const CHAT_SCROLL_MOTION = {
   revealDuration: motionDuration(0.42),
   revealEase: "power3.inOut",
+  componentFollowDelay: 0.12,
+  componentRevealDelay: 0.16,
   followDuration: motionDuration(0.24),
   followEase: "power2.out",
 };
@@ -2757,14 +2759,22 @@ export class ChatActor {
   ): gsap.core.Timeline {
     if (targets.length) gsap.set(targets, { ...preset.from });
 
-    return this.revealMessageWithChildren(
+    const tl = this.revealMessageWithChildren(
       message,
       targets,
       { ...preset.to },
       preset.position,
       scrollAnchor,
       scrollOffset,
-    ).call(
+    );
+
+    tl.call(
+      () => this.animateMessageScrollIntoView(message, CHAT_SCROLL_MOTION.followDuration, scrollAnchor, scrollOffset),
+      undefined,
+      CHAT_SCROLL_MOTION.componentFollowDelay,
+    );
+
+    return tl.call(
       () => this.animateMessageScrollIntoView(message, CHAT_SCROLL_MOTION.followDuration, scrollAnchor, scrollOffset),
       undefined,
       "+=0.02",
@@ -2773,6 +2783,9 @@ export class ChatActor {
 
   private revealMessage(message: HTMLElement, scrollAnchor: HTMLElement | null = null, scrollOffset = 0): gsap.core.Timeline {
     let scrollTarget = 0;
+    const revealAt = message.classList.contains("wa-message--component")
+      ? CHAT_SCROLL_MOTION.componentRevealDelay
+      : 0.04;
 
     return gsap
       .timeline()
@@ -2781,6 +2794,7 @@ export class ChatActor {
         this.scrollTween = null;
         message.style.display = "grid";
         this.setMotionHints(message);
+        this.forceThreadLayout(message);
         if (this.composerVisible) this.pinThreadToBottom();
         scrollTarget = this.getMessageScrollTarget(message, scrollAnchor, scrollOffset);
       })
@@ -2799,8 +2813,13 @@ export class ChatActor {
         y: 0,
         scale: 1,
         ...MESSAGE_SPRING,
-      }, 0.04)
+      }, revealAt)
       .call(() => this.clearMotionHints(message));
+  }
+
+  private forceThreadLayout(message: HTMLElement): void {
+    void message.offsetHeight;
+    void this.thread.scrollHeight;
   }
 
   private setMotionHints(targets: gsap.TweenTarget, willChange = "transform, opacity"): void {
@@ -6083,8 +6102,9 @@ export class ChatActor {
   private getAlignedElementScrollTarget(element: HTMLElement, extraScroll = 0): number {
     const sideInset = this.getElementSideInset(element);
     const target = this.getElementOffsetTopWithinThread(element) - sideInset + extraScroll;
+    const maxTarget = Math.max(this.getThreadBottomScrollTarget(), this.getElementBottomScrollTarget(element));
 
-    return Math.min(Math.max(0, target), this.getThreadBottomScrollTarget());
+    return Math.min(Math.max(0, target), maxTarget);
   }
 
   private getElementSideInset(element: HTMLElement): number {
@@ -6121,6 +6141,16 @@ export class ChatActor {
     return Math.max(0, this.thread.scrollHeight - this.thread.clientHeight);
   }
 
+  private getElementBottomScrollTarget(element: HTMLElement): number {
+    return Math.max(
+      0,
+      this.getElementOffsetTopWithinThread(element) +
+        element.offsetHeight +
+        this.getThreadBottomPadding() -
+        this.thread.clientHeight,
+    );
+  }
+
   private pinThreadToBottom(): void {
     this.thread.scrollTop = this.getThreadBottomScrollTarget();
   }
@@ -6139,6 +6169,7 @@ export class ChatActor {
     }
 
     this.scrollTween?.kill();
+    gsap.killTweensOf(this.thread, "scrollTop");
     this.scrollTween = gsap.to(this.thread, {
       scrollTop: target,
       duration,
