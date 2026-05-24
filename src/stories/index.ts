@@ -1430,9 +1430,9 @@ export const defaultStories: StoryDefinition[] = [
         false,
       );
       const contextFilePickupTarget = {
-        desktop: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 180, y: -74 }, humanOffset: false },
-        tablet: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 144, y: -58 }, humanOffset: false },
-        mobile: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 96, y: -42 }, humanOffset: false },
+        desktop: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 420, y: -74 }, humanOffset: false },
+        tablet: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 360, y: -58 }, humanOffset: false },
+        mobile: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 280, y: -42 }, humanOffset: false },
       } satisfies ResponsiveTarget;
       const dropTarget = responsiveElementTarget("[data-chat-shell]", "center", {
         desktop: { x: 0, y: 74 },
@@ -1495,7 +1495,6 @@ export const defaultStories: StoryDefinition[] = [
             preserveMode: true,
             label: "drag-context-files",
           },
-          at: "<",
         },
         { kind: "custom", build: () => dropArea.activate(), at: "<+=0.02" },
         { kind: "custom", build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat }) },
@@ -1703,7 +1702,6 @@ export const defaultStories: StoryDefinition[] = [
             preserveMode: true,
             label: "drag-webinar-csv",
           },
-          at: "<",
         },
         { kind: "custom", build: () => dropArea.activate(), at: "<+=0.02" },
         { kind: "custom", build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat }) },

@@ -52,9 +52,9 @@ import type {
 type ComponentStep = BuilderStep & { component: BuilderComponent };
 
 const CONTEXT_FILE_PICKUP_TARGET = {
-  desktop: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 180, y: -74 }, humanOffset: false },
-  tablet: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 144, y: -58 }, humanOffset: false },
-  mobile: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 96, y: -42 }, humanOffset: false },
+  desktop: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 420, y: -74 }, humanOffset: false },
+  tablet: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 360, y: -58 }, humanOffset: false },
+  mobile: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 280, y: -42 }, humanOffset: false },
 } satisfies ResponsiveTarget;
 
 export function createStoriesFromBuilderDraft(
@@ -220,7 +220,6 @@ function buildContextLearningStory(ctx: StoryContext, story: BuilderStory): gsap
           preserveMode: true,
           label: "drag-context-files",
         },
-        at: "<",
       },
       { kind: "custom" as const, build: () => dropArea.activate(), at: "<+=0.02" },
       { kind: "custom" as const, build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat }) },
@@ -408,7 +407,6 @@ function buildCsvCleanupStory(ctx: StoryContext, story: BuilderStory): gsap.core
         preserveMode: true,
         label: "drag-webinar-csv",
       },
-      at: "<",
     },
     { kind: "custom", build: () => dropArea.activate(), at: "<+=0.02" },
     { kind: "custom", build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat }) },
