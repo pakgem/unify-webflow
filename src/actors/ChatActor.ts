@@ -96,6 +96,7 @@ type DataTablePageCellSwap = {
   cell: HTMLElement;
   currentContent: HTMLElement[];
   clone: HTMLElement;
+  delay: number;
 };
 type DataTablePageTransitionState = {
   canSwitch: boolean;
@@ -496,9 +497,10 @@ const DATA_TABLE_ACTION_SELECTOR = "[data-table-action]";
 const DATA_TABLE_PAGE_BUTTON_SELECTOR = "[data-table-page-button]";
 const DATA_TABLE_PAGE_RANGE_SELECTOR = "[data-table-page-range]";
 const DATA_TABLE_PAGE_CELL_MOTION = {
-  duration: motionDuration(0.14),
-  maxStagger: motionDuration(0.016),
-  totalDuration: motionDuration(0.82),
+  duration: motionDuration(0.12),
+  rowStagger: motionDuration(0.03),
+  columnStagger: motionDuration(0.07),
+  totalDuration: motionDuration(0.95),
   incomingY: -7,
   outgoingY: 7,
 };
@@ -1563,6 +1565,7 @@ export class ChatActor {
           cell: currentCells[columnIndex],
           currentContent,
           clone,
+          delay: this.getDataTablePageCellDelay(rowIndex, columnIndex),
         });
       }
     }
@@ -1584,11 +1587,10 @@ export class ChatActor {
 
   private renderDataTablePageCellSwaps(state: DataTablePageTransitionState, progress: number): void {
     const elapsed = progress * DATA_TABLE_PAGE_CELL_MOTION.totalDuration;
-    const stagger = this.getDataTablePageCellStagger(state.cellSwaps.length);
 
-    state.cellSwaps.forEach((swap, index) => {
+    state.cellSwaps.forEach((swap) => {
       const localProgress = clampUnit(
-        (elapsed - index * stagger) /
+        (elapsed - swap.delay) /
           DATA_TABLE_PAGE_CELL_MOTION.duration,
       );
       const incomingProgress = DATA_TABLE_PAGE_CELL_EASE.in(localProgress);
@@ -1607,12 +1609,11 @@ export class ChatActor {
     });
   }
 
-  private getDataTablePageCellStagger(cellCount: number): number {
-    if (cellCount <= 1) return 0;
-
-    const availableCascadeTime = DATA_TABLE_PAGE_CELL_MOTION.totalDuration - DATA_TABLE_PAGE_CELL_MOTION.duration;
-
-    return Math.min(DATA_TABLE_PAGE_CELL_MOTION.maxStagger, availableCascadeTime / (cellCount - 1));
+  private getDataTablePageCellDelay(rowIndex: number, columnIndex: number): number {
+    return (
+      rowIndex * DATA_TABLE_PAGE_CELL_MOTION.rowStagger +
+      columnIndex * DATA_TABLE_PAGE_CELL_MOTION.columnStagger
+    );
   }
 
   private setDataTablePageCellSwapState(elements: HTMLElement[], opacity: number, y: number): void {
