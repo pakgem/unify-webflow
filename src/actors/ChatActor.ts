@@ -92,6 +92,22 @@ type FileLandingLabel = {
   el: HTMLElement;
   setOpacity: (value: number) => void;
 };
+type DataTablePageCellSwap = {
+  cell: HTMLElement;
+  currentContent: HTMLElement[];
+  clone: HTMLElement;
+};
+type DataTablePageTransitionState = {
+  canSwitch: boolean;
+  committed: boolean;
+  table: HTMLElement | null;
+  currentRows: HTMLElement[];
+  targetRows: HTMLElement[];
+  buttons: HTMLElement[];
+  targetButton?: HTMLElement;
+  range: HTMLElement | null;
+  cellSwaps: DataTablePageCellSwap[];
+};
 type SignupLogoTransfer = {
   el: HTMLElement;
   startX: number;
@@ -479,6 +495,17 @@ const DATA_TABLE_SELECTOR = "[data-data-table]";
 const DATA_TABLE_ACTION_SELECTOR = "[data-table-action]";
 const DATA_TABLE_PAGE_BUTTON_SELECTOR = "[data-table-page-button]";
 const DATA_TABLE_PAGE_RANGE_SELECTOR = "[data-table-page-range]";
+const DATA_TABLE_PAGE_CELL_MOTION = {
+  duration: motionDuration(0.15),
+  stagger: motionDuration(0.005),
+  totalDuration: motionDuration(0.43),
+  incomingY: -7,
+  outgoingY: 7,
+};
+const DATA_TABLE_PAGE_CELL_EASE = {
+  in: gsap.parseEase("power2.out"),
+  out: gsap.parseEase("power2.in"),
+};
 const SIMPLE_ICON_CDN_BASE = "https://cdn.jsdelivr.net/npm/simple-icons@latest/icons";
 const GOOGLE_FAVICON_BASE = "https://www.google.com/s2/favicons";
 const COMPANY_LOGO_ICON_SLUGS: Record<string, string> = {
@@ -1457,30 +1484,23 @@ export class ChatActor {
 
   dataTablePage(tableId: string, page: number, options: { updateExpected?: boolean } = {}): gsap.core.Timeline {
     const tl = gsap.timeline();
-    const fadeOut = { value: 0 };
-    const fadeIn = { value: 0 };
+    const progress = { value: 0 };
     const updateExpected = options.updateExpected ?? true;
-    const state: {
-      canSwitch: boolean;
-      table: HTMLElement | null;
-      currentRows: HTMLElement[];
-      targetRows: HTMLElement[];
-      buttons: HTMLElement[];
-      targetButton?: HTMLElement;
-      range: HTMLElement | null;
-    } = {
+    const state: DataTablePageTransitionState = {
       canSwitch: false,
+      committed: false,
       table: null,
       currentRows: [],
       targetRows: [],
       buttons: [],
       range: null,
+      cellSwaps: [],
     };
 
-    tl.to(fadeOut, {
+    tl.to(progress, {
       value: 1,
-      duration: motionDuration(0.14),
-      ease: "power1.out",
+      duration: DATA_TABLE_PAGE_CELL_MOTION.totalDuration,
+      ease: "none",
       onStart: () => {
         state.table = this.findDataTable(tableId);
         if (updateExpected) this.expectedDataTablePages.set(tableId, page);
@@ -1494,66 +1514,161 @@ export class ChatActor {
           state.targetRows.length &&
           state.table.dataset.activePage !== String(page),
         );
-        if (state.canSwitch) gsap.set(state.currentRows, { autoAlpha: 1, y: 0 });
+        if (state.canSwitch) {
+          progress.value = 0;
+          gsap.set(state.currentRows, { autoAlpha: 1, y: 0 });
+          state.cellSwaps = this.prepareDataTablePageCellSwaps(state.currentRows, state.targetRows);
+          this.setMotionHints(this.getDataTablePageMotionTargets(state));
+        }
       },
       onUpdate: () => {
         if (!state.canSwitch) return;
 
-        const progress = fadeOut.value;
-        const y = this.interpolate(0, -4, progress);
-
-        state.currentRows.forEach((row) => {
-          row.style.opacity = String(1 - progress);
-          row.style.visibility = progress > 0.98 ? "hidden" : "visible";
-          row.style.transform = `translate3d(0, ${y}px, 0)`;
-        });
+        this.renderDataTablePageCellSwaps(state, progress.value);
       },
-    })
-      .call(() => {
-        if (!state.table || !state.canSwitch) return;
+    }).call(() => {
+      this.commitDataTablePageTransition(state, page);
+    });
 
-        state.table.dataset.activePage = String(page);
-        state.currentRows.forEach((row) => {
-          row.style.display = "none";
-        });
-        state.targetRows.forEach((row) => {
-          row.style.display = "grid";
-        });
-        state.buttons.forEach((button) => {
-          const active = Number(button.dataset.tablePageButton) === page;
-          button.dataset.active = String(active);
-          button.setAttribute("aria-current", active ? "page" : "false");
-        });
-        if (state.range && state.targetButton?.dataset.pageRange) {
-          state.range.textContent = state.targetButton.dataset.pageRange;
-        }
-        gsap.set(state.targetRows, { autoAlpha: 0, y: 6 });
-      })
-      .to(fadeIn, {
-        value: 1,
-        duration: motionDuration(0.2),
-        ease: "power2.out",
-        onStart: () => {
-          fadeIn.value = 0;
-        },
-        onUpdate: () => {
-          if (!state.canSwitch) return;
-
-          const progress = fadeIn.value;
-          const y = this.interpolate(6, 0, progress);
-
-          state.targetRows.forEach((row) => {
-            row.style.opacity = String(progress);
-            row.style.visibility = progress > 0 ? "visible" : "hidden";
-            row.style.transform = `translate3d(0, ${y}px, 0)`;
-          });
-        },
-        onComplete: () => {
-          if (state.canSwitch) gsap.set(state.targetRows, { autoAlpha: 1, y: 0 });
-        },
-      });
+    tl.eventCallback("onInterrupt", () => {
+      this.cleanupDataTablePageTransition(state);
+    });
 
     return tl;
+  }
+
+  private prepareDataTablePageCellSwaps(
+    currentRows: HTMLElement[],
+    targetRows: HTMLElement[],
+  ): DataTablePageCellSwap[] {
+    const swaps: DataTablePageCellSwap[] = [];
+    const rowCount = Math.min(currentRows.length, targetRows.length);
+
+    for (let rowIndex = 0; rowIndex < rowCount; rowIndex += 1) {
+      const currentCells = this.queryElements(currentRows[rowIndex], ".wa-data-table__cell");
+      const targetCells = this.queryElements(targetRows[rowIndex], ".wa-data-table__cell");
+      const columnCount = Math.min(currentCells.length, targetCells.length);
+
+      for (let columnIndex = 0; columnIndex < columnCount; columnIndex += 1) {
+        const currentContent = this.getElementChildren(currentCells[columnIndex]);
+        const clone = this.createDataTablePageCellClone(targetCells[columnIndex]);
+
+        if (!currentContent.length || !clone.childNodes.length) continue;
+
+        currentCells[columnIndex].dataset.cellSwapActive = "true";
+        currentCells[columnIndex].append(clone);
+        this.setDataTablePageCellSwapState(currentContent, 1, 0);
+        this.setDataTablePageCellSwapState([clone], 0, DATA_TABLE_PAGE_CELL_MOTION.incomingY);
+        swaps.push({
+          cell: currentCells[columnIndex],
+          currentContent,
+          clone,
+        });
+      }
+    }
+
+    return swaps;
+  }
+
+  private createDataTablePageCellClone(targetCell: HTMLElement): HTMLElement {
+    const clone = document.createElement("span");
+
+    clone.className = "wa-data-table__cell-swap-clone";
+    clone.setAttribute("aria-hidden", "true");
+    targetCell.childNodes.forEach((child) => {
+      clone.append(child.cloneNode(true));
+    });
+
+    return clone;
+  }
+
+  private renderDataTablePageCellSwaps(state: DataTablePageTransitionState, progress: number): void {
+    const elapsed = progress * DATA_TABLE_PAGE_CELL_MOTION.totalDuration;
+
+    state.cellSwaps.forEach((swap, index) => {
+      const localProgress = clampUnit(
+        (elapsed - index * DATA_TABLE_PAGE_CELL_MOTION.stagger) /
+          DATA_TABLE_PAGE_CELL_MOTION.duration,
+      );
+      const incomingProgress = DATA_TABLE_PAGE_CELL_EASE.in(localProgress);
+      const outgoingProgress = DATA_TABLE_PAGE_CELL_EASE.out(localProgress);
+
+      this.setDataTablePageCellSwapState(
+        swap.currentContent,
+        1 - outgoingProgress,
+        this.interpolate(0, DATA_TABLE_PAGE_CELL_MOTION.outgoingY, outgoingProgress),
+      );
+      this.setDataTablePageCellSwapState(
+        [swap.clone],
+        incomingProgress,
+        this.interpolate(DATA_TABLE_PAGE_CELL_MOTION.incomingY, 0, incomingProgress),
+      );
+    });
+  }
+
+  private setDataTablePageCellSwapState(elements: HTMLElement[], opacity: number, y: number): void {
+    const visible = opacity > 0.001;
+    const opacityValue = clampUnit(opacity).toFixed(3);
+    const yValue = Math.abs(y) < 0.01 ? "0" : y.toFixed(2);
+
+    elements.forEach((element) => {
+      element.style.opacity = opacityValue;
+      element.style.transform = `translate3d(0, ${yValue}px, 0)`;
+      element.style.visibility = visible ? "visible" : "hidden";
+    });
+  }
+
+  private commitDataTablePageTransition(
+    state: DataTablePageTransitionState,
+    page: number,
+  ): void {
+    if (!state.table || !state.canSwitch) return;
+
+    state.committed = true;
+    state.table.dataset.activePage = String(page);
+    state.currentRows.forEach((row) => {
+      row.style.display = "none";
+    });
+    state.targetRows.forEach((row) => {
+      row.style.display = "grid";
+    });
+    state.buttons.forEach((button) => {
+      const active = Number(button.dataset.tablePageButton) === page;
+      button.dataset.active = String(active);
+      button.setAttribute("aria-current", active ? "page" : "false");
+    });
+    if (state.range && state.targetButton?.dataset.pageRange) {
+      state.range.textContent = state.targetButton.dataset.pageRange;
+    }
+    gsap.set(state.targetRows, {
+      autoAlpha: 1,
+      y: 0,
+      clearProps: "opacity,visibility,transform,translate,rotate,scale",
+    });
+    this.cleanupDataTablePageTransition(state);
+  }
+
+  private cleanupDataTablePageTransition(state: DataTablePageTransitionState): void {
+    const motionTargets = this.getDataTablePageMotionTargets(state);
+
+    if (motionTargets.length) this.clearMotionHints(motionTargets);
+    state.cellSwaps.forEach((swap) => {
+      swap.clone.remove();
+      delete swap.cell.dataset.cellSwapActive;
+      gsap.set(swap.currentContent, { clearProps: "opacity,visibility,transform,translate,rotate,scale" });
+    });
+    if (!state.committed && state.canSwitch) {
+      gsap.set(state.currentRows, { autoAlpha: 1, y: 0 });
+    }
+    state.cellSwaps = [];
+  }
+
+  private getDataTablePageMotionTargets(state: DataTablePageTransitionState): HTMLElement[] {
+    return state.cellSwaps.flatMap((swap) => [...swap.currentContent, swap.clone]);
+  }
+
+  private getElementChildren(element: HTMLElement): HTMLElement[] {
+    return Array.from(element.children).filter((child): child is HTMLElement => child instanceof HTMLElement);
   }
 
   getDataTablePageRestores(): DataTablePageRestore[] {
