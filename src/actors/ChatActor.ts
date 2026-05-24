@@ -90,12 +90,6 @@ type FileLandingClone = {
 };
 type FileLandingLabel = {
   el: HTMLElement;
-  startX: number;
-  startY: number;
-  endX: number;
-  endY: number;
-  setX: (value: number) => void;
-  setY: (value: number) => void;
   setOpacity: (value: number) => void;
 };
 type SignupLogoTransfer = {
@@ -2564,19 +2558,14 @@ export class ChatActor {
     const labelWidth = label.offsetWidth;
     const labelHeight = label.offsetHeight;
     const gap = 9;
-    const startBounds = this.getFileLandingCloneBounds(clones, "start");
     const endBounds = this.getFileLandingCloneBounds(clones, "end");
-    const startX = startBounds.left + startBounds.width / 2 - labelWidth / 2;
     const endX = endBounds.left + endBounds.width / 2 - labelWidth / 2;
+    const endY = endBounds.top - labelHeight - gap;
+
+    gsap.set(label, { x: endX, y: endY });
 
     return {
       el: label,
-      startX,
-      startY: startBounds.top - labelHeight - gap,
-      endX,
-      endY: endBounds.top - labelHeight - gap,
-      setX: gsap.quickSetter(label, "x", "px") as (value: number) => void,
-      setY: gsap.quickSetter(label, "y", "px") as (value: number) => void,
       setOpacity: gsap.quickSetter(label, "opacity") as (value: number) => void,
     };
   }
@@ -2586,8 +2575,6 @@ export class ChatActor {
 
     const fadeIn = clampUnit(progress / 0.16);
     const fadeOut = clampUnit((1 - progress) / 0.16);
-    label.setX(this.interpolate(label.startX, label.endX, progress));
-    label.setY(this.interpolate(label.startY, label.endY, progress));
     label.setOpacity(Math.min(fadeIn, fadeOut));
   }
 

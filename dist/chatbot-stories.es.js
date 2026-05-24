@@ -3783,22 +3783,16 @@ class Zs {
       x: 0,
       y: 0
     });
-    const i = a.offsetWidth, n = a.offsetHeight, o = 9, s = this.getFileLandingCloneBounds(t, "start"), l = this.getFileLandingCloneBounds(t, "end"), c = s.left + s.width / 2 - i / 2, d = l.left + l.width / 2 - i / 2;
-    return {
+    const i = a.offsetWidth, n = a.offsetHeight, o = 9, s = this.getFileLandingCloneBounds(t, "end"), l = s.left + s.width / 2 - i / 2, c = s.top - n - o;
+    return m.set(a, { x: l, y: c }), {
       el: a,
-      startX: c,
-      startY: s.top - n - o,
-      endX: d,
-      endY: l.top - n - o,
-      setX: m.quickSetter(a, "x", "px"),
-      setY: m.quickSetter(a, "y", "px"),
       setOpacity: m.quickSetter(a, "opacity")
     };
   }
   renderFileLandingLabel(e, t) {
     if (!e) return;
     const a = qt(t / 0.16), i = qt((1 - t) / 0.16);
-    e.setX(this.interpolate(e.startX, e.endX, t)), e.setY(this.interpolate(e.startY, e.endY, t)), e.setOpacity(Math.min(a, i));
+    e.setOpacity(Math.min(a, i));
   }
   getFileLandingCloneBounds(e, t) {
     const a = e.map((p) => t === "start" ? p.startX : p.endX), i = e.map((p) => t === "start" ? p.startY : p.endY), n = e.map((p) => t === "start" ? p.startWidth : p.endWidth), o = e.map((p) => t === "start" ? p.startHeight : p.endHeight), s = e.map((p, f) => a[f] + n[f]), l = e.map((p, f) => i[f] + o[f]), c = Math.min(...a), d = Math.min(...i), u = Math.max(...s), g = Math.max(...l);
