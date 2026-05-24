@@ -339,6 +339,26 @@ const SEQUENCE_THINKING_LOGO = {
 };
 
 /* --------------------------------------------------------------------------
+   Sequence Person Switch
+
+      0ms   selected person tab updates immediately
+      0ms   rail starts centering with transform-friendly scroll motion
+     90ms   visible copy swaps to the selected person's sequence
+    250ms   new copy settles in without changing scroll position
+   -------------------------------------------------------------------------- */
+
+const SEQUENCE_PERSON_SWITCH = {
+  exitDuration: motionDuration(0.07),
+  enterDuration: motionDuration(0.17),
+  railCenterDuration: motionDuration(0.26),
+  exitY: -2,
+  enterY: 4,
+  stagger: 0.006,
+  exitEase: "power2.in",
+  enterEase: "power3.out",
+};
+
+/* --------------------------------------------------------------------------
    Composer Show/Hide Storyboard
 
    0ms   hidden shell is a compact centered pill
@@ -2182,7 +2202,7 @@ export class ChatActor {
 
   sequencePerson(sequenceId: string, index: number): gsap.core.Timeline {
     const section = this.findSequenceEngagement(sequenceId);
-    const tl = gsap.timeline();
+    const tl = gsap.timeline({ defaults: { overwrite: "auto" } });
 
     if (!section) return tl;
 
@@ -2196,25 +2216,35 @@ export class ChatActor {
       return tl;
     }
 
-    const textTargets = this.getSequenceTransitionTargets(activeCard);
+    this.setSequencePersonRailState(section, index, true);
 
-    tl.to(textTargets, {
+    const outgoingTargets = this.getSequenceTransitionTargets(activeCard);
+
+    gsap.killTweensOf(outgoingTargets);
+
+    tl.to(outgoingTargets, {
       autoAlpha: 0,
-      y: -3,
-      duration: motionDuration(0.14),
-      ease: "power2.in",
-      stagger: 0.012,
+      y: SEQUENCE_PERSON_SWITCH.exitY,
+      duration: SEQUENCE_PERSON_SWITCH.exitDuration,
+      ease: SEQUENCE_PERSON_SWITCH.exitEase,
+      stagger: SEQUENCE_PERSON_SWITCH.stagger,
+      force3D: true,
     })
       .call(() => {
-        this.setActiveSequencePerson(section, index, true);
-        gsap.set(textTargets, { y: 4 });
+        this.applySequenceTemplateToDisplayCard(section, activeCard, targetCard, index);
+        gsap.set(outgoingTargets, {
+          autoAlpha: 0,
+          y: SEQUENCE_PERSON_SWITCH.enterY,
+          force3D: true,
+        });
       })
-      .to(textTargets, {
+      .to(outgoingTargets, {
         autoAlpha: 1,
         y: 0,
-        duration: motionDuration(0.24),
-        ease: "power2.out",
-        stagger: 0.014,
+        duration: SEQUENCE_PERSON_SWITCH.enterDuration,
+        ease: SEQUENCE_PERSON_SWITCH.enterEase,
+        stagger: SEQUENCE_PERSON_SWITCH.stagger,
+        force3D: true,
       });
 
     return tl;
@@ -5784,8 +5814,6 @@ export class ChatActor {
 
   private setActiveSequencePerson(section: HTMLElement, index: number, shouldCenter = false): void {
     const cards = this.queryElements(section, "[data-sequence-card]");
-    const personCards = this.queryElements(section, "[data-sequence-person-card]");
-    const count = section.querySelector<HTMLElement>("[data-sequence-count]");
     const displayCard = this.getSequenceDisplayCard(section);
     const templateCard = this.getSequenceTemplateCard(section, index);
 
@@ -5800,6 +5828,14 @@ export class ChatActor {
     });
     section.dataset.activeSequenceIndex = String(index);
     this.applySequenceTemplateToDisplayCard(section, displayCard, templateCard, index);
+    this.setSequencePersonRailState(section, index, shouldCenter);
+  }
+
+  private setSequencePersonRailState(section: HTMLElement, index: number, shouldCenter = false): void {
+    const personCards = this.queryElements(section, "[data-sequence-person-card]");
+    const count = section.querySelector<HTMLElement>("[data-sequence-count]");
+
+    section.dataset.activeSequenceIndex = String(index);
     personCards.forEach((personCard) => {
       const active = Number(personCard.dataset.sequencePersonIndex) === index;
 
@@ -5825,7 +5861,7 @@ export class ChatActor {
 
     gsap.to(rail, {
       scrollLeft: target,
-      duration: motionDuration(0.34),
+      duration: SEQUENCE_PERSON_SWITCH.railCenterDuration,
       ease: "power2.out",
       overwrite: "auto",
     });

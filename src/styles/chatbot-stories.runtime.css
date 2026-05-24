@@ -3900,8 +3900,10 @@ body {
   opacity: 0.66;
   cursor: pointer;
   scroll-snap-align: center;
-  transform: none;
+  transform: translateZ(0);
   transform-origin: center;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
   transition:
     border-color 160ms ease,
     background 160ms ease,
@@ -4251,6 +4253,15 @@ body {
   line-height: 1.32;
   font-weight: 410;
   white-space: pre-line;
+}
+
+.wa-sequence-step__copy strong,
+.wa-sequence-copy-panel__meta,
+.wa-sequence-copy-panel__subject,
+.wa-sequence-copy-panel__body {
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  will-change: transform, opacity;
 }
 
 .wa-engage-channels {
