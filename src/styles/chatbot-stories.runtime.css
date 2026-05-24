@@ -1743,7 +1743,6 @@ body {
 
 .wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="name"],
 .wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="contact"],
-.wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="rawName"],
 .wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="fullName"],
 .wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="mutualConnection"] {
   padding-left: 8px;
@@ -1988,7 +1987,6 @@ body {
 
 .wa-data-table__cell[data-column-key="name"],
 .wa-data-table__cell[data-column-key="contact"],
-.wa-data-table__cell[data-column-key="rawName"],
 .wa-data-table__cell[data-column-key="fullName"],
 .wa-data-table__cell[data-column-key="mutualConnection"] {
   overflow: visible;
@@ -5153,7 +5151,6 @@ body {
 
   .wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="name"],
   .wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="contact"],
-  .wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="rawName"],
   .wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="fullName"],
   .wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="mutualConnection"] {
     padding-left: 4px;

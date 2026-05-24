@@ -4068,7 +4068,7 @@ export class ChatActor {
   }
 
   private isPersonNameColumn(columnKey: string): boolean {
-    return columnKey === "name" || columnKey === "contact" || columnKey === "rawName" || columnKey === "fullName";
+    return columnKey === "name" || columnKey === "contact" || columnKey === "fullName";
   }
 
   private createDataTableAddIcon(): SVGSVGElement {
