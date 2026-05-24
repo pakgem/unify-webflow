@@ -22,6 +22,7 @@ type PathOptions = {
   speed?: CursorSpeed;
   intent?: CursorIntent;
   curve?: number;
+  durationScale?: number;
   overshoot?: number | false;
   settle?: boolean;
   reducedMotion?: boolean;
@@ -71,7 +72,11 @@ export function createHumanCursorPath(start: Point, end: Point, options: PathOpt
   const intentCurve = intent === "drag" ? 0.1 : intent === "click" ? 0.17 : 0.22;
   const curve = clamp(dist * intentCurve * curveAmount, 18, 150) * curveSign * (0.72 + random() * 0.44);
   const baseDuration = dist / SPEED_PIXELS_PER_SECOND[speed] + 0.16;
-  const duration = clamp(baseDuration * INTENT_DURATION_MULTIPLIER[intent] * CURSOR_DURATION_SCALE, 0.3, 1.66);
+  const duration = clamp(
+    baseDuration * INTENT_DURATION_MULTIPLIER[intent] * CURSOR_DURATION_SCALE * (options.durationScale ?? 1),
+    0.3,
+    1.98,
+  );
   const overshootDistance =
     options.overshoot === false || dist < 120
       ? 0

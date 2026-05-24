@@ -291,10 +291,28 @@ export function elementPerusalSteps(items: ElementPerusalItem[]): StoryStep[] {
   });
 }
 
-export function dataTableFooterPerusalStep(tableId: string, duration = STORY_TIMING.beat + 0.18, at?: TimelinePosition): StoryStep {
+export function dataTableFooterPerusalStep(
+  tableId: string,
+  duration = STORY_TIMING.beat + 0.18,
+  at?: TimelinePosition,
+  scrollOptions: { align?: "top" | "bottom"; offset?: number; settleDelay?: number } = {},
+): StoryStep {
   return {
     kind: "custom",
-    build: (ctx) => ctx.chat.scrollDataTableToFooter(tableId, duration),
+    build: (ctx) => {
+      const tl = createBuildTimeline(ctx);
+
+      tl.call(() => ctx.chat.scrollDataTableFooterIntoView(tableId, duration, scrollOptions));
+      tl.to({}, { duration });
+
+      if (scrollOptions.settleDelay) {
+        tl.to({}, { duration: scrollOptions.settleDelay });
+        tl.call(() => ctx.chat.scrollDataTableFooterIntoView(tableId, duration, scrollOptions));
+        tl.to({}, { duration });
+      }
+
+      return releaseBuildTimeline(tl);
+    },
     at,
   };
 }

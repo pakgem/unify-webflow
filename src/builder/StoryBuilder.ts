@@ -2056,7 +2056,7 @@ function createSeedSteps(storyId: string, fallbackSummary: string): BuilderStep[
           ["Ava Garcia", "Gusto", "VP Revenue", "7h ago", "Demo page"],
         ]),
       },
-      { kind: "cursor", text: "Cursor clicks page 2, hovers the dialer icon, then clicks the email icon.", note: "Dialer tooltip reads “Start power dialing” with a “Coming soon” badge; email tooltip reads “Build outreach sequence.”" },
+      { kind: "cursor", text: "Cursor clicks page 2, hovers the dialer icon, then clicks the email icon.", note: "Dialer tooltip reads “Coming soon!”; the outreach sequence button has no tooltip." },
       createThinkingStepSeed(
         [
           "generating sequence template from company offering",
@@ -2235,12 +2235,12 @@ function createWebsiteVisitorTableComponent(title: string, rows: string[][]): Bu
     actions: [
       {
         label: "Power dialer",
-        tooltip: "Start power dialing",
-        badge: "Coming soon",
+        tooltip: "Coming soon!",
+        badge: "",
       },
       {
         label: "Create outreach sequence",
-        tooltip: "Build outreach sequence",
+        tooltip: "",
         badge: "",
       },
     ],

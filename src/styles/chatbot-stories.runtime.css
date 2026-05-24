@@ -1559,6 +1559,10 @@ body {
   color: #050505;
 }
 
+.wa-data-table[data-data-table="website-visitors-sales"] {
+  padding-bottom: 88px;
+}
+
 .wa-data-table__header {
   display: none;
   grid-template-columns: minmax(0, 1fr) auto;

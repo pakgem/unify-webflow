@@ -1284,6 +1284,14 @@ export class ChatActor {
     });
   }
 
+  scrollToLiveTimeline(duration = CHAT_SCROLL_MOTION.followDuration): gsap.core.Timeline {
+    return this.scrollChatTarget(() => null, {
+      align: "bottom",
+      duration,
+      fallback: "bottom",
+    });
+  }
+
   userMessage(text: string): gsap.core.Timeline {
     const message = this.claimMessage("user", text);
 
@@ -1336,11 +1344,39 @@ export class ChatActor {
     return this.revealComponentItems("table", table, ".wa-data-table__row", COMPONENT_CHILD_REVEAL.tableRow, scrollAnchor);
   }
 
-  scrollDataTableToFooter(tableId: string, duration = CHAT_SCROLL_MOTION.revealDuration): gsap.core.Timeline {
-    return this.scrollChatTarget(() => this.findDataTable(tableId), {
-      align: "bottom",
+  scrollDataTableFooterIntoView(
+    tableId: string,
+    duration = CHAT_SCROLL_MOTION.revealDuration,
+    options: Pick<ChatElementScrollOptions, "align" | "offset"> = {},
+  ): void {
+    const table = this.findDataTable(tableId);
+    const targetElement =
+      options.align === "top"
+        ? table?.querySelector<HTMLElement>(".wa-data-table__footer") ?? table
+        : table;
+
+    if (!targetElement) return;
+
+    this.stopScrollMotion();
+
+    const target = this.getElementScrollTarget(targetElement, {
+      align: options.align ?? "bottom",
+      offset: options.offset ?? 0,
+    });
+
+    if (this.prefersReducedMotion || Math.abs(this.thread.scrollTop - target) < 1) {
+      this.thread.scrollTop = target;
+      return;
+    }
+
+    this.scrollTween = gsap.to(this.thread, {
+      scrollTop: target,
       duration,
-      fallback: "bottom",
+      ease: CHAT_SCROLL_MOTION.revealEase,
+      overwrite: "auto",
+      onComplete: () => {
+        this.scrollTween = null;
+      },
     });
   }
 
@@ -1365,13 +1401,14 @@ export class ChatActor {
   ): gsap.core.Timeline {
     const tl = gsap.timeline();
     let scrollTarget = this.thread.scrollTop;
+    let resolvedElement: HTMLElement | null = null;
 
     tl.call(() => {
-      const element = resolveElement();
+      resolvedElement = resolveElement();
 
       this.stopScrollMotion();
-      scrollTarget = element
-        ? this.getElementScrollTarget(element, options)
+      scrollTarget = resolvedElement
+        ? this.getElementScrollTarget(resolvedElement, options)
         : this.getMissingScrollTarget(options.fallback ?? "current");
     });
 
@@ -1383,6 +1420,19 @@ export class ChatActor {
       onComplete: () => {
         this.scrollTween = null;
       },
+    });
+
+    tl.call(() => {
+      scrollTarget = resolvedElement
+        ? this.getElementScrollTarget(resolvedElement, options)
+        : this.getMissingScrollTarget(options.fallback ?? "current");
+    });
+
+    tl.to(this.thread, {
+      scrollTop: () => scrollTarget,
+      duration: motionDuration(0.16),
+      ease: "power2.out",
+      overwrite: "auto",
     });
 
     return tl;
@@ -4347,7 +4397,7 @@ export class ChatActor {
   private getDataTableControlTooltipText(control: HTMLElement): string {
     const inlineTooltip = control.querySelector<HTMLElement>(".wa-data-table-action__tooltip")?.textContent?.trim();
 
-    return inlineTooltip || control.dataset.tooltip || control.getAttribute("aria-label") || "";
+    return inlineTooltip || control.dataset.tooltip || "";
   }
 
   private findDataTableControl(target: EventTarget | null): HTMLElement | null {

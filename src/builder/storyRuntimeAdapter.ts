@@ -267,7 +267,16 @@ function buildEngagementStory(ctx: StoryContext, story: BuilderStory): gsap.core
   if (tableConfig) {
     steps.push(
       { kind: "dataTable" as const, config: tableConfig, at: "-=0.02" },
-      dataTableFooterPerusalStep("website-visitors-sales", STORY_TIMING.beat + 0.18, "+=0.08"),
+      dataTableFooterPerusalStep("website-visitors-sales", STORY_TIMING.beat + 0.42, "+=0.08", {
+        align: "top",
+        offset: -190,
+        settleDelay: 0.32,
+      }),
+      {
+        kind: "custom" as const,
+        build: () => ctx.chat.scrollToLiveTimeline(STORY_TIMING.beat + 0.42),
+        at: "+=0.08",
+      },
     );
   }
 
@@ -303,20 +312,24 @@ function buildEngagementStory(ctx: StoryContext, story: BuilderStory): gsap.core
       {
         kind: "cursorMove" as const,
         target: powerDialerTarget,
-        options: { mode: "pointer" as const, intent: "hover" as const, speed: "slow" as const, label: "hover-power-dialer" },
+        options: {
+          mode: "pointer" as const,
+          intent: "hover" as const,
+          speed: "slow" as const,
+          durationScale: 1.45,
+          label: "hover-power-dialer",
+        },
         at: "+=0.42",
       },
       { kind: "custom" as const, build: () => ctx.chat.dataTableActionTooltip("website-visitors-sales", "power-dialer", true) },
-      { kind: "custom" as const, build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat + 1 }), at: "+=0.12" },
+      { kind: "custom" as const, build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat + 2 }), at: "+=0.12" },
       { kind: "custom" as const, build: () => ctx.chat.dataTableActionTooltip("website-visitors-sales", "power-dialer", false) },
       {
         kind: "cursorMove" as const,
         target: emailSequenceTarget,
         options: { mode: "pointer" as const, intent: "hover" as const, speed: "slow" as const, label: "hover-email-sequence" },
       },
-      { kind: "custom" as const, build: () => ctx.chat.dataTableActionTooltip("website-visitors-sales", "email-sequence", true) },
       { kind: "cursorClick" as const, at: "+=0.18" },
-      { kind: "custom" as const, build: () => ctx.chat.dataTableActionTooltip("website-visitors-sales", "email-sequence", false), at: "<+=0.02" },
       { kind: "status" as const, text: "building outreach sequence", at: "<" },
     );
   }
@@ -1033,7 +1046,7 @@ function toDataTableAction(action: NonNullable<BuilderTableComponent["actions"]>
     id,
     label: id === "power-dialer" ? "Power dial" : "Outreach sequence",
     icon: id === "power-dialer" ? "dialer" : "email",
-    tooltip: action.tooltip,
+    tooltip: action.tooltip.trim() || undefined,
     badge: action.badge || undefined,
   };
 }

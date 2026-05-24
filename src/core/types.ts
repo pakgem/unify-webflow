@@ -48,6 +48,7 @@ export type CursorMoveOptions = {
   speed?: CursorSpeed;
   curve?: number;
   ease?: string;
+  durationScale?: number;
   overshoot?: number | false;
   settle?: boolean;
   releaseHold?: number;
