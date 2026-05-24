@@ -3808,6 +3808,16 @@ body {
   gap: 10px;
 }
 
+.wa-sequence-people-wrap {
+  --wa-sequence-person-card-min-width: 112px;
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  overflow: visible;
+}
+
 .wa-sequence-people {
   --wa-sequence-person-card-min-width: 112px;
   position: relative;
@@ -3819,6 +3829,7 @@ body {
   max-width: 100%;
   margin: 0;
   padding: 3px max(16px, calc(50% - var(--wa-sequence-person-card-min-width) / 2)) 0;
+  border-bottom: 1px solid rgba(17, 17, 15, 0.28);
   overflow-x: auto;
   overflow-y: visible;
   scroll-snap-type: x mandatory;
@@ -3826,24 +3837,6 @@ body {
   scrollbar-width: none;
   -webkit-mask-image: linear-gradient(to right, transparent 0, #000 34px, #000 calc(100% - 34px), transparent 100%);
   mask-image: linear-gradient(to right, transparent 0, #000 34px, #000 calc(100% - 34px), transparent 100%);
-}
-
-.wa-sequence-people::after {
-  content: "";
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 2;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(17, 17, 15, 0.34) 34px,
-    rgba(17, 17, 15, 0.34) calc(100% - 34px),
-    transparent
-  );
-  pointer-events: none;
 }
 
 .wa-sequence-people::-webkit-scrollbar {
@@ -3890,7 +3883,9 @@ body {
 
 .wa-sequence-person-card[data-active="true"] {
   z-index: 3;
+  margin-bottom: -1px;
   border-color: rgba(17, 17, 15, 0.24);
+  border-bottom: 1px solid var(--wa-panel);
   box-shadow: none;
 }
 
@@ -3900,7 +3895,7 @@ body {
   right: -1px;
   bottom: -1px;
   left: -1px;
-  z-index: 5;
+  z-index: 2;
   height: 2px;
   background: var(--wa-panel);
   pointer-events: none;

@@ -2081,7 +2081,7 @@ export class ChatActor {
     return this.revealComponentItems(
       "sequence",
       panel,
-      ".wa-sequence-person-card, .wa-sequence-card, .wa-sequence-step, .wa-sequence-wait, .wa-sequence-copy-panel, .wa-engage-channel, .wa-sequence-kickoff",
+      ".wa-sequence-people-wrap, .wa-sequence-card, .wa-sequence-step, .wa-sequence-wait, .wa-sequence-copy-panel, .wa-engage-channel, .wa-sequence-kickoff",
       COMPONENT_CHILD_REVEAL.stackCard,
     )
       .call(() => this.setSequencePersonRailPosition(panel, initialIndex), undefined, 0.01)
@@ -5435,11 +5435,14 @@ export class ChatActor {
     let peopleNav: HTMLElement | null = null;
 
     if (hasSequenceSteps) {
+      const peopleWrap = document.createElement("div");
       const peopleRail = document.createElement("div");
 
+      peopleWrap.className = "wa-sequence-people-wrap";
       peopleRail.className = "wa-sequence-people";
       peopleRail.dataset.sequencePeopleRail = config.id;
       peopleRail.setAttribute("aria-label", "Sequence people");
+      peopleWrap.append(peopleRail);
 
       config.sequences.forEach((sequence, index) => {
         const person = document.createElement("button");
@@ -5472,7 +5475,7 @@ export class ChatActor {
         peopleRail.append(person);
       });
 
-      peopleNav = peopleRail;
+      peopleNav = peopleWrap;
     }
 
     config.sequences.forEach((sequence, index) => {
@@ -5692,7 +5695,7 @@ export class ChatActor {
   private clearSequencePersonCardMotionStyles(section: HTMLElement): void {
     const personCards = this.queryElements(section, "[data-sequence-person-card]");
 
-    gsap.set(personCards, { clearProps: "opacity,visibility" });
+    gsap.set(personCards, { clearProps: "opacity,visibility,transform" });
   }
 
   private createSequenceWaitRow(waitDays: number, index: number): HTMLElement {
