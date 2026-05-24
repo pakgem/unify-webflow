@@ -96,13 +96,13 @@ const GTM_STRATEGY_PLANS = [
    -------------------------------------------------------------------------- */
 
 const DATA_MARKETPLACE_PRE_ENRICHMENT_COLUMNS = [
-  { key: "name", label: "Name", width: "1.45fr" },
+  { key: "name", label: "Name", width: "1.45fr", cellType: "person" },
   { key: "company", label: "Company", width: "1fr" },
   { key: "title", label: "Title", width: "1.45fr" },
 ] satisfies DataTableConfig["columns"];
 
 const DATA_MARKETPLACE_ENRICHED_COLUMNS = [
-  { key: "name", label: "Prospect", width: "minmax(220px,0.95fr)" },
+  { key: "name", label: "Prospect", width: "minmax(220px,0.95fr)", cellType: "person" },
   { key: "email", label: "Work email", width: "minmax(190px,0.95fr)" },
   { key: "number", label: "Mobile", width: "minmax(150px,0.72fr)" },
   { key: "connector", label: "Connector", width: "minmax(170px,0.78fr)" },
@@ -660,7 +660,7 @@ const PROXIMITY_LEADS = {
 } satisfies ProximityLeadListConfig;
 
 const ENGAGEMENT_LIST_COLUMNS = [
-  { key: "name", label: "Name", width: "1.35fr" },
+  { key: "name", label: "Name", width: "1.35fr", cellType: "person" },
   { key: "company", label: "Company", width: "1fr" },
   { key: "title", label: "Title", width: "1.35fr" },
   { key: "fit", label: "Fit", width: "0.72fr" },
@@ -1029,7 +1029,7 @@ const ENGAGEMENT_SEQUENCE_THINKING = {
 } satisfies SequenceBuildThinkingConfig;
 
 const WEBSITE_VISITOR_SALES_COLUMNS = [
-  { key: "name", label: "Name", width: "1.2fr" },
+  { key: "name", label: "Name", width: "1.2fr", cellType: "person" },
   { key: "company", label: "Company", width: "0.95fr" },
   { key: "title", label: "Title", width: "1.15fr" },
   { key: "visit", label: "Last visit", width: "0.86fr" },
@@ -1069,6 +1069,7 @@ const WEBSITE_VISITOR_SALES_TABLE = {
   count: "50 sales leaders",
   variant: "filtered",
   scrollAlign: "equal-inset",
+  footerClearance: 88,
   columns: WEBSITE_VISITOR_SALES_COLUMNS,
   rows: WEBSITE_VISITOR_SALES_PAGE_ONE,
   pagination: {
@@ -1219,9 +1220,8 @@ const CSV_RAW_TABLE = {
   title: "Raw webinar attendees",
   eyebrow: "CSV import",
   count: "54 records",
-  renderPeople: false,
   columns: [
-    { key: "name", label: "Name", width: "110px" },
+    { key: "name", label: "Name", width: "110px", cellType: "text" },
     { key: "email", label: "Email", width: "250px" },
     { key: "company", label: "Company", width: "minmax(120px,1fr)" },
   ],
@@ -1244,7 +1244,7 @@ const CSV_CLEAN_TABLE = {
   count: "54 records",
   scrollAnchor: "previous-message",
   columns: [
-    { key: "fullName", label: "Full name", width: "245px" },
+    { key: "fullName", label: "Full name", width: "245px", cellType: "person" },
     { key: "work-email", label: "Work email", width: "215px" },
     { key: "company", label: "Company", width: "minmax(110px,1fr)" },
   ],

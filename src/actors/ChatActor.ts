@@ -2,6 +2,7 @@ import { gsap } from "gsap";
 import type { CursorActor } from "./CursorActor";
 import type {
   DataSourceGridConfig,
+  DataTableColumnConfig,
   DataTableConfig,
   EnrichmentConfig,
   MailboxConnectionConfig,
@@ -37,6 +38,8 @@ type PreparedResultCard = {
   reveal: () => gsap.core.Timeline;
   highlight: (target?: HTMLElement | string) => gsap.core.Timeline;
 };
+type DataTableCellType = NonNullable<DataTableColumnConfig["cellType"]>;
+type DataTablePersonOptions = NonNullable<DataTableColumnConfig["person"]>;
 
 type PreparedCsvDropArea = {
   el: HTMLElement;
@@ -4034,6 +4037,10 @@ export class ChatActor {
     table.dataset.columnCount = String(config.columns.length);
     table.dataset.activePage = String(activePage);
     if (config.scrollAlign) table.dataset.scrollAlign = config.scrollAlign;
+    if (config.footerClearance !== undefined) {
+      table.dataset.footerClearance = "true";
+      table.style.setProperty("--wa-data-table-footer-clearance", `${config.footerClearance}px`);
+    }
     this.expectedDataTablePages.set(config.id, activePage);
     table.style.setProperty(
       "--wa-data-table-columns",
@@ -4062,13 +4069,11 @@ export class ChatActor {
 
     const grid = document.createElement("div");
     grid.className = "wa-data-table__grid";
-    const renderPeople = config.renderPeople !== false;
-
-    grid.append(this.createDataTableRow("header", config.columns, {}, config.id, undefined, renderPeople));
+    grid.append(this.createDataTableRow("header", config.columns, {}, config.id));
 
     for (const page of pages) {
       for (const row of page.rows) {
-        const rowEl = this.createDataTableRow(row.id, config.columns, row.values, config.id, page.page, renderPeople);
+        const rowEl = this.createDataTableRow(row.id, config.columns, row.values, config.id, page.page);
 
         if (page.page !== activePage) {
           rowEl.style.display = "none";
@@ -4094,7 +4099,6 @@ export class ChatActor {
     values: Record<string, string>,
     tableId: string,
     page?: number,
-    renderPeople = true,
   ): HTMLElement {
     const row = document.createElement("div");
     row.className = "wa-data-table__row";
@@ -4111,28 +4115,8 @@ export class ChatActor {
       cell.className = "wa-data-table__cell";
       cell.dataset.columnKey = column.key;
 
-      if (isHeader) {
-        cell.textContent = column.label;
-      } else if (renderPeople && this.shouldRenderDataTablePerson(column.key)) {
-        cell.append(this.createDataTablePerson(values, values[column.key] ?? ""));
-      } else if (column.key === "mutualConnection") {
-        cell.append(this.createDataTablePerson(values, values[column.key] ?? "", {
-          detailKey: "mutualConnectionDetail",
-          avatarToneKey: "mutualConnectionAvatarTone",
-          avatarUrlKey: "mutualConnectionAvatarUrl",
-          avatarKey: "mutualConnectionAvatar",
-          sourceKey: "mutualConnectionSource",
-          companyKey: "mutualConnectionCompany",
-        }));
-        if (values.mutualConnectionBadge) cell.append(this.createDataTableCellBadge(values.mutualConnectionBadge));
-      } else {
-        const value = values[column.key] ?? "";
-        const text = document.createElement("span");
-        text.className = "wa-data-table__cell-text";
-        text.textContent = value || "-";
-        cell.append(text);
-        if (!value) cell.dataset.empty = "true";
-      }
+      if (isHeader) cell.textContent = column.label;
+      else this.appendDataTableCellContent(cell, column, values);
 
       row.append(cell);
     }
@@ -4155,12 +4139,55 @@ export class ChatActor {
     return add;
   }
 
-  private isPersonNameColumn(columnKey: string): boolean {
-    return columnKey === "name" || columnKey === "contact" || columnKey === "fullName";
+  private appendDataTableCellContent(
+    cell: HTMLElement,
+    column: DataTableColumnConfig,
+    values: Record<string, string>,
+  ): void {
+    const cellType = this.getDataTableCellType(column);
+
+    if (cellType === "person") {
+      cell.append(this.createDataTablePerson(values, values[column.key] ?? "", column.person));
+      return;
+    }
+
+    if (cellType === "mutualConnection") {
+      const options = this.getMutualConnectionPersonOptions(column);
+      const badgeKey = options.badgeKey ?? "mutualConnectionBadge";
+
+      cell.append(this.createDataTablePerson(values, values[column.key] ?? "", options));
+      if (values[badgeKey]) cell.append(this.createDataTableCellBadge(values[badgeKey]));
+      return;
+    }
+
+    this.appendDataTableTextCell(cell, values[column.key] ?? "");
   }
 
-  private shouldRenderDataTablePerson(columnKey: string): boolean {
-    return this.isPersonNameColumn(columnKey);
+  private getDataTableCellType(column: DataTableColumnConfig): DataTableCellType {
+    if (column.cellType) return column.cellType;
+    if (column.key === "mutualConnection") return "mutualConnection";
+    return "text";
+  }
+
+  private getMutualConnectionPersonOptions(column: DataTableColumnConfig): DataTablePersonOptions {
+    return {
+      detailKey: "mutualConnectionDetail",
+      avatarToneKey: "mutualConnectionAvatarTone",
+      avatarUrlKey: "mutualConnectionAvatarUrl",
+      avatarKey: "mutualConnectionAvatar",
+      sourceKey: "mutualConnectionSource",
+      companyKey: "mutualConnectionCompany",
+      ...column.person,
+    };
+  }
+
+  private appendDataTableTextCell(cell: HTMLElement, value: string): void {
+    const text = document.createElement("span");
+
+    text.className = "wa-data-table__cell-text";
+    text.textContent = value || "-";
+    cell.append(text);
+    if (!value) cell.dataset.empty = "true";
   }
 
   private createDataTableAddIcon(): SVGSVGElement {

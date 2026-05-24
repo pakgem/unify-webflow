@@ -213,6 +213,24 @@ export type DataTableRowConfig = {
   values: Record<string, string>;
 };
 
+export type DataTablePersonColumnConfig = {
+  detailKey?: string;
+  avatarToneKey?: string;
+  avatarUrlKey?: string;
+  avatarKey?: string;
+  sourceKey?: string;
+  companyKey?: string;
+  badgeKey?: string;
+};
+
+export type DataTableColumnConfig = {
+  key: string;
+  label: string;
+  width?: string;
+  cellType?: "text" | "person" | "mutualConnection";
+  person?: DataTablePersonColumnConfig;
+};
+
 export type DataTableConfig = {
   id: string;
   title: string;
@@ -220,12 +238,8 @@ export type DataTableConfig = {
   count?: string;
   variant?: "default" | "filtered" | "enriched" | "connections";
   scrollAlign?: "equal-inset";
-  renderPeople?: boolean;
-  columns: Array<{
-    key: string;
-    label: string;
-    width?: string;
-  }>;
+  footerClearance?: number;
+  columns: DataTableColumnConfig[];
   rows: DataTableRowConfig[];
   pagination?: {
     pageSize: number;

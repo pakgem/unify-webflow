@@ -698,6 +698,8 @@ type BuilderTableShape = {
   variant?: DataTableConfig["variant"];
 };
 
+type DataTableColumn = DataTableConfig["columns"][number];
+
 const MUTUAL_CONNECTION_COMPANY_BY_NAME: Record<string, { title: string; company: string }> = {
   "dev singh": { title: "RevOps Lead @ Brex", company: "Brex" },
   "evan brooks": { title: "Growth Lead @ PayPal", company: "PayPal" },
@@ -728,7 +730,7 @@ function toDataTable(component: BuilderTableComponent, fallbackId: string): Data
     eyebrow: component.eyebrow,
     count: component.count,
     variant: shape.variant ?? inferTableVariant(component),
-    renderPeople: shouldRenderTablePeople(fallbackId),
+    footerClearance: getTableFooterClearance(fallbackId),
     columns: shape.columns,
     rows: pages[0]?.rows ?? rows,
     actions: component.actions?.map(toDataTableAction),
@@ -871,6 +873,7 @@ function getBuilderTableShape(component: BuilderTableComponent, fallbackId: stri
         key: "name",
         label: "Prospect",
         width: "minmax(220px,0.95fr)",
+        cellType: "person" as const,
       };
     }
 
@@ -879,15 +882,19 @@ function getBuilderTableShape(component: BuilderTableComponent, fallbackId: stri
         key: "mutualConnection",
         label: "Best connection",
         width: "minmax(0,1.3fr)",
+        cellType: "mutualConnection" as const,
       };
     }
 
-    const specialKey = getSpecialTableColumnKey(fallbackId, label);
+    const override = getTableColumnOverride(fallbackId, label);
+    const key = override.key ?? slugId(label || `column-${sourceIndex + 1}`);
 
     return {
-      key: specialKey ?? slugId(label || `column-${sourceIndex + 1}`),
+      key,
       label,
-      width: getSpecialTableColumnWidth(fallbackId, label) ?? getBuilderTableColumnWidth(label, foldsRoleIntoName),
+      width: override.width ?? getBuilderTableColumnWidth(label, foldsRoleIntoName),
+      cellType: override.cellType ?? getDefaultTableColumnCellType(fallbackId, label, key),
+      person: override.person,
     };
   });
 
@@ -912,33 +919,39 @@ function getBuilderTableColumnWidth(label: string, foldsRoleIntoName: boolean): 
   return "minmax(130px,1fr)";
 }
 
-function getSpecialTableColumnKey(fallbackId: string, label: string): string | undefined {
-  const normalized = label.trim().toLowerCase();
-
-  if (isCleanedWebinarTable(fallbackId) && normalized === "full name") return "fullName";
-  return undefined;
-}
-
-function getSpecialTableColumnWidth(fallbackId: string, label: string): string | undefined {
+function getTableColumnOverride(fallbackId: string, label: string): Partial<DataTableColumn> {
   const normalized = label.trim().toLowerCase();
 
   if (fallbackId === "raw-webinar-attendees") {
-    if (normalized === "name") return "110px";
-    if (normalized === "email") return "250px";
-    if (normalized === "company") return "minmax(120px,1fr)";
+    if (normalized === "name") return { width: "110px", cellType: "text" };
+    if (normalized === "email") return { width: "250px" };
+    if (normalized === "company") return { width: "minmax(120px,1fr)" };
   }
 
   if (isCleanedWebinarTable(fallbackId)) {
-    if (normalized === "full name") return "245px";
-    if (normalized === "work email") return "215px";
-    if (normalized === "company") return "minmax(110px,1fr)";
+    if (normalized === "full name") return { key: "fullName", width: "245px", cellType: "person" };
+    if (normalized === "work email") return { width: "215px" };
+    if (normalized === "company") return { width: "minmax(110px,1fr)" };
   }
 
+  return {};
+}
+
+function getDefaultTableColumnCellType(
+  fallbackId: string,
+  label: string,
+  key: string,
+): DataTableColumn["cellType"] {
+  const normalized = label.trim().toLowerCase();
+
+  if (fallbackId === "raw-webinar-attendees") return undefined;
+  if (key === "name" || key === "contact" || key === "fullName") return "person";
+  if (normalized === "name" || normalized === "prospect" || normalized === "contact" || normalized === "full name") return "person";
   return undefined;
 }
 
-function shouldRenderTablePeople(fallbackId: string): boolean {
-  return fallbackId !== "raw-webinar-attendees";
+function getTableFooterClearance(fallbackId: string): number | undefined {
+  return fallbackId === "website-visitors-sales" ? 88 : undefined;
 }
 
 function isCleanedWebinarTable(fallbackId: string): boolean {

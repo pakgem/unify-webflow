@@ -1559,8 +1559,8 @@ body {
   color: #050505;
 }
 
-.wa-data-table[data-data-table="website-visitors-sales"] {
-  padding-bottom: 88px;
+.wa-data-table[data-footer-clearance="true"] {
+  padding-bottom: var(--wa-data-table-footer-clearance, 0px);
 }
 
 .wa-data-table__header {
