@@ -9366,7 +9366,7 @@ class Cc {
   }
   play() {
     const e = this.historyPaused;
-    this.setHistoryPaused(!1), this.chat.scrollToLive(), this.playing = !0, this.updatePlayButton(), !(e && this.restoreDataTablePagesBeforePlay()) && this.activeTimeline?.play();
+    this.setHistoryPaused(!1), this.chat.scrollToLive(), this.playing = !0, this.updatePlayButton(), !(e && this.restoreDataTablePagesBeforePlay()) && this.resumeActiveTimeline();
   }
   pause() {
     this.setHistoryPaused(!1), this.playing = !1, this.activeTimeline?.pause(), this.autoAdvance?.kill(), this.updatePlayButton(), this.resumeRestoreTimeline?.kill(), this.resumeRestoreTimeline = null;
@@ -9377,7 +9377,7 @@ class Cc {
     if (!e.length) return !1;
     const t = m.timeline({
       onComplete: () => {
-        this.resumeRestoreTimeline = null, this.playing && this.activeTimeline?.play();
+        this.resumeRestoreTimeline = null, this.playing && this.resumeActiveTimeline();
       }
     });
     return e.forEach((a, i) => {
@@ -9509,7 +9509,7 @@ class Cc {
       overwrite: !0,
       onUpdate: () => this.updateProgress(),
       onComplete: () => {
-        a && this.activeTimeline?.play(), this.updatePlayButton();
+        a && this.resumeActiveTimeline(), this.updatePlayButton();
       }
     }), this.activeTimeline.pause(), this.updatePlayButton();
   }
@@ -9611,9 +9611,23 @@ class Cc {
   setActiveTimelineProgress(e) {
     this.activeTimeline && (this.activeTimeline.progress(la(e)).pause(), this.updateProgress());
   }
+  resumeActiveTimeline() {
+    const e = this.activeTimeline;
+    if (e) {
+      if (this.isTimelineAtEnd(e)) {
+        this.handleComplete();
+        return;
+      }
+      e.play();
+    }
+  }
+  isTimelineAtEnd(e) {
+    const t = e.duration();
+    return t <= 0 || e.time() >= t - 1e-3 || e.progress() >= 0.999999;
+  }
   endStoryProgressScrub(e) {
     const t = this.storyProgressScrub;
-    t && (t.removeListeners(), t.marker.removeAttribute("data-scrubbing"), this.storyProgressScrub = null, this.playing = e ? t.wasPlaying : this.playing, e && t.wasPlaying ? this.activeTimeline?.play() : this.activeTimeline?.pause(), this.updatePlayButton());
+    t && (t.removeListeners(), t.marker.removeAttribute("data-scrubbing"), this.storyProgressScrub = null, this.playing = e ? t.wasPlaying : this.playing, e && t.wasPlaying ? this.resumeActiveTimeline() : this.activeTimeline?.pause(), this.updatePlayButton());
   }
   getMarkerProgress(e, t, a = null) {
     if (a?.marker === e && a.trackHeight > 0)

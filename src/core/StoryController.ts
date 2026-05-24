@@ -87,7 +87,7 @@ export class StoryController implements ChatbotStoriesInstance {
 
     if (shouldRestoreDataTables && this.restoreDataTablePagesBeforePlay()) return;
 
-    this.activeTimeline?.play();
+    this.resumeActiveTimeline();
   }
 
   pause(): void {
@@ -110,7 +110,7 @@ export class StoryController implements ChatbotStoriesInstance {
     const timeline = gsap.timeline({
       onComplete: () => {
         this.resumeRestoreTimeline = null;
-        if (this.playing) this.activeTimeline?.play();
+        if (this.playing) this.resumeActiveTimeline();
       },
     });
 
@@ -374,7 +374,7 @@ export class StoryController implements ChatbotStoriesInstance {
       overwrite: true,
       onUpdate: () => this.updateProgress(),
       onComplete: () => {
-        if (wasPlaying) this.activeTimeline?.play();
+        if (wasPlaying) this.resumeActiveTimeline();
         this.updatePlayButton();
       },
     });
@@ -595,6 +595,25 @@ export class StoryController implements ChatbotStoriesInstance {
     this.updateProgress();
   }
 
+  private resumeActiveTimeline(): void {
+    const timeline = this.activeTimeline;
+
+    if (!timeline) return;
+
+    if (this.isTimelineAtEnd(timeline)) {
+      this.handleComplete();
+      return;
+    }
+
+    timeline.play();
+  }
+
+  private isTimelineAtEnd(timeline: gsap.core.Timeline): boolean {
+    const duration = timeline.duration();
+
+    return duration <= 0 || timeline.time() >= duration - 0.001 || timeline.progress() >= 0.999999;
+  }
+
   private endStoryProgressScrub(restorePlayback: boolean): void {
     const scrub = this.storyProgressScrub;
 
@@ -606,7 +625,7 @@ export class StoryController implements ChatbotStoriesInstance {
     this.playing = restorePlayback ? scrub.wasPlaying : this.playing;
 
     if (restorePlayback && scrub.wasPlaying) {
-      this.activeTimeline?.play();
+      this.resumeActiveTimeline();
     } else {
       this.activeTimeline?.pause();
     }
