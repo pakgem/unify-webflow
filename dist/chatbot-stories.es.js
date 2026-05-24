@@ -2436,13 +2436,13 @@ const Rs = [
   shadowBlur: 28,
   shadowAlpha: 0.18
 }, Se = {
-  rowStartHold: A(0.18),
-  serviceRevealDuration: A(0.16),
-  serviceLoadDuration: A(0.68),
-  serviceLoadVariance: A(0.14),
-  serviceSettleDuration: A(0.14),
-  rowCompleteHold: A(0.16),
-  rowOffsets: [0, A(0.08), A(0.14)]
+  rowStartHold: A(0.36),
+  serviceRevealDuration: A(0.32),
+  serviceLoadDuration: A(1.36),
+  serviceLoadVariance: A(0.28),
+  serviceSettleDuration: A(0.28),
+  rowCompleteHold: A(0.32),
+  rowOffsets: [0, A(0.16), A(0.28)]
 }, Ce = {
   tableRow: {
     from: { autoAlpha: 0, y: 7 },

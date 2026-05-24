@@ -510,13 +510,13 @@ const FILE_DROP_LANDING = {
   shadowAlpha: 0.18,
 };
 const ENRICHMENT_WATERFALL_MOTION = {
-  rowStartHold: motionDuration(0.18),
-  serviceRevealDuration: motionDuration(0.16),
-  serviceLoadDuration: motionDuration(0.68),
-  serviceLoadVariance: motionDuration(0.14),
-  serviceSettleDuration: motionDuration(0.14),
-  rowCompleteHold: motionDuration(0.16),
-  rowOffsets: [0, motionDuration(0.08), motionDuration(0.14)],
+  rowStartHold: motionDuration(0.36),
+  serviceRevealDuration: motionDuration(0.32),
+  serviceLoadDuration: motionDuration(1.36),
+  serviceLoadVariance: motionDuration(0.28),
+  serviceSettleDuration: motionDuration(0.28),
+  rowCompleteHold: motionDuration(0.32),
+  rowOffsets: [0, motionDuration(0.16), motionDuration(0.28)],
 };
 
 const COMPONENT_CHILD_REVEAL = {
