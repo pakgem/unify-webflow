@@ -3342,6 +3342,7 @@ body {
     "thumb detail progress";
   align-items: center;
   gap: 5px 14px;
+  margin-top: 8px;
   padding: 0;
   color: #5f5b55;
   background: transparent;
