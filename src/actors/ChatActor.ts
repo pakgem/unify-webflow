@@ -102,6 +102,8 @@ type DataTablePageTransitionState = {
   canSwitch: boolean;
   committed: boolean;
   table: HTMLElement | null;
+  initialPage: number | null;
+  initialRangeText: string | null;
   currentRows: HTMLElement[];
   targetRows: HTMLElement[];
   buttons: HTMLElement[];
@@ -745,8 +747,16 @@ export class ChatActor {
     if (!tableId || !Number.isFinite(page)) return;
 
     event.preventDefault();
+    const initialPage = Number(table.dataset.activePage);
+    const initialRangeText = table.querySelector<HTMLElement>(DATA_TABLE_PAGE_RANGE_SELECTOR)?.textContent ?? null;
+
+    this.updateDataTablePageControlsForTable(table, page, pageButton.dataset.pageRange ?? null);
     this.activeTablePageTimelines.get(tableId)?.kill();
-    const timeline = this.dataTablePage(tableId, page, { updateExpected: false });
+    const timeline = this.dataTablePage(tableId, page, {
+      updateExpected: false,
+      initialPage,
+      initialRangeText,
+    });
 
     this.activeTablePageTimelines.set(tableId, timeline);
     timeline.eventCallback("onComplete", () => {
@@ -1484,7 +1494,11 @@ export class ChatActor {
     return fallback === "bottom" ? this.getThreadBottomScrollTarget() : this.thread.scrollTop;
   }
 
-  dataTablePage(tableId: string, page: number, options: { updateExpected?: boolean } = {}): gsap.core.Timeline {
+  dataTablePage(
+    tableId: string,
+    page: number,
+    options: { updateExpected?: boolean; initialPage?: number | null; initialRangeText?: string | null } = {},
+  ): gsap.core.Timeline {
     const tl = gsap.timeline();
     const progress = { value: 0 };
     const updateExpected = options.updateExpected ?? true;
@@ -1492,6 +1506,8 @@ export class ChatActor {
       canSwitch: false,
       committed: false,
       table: null,
+      initialPage: null,
+      initialRangeText: null,
       currentRows: [],
       targetRows: [],
       buttons: [],
@@ -1506,11 +1522,13 @@ export class ChatActor {
       onStart: () => {
         state.table = this.findDataTable(tableId);
         if (updateExpected) this.expectedDataTablePages.set(tableId, page);
+        state.initialPage = options.initialPage ?? Number(state.table?.dataset.activePage);
         state.currentRows = state.table ? this.getVisibleDataTableRows(state.table) : [];
         state.targetRows = state.table ? this.queryElements(state.table, `.wa-data-table__row[data-page="${page}"]`) : [];
         state.buttons = state.table ? this.queryElements(state.table, DATA_TABLE_PAGE_BUTTON_SELECTOR) : [];
         state.targetButton = state.buttons.find((button) => Number(button.dataset.tablePageButton) === page);
         state.range = state.table?.querySelector<HTMLElement>(DATA_TABLE_PAGE_RANGE_SELECTOR) ?? null;
+        state.initialRangeText = options.initialRangeText ?? state.range?.textContent ?? null;
         state.canSwitch = Boolean(
           state.table &&
           state.targetRows.length &&
@@ -1520,6 +1538,7 @@ export class ChatActor {
           progress.value = 0;
           gsap.set(state.currentRows, { autoAlpha: 1, y: 0 });
           state.cellSwaps = this.prepareDataTablePageCellSwaps(state.currentRows, state.targetRows);
+          this.updateDataTablePageControls(state, page);
           this.setMotionHints(this.getDataTablePageMotionTargets(state));
         }
       },
@@ -1643,9 +1662,7 @@ export class ChatActor {
       row.style.display = "grid";
     });
     state.buttons.forEach((button) => {
-      const active = Number(button.dataset.tablePageButton) === page;
-      button.dataset.active = String(active);
-      button.setAttribute("aria-current", active ? "page" : "false");
+      this.updateDataTablePageButton(button, page);
     });
     if (state.range && state.targetButton?.dataset.pageRange) {
       state.range.textContent = state.targetButton.dataset.pageRange;
@@ -1669,6 +1686,9 @@ export class ChatActor {
     });
     if (!state.committed && state.canSwitch) {
       gsap.set(state.currentRows, { autoAlpha: 1, y: 0 });
+      if (state.initialPage !== null && Number.isFinite(state.initialPage)) {
+        this.updateDataTablePageControls(state, state.initialPage, state.initialRangeText);
+      }
     }
     state.cellSwaps = [];
   }
@@ -1679,6 +1699,42 @@ export class ChatActor {
 
   private getElementChildren(element: HTMLElement): HTMLElement[] {
     return Array.from(element.children).filter((child): child is HTMLElement => child instanceof HTMLElement);
+  }
+
+  private updateDataTablePageControls(
+    state: DataTablePageTransitionState,
+    page: number,
+    rangeText = state.targetButton?.dataset.pageRange ?? null,
+  ): void {
+    this.updateDataTablePageControlsForElements(state.buttons, state.range, page, rangeText);
+  }
+
+  private updateDataTablePageControlsForTable(table: HTMLElement, page: number, rangeText: string | null): void {
+    this.updateDataTablePageControlsForElements(
+      this.queryElements(table, DATA_TABLE_PAGE_BUTTON_SELECTOR),
+      table.querySelector<HTMLElement>(DATA_TABLE_PAGE_RANGE_SELECTOR),
+      page,
+      rangeText,
+    );
+  }
+
+  private updateDataTablePageControlsForElements(
+    buttons: HTMLElement[],
+    range: HTMLElement | null,
+    page: number,
+    rangeText: string | null,
+  ): void {
+    buttons.forEach((button) => {
+      this.updateDataTablePageButton(button, page);
+    });
+    if (range && rangeText !== null) range.textContent = rangeText;
+  }
+
+  private updateDataTablePageButton(button: HTMLElement, page: number): void {
+    const active = Number(button.dataset.tablePageButton) === page;
+
+    button.dataset.active = String(active);
+    button.setAttribute("aria-current", active ? "page" : "false");
   }
 
   getDataTablePageRestores(): DataTablePageRestore[] {

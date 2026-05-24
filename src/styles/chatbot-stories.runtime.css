@@ -2019,6 +2019,15 @@ body {
   white-space: nowrap;
 }
 
+.wa-data-table__cell[data-column-key="signal"] .wa-data-table__cell-text {
+  overflow-wrap: normal;
+  white-space: nowrap;
+}
+
+.wa-data-table__cell[data-cell-swap-active="true"][data-column-key] {
+  overflow: hidden;
+}
+
 .wa-data-table[data-table-variant="enriched"] .wa-data-table__cell[data-column-key="email"],
 .wa-data-table[data-table-variant="enriched"] .wa-data-table__cell[data-column-key="number"],
 .wa-data-table[data-table-variant="enriched"] .wa-data-table__cell[data-column-key="work-email"],
