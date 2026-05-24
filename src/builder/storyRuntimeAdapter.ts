@@ -838,7 +838,7 @@ function getRawCsvTableShape(labels: string[]): BuilderTableShape {
 function getBuilderTableColumnWidth(label: string, foldsRoleIntoName: boolean): string | undefined {
   const normalized = label.toLowerCase();
 
-  if (normalized === "email") return "max-content";
+  if (normalized === "email" || normalized === "work email") return "max-content";
   if (!foldsRoleIntoName) return undefined;
 
   if (normalized.includes("connector") || normalized.includes("connection")) return "minmax(170px,0.78fr)";

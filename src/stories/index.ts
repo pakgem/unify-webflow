@@ -1237,63 +1237,63 @@ const CSV_CLEAN_TABLE = {
   scrollAnchor: "previous-message",
   columns: [
     { key: "fullName", label: "Full name", width: "1.25fr" },
-    { key: "email", label: "Email", width: "max-content" },
+    { key: "work-email", label: "Work email", width: "max-content" },
     { key: "company", label: "Company", width: "1fr" },
-    { key: "status", label: "Status", width: "0.85fr" },
+    { key: "title", label: "Title", width: "1.1fr" },
   ],
   rows: [
     {
       id: "maya-rodriguez",
       values: {
         fullName: "Maya Rodriguez",
-        email: "maya.rodriguez@northstar.ai",
+        "work-email": "maya.rodriguez@northstar.ai",
         company: "Northstar AI",
-        status: "Normalized",
+        title: "VP Marketing",
       },
     },
     {
       id: "ethan-cho",
       values: {
         fullName: "Ethan Cho",
-        email: "ethan.cho@clearbit.dev",
+        "work-email": "ethan.cho@clearbit.com",
         company: "Clearbit",
-        status: "Normalized",
+        title: "Head of Demand Gen",
       },
     },
     {
       id: "priya-shah",
       values: {
         fullName: "Priya Shah",
-        email: "priya.shah@orbitgrid.com",
+        "work-email": "priya.shah@orbitgrid.com",
         company: "OrbitGrid",
-        status: "Deduped",
+        title: "Head of Growth",
       },
     },
     {
       id: "lucas-meyer",
       values: {
         fullName: "Lucas Meyer",
-        email: "lucas.meyer@ramp.com",
+        "work-email": "lucas.meyer@ramp.com",
         company: "Ramp",
-        status: "Fixed case",
+        title: "Revenue Operations",
       },
     },
     {
       id: "nina-kapoor",
       values: {
         fullName: "Nina Kapoor",
-        email: "nina.kapoor@mercury.com",
+        "work-email": "nina.kapoor@mercury.com",
         company: "Mercury",
-        status: "Filled name",
+        title: "Sales Director",
       },
     },
     {
       id: "sam-hollis",
       values: {
         fullName: "Sam Hollis",
-        email: "sam.hollis@apollo.io",
+        "work-email": "sam.hollis@apollo.io",
         company: "Apollo",
-        status: "Normalized",
+        title: "VP Sales",
       },
     },
   ],
