@@ -1240,8 +1240,7 @@ const CSV_CLEAN_TABLE = {
   columns: [
     { key: "fullName", label: "Full name", width: "245px" },
     { key: "work-email", label: "Work email", width: "215px" },
-    { key: "company", label: "Company", width: "110px" },
-    { key: "title", label: "Title", width: "minmax(160px,1fr)" },
+    { key: "company", label: "Company", width: "minmax(110px,1fr)" },
   ],
   rows: [
     {
@@ -1250,7 +1249,7 @@ const CSV_CLEAN_TABLE = {
         fullName: "Maya Rodriguez",
         "work-email": "maya.rodriguez@northstar.ai",
         company: "Northstar AI",
-        title: "VP Marketing",
+        prospectDetail: "VP Marketing",
       },
     },
     {
@@ -1259,7 +1258,7 @@ const CSV_CLEAN_TABLE = {
         fullName: "Ethan Cho",
         "work-email": "ethan.cho@clearbit.com",
         company: "Clearbit",
-        title: "Head of Demand Gen",
+        prospectDetail: "Head of Demand Gen",
       },
     },
     {
@@ -1268,7 +1267,7 @@ const CSV_CLEAN_TABLE = {
         fullName: "Priya Shah",
         "work-email": "priya.shah@orbitgrid.com",
         company: "OrbitGrid",
-        title: "Head of Growth",
+        prospectDetail: "Head of Growth",
       },
     },
     {
@@ -1277,7 +1276,7 @@ const CSV_CLEAN_TABLE = {
         fullName: "Lucas Meyer",
         "work-email": "lucas.meyer@ramp.com",
         company: "Ramp",
-        title: "Revenue Operations",
+        prospectDetail: "Revenue Operations",
       },
     },
     {
@@ -1286,7 +1285,7 @@ const CSV_CLEAN_TABLE = {
         fullName: "Nina Kapoor",
         "work-email": "nina.kapoor@mercury.com",
         company: "Mercury",
-        title: "Sales Director",
+        prospectDetail: "Sales Director",
       },
     },
     {
@@ -1295,7 +1294,7 @@ const CSV_CLEAN_TABLE = {
         fullName: "Sam Hollis",
         "work-email": "sam.hollis@apollo.io",
         company: "Apollo",
-        title: "VP Sales",
+        prospectDetail: "VP Sales",
       },
     },
   ],

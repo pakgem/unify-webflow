@@ -820,7 +820,17 @@ function getBuilderTableShape(component: BuilderTableComponent, fallbackId: stri
     ? labels.findIndex((label, index) => index > nameIndex && /^role\b/i.test(label.trim()))
     : -1;
   const foldsRoleIntoName = nameIndex >= 0 && roleIndex >= 0;
-  const sourceIndexes = labels.map((_label, index) => index).filter((index) => index !== roleIndex);
+  const cleanedDetailIndex = isCleanedWebinarTable(fallbackId)
+    ? labels.findIndex((label) => label.trim().toLowerCase() === "title")
+    : -1;
+  const foldedDetailIndex = foldsRoleIntoName
+    ? roleIndex
+    : cleanedDetailIndex >= 0
+      ? cleanedDetailIndex
+      : undefined;
+  const sourceIndexes = labels
+    .map((_label, index) => index)
+    .filter((index) => index !== roleIndex && index !== cleanedDetailIndex);
   const columns = sourceIndexes.map((sourceIndex) => {
     const label = labels[sourceIndex] || `Column ${sourceIndex + 1}`;
 
@@ -852,7 +862,7 @@ function getBuilderTableShape(component: BuilderTableComponent, fallbackId: stri
   return {
     columns,
     sourceIndexes,
-    foldedRoleIndex: foldsRoleIntoName ? roleIndex : undefined,
+    foldedRoleIndex: foldedDetailIndex,
     mutualConnectionKey: columns.some((column) => column.key === "mutualConnection") ? "mutualConnection" : undefined,
     variant: columns.some((column) => column.key === "mutualConnection") ? "connections" : undefined,
   };
@@ -889,8 +899,7 @@ function getSpecialTableColumnWidth(fallbackId: string, label: string): string |
   if (isCleanedWebinarTable(fallbackId)) {
     if (normalized === "full name") return "245px";
     if (normalized === "work email") return "215px";
-    if (normalized === "company") return "110px";
-    if (normalized === "title") return "minmax(160px,1fr)";
+    if (normalized === "company") return "minmax(110px,1fr)";
   }
 
   return undefined;
