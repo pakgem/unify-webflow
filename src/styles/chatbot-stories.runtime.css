@@ -1656,7 +1656,6 @@ body {
 .wa-data-table[data-data-table="raw-webinar-attendees"] .wa-data-table__cell,
 .wa-data-table[data-data-table="clean-webinar-attendees"] .wa-data-table__cell,
 .wa-data-table[data-data-table="cleaned-webinar-attendees"] .wa-data-table__cell {
-  align-items: flex-start;
   justify-content: flex-start;
   text-align: left;
 }
@@ -1744,6 +1743,8 @@ body {
 
 .wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="name"],
 .wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="contact"],
+.wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="rawName"],
+.wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="fullName"],
 .wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="mutualConnection"] {
   padding-left: 8px;
 }
@@ -1987,6 +1988,8 @@ body {
 
 .wa-data-table__cell[data-column-key="name"],
 .wa-data-table__cell[data-column-key="contact"],
+.wa-data-table__cell[data-column-key="rawName"],
+.wa-data-table__cell[data-column-key="fullName"],
 .wa-data-table__cell[data-column-key="mutualConnection"] {
   overflow: visible;
   color: #050505;
@@ -5150,6 +5153,8 @@ body {
 
   .wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="name"],
   .wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="contact"],
+  .wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="rawName"],
+  .wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="fullName"],
   .wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="mutualConnection"] {
     padding-left: 4px;
   }

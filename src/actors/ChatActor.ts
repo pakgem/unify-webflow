@@ -4030,7 +4030,7 @@ export class ChatActor {
 
       if (isHeader) {
         cell.textContent = column.label;
-      } else if (column.key === "name" || column.key === "contact") {
+      } else if (this.isPersonNameColumn(column.key)) {
         cell.append(this.createDataTablePerson(values, values[column.key] ?? ""));
       } else if (column.key === "mutualConnection") {
         cell.append(this.createDataTablePerson(values, values[column.key] ?? "", {
@@ -4065,6 +4065,10 @@ export class ChatActor {
     }
 
     return row;
+  }
+
+  private isPersonNameColumn(columnKey: string): boolean {
+    return columnKey === "name" || columnKey === "contact" || columnKey === "rawName" || columnKey === "fullName";
   }
 
   private createDataTableAddIcon(): SVGSVGElement {
