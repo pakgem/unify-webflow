@@ -710,7 +710,7 @@ function toDataTable(component: BuilderTableComponent, fallbackId: string): Data
     title: component.title,
     eyebrow: component.eyebrow,
     count: component.count,
-    variant: isCsvCleanupTableId(fallbackId) ? "csv" : shape.variant ?? inferTableVariant(component),
+    variant: shape.variant ?? inferTableVariant(component),
     columns: shape.columns,
     rows: pages[0]?.rows ?? rows,
     actions: component.actions?.map(toDataTableAction),
@@ -779,12 +779,6 @@ function normalizeConnectorLabel(value: string): string {
   if (!parsed.name || !parsed.title) return value;
 
   return `${parsed.name} (${parsed.title})${parsed.context ? ` — ${parsed.context}` : ""}`;
-}
-
-function isCsvCleanupTableId(tableId: string): boolean {
-  return tableId === "raw-webinar-attendees" ||
-    tableId === "clean-webinar-attendees" ||
-    tableId === "cleaned-webinar-attendees";
 }
 
 function inferPageSizeFromRanges(ranges: string[] | undefined): number | null {

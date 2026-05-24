@@ -1330,7 +1330,7 @@ export class ChatActor {
   }
 
   dataTable(config: DataTableConfig): gsap.core.Timeline {
-    const table = this.isCsvDataTable(config) ? this.createCsvDataTable(config) : this.createDataTable(config);
+    const table = this.createDataTable(config);
     const scrollAnchor = config.scrollAnchor === "previous-message" ? this.getLastMessageBody() : null;
 
     return this.revealComponentItems("table", table, ".wa-data-table__row", COMPONENT_CHILD_REVEAL.tableRow, scrollAnchor);
@@ -4036,110 +4036,6 @@ export class ChatActor {
     return table;
   }
 
-  private createCsvDataTable(config: DataTableConfig): HTMLElement {
-    const table = document.createElement("article");
-    const pages = this.getDataTablePages(config);
-    const activePage = config.pagination?.activePage ?? pages[0]?.page ?? 1;
-
-    table.className = "wa-csv-table";
-    table.dataset.dataTable = config.id;
-    table.dataset.tableVariant = "csv";
-    table.dataset.columnCount = String(config.columns.length);
-    table.dataset.activePage = String(activePage);
-    this.expectedDataTablePages.set(config.id, activePage);
-    table.style.setProperty(
-      "--wa-csv-table-columns",
-      config.columns.map((column) => this.getCsvTableColumnWidth(column)).join(" "),
-    );
-
-    const grid = document.createElement("div");
-    grid.className = "wa-csv-table__grid";
-    grid.append(this.createCsvDataTableRow("header", config.columns, {}, config.id));
-
-    for (const page of pages) {
-      for (const row of page.rows) {
-        const rowEl = this.createCsvDataTableRow(row.id, config.columns, row.values, config.id, page.page);
-
-        if (page.page !== activePage) {
-          rowEl.style.display = "none";
-          gsap.set(rowEl, { autoAlpha: 0, y: 6 });
-        }
-
-        grid.append(rowEl);
-      }
-    }
-
-    table.append(grid);
-
-    if (config.pagination) {
-      table.append(this.createDataTableFooter(config, pages, activePage));
-    }
-
-    return table;
-  }
-
-  private createCsvDataTableRow(
-    rowId: string,
-    columns: DataTableConfig["columns"],
-    values: Record<string, string>,
-    tableId: string,
-    page?: number,
-  ): HTMLElement {
-    const row = document.createElement("div");
-    const isHeader = rowId === "header";
-
-    row.className = "wa-csv-table__row wa-data-table__row";
-    row.dataset.tableRow = rowId;
-    if (isHeader) row.dataset.header = "true";
-    if (!isHeader && page !== undefined) row.dataset.page = String(page);
-
-    for (const column of columns) {
-      const cell = document.createElement(isHeader ? "strong" : "span");
-
-      cell.className = "wa-csv-table__cell";
-      cell.dataset.columnKey = column.key;
-
-      const text = document.createElement("span");
-
-      text.className = "wa-csv-table__text";
-      text.textContent = isHeader ? column.label : values[column.key] || "-";
-      cell.append(text);
-      if (!isHeader && !values[column.key]) cell.dataset.empty = "true";
-      row.append(cell);
-    }
-
-    if (isHeader) {
-      const add = document.createElement("button");
-
-      add.className = "wa-data-table__add wa-csv-table__add";
-      add.type = "button";
-      add.tabIndex = -1;
-      add.setAttribute("aria-label", `Add row to ${tableId}`);
-      add.append(this.createDataTableAddIcon());
-      row.append(add);
-    }
-
-    return row;
-  }
-
-  private getCsvTableColumnWidth(column: DataTableConfig["columns"][number]): string {
-    const key = column.key.toLowerCase();
-    const label = column.label.toLowerCase();
-    const text = `${key} ${label}`;
-
-    if (text.includes("email")) return "minmax(250px, 1.35fr)";
-    if (text.includes("company")) return "minmax(140px, 0.85fr)";
-    if (text.includes("title")) return "minmax(160px, 1fr)";
-    return "minmax(150px, 1fr)";
-  }
-
-  private isCsvDataTable(config: DataTableConfig): boolean {
-    return config.variant === "csv" ||
-      config.id === "raw-webinar-attendees" ||
-      config.id === "clean-webinar-attendees" ||
-      config.id === "cleaned-webinar-attendees";
-  }
-
   private createDataTableRow(
     rowId: string,
     columns: DataTableConfig["columns"],
@@ -4189,16 +4085,21 @@ export class ChatActor {
     }
 
     if (isHeader) {
-      const add = document.createElement("button");
-      add.className = "wa-data-table__add";
-      add.type = "button";
-      add.tabIndex = -1;
-      add.setAttribute("aria-label", `Add row to ${tableId}`);
-      add.append(this.createDataTableAddIcon());
-      row.append(add);
+      row.append(this.createDataTableAddButton(tableId));
     }
 
     return row;
+  }
+
+  private createDataTableAddButton(tableId: string, className = ""): HTMLButtonElement {
+    const add = document.createElement("button");
+
+    add.className = `wa-data-table__add${className ? ` ${className}` : ""}`;
+    add.type = "button";
+    add.tabIndex = -1;
+    add.setAttribute("aria-label", `Add row to ${tableId}`);
+    add.append(this.createDataTableAddIcon());
+    return add;
   }
 
   private isPersonNameColumn(columnKey: string): boolean {

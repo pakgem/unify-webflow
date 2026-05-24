@@ -216,7 +216,7 @@ export type DataTableConfig = {
   title: string;
   eyebrow?: string;
   count?: string;
-  variant?: "default" | "filtered" | "enriched" | "connections" | "csv";
+  variant?: "default" | "filtered" | "enriched" | "connections";
   scrollAlign?: "equal-inset";
   columns: Array<{
     key: string;
