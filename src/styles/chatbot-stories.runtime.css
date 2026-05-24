@@ -2405,7 +2405,7 @@ body {
   gap: 7px;
   max-width: none;
   min-height: 26px;
-  padding: 0 8px;
+  padding: 0 8px 0 6px;
   overflow: hidden;
   border: 1px solid #e5ded5;
   border-radius: 5px;
@@ -2496,11 +2496,16 @@ body {
   color: #68635c;
   border-color: transparent;
   background:
-    linear-gradient(#fffffa, #fffffa) padding-box,
+    linear-gradient(#fbfaf2, #fbfaf2) padding-box,
     linear-gradient(108deg, #2f2e2a 0%, #2f2e2a 35%, #c9c2b8 49%, #2f2e2a 64%, #2f2e2a 100%) border-box;
   background-size: 100% 100%, 220% 100%;
   animation: wa-waterfall-service-poll 900ms linear infinite;
   box-shadow: 0 1px 3px rgba(17, 17, 15, 0.12);
+}
+
+.wa-waterfall-chip[data-step-state="complete"],
+.wa-waterfall-chip[data-step-state="failed"] {
+  background: #fbfaf2;
 }
 
 .wa-waterfall-chip[data-step-state="complete"] {
@@ -5283,7 +5288,7 @@ body {
 
   .wa-waterfall-chip {
     min-height: 26px;
-    padding: 0 8px;
+    padding: 0 8px 0 6px;
     gap: 5px;
     font-size: 11px;
   }
