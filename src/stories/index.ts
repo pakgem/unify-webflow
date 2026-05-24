@@ -1215,9 +1215,9 @@ const CSV_RAW_TABLE = {
   count: "54 records",
   renderPeople: false,
   columns: [
-    { key: "name", label: "Name" },
-    { key: "email", label: "Email" },
-    { key: "company", label: "Company" },
+    { key: "name", label: "Name", width: "110px" },
+    { key: "email", label: "Email", width: "250px" },
+    { key: "company", label: "Company", width: "minmax(120px,1fr)" },
   ],
   rows: CSV_RAW_ROWS,
   pagination: {
@@ -1237,18 +1237,17 @@ const CSV_CLEAN_TABLE = {
   eyebrow: "CSV cleanup",
   count: "54 records",
   scrollAnchor: "previous-message",
-  renderPeople: false,
   columns: [
-    { key: "full-name", label: "Full name" },
-    { key: "work-email", label: "Work email" },
-    { key: "company", label: "Company" },
-    { key: "title", label: "Title" },
+    { key: "fullName", label: "Full name", width: "245px" },
+    { key: "work-email", label: "Work email", width: "215px" },
+    { key: "company", label: "Company", width: "110px" },
+    { key: "title", label: "Title", width: "minmax(160px,1fr)" },
   ],
   rows: [
     {
       id: "maya-rodriguez",
       values: {
-        "full-name": "Maya Rodriguez",
+        fullName: "Maya Rodriguez",
         "work-email": "maya.rodriguez@northstar.ai",
         company: "Northstar AI",
         title: "VP Marketing",
@@ -1257,7 +1256,7 @@ const CSV_CLEAN_TABLE = {
     {
       id: "ethan-cho",
       values: {
-        "full-name": "Ethan Cho",
+        fullName: "Ethan Cho",
         "work-email": "ethan.cho@clearbit.com",
         company: "Clearbit",
         title: "Head of Demand Gen",
@@ -1266,7 +1265,7 @@ const CSV_CLEAN_TABLE = {
     {
       id: "priya-shah",
       values: {
-        "full-name": "Priya Shah",
+        fullName: "Priya Shah",
         "work-email": "priya.shah@orbitgrid.com",
         company: "OrbitGrid",
         title: "Head of Growth",
@@ -1275,7 +1274,7 @@ const CSV_CLEAN_TABLE = {
     {
       id: "lucas-meyer",
       values: {
-        "full-name": "Lucas Meyer",
+        fullName: "Lucas Meyer",
         "work-email": "lucas.meyer@ramp.com",
         company: "Ramp",
         title: "Revenue Operations",
@@ -1284,7 +1283,7 @@ const CSV_CLEAN_TABLE = {
     {
       id: "nina-kapoor",
       values: {
-        "full-name": "Nina Kapoor",
+        fullName: "Nina Kapoor",
         "work-email": "nina.kapoor@mercury.com",
         company: "Mercury",
         title: "Sales Director",
@@ -1293,7 +1292,7 @@ const CSV_CLEAN_TABLE = {
     {
       id: "sam-hollis",
       values: {
-        "full-name": "Sam Hollis",
+        fullName: "Sam Hollis",
         "work-email": "sam.hollis@apollo.io",
         company: "Apollo",
         title: "VP Sales",

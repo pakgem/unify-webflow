@@ -815,7 +815,6 @@ function shouldEqualInsetRevealTable(
 
 function getBuilderTableShape(component: BuilderTableComponent, fallbackId: string): BuilderTableShape {
   const labels = component.columns;
-  const useDefaultColumnWidths = shouldUseDefaultColumnWidths(fallbackId);
   const nameIndex = labels.findIndex((label) => label.trim().toLowerCase() === "name");
   const roleIndex = nameIndex >= 0
     ? labels.findIndex((label, index) => index > nameIndex && /^role\b/i.test(label.trim()))
@@ -841,10 +840,12 @@ function getBuilderTableShape(component: BuilderTableComponent, fallbackId: stri
       };
     }
 
+    const specialKey = getSpecialTableColumnKey(fallbackId, label);
+
     return {
-      key: slugId(label || `column-${sourceIndex + 1}`),
+      key: specialKey ?? slugId(label || `column-${sourceIndex + 1}`),
       label,
-      width: useDefaultColumnWidths ? undefined : getBuilderTableColumnWidth(label, foldsRoleIntoName),
+      width: getSpecialTableColumnWidth(fallbackId, label) ?? getBuilderTableColumnWidth(label, foldsRoleIntoName),
     };
   });
 
@@ -869,12 +870,38 @@ function getBuilderTableColumnWidth(label: string, foldsRoleIntoName: boolean): 
   return "minmax(130px,1fr)";
 }
 
-function shouldUseDefaultColumnWidths(fallbackId: string): boolean {
-  return fallbackId === "raw-webinar-attendees" || fallbackId === "cleaned-webinar-attendees";
+function getSpecialTableColumnKey(fallbackId: string, label: string): string | undefined {
+  const normalized = label.trim().toLowerCase();
+
+  if (isCleanedWebinarTable(fallbackId) && normalized === "full name") return "fullName";
+  return undefined;
+}
+
+function getSpecialTableColumnWidth(fallbackId: string, label: string): string | undefined {
+  const normalized = label.trim().toLowerCase();
+
+  if (fallbackId === "raw-webinar-attendees") {
+    if (normalized === "name") return "110px";
+    if (normalized === "email") return "250px";
+    if (normalized === "company") return "minmax(120px,1fr)";
+  }
+
+  if (isCleanedWebinarTable(fallbackId)) {
+    if (normalized === "full name") return "245px";
+    if (normalized === "work email") return "215px";
+    if (normalized === "company") return "110px";
+    if (normalized === "title") return "minmax(160px,1fr)";
+  }
+
+  return undefined;
 }
 
 function shouldRenderTablePeople(fallbackId: string): boolean {
-  return fallbackId !== "raw-webinar-attendees" && fallbackId !== "cleaned-webinar-attendees";
+  return fallbackId !== "raw-webinar-attendees";
+}
+
+function isCleanedWebinarTable(fallbackId: string): boolean {
+  return fallbackId === "cleaned-webinar-attendees" || fallbackId === "clean-webinar-attendees";
 }
 
 function toDataTableRow(
