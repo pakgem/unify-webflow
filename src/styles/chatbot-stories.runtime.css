@@ -3862,6 +3862,10 @@ body {
   display: none;
 }
 
+.wa-sequence-people[data-sequence-centering="true"] {
+  scroll-snap-type: none;
+}
+
 .wa-sequence-person-card {
   position: relative;
   z-index: 1;

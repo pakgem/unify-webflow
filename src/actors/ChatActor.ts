@@ -351,14 +351,15 @@ const SEQUENCE_THINKING_LOGO = {
    -------------------------------------------------------------------------- */
 
 const SEQUENCE_PERSON_SWITCH = {
-  exitDuration: motionDuration(0.07),
-  enterDuration: motionDuration(0.17),
-  railCenterDuration: motionDuration(0.26),
-  exitY: -2,
-  enterY: 4,
-  stagger: 0.006,
-  exitEase: "power2.in",
+  exitDuration: motionDuration(0.08),
+  enterDuration: motionDuration(0.2),
+  railCenterDuration: motionDuration(0.34),
+  exitY: -1,
+  enterY: 3,
+  stagger: 0.004,
+  exitEase: "power1.out",
   enterEase: "power3.out",
+  railCenterEase: "power3.out",
 };
 
 /* --------------------------------------------------------------------------
@@ -685,6 +686,7 @@ export class ChatActor {
   private transferSignupLogoOnNextThinking = false;
   private activeTablePageTimelines = new Map<string, gsap.core.Timeline>();
   private expectedDataTablePages = new Map<string, number>();
+  private activeSequencePersonTimelines = new Map<string, gsap.core.Timeline>();
 
   private readonly handleDataTableControlPointerOver = (event: PointerEvent): void => {
     const control = this.findDataTableControl(event.target);
@@ -762,6 +764,7 @@ export class ChatActor {
     this.composerText.textContent = "";
     gsap.killTweensOf([this.composer, this.composerText, ...this.composerContents, this.thread]);
     this.clearDataTableState();
+    this.clearSequencePersonTimelines();
     this.transferSignupLogoOnNextThinking = false;
     this.signupEmail.textContent = "";
     this.setSignupEmailFilled(false);
@@ -795,6 +798,7 @@ export class ChatActor {
     this.chatShell.removeEventListener("pointerout", this.handleDataTableControlPointerOut);
     this.chatShell.removeEventListener("click", this.handleDataTableControlClick);
     this.clearDataTableState();
+    this.clearSequencePersonTimelines();
   }
 
   prepareStoryStart(): void {
@@ -2301,6 +2305,28 @@ export class ChatActor {
       });
 
     return tl;
+  }
+
+  private playSequencePersonInteraction(sequenceId: string, index: number): void {
+    this.activeSequencePersonTimelines.get(sequenceId)?.kill();
+
+    const timeline = this.sequencePerson(sequenceId, index);
+    const cleanup = () => {
+      if (this.activeSequencePersonTimelines.get(sequenceId) === timeline) {
+        this.activeSequencePersonTimelines.delete(sequenceId);
+      }
+    };
+
+    if (timeline.duration() <= 0) return;
+
+    this.activeSequencePersonTimelines.set(sequenceId, timeline);
+    timeline.eventCallback("onComplete", cleanup);
+    timeline.eventCallback("onInterrupt", cleanup);
+  }
+
+  private clearSequencePersonTimelines(): void {
+    this.activeSequencePersonTimelines.forEach((timeline) => timeline.kill());
+    this.activeSequencePersonTimelines.clear();
   }
 
   sequenceKickoff(sequenceId: string): gsap.core.Timeline {
@@ -5625,9 +5651,7 @@ export class ChatActor {
         person.dataset.active = String(index === initialIndex);
         person.setAttribute("aria-pressed", String(index === initialIndex));
         person.setAttribute("aria-label", `Preview sequence for ${sequence.name}`);
-        person.addEventListener("click", () => {
-          this.sequencePerson(config.id, index).play();
-        });
+        person.addEventListener("click", () => this.playSequencePersonInteraction(config.id, index));
 
         avatarWrap.className = "wa-sequence-person-card__avatar-wrap";
         avatar.className = "wa-sequence-person-card__avatar";
@@ -5949,16 +5973,26 @@ export class ChatActor {
 
     const target = this.getSequencePersonRailScrollTarget(rail, card);
 
+    gsap.killTweensOf(rail, "scrollLeft");
+
     if (this.prefersReducedMotion || Math.abs(rail.scrollLeft - target) < 1) {
       rail.scrollLeft = target;
+      delete rail.dataset.sequenceCentering;
       return;
     }
 
+    rail.dataset.sequenceCentering = "true";
     gsap.to(rail, {
       scrollLeft: target,
       duration: SEQUENCE_PERSON_SWITCH.railCenterDuration,
-      ease: "power2.out",
+      ease: SEQUENCE_PERSON_SWITCH.railCenterEase,
       overwrite: "auto",
+      onComplete: () => {
+        delete rail.dataset.sequenceCentering;
+      },
+      onInterrupt: () => {
+        delete rail.dataset.sequenceCentering;
+      },
     });
   }
 
