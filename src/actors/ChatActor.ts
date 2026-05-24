@@ -496,9 +496,9 @@ const DATA_TABLE_ACTION_SELECTOR = "[data-table-action]";
 const DATA_TABLE_PAGE_BUTTON_SELECTOR = "[data-table-page-button]";
 const DATA_TABLE_PAGE_RANGE_SELECTOR = "[data-table-page-range]";
 const DATA_TABLE_PAGE_CELL_MOTION = {
-  duration: motionDuration(0.15),
-  stagger: motionDuration(0.005),
-  totalDuration: motionDuration(0.43),
+  duration: motionDuration(0.14),
+  maxStagger: motionDuration(0.016),
+  totalDuration: motionDuration(0.82),
   incomingY: -7,
   outgoingY: 7,
 };
@@ -1584,10 +1584,11 @@ export class ChatActor {
 
   private renderDataTablePageCellSwaps(state: DataTablePageTransitionState, progress: number): void {
     const elapsed = progress * DATA_TABLE_PAGE_CELL_MOTION.totalDuration;
+    const stagger = this.getDataTablePageCellStagger(state.cellSwaps.length);
 
     state.cellSwaps.forEach((swap, index) => {
       const localProgress = clampUnit(
-        (elapsed - index * DATA_TABLE_PAGE_CELL_MOTION.stagger) /
+        (elapsed - index * stagger) /
           DATA_TABLE_PAGE_CELL_MOTION.duration,
       );
       const incomingProgress = DATA_TABLE_PAGE_CELL_EASE.in(localProgress);
@@ -1604,6 +1605,14 @@ export class ChatActor {
         this.interpolate(DATA_TABLE_PAGE_CELL_MOTION.incomingY, 0, incomingProgress),
       );
     });
+  }
+
+  private getDataTablePageCellStagger(cellCount: number): number {
+    if (cellCount <= 1) return 0;
+
+    const availableCascadeTime = DATA_TABLE_PAGE_CELL_MOTION.totalDuration - DATA_TABLE_PAGE_CELL_MOTION.duration;
+
+    return Math.min(DATA_TABLE_PAGE_CELL_MOTION.maxStagger, availableCascadeTime / (cellCount - 1));
   }
 
   private setDataTablePageCellSwapState(elements: HTMLElement[], opacity: number, y: number): void {
