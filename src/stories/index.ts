@@ -1138,7 +1138,7 @@ const CSV_RAW_ROWS = [
     id: "raw-lucas-meyer",
     values: {
       name: "Lucas",
-      email: "",
+      email: "lucas.meyer@ramp.com",
       company: "Ramp",
     },
   },
@@ -1146,7 +1146,7 @@ const CSV_RAW_ROWS = [
     id: "raw-nina-kapoor",
     values: {
       name: "N. Kapoor",
-      email: "nina@yahoo.com",
+      email: "",
       company: "Mercury",
     },
   },
@@ -1206,6 +1206,14 @@ const CSV_RAW_ROWS = [
       company: "Northstar AI",
     },
   },
+  {
+    id: "raw-ethan-cho-duplicate",
+    values: {
+      name: "Ethan Cho",
+      email: "ethan.cho+events@gmail.com",
+      company: "Clearbit Inc.",
+    },
+  },
 ];
 
 const CSV_RAW_TABLE = {
@@ -1226,7 +1234,7 @@ const CSV_RAW_TABLE = {
     activePage: 1,
     pages: [
       { page: 1, range: "1-6 of 54 records", rows: CSV_RAW_ROWS.slice(0, 6) },
-      { page: 2, range: "7-12 of 54 records", rows: CSV_RAW_ROWS.slice(6, 12) },
+      { page: 2, range: "7-13 of 54 records", rows: CSV_RAW_ROWS.slice(6, 13) },
     ],
   },
 } satisfies DataTableConfig;

@@ -2261,8 +2261,8 @@ function createRawWebinarAttendeesTableComponent(): BuilderTableComponent {
       ["Maya R.", "MAYA.RODRIGUEZ@NorthStar.ai ", "northstar ai"],
       ["Ethan Cho", "ethan.cho@gmail.com", "Clearbit Inc."],
       ["Priya Shah", "priya.shah+webinar@orbitgrid.com", "Orbitgrid"],
-      ["Lucas", "", "Ramp"],
-      ["N. Kapoor", "nina@yahoo.com", "Mercury"],
+      ["Lucas", "lucas.meyer@ramp.com", "Ramp"],
+      ["N. Kapoor", "", "Mercury"],
       ["sam hollis", "sam.hollis@apollo.io", "Apollo.io"],
       ["Anna Li", "", "Linear"],
       ["Devon Park", "devon.park@brex.com", "Brex"],
@@ -2270,10 +2270,11 @@ function createRawWebinarAttendeesTableComponent(): BuilderTableComponent {
       ["Owen Lee", "owen.lee@icloud.com", "Notion"],
       ["Clara Wong", "clara.wong@brightlayer.com", "Bright Layer"],
       ["Maya Rodriguez", "maya.rodriguez@northstar.ai", "Northstar AI"],
+      ["Ethan Cho", "ethan.cho+events@gmail.com", "Clearbit Inc."],
     ],
     pagination: {
       pageSize: 6,
-      ranges: ["1-6 of 54 records", "7-12 of 54 records"],
+      ranges: ["1-6 of 54 records", "7-13 of 54 records"],
     },
   };
 }

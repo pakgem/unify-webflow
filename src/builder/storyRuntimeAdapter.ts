@@ -706,7 +706,7 @@ function toDataTable(component: BuilderTableComponent, fallbackId: string): Data
   const pages = component.pagination?.ranges.map((range, pageIndex) => ({
     page: pageIndex + 1,
     range,
-    rows: rows.slice(pageIndex * pageSize, (pageIndex + 1) * pageSize),
+    rows: getRowsForPaginationRange(rows, range, pageIndex, pageSize),
   })).filter((page) => page.rows.length) ?? [];
 
   return {
@@ -797,6 +797,21 @@ function inferPageSizeFromRanges(ranges: string[] | undefined): number | null {
   const pageSize = end - start + 1;
 
   return Number.isFinite(pageSize) && pageSize > 0 ? pageSize : null;
+}
+
+function getRowsForPaginationRange<T>(rows: T[], range: string, pageIndex: number, pageSize: number): T[] {
+  const match = range.match(/^\s*(\d+)\s*[-–]\s*(\d+)/);
+
+  if (!match) return rows.slice(pageIndex * pageSize, (pageIndex + 1) * pageSize);
+
+  const start = Number(match[1]);
+  const end = Number(match[2]);
+
+  if (!Number.isFinite(start) || !Number.isFinite(end) || start <= 0 || end < start) {
+    return rows.slice(pageIndex * pageSize, (pageIndex + 1) * pageSize);
+  }
+
+  return rows.slice(start - 1, end);
 }
 
 function shouldEqualInsetRevealTable(
