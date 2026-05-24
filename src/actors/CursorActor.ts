@@ -193,6 +193,7 @@ export class CursorActor {
     const seed = `${this.storyId}:${label}:${this.resolver.getBreakpoint()}`;
     const initialEnd = this.resolver.resolve(target, seed);
     const initialStart = { ...this.plannedPosition };
+    const travelEase = options.ease ?? "power2.inOut";
     const initialPlan = createHumanCursorPath(initialStart, initialEnd, {
       seed,
       intent: options.intent,
@@ -242,6 +243,7 @@ export class CursorActor {
           return livePlan;
         },
         initialPlan.duration,
+        travelEase,
       ),
     );
 

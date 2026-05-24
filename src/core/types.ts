@@ -47,6 +47,7 @@ export type CursorMoveOptions = {
   intent?: CursorIntent;
   speed?: CursorSpeed;
   curve?: number;
+  ease?: string;
   overshoot?: number | false;
   settle?: boolean;
   releaseHold?: number;

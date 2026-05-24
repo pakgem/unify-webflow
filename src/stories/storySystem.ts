@@ -27,6 +27,7 @@ export const STORY_TIMING = {
   thinkingShort: 0.92,
   thinkingMedium: 1.3,
   beat: 0.26,
+  fileGrab: 0.18,
 };
 
 type ResponsiveOffsets = Partial<Record<BreakpointName, Offset | number>>;

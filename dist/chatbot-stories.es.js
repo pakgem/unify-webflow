@@ -797,12 +797,12 @@ var ne = /* @__PURE__ */ (function(r) {
         }
       else {
         p = this._last;
-        for (var E = i < 0 ? i : g; p; ) {
-          if (f = p._prev, (p._act || E <= p._end) && p._ts && y !== p) {
+        for (var M = i < 0 ? i : g; p; ) {
+          if (f = p._prev, (p._act || M <= p._end) && p._ts && y !== p) {
             if (p.parent !== this)
               return this.render(i, n, o);
-            if (p.render(p._ts > 0 ? (E - p._start) * p._ts : (p._dirty ? p.totalDuration() : p._tDur) + (E - p._start) * p._ts, n, o || X && Ci(p)), g !== this._time || !this._ts && !b) {
-              y = 0, f && (d += this._zTime = E ? -q : q);
+            if (p.render(p._ts > 0 ? (M - p._start) * p._ts : (p._dirty ? p.totalDuration() : p._tDur) + (M - p._start) * p._ts, n, o || X && Ci(p)), g !== this._time || !this._ts && !b) {
+              y = 0, f && (d += this._zTime = M ? -q : q);
               break;
             }
           }
@@ -970,7 +970,7 @@ var ts = function(e, t, a, i, n, o, s) {
       c[s._props[d]] = l;
   return s;
 }, Ye, di, Ei = function r(e, t, a) {
-  var i = e.vars, n = i.ease, o = i.startAt, s = i.immediateRender, l = i.lazy, c = i.onUpdate, d = i.runBackwards, u = i.yoyoEase, g = i.keyframes, p = i.autoRevert, f = e._dur, h = e._startAt, w = e._targets, b = e.parent, y = b && b.data === "nested" ? b.vars.targets : w, A = e._overwrite === "auto" && !bi, _ = e.timeline, x = i.easeReverse || u, T, v, C, S, E, F, N, D, I, O, P, U, J;
+  var i = e.vars, n = i.ease, o = i.startAt, s = i.immediateRender, l = i.lazy, c = i.onUpdate, d = i.runBackwards, u = i.yoyoEase, g = i.keyframes, p = i.autoRevert, f = e._dur, h = e._startAt, w = e._targets, b = e.parent, y = b && b.data === "nested" ? b.vars.targets : w, A = e._overwrite === "auto" && !bi, _ = e.timeline, x = i.easeReverse || u, T, v, C, S, M, F, N, D, I, O, P, U, J;
   if (_ && (!g || !n) && (n = "none"), e._ease = pt(n, Vt.ease), e._rEase = x && (pt(x) || e._ease), e._from = !_ && !!i.runBackwards, e._from && (e.ratio = 1), !_ || g && !i.stagger) {
     if (D = w[0] ? ut(w[0]).harness : 0, U = D && i[D.prop], T = ma(i, vi), h && (h._zTime < 0 && h.progress(1), t < 0 && d && s && !p ? h.render(-1, !0) : h.revert(d && f ? ca : Mo), h._lazy = 0), o) {
       if (Ze(e._startAt = j.set(w, fe({
@@ -1006,12 +1006,12 @@ var ts = function(e, t, a, i, n, o, s) {
         return;
     }
     for (e._pt = e._ptCache = 0, l = f && re(l) || l && !f, v = 0; v < w.length; v++) {
-      if (E = w[v], N = E._gsap || Si(w)[v]._gsap, e._ptLookup[v] = O = {}, ni[N.id] && Xe.length && ga(), P = y === w ? v : y.indexOf(E), D && (I = new D()).init(E, U || T, e, P, y) !== !1 && (e._pt = S = new se(e._pt, E, I.name, 0, 1, I.render, I, 0, I.priority), I._props.forEach(function(De) {
+      if (M = w[v], N = M._gsap || Si(w)[v]._gsap, e._ptLookup[v] = O = {}, ni[N.id] && Xe.length && ga(), P = y === w ? v : y.indexOf(M), D && (I = new D()).init(M, U || T, e, P, y) !== !1 && (e._pt = S = new se(e._pt, M, I.name, 0, 1, I.render, I, 0, I.priority), I._props.forEach(function(De) {
         O[De] = S;
       }), I.priority && (F = 1)), !D || U)
         for (C in T)
-          de[C] && (I = vr(C, T, e, P, E, y)) ? I.priority && (F = 1) : O[C] = S = Ti.call(e, E, C, "get", T[C], P, y, 0, i.stringFilter);
-      e._op && e._op[v] && e.kill(E, e._op[v]), A && e._pt && (Ye = e, H.killTweensOf(E, O, e.globalTime(t)), J = !e.parent, Ye = 0), e._pt && l && (ni[N.id] = 1);
+          de[C] && (I = vr(C, T, e, P, M, y)) ? I.priority && (F = 1) : O[C] = S = Ti.call(e, M, C, "get", T[C], P, y, 0, i.stringFilter);
+      e._op && e._op[v] && e.kill(M, e._op[v]), A && e._pt && (Ye = e, H.killTweensOf(M, O, e.globalTime(t)), J = !e.parent, Ye = 0), e._pt && l && (ni[N.id] = 1);
     }
     F && Mr(e), e._onInit && e._onInit(e);
   }
@@ -1067,7 +1067,7 @@ var j = /* @__PURE__ */ (function(r) {
   function e(a, i, n, o) {
     var s;
     typeof i == "number" && (n.duration = i, i = n, n = null), s = r.call(this, o ? i : zt(i)) || this;
-    var l = s.vars, c = l.duration, d = l.delay, u = l.immediateRender, g = l.stagger, p = l.overwrite, f = l.keyframes, h = l.defaults, w = l.scrollTrigger, b = i.parent || H, y = (ee(a) || jn(a) ? Ge(a[0]) : "length" in i) ? [a] : Ae(a), A, _, x, T, v, C, S, E;
+    var l = s.vars, c = l.duration, d = l.delay, u = l.immediateRender, g = l.stagger, p = l.overwrite, f = l.keyframes, h = l.defaults, w = l.scrollTrigger, b = i.parent || H, y = (ee(a) || jn(a) ? Ge(a[0]) : "length" in i) ? [a] : Ae(a), A, _, x, T, v, C, S, M;
     if (s._targets = y.length ? Si(y) : Ht("GSAP target " + a + " not found. https://gsap.com", !ge.nullTargetWarn) || [], s._ptLookup = [], s._overwrite = p, f || g || ta(c) || ta(d)) {
       i = s.vars;
       var F = i.easeReverse || i.yoyoEase;
@@ -1078,9 +1078,9 @@ var j = /* @__PURE__ */ (function(r) {
       }), A.kill(), A.parent = A._dp = Be(s), A._start = 0, g || ta(c) || ta(d)) {
         if (T = y.length, S = g && ur(g), Ie(g))
           for (v in g)
-            ~kr.indexOf(v) && (E || (E = {}), E[v] = g[v]);
+            ~kr.indexOf(v) && (M || (M = {}), M[v] = g[v]);
         for (_ = 0; _ < T; _++)
-          x = ma(i, Sr), x.stagger = 0, F && (x.easeReverse = F), E && kt(x, E), C = y[_], x.duration = +Ut(c, Be(s), _, C, y), x.delay = (+Ut(d, Be(s), _, C, y) || 0) - s._delay, !g && T === 1 && x.delay && (s._delay = d = x.delay, s._start += d, x.delay = 0), A.to(C, x, S ? S(_, C, y) : 0), A._ease = R.none;
+          x = ma(i, Sr), x.stagger = 0, F && (x.easeReverse = F), M && kt(x, M), C = y[_], x.duration = +Ut(c, Be(s), _, C, y), x.delay = (+Ut(d, Be(s), _, C, y) || 0) - s._delay, !g && T === 1 && x.delay && (s._delay = d = x.delay, s._start += d, x.delay = 0), A.to(C, x, S ? S(_, C, y) : 0), A._ease = R.none;
         A.duration() ? c = d = 0 : s.timeline = 0;
       } else if (f) {
         zt(fe(A.vars.defaults, {
@@ -1869,8 +1869,8 @@ var Ki, Qe, xt, Ii, dt, Xi, Di, ws = function() {
   var a = e._gsap || new _r(e);
   if ("x" in a && !t && !a.uncache)
     return a;
-  var i = e.style, n = a.scaleX < 0, o = "px", s = "deg", l = getComputedStyle(e), c = pe(e, le) || "0", d, u, g, p, f, h, w, b, y, A, _, x, T, v, C, S, E, F, N, D, I, O, P, U, J, De, ve, Mt, at, Fi, Le, it;
-  return d = u = g = h = w = b = y = A = _ = 0, p = f = 1, a.svg = !!(e.getCTM && Br(e)), l.translate && ((l.translate !== "none" || l.scale !== "none" || l.rotate !== "none") && (i[W] = (l.translate !== "none" ? "translate3d(" + (l.translate + " 0 0").split(" ").slice(0, 3).join(", ") + ") " : "") + (l.rotate !== "none" ? "rotate(" + l.rotate + ") " : "") + (l.scale !== "none" ? "scale(" + l.scale.split(" ").join(",") + ") " : "") + (l[W] !== "none" ? l[W] : "")), i.scale = i.rotate = i.translate = "none"), v = Oi(e, a.svg), a.svg && (a.uncache ? (J = e.getBBox(), c = a.xOrigin - J.x + "px " + (a.yOrigin - J.y) + "px", U = "") : U = !t && e.getAttribute("data-svg-origin"), mi(e, U || c, !!U || a.originIsAbsolute, a.smooth !== !1, v)), x = a.xOrigin || 0, T = a.yOrigin || 0, v !== Kt && (F = v[0], N = v[1], D = v[2], I = v[3], d = O = v[4], u = P = v[5], v.length === 6 ? (p = Math.sqrt(F * F + N * N), f = Math.sqrt(I * I + D * D), h = F || N ? ft(N, F) * lt : 0, y = D || I ? ft(D, I) * lt + h : 0, y && (f *= Math.abs(Math.cos(y * At))), a.svg && (d -= x - (x * F + T * D), u -= T - (x * N + T * I))) : (it = v[6], Fi = v[7], ve = v[8], Mt = v[9], at = v[10], Le = v[11], d = v[12], u = v[13], g = v[14], C = ft(it, at), w = C * lt, C && (S = Math.cos(-C), E = Math.sin(-C), U = O * S + ve * E, J = P * S + Mt * E, De = it * S + at * E, ve = O * -E + ve * S, Mt = P * -E + Mt * S, at = it * -E + at * S, Le = Fi * -E + Le * S, O = U, P = J, it = De), C = ft(-D, at), b = C * lt, C && (S = Math.cos(-C), E = Math.sin(-C), U = F * S - ve * E, J = N * S - Mt * E, De = D * S - at * E, Le = I * E + Le * S, F = U, N = J, D = De), C = ft(N, F), h = C * lt, C && (S = Math.cos(C), E = Math.sin(C), U = F * S + N * E, J = O * S + P * E, N = N * S - F * E, P = P * S - O * E, F = U, O = J), w && Math.abs(w) + Math.abs(h) > 359.9 && (w = h = 0, b = 180 - b), p = Q(Math.sqrt(F * F + N * N + D * D)), f = Q(Math.sqrt(P * P + it * it)), C = ft(O, P), y = Math.abs(C) > 2e-4 ? C * lt : 0, _ = Le ? 1 / (Le < 0 ? -Le : Le) : 0), a.svg && (U = e.getAttribute("transform"), a.forceCSS = e.setAttribute("transform", "") || !zr(pe(e, W)), U && e.setAttribute("transform", U))), Math.abs(y) > 90 && Math.abs(y) < 270 && (n ? (p *= -1, y += h <= 0 ? 180 : -180, h += h <= 0 ? 180 : -180) : (f *= -1, y += y <= 0 ? 180 : -180)), t = t || a.uncache, a.x = d - ((a.xPercent = d && (!t && a.xPercent || (Math.round(e.offsetWidth / 2) === Math.round(-d) ? -50 : 0))) ? e.offsetWidth * a.xPercent / 100 : 0) + o, a.y = u - ((a.yPercent = u && (!t && a.yPercent || (Math.round(e.offsetHeight / 2) === Math.round(-u) ? -50 : 0))) ? e.offsetHeight * a.yPercent / 100 : 0) + o, a.z = g + o, a.scaleX = Q(p), a.scaleY = Q(f), a.rotation = Q(h) + s, a.rotationX = Q(w) + s, a.rotationY = Q(b) + s, a.skewX = y + s, a.skewY = A + s, a.transformPerspective = _ + o, (a.zOrigin = parseFloat(c.split(" ")[2]) || !t && a.zOrigin || 0) && (i[le] = ya(c)), a.xOffset = a.yOffset = 0, a.force3D = ge.force3D, a.renderTransform = a.svg ? Bs : Or ? Fr : Ns, a.uncache = 0, a;
+  var i = e.style, n = a.scaleX < 0, o = "px", s = "deg", l = getComputedStyle(e), c = pe(e, le) || "0", d, u, g, p, f, h, w, b, y, A, _, x, T, v, C, S, M, F, N, D, I, O, P, U, J, De, ve, Mt, at, Fi, Le, it;
+  return d = u = g = h = w = b = y = A = _ = 0, p = f = 1, a.svg = !!(e.getCTM && Br(e)), l.translate && ((l.translate !== "none" || l.scale !== "none" || l.rotate !== "none") && (i[W] = (l.translate !== "none" ? "translate3d(" + (l.translate + " 0 0").split(" ").slice(0, 3).join(", ") + ") " : "") + (l.rotate !== "none" ? "rotate(" + l.rotate + ") " : "") + (l.scale !== "none" ? "scale(" + l.scale.split(" ").join(",") + ") " : "") + (l[W] !== "none" ? l[W] : "")), i.scale = i.rotate = i.translate = "none"), v = Oi(e, a.svg), a.svg && (a.uncache ? (J = e.getBBox(), c = a.xOrigin - J.x + "px " + (a.yOrigin - J.y) + "px", U = "") : U = !t && e.getAttribute("data-svg-origin"), mi(e, U || c, !!U || a.originIsAbsolute, a.smooth !== !1, v)), x = a.xOrigin || 0, T = a.yOrigin || 0, v !== Kt && (F = v[0], N = v[1], D = v[2], I = v[3], d = O = v[4], u = P = v[5], v.length === 6 ? (p = Math.sqrt(F * F + N * N), f = Math.sqrt(I * I + D * D), h = F || N ? ft(N, F) * lt : 0, y = D || I ? ft(D, I) * lt + h : 0, y && (f *= Math.abs(Math.cos(y * At))), a.svg && (d -= x - (x * F + T * D), u -= T - (x * N + T * I))) : (it = v[6], Fi = v[7], ve = v[8], Mt = v[9], at = v[10], Le = v[11], d = v[12], u = v[13], g = v[14], C = ft(it, at), w = C * lt, C && (S = Math.cos(-C), M = Math.sin(-C), U = O * S + ve * M, J = P * S + Mt * M, De = it * S + at * M, ve = O * -M + ve * S, Mt = P * -M + Mt * S, at = it * -M + at * S, Le = Fi * -M + Le * S, O = U, P = J, it = De), C = ft(-D, at), b = C * lt, C && (S = Math.cos(-C), M = Math.sin(-C), U = F * S - ve * M, J = N * S - Mt * M, De = D * S - at * M, Le = I * M + Le * S, F = U, N = J, D = De), C = ft(N, F), h = C * lt, C && (S = Math.cos(C), M = Math.sin(C), U = F * S + N * M, J = O * S + P * M, N = N * S - F * M, P = P * S - O * M, F = U, O = J), w && Math.abs(w) + Math.abs(h) > 359.9 && (w = h = 0, b = 180 - b), p = Q(Math.sqrt(F * F + N * N + D * D)), f = Q(Math.sqrt(P * P + it * it)), C = ft(O, P), y = Math.abs(C) > 2e-4 ? C * lt : 0, _ = Le ? 1 / (Le < 0 ? -Le : Le) : 0), a.svg && (U = e.getAttribute("transform"), a.forceCSS = e.setAttribute("transform", "") || !zr(pe(e, W)), U && e.setAttribute("transform", U))), Math.abs(y) > 90 && Math.abs(y) < 270 && (n ? (p *= -1, y += h <= 0 ? 180 : -180, h += h <= 0 ? 180 : -180) : (f *= -1, y += y <= 0 ? 180 : -180)), t = t || a.uncache, a.x = d - ((a.xPercent = d && (!t && a.xPercent || (Math.round(e.offsetWidth / 2) === Math.round(-d) ? -50 : 0))) ? e.offsetWidth * a.xPercent / 100 : 0) + o, a.y = u - ((a.yPercent = u && (!t && a.yPercent || (Math.round(e.offsetHeight / 2) === Math.round(-u) ? -50 : 0))) ? e.offsetHeight * a.yPercent / 100 : 0) + o, a.z = g + o, a.scaleX = Q(p), a.scaleY = Q(f), a.rotation = Q(h) + s, a.rotationX = Q(w) + s, a.rotationY = Q(b) + s, a.skewX = y + s, a.skewY = A + s, a.transformPerspective = _ + o, (a.zOrigin = parseFloat(c.split(" ")[2]) || !t && a.zOrigin || 0) && (i[le] = ya(c)), a.xOffset = a.yOffset = 0, a.force3D = ge.force3D, a.renderTransform = a.svg ? Bs : Or ? Fr : Ns, a.uncache = 0, a;
 }, ya = function(e) {
   return (e = e.split(" "))[0] + " " + e[1];
 }, qa = function(e, t, a) {
@@ -1936,8 +1936,8 @@ var Ur = {
           if (l && h in l ? (c = typeof l[h] == "function" ? l[h].call(a, i, e, n) : l[h], K(c) && ~c.indexOf("random(") && (c = Yt(c)), $(c + "") || c === "auto" || (c += ge.units[h] || $(ze(e, h)) || ""), (c + "").charAt(1) === "=" && (c = ze(e, h))) : c = ze(e, h), g = parseFloat(c), y = p === "string" && d.charAt(1) === "=" && d.substr(0, 2), y && (d = d.substr(2)), u = parseFloat(d), h in Re && (h === "autoAlpha" && (g === 1 && ze(e, "visibility") === "hidden" && u && (g = 0), C.push("visibility", 0, s.visibility), je(this, s, "visibility", g ? "inherit" : "hidden", u ? "inherit" : "hidden", !u)), h !== "scale" && h !== "transform" && (h = Re[h], ~h.indexOf(",") && (h = h.split(",")[0]))), A = h in Ve, A) {
             if (this.styles.save(h), S = d, p === "string" && d.substring(0, 6) === "var(--") {
               if (d = pe(e, d.substring(4, d.indexOf(")"))), d.substring(0, 5) === "calc(") {
-                var E = e.style.perspective;
-                e.style.perspective = d, d = pe(e, "perspective"), E ? e.style.perspective = E : $e(e, "perspective");
+                var M = e.style.perspective;
+                e.style.perspective = d, d = pe(e, "perspective"), M ? e.style.perspective = M : $e(e, "perspective");
               }
               u = parseFloat(d);
             }
@@ -5303,13 +5303,13 @@ class zl {
       T.className = "wa-sequence-card__personalization", T.textContent = p.personalization;
       const v = p.steps;
       if (v?.length) {
-        const C = document.createElement("div"), S = v[0], E = document.createElement("div"), F = document.createElement("span"), N = document.createElement("strong"), D = document.createElement("p");
+        const C = document.createElement("div"), S = v[0], M = document.createElement("div"), F = document.createElement("span"), N = document.createElement("strong"), D = document.createElement("p");
         C.className = "wa-sequence-steps", v.forEach((I, O) => {
           const P = document.createElement("button"), U = document.createElement("span"), J = document.createElement("span"), De = document.createElement("strong"), ve = this.getSequenceStepWaitDays(I, O, v.length);
           P.className = "wa-sequence-step", P.type = "button", P.tabIndex = -1, P.dataset.stepIndex = String(O), P.dataset.stepOpen = String(O === 0), P.dataset.stepSelected = String(O === 0), P.dataset.channel = this.slugChannelName(I.channel), P.dataset.stepSubject = O === 0 ? p.subject : I.label, P.dataset.stepBody = this.getSequenceStepCopy(p, I), P.dataset.stepTemplateChannel = I.channel, P.dataset.stepTemplateLabel = I.label, P.dataset.stepTemplateSubject = O === 0 ? p.subject : I.label, P.dataset.stepTemplateBody = this.getSequenceStepCopy(p, I), ve && (P.dataset.waitDays = String(ve), P.dataset.stepTemplateWaitDays = String(ve)), P.setAttribute("aria-pressed", String(O === 0)), P.addEventListener("click", () => {
             this.selectSequenceStep(h, O);
           }), U.className = "wa-sequence-step__channel", U.textContent = this.formatSequenceChannelLabel(I.channel), J.className = "wa-sequence-step__copy", De.textContent = I.label, J.append(De), P.append(U, J), C.append(P), ve && C.append(this.createSequenceWaitRow(ve, O));
-        }), E.className = "wa-sequence-copy-panel", E.dataset.sequenceCopyPanel = "", F.className = "wa-sequence-copy-panel__meta", F.dataset.sequenceCopyMeta = "", F.textContent = S ? `${S.channel} 1` : "Email", N.className = "wa-sequence-copy-panel__subject", N.dataset.sequenceCopySubject = "", N.textContent = p.subject, D.className = "wa-sequence-copy-panel__body", D.dataset.sequenceCopyBody = "", D.textContent = S ? this.getSequenceStepCopy(p, S) : p.personalization, E.append(F, N, D), h.append(C, E);
+        }), M.className = "wa-sequence-copy-panel", M.dataset.sequenceCopyPanel = "", F.className = "wa-sequence-copy-panel__meta", F.dataset.sequenceCopyMeta = "", F.textContent = S ? `${S.channel} 1` : "Email", N.className = "wa-sequence-copy-panel__subject", N.dataset.sequenceCopySubject = "", N.textContent = p.subject, D.className = "wa-sequence-copy-panel__body", D.dataset.sequenceCopyBody = "", D.textContent = S ? this.getSequenceStepCopy(p, S) : p.personalization, M.append(F, N, D), h.append(C, M);
       } else
         h.append(w, x, T);
       o.append(h);
@@ -5853,7 +5853,7 @@ class jl {
     this.mode = e, this.el.dataset.cursorMode = e, this.updateModeWatch();
   }
   moveTo(e, t = {}) {
-    const a = t.label ?? `move-${this.moveIndex}`, i = t.mode ?? "default", n = `${this.storyId}:${a}:${this.resolver.getBreakpoint()}`, o = this.resolver.resolve(e, n), s = { ...this.plannedPosition }, l = ia(s, o, {
+    const a = t.label ?? `move-${this.moveIndex}`, i = t.mode ?? "default", n = `${this.storyId}:${a}:${this.resolver.getBreakpoint()}`, o = this.resolver.resolve(e, n), s = { ...this.plannedPosition }, l = t.ease ?? "power2.inOut", c = ia(s, o, {
       seed: n,
       intent: t.intent,
       speed: t.speed,
@@ -5861,18 +5861,18 @@ class jl {
       overshoot: t.overshoot,
       settle: t.settle,
       reducedMotion: this.options.reducedMotion
-    }), c = m.timeline();
-    let d = null;
-    return this.moveIndex += 1, this.plannedPosition = { ...o }, c.call(() => {
+    }), d = m.timeline();
+    let u = null;
+    return this.moveIndex += 1, this.plannedPosition = { ...o }, d.call(() => {
       this.stopIdleFloat(), this.resetRotation(), i !== "drag" && this.clearPayloadDragState();
-    }, void 0, 0), c.set(this.el, { autoAlpha: 1 }, 0), c.call(() => {
+    }, void 0, 0), d.set(this.el, { autoAlpha: 1 }, 0), d.call(() => {
       this.modeOverride = i === "drag" ? "drag" : null, this.modeOverride ? this.setMode(this.modeOverride) : this.syncModeToPoint(this.currentPosition);
-    }, void 0, 0), c.add(
+    }, void 0, 0), d.add(
       this.pathTweenFromFactory(
         () => {
           this.resolver.refresh();
-          const u = this.resolver.resolve(e, n);
-          return d = ia(this.currentPosition, u, {
+          const g = this.resolver.resolve(e, n);
+          return u = ia(this.currentPosition, g, {
             seed: n,
             intent: t.intent,
             speed: t.speed,
@@ -5880,25 +5880,26 @@ class jl {
             overshoot: t.overshoot,
             settle: t.settle,
             reducedMotion: this.options.reducedMotion
-          }), this.plannedPosition = { ...u }, d;
+          }), this.plannedPosition = { ...g }, u;
         },
-        l.duration
+        c.duration,
+        l
       )
-    ), l.settle && c.add(
+    ), c.settle && d.add(
       this.pathTweenFromFactory(
-        () => d?.settle ?? {
+        () => u?.settle ?? {
           start: this.currentPosition,
           c1: this.currentPosition,
           c2: this.currentPosition,
           end: this.currentPosition,
           duration: 0.01
         },
-        l.settle.duration,
+        c.settle.duration,
         "power2.out"
       )
-    ), t.preserveMode || c.call(() => {
+    ), t.preserveMode || d.call(() => {
       this.modeOverride = null, this.syncModeToPoint(this.currentPosition), this.queueIdleFloat();
-    }), c;
+    }), d;
   }
   parkForChatHistory() {
     const e = `history-park-${this.moveIndex}`, t = `${this.storyId}:${e}:${this.resolver.getBreakpoint()}`, a = { ...this.currentPosition }, i = this.resolveHistoryParkPoint(), n = ia(a, i, {
@@ -6406,13 +6407,14 @@ function tc(r) {
 function Jt(r) {
   return typeof r == "string" && r.trim().length > 0;
 }
-const M = {
+const E = {
   typeShort: 0.92,
   typeMedium: 1.16,
   typeLong: 1.34,
   thinkingShort: 0.92,
   thinkingMedium: 1.3,
-  beat: 0.26
+  beat: 0.26,
+  fileGrab: 0.18
 };
 function Za(r) {
   return typeof r == "number" ? { x: r, y: 0 } : r;
@@ -6563,7 +6565,7 @@ function ao(r) {
     }), t;
   });
 }
-function io(r, e = M.beat + 0.18, t) {
+function io(r, e = E.beat + 0.18, t) {
   return {
     kind: "custom",
     build: (a) => a.chat.scrollDataTableToFooter(r, e),
@@ -6744,7 +6746,7 @@ function pc(r, e, t) {
     ), a.add(r.chat.strategyPlanHover(o, !0), "<+=0.08"), a.add(r.chat.strategyPlanHover(o, !1), "-=0.04");
   }), Ma(a);
 }
-function gc(r, e, t, a = M.thinkingShort, i = 1, n = "thinking", o = 0) {
+function gc(r, e, t, a = E.thinkingShort, i = 1, n = "thinking", o = 0) {
   const s = a * Math.max(1, i), l = i >= 3 && no(e, t, {
     kind: "thinking",
     key: n,
@@ -6823,7 +6825,7 @@ function bc(r, e) {
       label: `focus-${e.sendLabel}`
     }),
     "-=0.18"
-  ), t.add(r.cursor.click("text"), "-=0.02").add(r.chat.setComposerFocus(!0), "-=0.14").add(r.chat.typeComposer(e.text, e.duration ?? M.typeMedium)).add(
+  ), t.add(r.cursor.click("text"), "-=0.02").add(r.chat.setComposerFocus(!0), "-=0.14").add(r.chat.typeComposer(e.text, e.duration ?? E.typeMedium)).add(
     r.cursor.moveTo(ac, {
       mode: "pointer",
       intent: "click",
@@ -6904,7 +6906,7 @@ function Cc(r, e) {
   return Pe(r, [
     { kind: "status", text: t?.text || "Sign up" },
     { kind: "cursorClick", nextMode: "text", at: "-=0.04" },
-    { kind: "typeSignupEmail", email: a?.text || "joel@vercel.com", duration: M.typeShort },
+    { kind: "typeSignupEmail", email: a?.text || "joel@vercel.com", duration: E.typeShort },
     {
       kind: "cursorMove",
       target: Zr,
@@ -6915,7 +6917,7 @@ function Cc(r, e) {
     { kind: "custom", build: () => r.chat.submitSignup(), at: "<" },
     { kind: "status", text: "Building workspace", at: "-=0.08" },
     { kind: "custom", build: () => r.chat.transferSignupLogoToNextThinking(), at: "<" },
-    { kind: "transitionSignupToChat", at: `+=${M.beat}` },
+    { kind: "transitionSignupToChat", at: `+=${E.beat}` },
     ...i ? [{ kind: "status", text: i.text || "Researching", at: "<" }] : [],
     ...i ? [Pa(i, { hold: 0.46, at: "<" })] : [],
     ...n ? [{ kind: "assistant", text: n.text }] : [],
@@ -6950,7 +6952,7 @@ function Tc(r, e) {
         },
         at: "+=0.08"
       },
-      { kind: "custom", build: () => l.startFollow(), at: "+=0.02" },
+      { kind: "custom", build: () => l.startFollow() },
       { kind: "custom", build: () => o.revealWhenCursorEnters(r.cursor), at: "<" },
       {
         kind: "cursorMove",
@@ -6959,14 +6961,16 @@ function Tc(r, e) {
           mode: "drag",
           intent: "drag",
           speed: "slow",
+          ease: "power1.out",
           overshoot: !1,
           settle: !0,
           preserveMode: !0,
           label: "drag-context-files"
-        }
+        },
+        at: "<"
       },
       { kind: "custom", build: () => o.activate(), at: "<+=0.02" },
-      { kind: "custom", build: () => r.timeline().to({}, { duration: M.beat }) },
+      { kind: "custom", build: () => r.timeline().to({}, { duration: E.beat }) },
       { kind: "custom", build: () => o.complete() },
       { kind: "custom", build: () => l.landAsUploadedFiles(n), at: "<" }
     );
@@ -6987,7 +6991,7 @@ function Ec(r, e) {
     fromEntry: !0
   }), o && l.push(
     { kind: "dataTable", config: o, at: "-=0.02" },
-    io("website-visitors-sales", M.beat + 0.18, "+=0.08")
+    io("website-visitors-sales", E.beat + 0.18, "+=0.08")
   ), o?.pagination && o.pagination.pages.length > 1) {
     const c = z(
       '[data-data-table="website-visitors-sales"] [data-table-page-button="2"]',
@@ -7013,7 +7017,7 @@ function Ec(r, e) {
       { kind: "cursorClick", at: "-=0.02" },
       { kind: "custom", build: () => r.chat.dataTablePage("website-visitors-sales", 2), at: "-=0.03" },
       { kind: "status", text: "ready to engage", at: "+=0.1" },
-      { kind: "custom", build: () => r.timeline().to({}, { duration: M.beat + 0.58 }) },
+      { kind: "custom", build: () => r.timeline().to({}, { duration: E.beat + 0.58 }) },
       {
         kind: "cursorMove",
         target: d,
@@ -7021,7 +7025,7 @@ function Ec(r, e) {
         at: "+=0.42"
       },
       { kind: "custom", build: () => r.chat.dataTableActionTooltip("website-visitors-sales", "power-dialer", !0) },
-      { kind: "custom", build: () => r.timeline().to({}, { duration: M.beat + 1 }), at: "+=0.12" },
+      { kind: "custom", build: () => r.timeline().to({}, { duration: E.beat + 1 }), at: "+=0.12" },
       { kind: "custom", build: () => r.chat.dataTableActionTooltip("website-visitors-sales", "power-dialer", !1) },
       {
         kind: "cursorMove",
@@ -7034,7 +7038,7 @@ function Ec(r, e) {
       { kind: "status", text: "building outreach sequence", at: "<" }
     );
   }
-  if (i && l.push(Pa(i, { hold: M.thinkingMedium, at: "+=0.06" })), s) {
+  if (i && l.push(Pa(i, { hold: E.thinkingMedium, at: "+=0.06" })), s) {
     const [c, d] = Wr(s, 2), u = z(
       `[data-sequence-person-card="visitor-outreach-sequences:${c}"]`,
       "center"
@@ -7047,7 +7051,7 @@ function Ec(r, e) {
     );
     l.push(
       { kind: "sequenceEngagement", config: s, at: "-=0.02" },
-      { kind: "custom", build: () => r.timeline().to({}, { duration: M.beat + 0.24 }), at: "+=0.04" },
+      { kind: "custom", build: () => r.timeline().to({}, { duration: E.beat + 0.24 }), at: "+=0.04" },
       {
         kind: "cursorMove",
         target: u,
@@ -7055,7 +7059,7 @@ function Ec(r, e) {
       },
       { kind: "cursorClick", at: "-=0.02" },
       { kind: "custom", build: () => r.chat.sequencePerson("visitor-outreach-sequences", c), at: "-=0.03" },
-      { kind: "custom", build: () => r.timeline().to({}, { duration: M.beat + 0.24 }), at: "+=0.04" },
+      { kind: "custom", build: () => r.timeline().to({}, { duration: E.beat + 0.24 }), at: "+=0.04" },
       {
         kind: "cursorMove",
         target: g,
@@ -7063,7 +7067,7 @@ function Ec(r, e) {
       },
       { kind: "cursorClick", at: "-=0.02" },
       { kind: "custom", build: () => r.chat.sequencePerson("visitor-outreach-sequences", d), at: "-=0.03" },
-      { kind: "custom", build: () => r.timeline().to({}, { duration: M.beat + 0.28 }), at: "+=0.04" },
+      { kind: "custom", build: () => r.timeline().to({}, { duration: E.beat + 0.28 }), at: "+=0.04" },
       {
         kind: "cursorMove",
         target: p,
@@ -7086,7 +7090,7 @@ function Mc(r, e) {
   });
   return Pe(r, [
     { kind: "status", text: "waiting for CSV" },
-    { kind: "custom", build: () => g.startFollow(), at: "+=0.04" },
+    { kind: "custom", build: () => g.startFollow(), at: `+=${E.fileGrab}` },
     { kind: "custom", build: () => u.revealWhenCursorEnters(r.cursor), at: "<" },
     {
       kind: "cursorMove",
@@ -7095,19 +7099,21 @@ function Mc(r, e) {
         mode: "drag",
         intent: "drag",
         speed: "slow",
+        ease: "power1.out",
         overshoot: !1,
         settle: !0,
         preserveMode: !0,
         label: "drag-webinar-csv"
-      }
+      },
+      at: "<"
     },
     { kind: "custom", build: () => u.activate(), at: "<+=0.02" },
-    { kind: "custom", build: () => r.timeline().to({}, { duration: M.beat }) },
+    { kind: "custom", build: () => r.timeline().to({}, { duration: E.beat }) },
     { kind: "custom", build: () => u.complete() },
     { kind: "custom", build: () => g.landAsUploadedFile(c, d), at: "<" },
     ...s ? [{ kind: "dataTable", config: Zt(s.component, "raw-webinar-attendees"), at: "+=0.08" }] : [],
     { kind: "status", text: "Cleaning CSV", at: "<" },
-    ...a ? [Pa(a, { hold: 0.34, at: `+=${M.beat}` })] : [],
+    ...a ? [Pa(a, { hold: 0.34, at: `+=${E.beat}` })] : [],
     ...i ? [{ kind: "assistant", text: i.text }] : [],
     ...l ? [{ kind: "dataTable", config: zc(Zt(l.component, "cleaned-webinar-attendees")), at: "-=0.04" }] : [],
     Ke(Fe.bottomRight, "+=0.18")
@@ -7188,7 +7194,7 @@ function ro(r, e, t, a = !1) {
       sendLabel: `send-${ie(e)}-${r.length}`,
       fromEntry: a,
       statusAfter: t.note || void 0,
-      at: a ? void 0 : `+=${M.beat}`
+      at: a ? void 0 : `+=${E.beat}`
     });
     return;
   }
@@ -7197,7 +7203,7 @@ function ro(r, e, t, a = !1) {
     return;
   }
   if (t.kind === "thinking") {
-    r.push(Pa(t, { hold: M.thinkingMedium }));
+    r.push(Pa(t, { hold: E.thinkingMedium }));
     return;
   }
   if (t.kind === "file" && t.text) {
@@ -7597,7 +7603,7 @@ function $t(r, e) {
   );
 }
 function go(r) {
-  return r.length > 72 ? M.typeLong : r.length > 38 ? M.typeMedium : M.typeShort;
+  return r.length > 72 ? E.typeLong : r.length > 38 ? E.typeMedium : E.typeShort;
 }
 function id(r) {
   const e = `${r.title} ${r.eyebrow ?? ""}`.toLowerCase();
@@ -8779,7 +8785,7 @@ const rd = [
     build: (r) => Pe(r, [
       { kind: "status", text: "Sign up" },
       { kind: "cursorClick", nextMode: "text", at: "-=0.04" },
-      { kind: "typeSignupEmail", email: "joel@vercel.com", duration: M.typeShort },
+      { kind: "typeSignupEmail", email: "joel@vercel.com", duration: E.typeShort },
       {
         kind: "cursorMove",
         target: Zr,
@@ -8790,7 +8796,7 @@ const rd = [
       { kind: "custom", build: () => r.chat.submitSignup(), at: "<" },
       { kind: "status", text: "Building workspace", at: "-=0.08" },
       { kind: "custom", build: () => r.chat.transferSignupLogoToNextThinking(), at: "<" },
-      { kind: "transitionSignupToChat", at: `+=${M.beat}` },
+      { kind: "transitionSignupToChat", at: `+=${E.beat}` },
       { kind: "status", text: "Researching Vercel", at: "<" },
       { kind: "thinking", steps: rd, hold: 0.46, at: "<" },
       { kind: "assistant", text: "Here are some ideas I can put into action for you:" },
@@ -8818,7 +8824,7 @@ const rd = [
       {
         kind: "prompt",
         text: "Show me new hires at dev-tool companies with 50+ employees.",
-        duration: M.typeLong,
+        duration: E.typeLong,
         sendLabel: "send-data-search",
         statusBefore: "Searching data",
         statusAfter: "Searching 100+ sources",
@@ -8827,30 +8833,30 @@ const rd = [
       {
         kind: "thinking",
         label: "Searching hiring signals, headcount, and company data",
-        hold: M.thinkingMedium
+        hold: E.thinkingMedium
       },
       { kind: "dataTable", config: Dn, at: "-=0.04" },
       {
         kind: "prompt",
         text: "Filter to the ones that have raised in the past three months.",
-        duration: M.typeMedium,
+        duration: E.typeMedium,
         sendLabel: "send-data-filter",
         statusAfter: "Filtering by funding",
-        at: `+=${M.beat}`
+        at: `+=${E.beat}`
       },
       {
         kind: "thinking",
         label: "Checking rounds announced since February 2026",
-        hold: M.thinkingShort
+        hold: E.thinkingShort
       },
       { kind: "dataTable", config: Ln, at: "-=0.04" },
       {
         kind: "prompt",
         text: "Okay, enrich these contacts.",
-        duration: M.typeShort,
+        duration: E.typeShort,
         sendLabel: "send-enrich-contacts",
         statusAfter: "Preparing enrichment",
-        at: `+=${M.beat}`
+        at: `+=${E.beat}`
       },
       { kind: "enrichmentPanel", config: ld, at: "+=0.12" },
       { kind: "status", text: "Contacts enriched", at: "+=0.86" },
@@ -8887,7 +8893,7 @@ const rd = [
       });
       return Pe(r, [
         ...eo(cd),
-        { kind: "status", text: "waiting for context", at: `+=${M.beat}` },
+        { kind: "status", text: "waiting for context", at: `+=${E.beat}` },
         {
           kind: "cursorMove",
           target: a,
@@ -8901,7 +8907,7 @@ const rd = [
           },
           at: "+=0.08"
         },
-        { kind: "custom", build: () => t.startFollow(), at: "+=0.02" },
+        { kind: "custom", build: () => t.startFollow() },
         { kind: "custom", build: () => e.revealWhenCursorEnters(r.cursor), at: "<" },
         {
           kind: "cursorMove",
@@ -8910,14 +8916,16 @@ const rd = [
             mode: "drag",
             intent: "drag",
             speed: "slow",
+            ease: "power1.out",
             overshoot: !1,
             settle: !0,
             preserveMode: !0,
             label: "drag-context-files"
-          }
+          },
+          at: "<"
         },
         { kind: "custom", build: () => e.activate(), at: "<+=0.02" },
-        { kind: "custom", build: () => r.timeline().to({}, { duration: M.beat }) },
+        { kind: "custom", build: () => r.timeline().to({}, { duration: E.beat }) },
         { kind: "custom", build: () => e.complete() },
         { kind: "custom", build: () => t.landAsUploadedFiles(Bn), at: "<" },
         { kind: "status", text: "Learning Pylon's business", at: "<" },
@@ -8930,7 +8938,7 @@ const rd = [
             "Summarizing ICP fit and GTM angles"
           ],
           hold: 0.24,
-          at: `+=${M.beat}`
+          at: `+=${E.beat}`
         },
         {
           kind: "custom",
@@ -8941,24 +8949,24 @@ const rd = [
         {
           kind: "prompt",
           text: "Write a sequence for consumer fintech founders.",
-          duration: M.typeShort,
+          duration: E.typeShort,
           sendLabel: "send-bad-icp-request",
           statusAfter: "Checking ICP fit",
-          at: `+=${M.beat}`
+          at: `+=${E.beat}`
         },
         { kind: "assistant", text: "Are you sure? this doesn't fit your ICP", at: "+=0.08" },
         {
           kind: "prompt",
           text: "Okay, generate leads ranked by how personally connected they are to us.",
-          duration: M.typeMedium,
+          duration: E.typeMedium,
           sendLabel: "send-proximity-list",
           statusAfter: "Ranking proximity",
-          at: `+=${M.beat}`
+          at: `+=${E.beat}`
         },
         {
           kind: "thinking",
           label: "Scoring shared schools, fields of study, mutual contacts, and warm signals",
-          hold: M.thinkingMedium
+          hold: E.thinkingMedium
         },
         { kind: "custom", build: () => r.chat.proximityLeadList(zn), at: "-=0.04" },
         Ke(Fe.bottomRight, "+=0.16")
@@ -9005,14 +9013,14 @@ const rd = [
         {
           kind: "prompt",
           text: "Show me 50 sales leaders that have recently visited my website.",
-          duration: M.typeLong,
+          duration: E.typeLong,
           sendLabel: "send-visitor-sales-list",
           statusBefore: "finding visitors",
           statusAfter: "building visitor list",
           fromEntry: !0
         },
         { kind: "dataTable", config: Un, at: "-=0.02" },
-        io("website-visitors-sales", M.beat + 0.18, "+=0.08"),
+        io("website-visitors-sales", E.beat + 0.18, "+=0.08"),
         {
           kind: "cursorMove",
           target: e,
@@ -9024,7 +9032,7 @@ const rd = [
         { kind: "status", text: "ready to engage", at: "+=0.1" },
         {
           kind: "custom",
-          build: () => r.timeline().to({}, { duration: M.beat + 0.58 })
+          build: () => r.timeline().to({}, { duration: E.beat + 0.58 })
         },
         {
           kind: "cursorMove",
@@ -9033,7 +9041,7 @@ const rd = [
           at: "+=0.42"
         },
         { kind: "custom", build: () => r.chat.dataTableActionTooltip("website-visitors-sales", "power-dialer", !0) },
-        { kind: "custom", build: () => r.timeline().to({}, { duration: M.beat + 1 }), at: "+=0.12" },
+        { kind: "custom", build: () => r.timeline().to({}, { duration: E.beat + 1 }), at: "+=0.12" },
         { kind: "custom", build: () => r.chat.dataTableActionTooltip("website-visitors-sales", "power-dialer", !1) },
         {
           kind: "cursorMove",
@@ -9046,7 +9054,7 @@ const rd = [
         { kind: "status", text: "building outreach sequence", at: "<" },
         { kind: "custom", build: () => r.chat.sequenceBuildThinking(dd), at: "+=0.06" },
         { kind: "sequenceEngagement", config: $a, at: "-=0.02" },
-        { kind: "custom", build: () => r.timeline().to({}, { duration: M.beat + 0.24 }), at: "+=0.04" },
+        { kind: "custom", build: () => r.timeline().to({}, { duration: E.beat + 0.24 }), at: "+=0.04" },
         {
           kind: "cursorMove",
           target: o,
@@ -9054,7 +9062,7 @@ const rd = [
         },
         { kind: "cursorClick", at: "-=0.02" },
         { kind: "custom", build: () => r.chat.sequencePerson("visitor-outreach-sequences", i), at: "-=0.03" },
-        { kind: "custom", build: () => r.timeline().to({}, { duration: M.beat + 0.24 }), at: "+=0.04" },
+        { kind: "custom", build: () => r.timeline().to({}, { duration: E.beat + 0.24 }), at: "+=0.04" },
         {
           kind: "cursorMove",
           target: s,
@@ -9062,7 +9070,7 @@ const rd = [
         },
         { kind: "cursorClick", at: "-=0.02" },
         { kind: "custom", build: () => r.chat.sequencePerson("visitor-outreach-sequences", n), at: "-=0.03" },
-        { kind: "custom", build: () => r.timeline().to({}, { duration: M.beat + 0.28 }), at: "+=0.04" },
+        { kind: "custom", build: () => r.timeline().to({}, { duration: E.beat + 0.28 }), at: "+=0.04" },
         {
           kind: "cursorMove",
           target: l,
@@ -9094,7 +9102,7 @@ const rd = [
       });
       return Pe(r, [
         { kind: "status", text: "waiting for CSV" },
-        { kind: "custom", build: () => t.startFollow(), at: "+=0.04" },
+        { kind: "custom", build: () => t.startFollow(), at: `+=${E.fileGrab}` },
         { kind: "custom", build: () => e.revealWhenCursorEnters(r.cursor), at: "<" },
         {
           kind: "cursorMove",
@@ -9103,14 +9111,16 @@ const rd = [
             mode: "drag",
             intent: "drag",
             speed: "slow",
+            ease: "power1.out",
             overshoot: !1,
             settle: !0,
             preserveMode: !0,
             label: "drag-webinar-csv"
-          }
+          },
+          at: "<"
         },
         { kind: "custom", build: () => e.activate(), at: "<+=0.02" },
-        { kind: "custom", build: () => r.timeline().to({}, { duration: M.beat }) },
+        { kind: "custom", build: () => r.timeline().to({}, { duration: E.beat }) },
         { kind: "custom", build: () => e.complete() },
         { kind: "custom", build: () => t.landAsUploadedFile("may_webinar_attendees.csv", "54 records"), at: "<" },
         { kind: "dataTable", config: pd, at: "+=0.08" },
@@ -9124,7 +9134,7 @@ const rd = [
             "Removing duplicates and empty rows"
           ],
           hold: 0.34,
-          at: `+=${M.beat}`
+          at: `+=${E.beat}`
         },
         { kind: "assistant", text: "I cleaned the attendee list and normalized the fields that matter for routing and follow-up." },
         { kind: "dataTable", config: gd, at: "-=0.04" },
