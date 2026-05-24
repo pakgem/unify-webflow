@@ -1213,6 +1213,7 @@ const CSV_RAW_TABLE = {
   title: "Raw webinar attendees",
   eyebrow: "CSV import",
   count: "54 records",
+  variant: "csv",
   columns: [
     { key: "rawName", label: "Name", width: "minmax(130px,0.85fr)" },
     { key: "email", label: "Email", width: "max-content" },
@@ -1235,7 +1236,7 @@ const CSV_CLEAN_TABLE = {
   title: "Cleaned webinar attendees",
   eyebrow: "CSV cleanup",
   count: "54 records",
-  variant: "filtered",
+  variant: "csv",
   scrollAnchor: "previous-message",
   columns: [
     { key: "fullName", label: "Full name", width: "1.25fr" },

@@ -709,7 +709,7 @@ function toDataTable(component: BuilderTableComponent, fallbackId: string): Data
     title: component.title,
     eyebrow: component.eyebrow,
     count: component.count,
-    variant: shape.variant ?? inferTableVariant(component),
+    variant: isCsvCleanupTableId(fallbackId) ? "csv" : shape.variant ?? inferTableVariant(component),
     columns: shape.columns,
     rows: pages[0]?.rows ?? rows,
     actions: component.actions?.map(toDataTableAction),
@@ -729,6 +729,12 @@ function withCsvCleanTableScroll(config: DataTableConfig): DataTableConfig {
     ...config,
     scrollAnchor: "previous-message",
   };
+}
+
+function isCsvCleanupTableId(tableId: string): boolean {
+  return tableId === "raw-webinar-attendees" ||
+    tableId === "clean-webinar-attendees" ||
+    tableId === "cleaned-webinar-attendees";
 }
 
 function inferPageSizeFromRanges(ranges: string[] | undefined): number | null {
