@@ -25,6 +25,7 @@ export function renderPlaybackMarkup(root: HTMLElement): void {
               <path d="M10 3.5 5.5 8l4.5 4.5"></path>
             </svg>
           </button>
+          <span class="wa-story-count" data-story-count aria-hidden="true">1 / 5</span>
           <button class="wa-control-button" type="button" data-toggle-play aria-label="Pause animation">Pause</button>
           <button class="wa-control-button" type="button" data-next-story aria-label="Next story">
             <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">

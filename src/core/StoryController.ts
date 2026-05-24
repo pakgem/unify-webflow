@@ -389,6 +389,7 @@ export class StoryController implements ChatbotStoriesInstance {
     this.setText("[data-story-label]", story.label);
     this.setText("[data-story-title]", story.label);
     this.setText("[data-story-summary]", story.summary);
+    this.setText("[data-story-count]", `${this.activeIndex + 1} / ${this.stories.length}`);
 
     for (const button of this.storyTabButtons) {
       const active = button.dataset.storyTab === story.id;
@@ -472,11 +473,15 @@ export class StoryController implements ChatbotStoriesInstance {
     const body = document.createElement("span");
     body.className = "wa-story-tab__body";
 
+    const count = document.createElement("span");
+    count.className = "wa-story-tab__count";
+    count.textContent = `${index + 1} / ${this.stories.length}`;
+
     const title = document.createElement("span");
     title.className = "wa-story-tab__title";
     title.textContent = story.navLabel ?? story.label;
 
-    body.append(title);
+    body.append(count, title);
 
     if (story.navDescription) {
       const description = document.createElement("span");
