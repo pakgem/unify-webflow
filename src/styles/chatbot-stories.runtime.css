@@ -863,8 +863,9 @@ body {
   color: #57544f;
   background: transparent;
   font-size: 14px;
-  line-height: 1;
+  line-height: 1.28;
   font-weight: var(--wa-chat-thinking-header-weight);
+  overflow: visible;
 }
 
 .wa-thinking__glyph {
@@ -946,12 +947,15 @@ body {
 
 .wa-thinking__title {
   color: #57544f;
+  line-height: inherit;
+  overflow: visible;
 }
 
 .wa-thinking__elapsed {
   margin-left: 5px;
   color: #8e8a83;
   font-size: 14px;
+  line-height: inherit;
   font-weight: var(--wa-chat-thinking-weight);
 }
 
