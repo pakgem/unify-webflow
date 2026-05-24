@@ -25,6 +25,7 @@ import {
   getThinkingElapsedLabel,
 } from "../stories/thinkingText";
 import { addTimelineElapsedTimer } from "../motion/elapsedTimer";
+import { COMPANY_FAVICON_URLS } from "../assets/companyFavicons";
 import { getProfilePhotoUrl } from "../assets/profilePhotos";
 import { createUnifyMarkSvg } from "../assets/unifyMark";
 import gmailConnectorIconSvg from "../assets/email-connectors/gmail.svg?raw";
@@ -4419,6 +4420,26 @@ export class ChatActor {
     return badge;
   }
 
+  private createSequenceCompanyBadge(company: string): HTMLElement | null {
+    const logoUrl = this.getCompanyLogoUrl(company, {});
+
+    if (!logoUrl) return null;
+
+    const badge = document.createElement("span");
+    const img = document.createElement("img");
+
+    badge.className = "wa-sequence-person-card__company";
+    badge.title = company;
+    badge.setAttribute("aria-hidden", "true");
+
+    img.alt = "";
+    img.decoding = "async";
+    img.src = logoUrl;
+    badge.append(img);
+
+    return badge;
+  }
+
   private getPersonBadgeCompany(
     values: Record<string, string>,
     options: { detailKey?: string; companyKey?: string } = {},
@@ -4441,6 +4462,11 @@ export class ChatActor {
     const explicitLogo = values.companyLogo || values.logoUrl;
 
     if (explicitLogo) return explicitLogo;
+
+    const companyKey = this.getCompanyKey(company);
+    const localLogo = COMPANY_FAVICON_URLS[companyKey];
+
+    if (localLogo) return localLogo;
 
     const iconSlug = values.companyLogoSlug || this.getCompanyLogoIconSlug(company);
 
@@ -5456,6 +5482,7 @@ export class ChatActor {
 
       config.sequences.forEach((sequence, index) => {
         const person = document.createElement("button");
+        const avatarWrap = document.createElement("span");
         const avatar = document.createElement("span");
         const copy = document.createElement("span");
         const name = document.createElement("strong");
@@ -5473,15 +5500,20 @@ export class ChatActor {
           this.sequencePerson(config.id, index).play();
         });
 
+        avatarWrap.className = "wa-sequence-person-card__avatar-wrap";
         avatar.className = "wa-sequence-person-card__avatar";
         avatar.dataset.avatarTone = String((index % 9) + 1);
         this.setProfileAvatar(avatar, sequence.name, sequence.avatarUrl);
+        avatarWrap.append(avatar);
+
+        const companyBadge = this.createSequenceCompanyBadge(sequence.company);
+        if (companyBadge) avatarWrap.append(companyBadge);
 
         copy.className = "wa-sequence-person-card__copy";
         name.textContent = sequence.name;
         meta.textContent = [sequence.title, sequence.company].filter(Boolean).join(", ");
         copy.append(name, meta);
-        person.append(avatar, copy);
+        person.append(avatarWrap, copy);
         peopleRail.append(person);
       });
 
