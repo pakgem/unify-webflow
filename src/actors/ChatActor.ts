@@ -389,7 +389,7 @@ const THINKING_HEADER_STREAM = {
 };
 
 const THINKING_STEP_FOLD = {
-  detailOffsetY: -4,
+  detailOffsetY: 0,
   duration: motionDuration(0.24),
 };
 

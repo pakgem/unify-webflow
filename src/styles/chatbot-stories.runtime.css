@@ -1182,7 +1182,6 @@ body {
 }
 
 .wa-research-step[data-step-state="complete"] {
-  min-height: 20px;
   align-items: start;
 }
 
@@ -1340,14 +1339,6 @@ body {
 
 .wa-research-step__detail[data-streaming="true"]::after {
   background: #86817a;
-}
-
-.wa-research-step[data-step-state="complete"] .wa-research-step__body {
-  gap: 0;
-}
-
-.wa-research-step[data-step-state="complete"] .wa-research-step__detail {
-  display: none;
 }
 
 .wa-research-step__chevron {
