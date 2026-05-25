@@ -509,7 +509,7 @@ const DATA_TABLE_SELECTOR = "[data-data-table]";
 const DATA_TABLE_ACTION_SELECTOR = "[data-table-action]";
 const DATA_TABLE_PAGE_BUTTON_SELECTOR = "[data-table-page-button]";
 const DATA_TABLE_PAGE_RANGE_SELECTOR = "[data-table-page-range]";
-const DATA_TABLE_PAGE_CELL_MOTION = {
+const STAGGERED_CELL_SWAP_MOTION = {
   duration: motionDuration(0.12),
   incomingLag: motionDuration(0.1),
   rowStagger: motionDuration(0.03),
@@ -518,7 +518,7 @@ const DATA_TABLE_PAGE_CELL_MOTION = {
   incomingY: -7,
   outgoingY: 7,
 };
-const DATA_TABLE_PAGE_CELL_EASE = {
+const STAGGERED_CELL_SWAP_EASE = {
   in: gsap.parseEase("power2.out"),
   out: gsap.parseEase("power2.in"),
 };
@@ -1550,7 +1550,7 @@ export class ChatActor {
 
     tl.to(progress, {
       value: 1,
-      duration: DATA_TABLE_PAGE_CELL_MOTION.totalDuration,
+      duration: STAGGERED_CELL_SWAP_MOTION.totalDuration,
       ease: "none",
       onStart: () => {
         state.table = this.findDataTable(tableId);
@@ -1612,7 +1612,7 @@ export class ChatActor {
         currentCells[columnIndex].dataset.cellSwapActive = "true";
         currentCells[columnIndex].append(clone);
         this.setDataTablePageCellSwapState(currentContent, 1, 0);
-        this.setDataTablePageCellSwapState([clone], 0, DATA_TABLE_PAGE_CELL_MOTION.incomingY);
+        this.setDataTablePageCellSwapState([clone], 0, STAGGERED_CELL_SWAP_MOTION.incomingY);
         swaps.push({
           cell: currentCells[columnIndex],
           currentContent,
@@ -1638,37 +1638,37 @@ export class ChatActor {
   }
 
   private renderDataTablePageCellSwaps(state: DataTablePageTransitionState, progress: number): void {
-    const elapsed = progress * DATA_TABLE_PAGE_CELL_MOTION.totalDuration;
+    const elapsed = progress * STAGGERED_CELL_SWAP_MOTION.totalDuration;
 
     state.cellSwaps.forEach((swap) => {
       const outgoingLocalProgress = clampUnit(
         (elapsed - swap.delay) /
-          DATA_TABLE_PAGE_CELL_MOTION.duration,
+          STAGGERED_CELL_SWAP_MOTION.duration,
       );
       const incomingLocalProgress = clampUnit(
-        (elapsed - swap.delay - DATA_TABLE_PAGE_CELL_MOTION.incomingLag) /
-          DATA_TABLE_PAGE_CELL_MOTION.duration,
+        (elapsed - swap.delay - STAGGERED_CELL_SWAP_MOTION.incomingLag) /
+          STAGGERED_CELL_SWAP_MOTION.duration,
       );
-      const incomingProgress = DATA_TABLE_PAGE_CELL_EASE.in(incomingLocalProgress);
-      const outgoingProgress = DATA_TABLE_PAGE_CELL_EASE.out(outgoingLocalProgress);
+      const incomingProgress = STAGGERED_CELL_SWAP_EASE.in(incomingLocalProgress);
+      const outgoingProgress = STAGGERED_CELL_SWAP_EASE.out(outgoingLocalProgress);
 
       this.setDataTablePageCellSwapState(
         swap.currentContent,
         1 - outgoingProgress,
-        this.interpolate(0, DATA_TABLE_PAGE_CELL_MOTION.outgoingY, outgoingProgress),
+        this.interpolate(0, STAGGERED_CELL_SWAP_MOTION.outgoingY, outgoingProgress),
       );
       this.setDataTablePageCellSwapState(
         [swap.clone],
         incomingProgress,
-        this.interpolate(DATA_TABLE_PAGE_CELL_MOTION.incomingY, 0, incomingProgress),
+        this.interpolate(STAGGERED_CELL_SWAP_MOTION.incomingY, 0, incomingProgress),
       );
     });
   }
 
   private getDataTablePageCellDelay(rowIndex: number, columnIndex: number): number {
     return (
-      rowIndex * DATA_TABLE_PAGE_CELL_MOTION.rowStagger +
-      columnIndex * DATA_TABLE_PAGE_CELL_MOTION.columnStagger
+      rowIndex * STAGGERED_CELL_SWAP_MOTION.rowStagger +
+      columnIndex * STAGGERED_CELL_SWAP_MOTION.columnStagger
     );
   }
 
@@ -2523,7 +2523,7 @@ export class ChatActor {
 
     tl.to(progress, {
       value: 1,
-      duration: DATA_TABLE_PAGE_CELL_MOTION.totalDuration,
+      duration: STAGGERED_CELL_SWAP_MOTION.totalDuration,
       ease: "none",
       onUpdate: () => {
         this.renderSequencePersonContentSwaps(state, progress.value);
@@ -4705,21 +4705,7 @@ export class ChatActor {
   }
 
   private createDataTableAddIcon(): SVGSVGElement {
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.classList.add("wa-data-table__add-icon");
-    svg.setAttribute("width", "16");
-    svg.setAttribute("height", "16");
-    svg.setAttribute("viewBox", "0 0 24 24");
-    svg.setAttribute("aria-hidden", "true");
-    svg.setAttribute("focusable", "false");
-
-    for (const d of ["M12 5v14", "M5 12h14"]) {
-      const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-      path.setAttribute("d", d);
-      svg.append(path);
-    }
-
-    return svg;
+    return this.createSvgIcon("wa-data-table__add-icon", ["M12 5v14", "M5 12h14"], { size: 16 });
   }
 
   private createDataTableCellBadge(label: string): HTMLElement {
@@ -4836,7 +4822,6 @@ export class ChatActor {
   }
 
   private createDataTableActionIcon(iconName: NonNullable<NonNullable<DataTableConfig["actions"]>[number]["icon"]>): SVGSVGElement {
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     const paths = iconName === "dialer"
       ? [
           "M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2",
@@ -4848,20 +4833,7 @@ export class ChatActor {
           "M3 7l9 6l9 -6",
         ];
 
-    svg.classList.add("wa-data-table-action__icon");
-    svg.setAttribute("width", "16");
-    svg.setAttribute("height", "16");
-    svg.setAttribute("viewBox", "0 0 24 24");
-    svg.setAttribute("aria-hidden", "true");
-    svg.setAttribute("focusable", "false");
-
-    for (const d of paths) {
-      const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-      path.setAttribute("d", d);
-      svg.append(path);
-    }
-
-    return svg;
+    return this.createSvgIcon("wa-data-table-action__icon", paths, { size: 16 });
   }
 
   private createDataTableFloatingTooltip(): HTMLElement {
@@ -5338,16 +5310,43 @@ export class ChatActor {
   }
 
   private createTablerIcon(name: "arrow-right" | "check" | "x", size: number): SVGSVGElement {
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     const paths = name === "arrow-right"
       ? ["M5 12h14", "M13 18l6 -6", "M13 6l6 6"]
       : name === "check"
         ? ["M5 12l5 5l10 -10"]
         : ["M18 6l-12 12", "M6 6l12 12"];
 
+    return this.createSvgIcon("", paths, {
+      size,
+      pathAttributes: {
+        fill: "none",
+        stroke: "currentColor",
+        "stroke-width": "2",
+        "stroke-linecap": "round",
+        "stroke-linejoin": "round",
+      },
+    });
+  }
+
+  private createSvgIcon(
+    className: string,
+    paths: string[],
+    {
+      size = 16,
+      viewBox = "0 0 24 24",
+      pathAttributes = {},
+    }: {
+      size?: number;
+      viewBox?: string;
+      pathAttributes?: Record<string, string>;
+    } = {},
+  ): SVGSVGElement {
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+
+    if (className) svg.classList.add(className);
     svg.setAttribute("width", String(size));
     svg.setAttribute("height", String(size));
-    svg.setAttribute("viewBox", "0 0 24 24");
+    svg.setAttribute("viewBox", viewBox);
     svg.setAttribute("aria-hidden", "true");
     svg.setAttribute("focusable", "false");
 
@@ -5355,11 +5354,9 @@ export class ChatActor {
       const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
 
       path.setAttribute("d", d);
-      path.setAttribute("fill", "none");
-      path.setAttribute("stroke", "currentColor");
-      path.setAttribute("stroke-width", "2");
-      path.setAttribute("stroke-linecap", "round");
-      path.setAttribute("stroke-linejoin", "round");
+      for (const [attribute, value] of Object.entries(pathAttributes)) {
+        path.setAttribute(attribute, value);
+      }
       svg.append(path);
     }
 
@@ -5838,21 +5835,14 @@ export class ChatActor {
       loadingLabel.textContent = normalizeMailboxStateLabel(options.loadingLabel, "Connecting");
 
       const connectedLabel = document.createElement("span");
-      const connectedIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-      const connectedPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      const connectedIcon = this.createSvgIcon("wa-mailbox-connection__connected-icon", ["M5 12l5 5l10 -10"], {
+        size: 16,
+      });
       const connectedText = document.createElement("span");
 
       connectedLabel.className = "wa-mailbox-connection__button-label";
       connectedLabel.dataset.mailboxButtonLabel = "connected";
       connectedLabel.setAttribute("aria-hidden", "true");
-      connectedIcon.classList.add("wa-mailbox-connection__connected-icon");
-      connectedIcon.setAttribute("width", "16");
-      connectedIcon.setAttribute("height", "16");
-      connectedIcon.setAttribute("viewBox", "0 0 24 24");
-      connectedIcon.setAttribute("aria-hidden", "true");
-      connectedIcon.setAttribute("focusable", "false");
-      connectedPath.setAttribute("d", "M5 12l5 5l10 -10");
-      connectedIcon.append(connectedPath);
       connectedText.textContent = options.connectedLabel ?? "Gmail";
       connectedLabel.append(connectedIcon, connectedText);
 
@@ -6459,14 +6449,23 @@ export class ChatActor {
   private createSequenceChannelIcon(channel: string): HTMLElement {
     const icon = document.createElement("span");
     const slug = this.slugChannelName(channel);
+    const paths = slug === "call" || slug.includes("call")
+      ? ["M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -16 -16a2 2 0 0 1 2 -2"]
+      : slug.includes("linkedin") || slug.includes("social")
+        ? [
+            "M9 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0",
+            "M7 21v-2a4 4 0 0 1 4 -4h4",
+            "M19 16v6",
+            "M16 19h6",
+          ]
+        : [
+            "M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z",
+            "M3 7l9 6l9 -6",
+          ];
 
     icon.className = "wa-sequence-step__icon";
     icon.setAttribute("aria-hidden", "true");
-    icon.innerHTML = slug === "call" || slug.includes("call")
-      ? `<svg viewBox="0 0 24 24" focusable="false"><path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -16 -16a2 2 0 0 1 2 -2"></path></svg>`
-      : slug.includes("linkedin") || slug.includes("social")
-        ? `<svg viewBox="0 0 24 24" focusable="false"><path d="M9 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"></path><path d="M7 21v-2a4 4 0 0 1 4 -4h4"></path><path d="M19 16v6"></path><path d="M16 19h6"></path></svg>`
-        : `<svg viewBox="0 0 24 24" focusable="false"><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z"></path><path d="M3 7l9 6l9 -6"></path></svg>`;
+    icon.append(this.createSvgIcon("", paths, { size: 14 }));
 
     return icon;
   }
@@ -6676,7 +6675,7 @@ export class ChatActor {
     target.style.minHeight = `${this.formatSequenceSwapSize(box.height)}px`;
     target.replaceChildren(currentClone, incomingClone);
     this.setDataTablePageCellSwapState([currentClone], 1, 0);
-    this.setDataTablePageCellSwapState([incomingClone], 0, DATA_TABLE_PAGE_CELL_MOTION.incomingY);
+    this.setDataTablePageCellSwapState([incomingClone], 0, STAGGERED_CELL_SWAP_MOTION.incomingY);
 
     return {
       target,
@@ -6696,7 +6695,7 @@ export class ChatActor {
     const parent = target.parentElement;
     const motionBuffer = locksShellRowHeight
       ? 0
-      : Math.ceil(Math.max(Math.abs(DATA_TABLE_PAGE_CELL_MOTION.incomingY), Math.abs(DATA_TABLE_PAGE_CELL_MOTION.outgoingY))) + 2;
+      : Math.ceil(Math.max(Math.abs(STAGGERED_CELL_SWAP_MOTION.incomingY), Math.abs(STAGGERED_CELL_SWAP_MOTION.outgoingY))) + 2;
 
     if (!parent || rect.width <= 0) {
       return {
@@ -6788,29 +6787,29 @@ export class ChatActor {
   }
 
   private renderSequencePersonContentSwaps(state: SequencePersonTransitionState, progress: number): void {
-    const elapsed = progress * DATA_TABLE_PAGE_CELL_MOTION.totalDuration;
+    const elapsed = progress * STAGGERED_CELL_SWAP_MOTION.totalDuration;
 
     state.swaps.forEach((swap) => {
       const outgoingLocalProgress = clampUnit(
         (elapsed - swap.delay) /
-          DATA_TABLE_PAGE_CELL_MOTION.duration,
+          STAGGERED_CELL_SWAP_MOTION.duration,
       );
       const incomingLocalProgress = clampUnit(
-        (elapsed - swap.delay - DATA_TABLE_PAGE_CELL_MOTION.incomingLag) /
-          DATA_TABLE_PAGE_CELL_MOTION.duration,
+        (elapsed - swap.delay - STAGGERED_CELL_SWAP_MOTION.incomingLag) /
+          STAGGERED_CELL_SWAP_MOTION.duration,
       );
-      const incomingProgress = DATA_TABLE_PAGE_CELL_EASE.in(incomingLocalProgress);
-      const outgoingProgress = DATA_TABLE_PAGE_CELL_EASE.out(outgoingLocalProgress);
+      const incomingProgress = STAGGERED_CELL_SWAP_EASE.in(incomingLocalProgress);
+      const outgoingProgress = STAGGERED_CELL_SWAP_EASE.out(outgoingLocalProgress);
 
       this.setDataTablePageCellSwapState(
         [swap.currentClone],
         1 - outgoingProgress,
-        this.interpolate(0, DATA_TABLE_PAGE_CELL_MOTION.outgoingY, outgoingProgress),
+        this.interpolate(0, STAGGERED_CELL_SWAP_MOTION.outgoingY, outgoingProgress),
       );
       this.setDataTablePageCellSwapState(
         [swap.incomingClone],
         incomingProgress,
-        this.interpolate(DATA_TABLE_PAGE_CELL_MOTION.incomingY, 0, incomingProgress),
+        this.interpolate(STAGGERED_CELL_SWAP_MOTION.incomingY, 0, incomingProgress),
       );
     });
   }
@@ -7021,7 +7020,11 @@ export class ChatActor {
     button.className = "wa-sequence-call-action__button";
     icon.className = "wa-sequence-call-action__icon";
     icon.setAttribute("aria-hidden", "true");
-    icon.innerHTML = `<svg viewBox="0 0 24 24" focusable="false"><path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -16 -16a2 2 0 0 1 2 -2"></path></svg>`;
+    icon.append(
+      this.createSvgIcon("", [
+        "M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -16 -16a2 2 0 0 1 2 -2",
+      ]),
+    );
     label.textContent = "Start";
     button.append(icon, label);
 

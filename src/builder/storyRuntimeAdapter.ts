@@ -59,6 +59,33 @@ const CONTEXT_FILE_PICKUP_TARGET = {
   mobile: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 280, y: -42 }, humanOffset: false },
 } satisfies ResponsiveTarget;
 
+const RUNTIME_ENTRY_BY_STORY_ID: Record<string, StoryDefinition["entry"]> = {
+  "hit-ground-running": SIGNUP_EMAIL_TARGET,
+  "data-marketplace": CHAT_INPUT_TARGETS.dataMarketplace,
+  "research-brief": CHAT_INPUT_TARGETS.researchBrief,
+};
+
+const RUNTIME_ENTRY_LEAD_TIME_BY_STORY_ID: Record<string, number> = {
+  "hit-ground-running": SIGNUP_ENTRY_LEAD_TIME,
+  "data-marketplace": INPUT_ENTRY_LEAD_TIME,
+  "research-brief": INPUT_ENTRY_LEAD_TIME,
+};
+
+const TABLE_COLUMN_WIDTHS = {
+  emailContent: "max-content",
+  foldedDefault: "minmax(130px,1fr)",
+  foldedEmail: "minmax(190px,0.95fr)",
+  foldedMobile: "minmax(150px,0.72fr)",
+  foldedConnector: "minmax(170px,0.78fr)",
+  foldedName: "minmax(220px,0.95fr)",
+  rawName: "110px",
+  rawEmail: "250px",
+  rawCompany: "minmax(120px,1fr)",
+  cleanName: "245px",
+  cleanEmail: "215px",
+  cleanCompany: "minmax(110px,1fr)",
+} as const;
+
 export function createStoriesFromBuilderDraft(
   builderStories: BuilderStory[],
   baseStories: StoryDefinition[],
@@ -111,16 +138,11 @@ function collectBuilderStoryAssetUrls(story: BuilderStory): string[] {
 }
 
 function getRuntimeEntry(storyId: string, baseStory: StoryDefinition): StoryDefinition["entry"] {
-  if (storyId === "hit-ground-running") return SIGNUP_EMAIL_TARGET;
-  if (storyId === "data-marketplace") return CHAT_INPUT_TARGETS.dataMarketplace;
-  if (storyId === "research-brief") return CHAT_INPUT_TARGETS.researchBrief;
-  return baseStory.entry;
+  return RUNTIME_ENTRY_BY_STORY_ID[storyId] ?? baseStory.entry;
 }
 
 function getRuntimeEntryLeadTime(storyId: string, baseStory: StoryDefinition): number | undefined {
-  if (storyId === "hit-ground-running") return SIGNUP_ENTRY_LEAD_TIME;
-  if (storyId === "data-marketplace" || storyId === "research-brief") return INPUT_ENTRY_LEAD_TIME;
-  return baseStory.entryLeadTime;
+  return RUNTIME_ENTRY_LEAD_TIME_BY_STORY_ID[storyId] ?? baseStory.entryLeadTime;
 }
 
 function buildBuilderStory(
@@ -872,7 +894,7 @@ function getBuilderTableShape(component: BuilderTableComponent, fallbackId: stri
       return {
         key: "name",
         label: "Prospect",
-        width: "minmax(220px,0.95fr)",
+        width: TABLE_COLUMN_WIDTHS.foldedName,
         cellType: "person" as const,
       };
     }
@@ -911,13 +933,13 @@ function getBuilderTableColumnWidth(label: string, foldsRoleIntoName: boolean): 
   const normalized = label.toLowerCase();
 
   if (foldsRoleIntoName) {
-    if (normalized.includes("connector") || normalized.includes("connection")) return "minmax(170px,0.78fr)";
-    if (normalized.includes("email")) return "minmax(190px,0.95fr)";
-    if (normalized.includes("mobile")) return "minmax(150px,0.72fr)";
-    return "minmax(130px,1fr)";
+    if (normalized.includes("connector") || normalized.includes("connection")) return TABLE_COLUMN_WIDTHS.foldedConnector;
+    if (normalized.includes("email")) return TABLE_COLUMN_WIDTHS.foldedEmail;
+    if (normalized.includes("mobile")) return TABLE_COLUMN_WIDTHS.foldedMobile;
+    return TABLE_COLUMN_WIDTHS.foldedDefault;
   }
 
-  if (normalized === "email" || normalized === "work email") return "max-content";
+  if (normalized === "email" || normalized === "work email") return TABLE_COLUMN_WIDTHS.emailContent;
   return undefined;
 }
 
@@ -925,15 +947,15 @@ function getTableColumnOverride(fallbackId: string, label: string): Partial<Data
   const normalized = label.trim().toLowerCase();
 
   if (fallbackId === "raw-webinar-attendees") {
-    if (normalized === "name") return { width: "110px", cellType: "text" };
-    if (normalized === "email") return { width: "250px" };
-    if (normalized === "company") return { width: "minmax(120px,1fr)" };
+    if (normalized === "name") return { width: TABLE_COLUMN_WIDTHS.rawName, cellType: "text" };
+    if (normalized === "email") return { width: TABLE_COLUMN_WIDTHS.rawEmail };
+    if (normalized === "company") return { width: TABLE_COLUMN_WIDTHS.rawCompany };
   }
 
   if (isCleanedWebinarTable(fallbackId)) {
-    if (normalized === "full name") return { key: "fullName", width: "245px", cellType: "person" };
-    if (normalized === "work email") return { width: "215px" };
-    if (normalized === "company") return { width: "minmax(110px,1fr)" };
+    if (normalized === "full name") return { key: "fullName", width: TABLE_COLUMN_WIDTHS.cleanName, cellType: "person" };
+    if (normalized === "work email") return { width: TABLE_COLUMN_WIDTHS.cleanEmail };
+    if (normalized === "company") return { width: TABLE_COLUMN_WIDTHS.cleanCompany };
   }
 
   return {};

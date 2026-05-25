@@ -1911,10 +1911,12 @@ body {
   grid-column: 6;
 }
 
-.wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="name"],
-.wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="contact"],
-.wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="fullName"],
-.wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="mutualConnection"] {
+.wa-data-table__row[data-header="true"] .wa-data-table__cell:is(
+  [data-column-key="name"],
+  [data-column-key="contact"],
+  [data-column-key="fullName"],
+  [data-column-key="mutualConnection"]
+) {
   padding-left: 8px;
 }
 
@@ -2155,25 +2157,28 @@ body {
   background: #11110f;
 }
 
-.wa-data-table__cell[data-column-key="name"],
-.wa-data-table__cell[data-column-key="contact"],
-.wa-data-table__cell[data-column-key="fullName"],
-.wa-data-table__cell[data-column-key="mutualConnection"] {
+.wa-data-table__cell:is(
+  [data-column-key="name"],
+  [data-column-key="contact"],
+  [data-column-key="fullName"],
+  [data-column-key="mutualConnection"]
+) {
   overflow: visible;
   color: #050505;
   font-weight: 400;
   white-space: nowrap;
 }
 
-.wa-data-table__cell[data-column-key="email"],
-.wa-data-table__cell[data-column-key="number"],
-.wa-data-table__cell[data-column-key="work-email"],
-.wa-data-table__cell[data-column-key="mobile"] {
+.wa-data-table__cell:is(
+  [data-column-key="email"],
+  [data-column-key="number"],
+  [data-column-key="work-email"],
+  [data-column-key="mobile"]
+) {
   color: #565553;
 }
 
-.wa-data-table__cell[data-column-key="email"] .wa-data-table__cell-text,
-.wa-data-table__cell[data-column-key="work-email"] .wa-data-table__cell-text {
+.wa-data-table__cell:is([data-column-key="email"], [data-column-key="work-email"]) .wa-data-table__cell-text {
   overflow-wrap: normal;
   white-space: nowrap;
 }
@@ -2187,17 +2192,21 @@ body {
   overflow: hidden;
 }
 
-.wa-data-table[data-table-variant="enriched"] .wa-data-table__cell[data-column-key="email"],
-.wa-data-table[data-table-variant="enriched"] .wa-data-table__cell[data-column-key="number"],
-.wa-data-table[data-table-variant="enriched"] .wa-data-table__cell[data-column-key="work-email"],
-.wa-data-table[data-table-variant="enriched"] .wa-data-table__cell[data-column-key="mobile"] {
+.wa-data-table[data-table-variant="enriched"] .wa-data-table__cell:is(
+  [data-column-key="email"],
+  [data-column-key="number"],
+  [data-column-key="work-email"],
+  [data-column-key="mobile"]
+) {
   color: #0c6f66;
 }
 
-.wa-data-table[data-table-variant="enriched"] .wa-data-table__cell[data-column-key="email"] .wa-data-table__cell-text,
-.wa-data-table[data-table-variant="enriched"] .wa-data-table__cell[data-column-key="number"] .wa-data-table__cell-text,
-.wa-data-table[data-table-variant="enriched"] .wa-data-table__cell[data-column-key="work-email"] .wa-data-table__cell-text,
-.wa-data-table[data-table-variant="enriched"] .wa-data-table__cell[data-column-key="mobile"] .wa-data-table__cell-text {
+.wa-data-table[data-table-variant="enriched"] .wa-data-table__cell:is(
+  [data-column-key="email"],
+  [data-column-key="number"],
+  [data-column-key="work-email"],
+  [data-column-key="mobile"]
+) .wa-data-table__cell-text {
   display: inline-flex;
   align-items: center;
   width: fit-content;
@@ -2209,10 +2218,12 @@ body {
   color: #0c6f66;
 }
 
-.wa-data-table[data-table-variant="enriched"] .wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="email"],
-.wa-data-table[data-table-variant="enriched"] .wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="number"],
-.wa-data-table[data-table-variant="enriched"] .wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="work-email"],
-.wa-data-table[data-table-variant="enriched"] .wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="mobile"] {
+.wa-data-table[data-table-variant="enriched"] .wa-data-table__row[data-header="true"] .wa-data-table__cell:is(
+  [data-column-key="email"],
+  [data-column-key="number"],
+  [data-column-key="work-email"],
+  [data-column-key="mobile"]
+) {
   color: #147970;
 }
 
@@ -5798,10 +5809,12 @@ body {
     font-size: 9px;
   }
 
-  .wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="name"],
-  .wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="contact"],
-  .wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="fullName"],
-  .wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="mutualConnection"] {
+  .wa-data-table__row[data-header="true"] .wa-data-table__cell:is(
+    [data-column-key="name"],
+    [data-column-key="contact"],
+    [data-column-key="fullName"],
+    [data-column-key="mutualConnection"]
+  ) {
     padding-left: 4px;
   }
 

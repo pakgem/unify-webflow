@@ -8,6 +8,7 @@ import type {
 } from "./types";
 
 const preloadedImageUrls = new Set<string>();
+const preloadLinkUrls = new Set<string>();
 
 export function preloadStoriesAround(stories: StoryDefinition[], index: number): void {
   if (!stories.length) return;
@@ -91,9 +92,14 @@ function preloadImage(url: string): void {
 }
 
 function addPreloadLink(url: string): void {
-  const existing = Array.from(document.head.querySelectorAll<HTMLLinkElement>('link[rel="preload"][as="image"]'));
+  if (!preloadLinkUrls.size) {
+    for (const link of document.head.querySelectorAll<HTMLLinkElement>('link[rel="preload"][as="image"]')) {
+      preloadLinkUrls.add(link.href);
+    }
+  }
 
-  if (existing.some((link) => link.href === url)) return;
+  if (preloadLinkUrls.has(url)) return;
+  preloadLinkUrls.add(url);
 
   const link = document.createElement("link");
   link.rel = "preload";

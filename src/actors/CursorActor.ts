@@ -1050,7 +1050,7 @@ export class CursorActor {
     });
     this.targetObserver.observe(this.root, {
       attributes: true,
-      attributeFilter: ["class", "style", "data-visible"],
+      attributeFilter: ["aria-disabled", "class", "contenteditable", "data-visible", "disabled", "href", "role"],
       childList: true,
       subtree: true,
     });
