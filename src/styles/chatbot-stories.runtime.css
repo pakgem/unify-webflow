@@ -104,6 +104,7 @@ body {
   --wa-window-max-height: 90vh;
   --wa-window-height: min(530px, var(--wa-window-max-height));
   --wa-chat-x-padding: 24px;
+  --wa-chat-shadow-gutter: min(24px, var(--wa-chat-x-padding));
   --wa-chat-entry-gap: 16px;
   --wa-chat-top-fade: calc(var(--wa-chat-x-padding) + 4px);
   --wa-chat-bottom-clearance: 110px;
@@ -738,9 +739,13 @@ body {
   display: grid;
   gap: var(--wa-chat-entry-gap);
   align-content: start;
+  box-sizing: border-box;
+  width: calc(100% + var(--wa-chat-shadow-gutter) + var(--wa-chat-shadow-gutter));
   height: 100%;
   min-height: 0;
   max-height: none;
+  margin-inline: calc(-1 * var(--wa-chat-shadow-gutter));
+  padding-inline: var(--wa-chat-shadow-gutter);
   padding-bottom: var(--wa-chat-bottom-clearance);
   overflow: hidden;
   overscroll-behavior: auto;
@@ -860,7 +865,9 @@ body {
 }
 
 .wa-sequence-sandbox .wa-thread {
+  width: 100%;
   height: auto;
+  margin-inline: 0;
   padding: 34px 0 42px;
   overflow: visible;
 }
@@ -1382,22 +1389,6 @@ body {
 .wa-message--style,
 .wa-message--style .wa-message__body {
   overflow-x: visible;
-}
-
-.wa-chat-shell__body:has(.wa-result-grid.has-strategy-plans),
-.wa-thread:has(.wa-result-grid.has-strategy-plans) {
-  overflow: visible;
-  clip-path: none;
-}
-
-.wa-chat-shell__body:has(.wa-style-profile) {
-  overflow: visible;
-  clip-path: inset(0 -32px 0 -32px);
-}
-
-.wa-thread:has(.wa-style-profile) {
-  overflow: hidden;
-  clip-path: inset(0 -32px 0 -32px);
 }
 
 .wa-result-grid.has-data-table,
