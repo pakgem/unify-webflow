@@ -5616,7 +5616,7 @@ class Ul {
   }
   getSequenceTransitionTargets(e) {
     return this.compactElements(
-      ...this.queryElements(e, ".wa-sequence-step__copy strong"),
+      e.querySelector('.wa-sequence-step[data-step-selected="true"] .wa-sequence-step__copy strong'),
       e.querySelector("[data-sequence-copy-meta]"),
       e.querySelector("[data-sequence-copy-subject]"),
       e.querySelector("[data-sequence-copy-body]")

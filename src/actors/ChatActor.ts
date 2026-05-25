@@ -6355,7 +6355,7 @@ export class ChatActor {
 
   private getSequenceTransitionTargets(card: HTMLElement): HTMLElement[] {
     return this.compactElements(
-      ...this.queryElements(card, ".wa-sequence-step__copy strong"),
+      card.querySelector<HTMLElement>(".wa-sequence-step[data-step-selected=\"true\"] .wa-sequence-step__copy strong"),
       card.querySelector<HTMLElement>("[data-sequence-copy-meta]"),
       card.querySelector<HTMLElement>("[data-sequence-copy-subject]"),
       card.querySelector<HTMLElement>("[data-sequence-copy-body]"),
