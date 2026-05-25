@@ -2579,7 +2579,7 @@ export class ChatActor {
 
       section.dataset.sequenceLaunched = "true";
       button.dataset.launched = "true";
-      if (label) label.textContent = "sequence kicked off";
+      if (label) label.textContent = `Enrolled ${section.dataset.peopleCount ?? "50 people"}`;
     });
   }
 
@@ -6312,26 +6312,36 @@ export class ChatActor {
       channels.append(item);
     });
 
+    const actions = document.createElement("div");
+    const draft = document.createElement("button");
+    const draftLabel = document.createElement("span");
     const kickoff = document.createElement("button");
     const kickoffLabel = document.createElement("span");
-    const kickoffDetail = document.createElement("span");
 
+    actions.className = "wa-sequence-actions";
+    draft.className = "wa-sequence-action wa-sequence-action--draft";
+    draft.type = "button";
+    draft.tabIndex = -1;
+    draft.dataset.sequenceSaveDraft = config.id;
+    draft.setAttribute("aria-label", "Save as draft");
+    draftLabel.className = "wa-sequence-kickoff__label";
+    draftLabel.textContent = "Save as draft";
+    draft.append(draftLabel);
     kickoff.className = "wa-sequence-kickoff";
     kickoff.type = "button";
     kickoff.tabIndex = -1;
     kickoff.dataset.sequenceKickoff = config.id;
-    kickoff.setAttribute("aria-label", config.launchLabel ?? "kick off sequence");
+    kickoff.setAttribute("aria-label", `Enroll ${config.peopleCount}`);
     kickoffLabel.className = "wa-sequence-kickoff__label";
-    kickoffLabel.textContent = config.launchLabel ?? "kick off sequence";
-    kickoffDetail.className = "wa-sequence-kickoff__detail";
-    kickoffDetail.textContent = `Launch tailored touches for ${config.peopleCount}`;
-    kickoff.append(kickoffLabel, kickoffDetail);
+    kickoffLabel.textContent = `Enroll ${config.peopleCount}`;
+    kickoff.append(kickoffLabel);
     kickoff.addEventListener("click", () => {
       this.sequenceKickoff(config.id).play();
     });
+    actions.append(draft, kickoff);
 
     if (hasSequenceSteps) {
-      section.append(...this.compactElements(header, peopleNav, sequences, kickoff));
+      section.append(...this.compactElements(header, peopleNav, sequences, actions));
       this.observeInitialSequenceRailCenter(section);
     } else {
       section.append(header, sequences, channels);
