@@ -2170,10 +2170,19 @@ body {
   --wa-data-table-scroll-width: 100%;
 }
 
+.wa-data-table--proximity .wa-data-table__grid {
+  overflow-x: hidden;
+}
+
+.wa-data-table--proximity .wa-data-table__row {
+  width: 100%;
+  min-width: 0;
+}
+
 .wa-data-table--proximity .wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="connection"] {
   font-size: 14px;
   line-height: 1.08;
-  overflow-wrap: normal;
+  overflow-wrap: anywhere;
   white-space: normal;
 }
 
@@ -2182,12 +2191,12 @@ body {
   color: var(--wa-ink);
   font-size: 13.5px;
   line-height: 1.18;
-  overflow-wrap: normal;
+  overflow-wrap: anywhere;
   white-space: normal;
 }
 
 .wa-data-table--proximity .wa-data-table__cell[data-column-key="connection"] .wa-data-table__cell-text {
-  overflow-wrap: normal;
+  overflow-wrap: anywhere;
   white-space: normal;
   word-break: normal;
 }
@@ -2223,7 +2232,7 @@ body {
   font-size: 13.5px;
   line-height: 1.22;
   font-weight: 500;
-  overflow-wrap: normal;
+  overflow-wrap: anywhere;
   white-space: normal;
   word-break: normal;
 }
