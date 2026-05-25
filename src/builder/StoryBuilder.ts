@@ -2675,7 +2675,7 @@ function createSequenceEngagementComponent(): BuilderSequenceEngagementComponent
           {
             channel: "linkedin",
             label: "light proof",
-            body: "Maya, saw OrbitGrid hiring RevOps while you were looking at pricing. I work on turning that intent into focused account lists. Worth connecting?",
+            body: "Maya, saw OrbitGrid looking at pricing while hiring RevOps. I work on turning those signals into focused account lists instead of generic outreach. Worth connecting?",
             waitDays: "3",
           },
           {
@@ -2687,7 +2687,7 @@ function createSequenceEngagementComponent(): BuilderSequenceEngagementComponent
           {
             channel: "call",
             label: "use context",
-            body: "Hi Maya, noticed OrbitGrid looked at pricing while adding RevOps roles. Is the bigger priority cleaner account fit, better coverage, or faster follow-up on intent?",
+            body: "Hi Maya, saw OrbitGrid looking at pricing while hiring RevOps. Are you trying to improve account fit, source coverage, or speed to follow-up right now?",
             waitDays: "",
           },
         ],
@@ -2709,7 +2709,7 @@ function createSequenceEngagementComponent(): BuilderSequenceEngagementComponent
           {
             channel: "linkedin",
             label: "ask a narrow question",
-            body: "Evan, saw Northstar Dev digging into integrations as your sales team expands. Curious if partner-fit signals are part of outbound scoring today.",
+            body: "Evan, saw Northstar Dev digging into integrations while expanding sales. Curious if partner-fit signals are already part of outbound scoring?",
             waitDays: "3",
           },
           {
@@ -2721,7 +2721,7 @@ function createSequenceEngagementComponent(): BuilderSequenceEngagementComponent
           {
             channel: "call",
             label: "reference the path",
-            body: "Hi Evan, I saw the integrations-page research and Northstar Dev’s sales expansion. Are ecosystem-led accounts already a named campaign, or still mostly rep judgment?",
+            body: "Hi Evan, saw the integrations research and Northstar Dev's sales expansion. Are ecosystem-led accounts already a named campaign, or still mostly rep judgment?",
             waitDays: "",
           },
         ],
@@ -2743,7 +2743,7 @@ function createSequenceEngagementComponent(): BuilderSequenceEngagementComponent
           {
             channel: "linkedin",
             label: "share a takeaway",
-            body: "Clara, saw BrightLayer reading customer proof. I’m curious if your team is trying to find more accounts with that same buying pattern.",
+            body: "Clara, saw BrightLayer reading customer proof. Curious whether your team is trying to find more accounts that look like that same buyer.",
             waitDays: "3",
           },
           {
@@ -2755,7 +2755,7 @@ function createSequenceEngagementComponent(): BuilderSequenceEngagementComponent
           {
             channel: "call",
             label: "ask for fit",
-            body: "Hi Clara, noticed the case-study research. Are you trying to replicate that customer profile, or test an adjacent segment where the proof still lands?",
+            body: "Hi Clara, saw the case-study research. Are you looking for more accounts like that customer, or testing a new adjacent segment?",
             waitDays: "",
           },
         ],

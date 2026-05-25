@@ -13,4 +13,5 @@ pnpm-debug.log*
 .vite/
 
 data/*.local.json
+!data/story-draft.local.json
 .vercel

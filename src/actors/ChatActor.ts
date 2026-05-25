@@ -6624,13 +6624,13 @@ export class ChatActor {
     finalHtml: string,
     delay: number,
   ): SequenceContentSwap {
-    const rect = target.getBoundingClientRect();
+    const box = this.measureSequenceContentSwapBox(target, currentHtml, finalHtml);
     const currentClone = this.createSequenceContentSwapClone(currentHtml, "current");
     const incomingClone = this.createSequenceContentSwapClone(finalHtml, "incoming");
 
     target.dataset.sequenceContentSwapActive = "true";
-    target.style.minWidth = `${rect.width}px`;
-    target.style.minHeight = `${rect.height}px`;
+    target.style.minWidth = `${box.width}px`;
+    target.style.minHeight = `${box.height}px`;
     target.replaceChildren(currentClone, incomingClone);
     this.setDataTablePageCellSwapState([currentClone], 1, 0);
     this.setDataTablePageCellSwapState([incomingClone], 0, DATA_TABLE_PAGE_CELL_MOTION.incomingY);
@@ -6641,6 +6641,49 @@ export class ChatActor {
       incomingClone,
       finalHtml,
       delay,
+    };
+  }
+
+  private measureSequenceContentSwapBox(target: HTMLElement, currentHtml: string, finalHtml: string): { width: number; height: number } {
+    const rect = target.getBoundingClientRect();
+    const heights = [rect.height, target.offsetHeight, target.scrollHeight];
+    const parent = target.parentElement;
+    const motionBuffer =
+      Math.ceil(Math.max(Math.abs(DATA_TABLE_PAGE_CELL_MOTION.incomingY), Math.abs(DATA_TABLE_PAGE_CELL_MOTION.outgoingY))) + 2;
+
+    if (!parent || rect.width <= 0) {
+      return {
+        width: rect.width,
+        height: Math.ceil(Math.max(...heights)) + motionBuffer,
+      };
+    }
+
+    const measure = target.cloneNode(false) as HTMLElement;
+
+    measure.removeAttribute("data-sequence-content-swap-active");
+    measure.style.position = "absolute";
+    measure.style.left = "-10000px";
+    measure.style.top = "0";
+    measure.style.width = `${rect.width}px`;
+    measure.style.minWidth = `${rect.width}px`;
+    measure.style.maxWidth = `${rect.width}px`;
+    measure.style.minHeight = "0";
+    measure.style.height = "auto";
+    measure.style.visibility = "hidden";
+    measure.style.pointerEvents = "none";
+    measure.style.overflow = "visible";
+    measure.style.contain = "layout style";
+
+    parent.append(measure);
+    [currentHtml, finalHtml].forEach((html) => {
+      measure.innerHTML = html;
+      heights.push(measure.offsetHeight, measure.scrollHeight, measure.getBoundingClientRect().height);
+    });
+    measure.remove();
+
+    return {
+      width: rect.width,
+      height: Math.ceil(Math.max(...heights)) + motionBuffer,
     };
   }
 

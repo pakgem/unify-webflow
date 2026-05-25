@@ -4480,6 +4480,11 @@ body {
   justify-items: inherit;
 }
 
+.wa-sequence-copy-panel[data-copy-channel="call"] .wa-sequence-copy-panel__subject[data-sequence-content-swap-active="true"],
+.wa-sequence-copy-panel[data-copy-channel="call"] .wa-sequence-copy-panel__body[data-sequence-content-swap-active="true"] {
+  overflow: visible;
+}
+
 .wa-sequence-step__copy span {
   color: var(--wa-color-muted);
   font-size: 10px;
