@@ -18,8 +18,9 @@ type StoryProgressScrubState = {
   wasPlaying: boolean;
   pointerId: number;
   marker: HTMLElement;
-  trackTop: number;
-  trackHeight: number;
+  trackAxis: "x" | "y";
+  trackStart: number;
+  trackLength: number;
   removeListeners: () => void;
 };
 type StorySwitchOptions = {
@@ -525,7 +526,7 @@ export class StoryController implements ChatbotStoriesInstance {
     const handleMove = (moveEvent: PointerEvent) => {
       if (moveEvent.pointerId !== event.pointerId) return;
       moveEvent.preventDefault();
-      this.scrubStoryProgress(storyIndex, marker, moveEvent.clientY);
+      this.scrubStoryProgress(storyIndex, marker, moveEvent);
     };
     const handleEnd = (endEvent: PointerEvent) => {
       if (endEvent.pointerId !== event.pointerId) return;
@@ -538,15 +539,14 @@ export class StoryController implements ChatbotStoriesInstance {
       window.removeEventListener("pointercancel", handleEnd);
     };
 
-    const markerRect = marker.getBoundingClientRect();
+    const track = this.getMarkerTrack(marker);
 
     this.storyProgressScrub = {
       storyIndex,
       wasPlaying,
       pointerId: event.pointerId,
       marker,
-      trackTop: markerRect.top,
-      trackHeight: markerRect.height,
+      ...track,
       removeListeners,
     };
 
@@ -554,11 +554,11 @@ export class StoryController implements ChatbotStoriesInstance {
     window.addEventListener("pointermove", handleMove, { passive: false });
     window.addEventListener("pointerup", handleEnd, { passive: false });
     window.addEventListener("pointercancel", handleEnd, { passive: false });
-    this.scrubStoryProgress(storyIndex, marker, event.clientY);
+    this.scrubStoryProgress(storyIndex, marker, event);
   }
 
-  private scrubStoryProgress(storyIndex: number, marker: HTMLElement, clientY: number): void {
-    const progress = this.getMarkerProgress(marker, clientY, this.storyProgressScrub);
+  private scrubStoryProgress(storyIndex: number, marker: HTMLElement, event: PointerEvent): void {
+    const progress = this.getMarkerProgress(marker, event, this.storyProgressScrub);
 
     this.activateStoryForProgressScrub(storyIndex);
     this.setActiveTimelineProgress(progress);
@@ -642,17 +642,33 @@ export class StoryController implements ChatbotStoriesInstance {
 
   private getMarkerProgress(
     marker: HTMLElement,
-    clientY: number,
+    event: PointerEvent,
     scrub: StoryProgressScrubState | null = null,
   ): number {
-    if (scrub?.marker === marker && scrub.trackHeight > 0) {
-      return clampProgress((clientY - scrub.trackTop) / scrub.trackHeight);
+    if (scrub?.marker === marker && scrub.trackLength > 0) {
+      const clientPosition = scrub.trackAxis === "x" ? event.clientX : event.clientY;
+
+      return clampProgress((clientPosition - scrub.trackStart) / scrub.trackLength);
     }
 
-    const rect = marker.getBoundingClientRect();
+    const track = this.getMarkerTrack(marker);
 
-    if (rect.height <= 0) return 0;
-    return clampProgress((clientY - rect.top) / rect.height);
+    if (track.trackLength <= 0) return 0;
+
+    const clientPosition = track.trackAxis === "x" ? event.clientX : event.clientY;
+
+    return clampProgress((clientPosition - track.trackStart) / track.trackLength);
+  }
+
+  private getMarkerTrack(marker: HTMLElement): Pick<StoryProgressScrubState, "trackAxis" | "trackStart" | "trackLength"> {
+    const rect = marker.getBoundingClientRect();
+    const trackAxis = rect.width > rect.height ? "x" : "y";
+
+    return {
+      trackAxis,
+      trackStart: trackAxis === "x" ? rect.left : rect.top,
+      trackLength: Math.max(0, trackAxis === "x" ? rect.width : rect.height),
+    };
   }
 
   private attachChatHistoryScroll(): void {
