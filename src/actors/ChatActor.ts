@@ -2820,8 +2820,8 @@ export class ChatActor {
         scrollTarget = this.getMessageScrollTarget(message);
         this.thread.scrollTop = scrollTarget;
         clones = this.createFileLandingClones(cursorFile, targets);
+        label = this.createFileLandingLabel(options.landingLabel, clones, extras[0] ?? null);
         this.thread.scrollTop = initialScrollTop;
-        label = this.createFileLandingLabel(options.landingLabel, clones);
         gsap.set(cursorFile, { autoAlpha: 0 });
       })
       .to(
@@ -2947,7 +2947,11 @@ export class ChatActor {
     }
   }
 
-  private createFileLandingLabel(labelText: string | undefined, clones: FileLandingClone[]): FileLandingLabel | null {
+  private createFileLandingLabel(
+    labelText: string | undefined,
+    clones: FileLandingClone[],
+    anchor: HTMLElement | null,
+  ): FileLandingLabel | null {
     if (!labelText || !clones.length) return null;
 
     const label = document.createElement("div");
@@ -2961,18 +2965,21 @@ export class ChatActor {
       left: 0,
       zIndex: 22,
       pointerEvents: "none",
-      opacity: 0,
+      opacity: 1,
       visibility: "visible",
       x: 0,
       y: 0,
     });
 
+    const labelRect = anchor
+      ? this.getElementLocalRect(anchor.getBoundingClientRect(), this.chatBody)
+      : null;
     const labelWidth = label.offsetWidth;
     const labelHeight = label.offsetHeight;
     const gap = 9;
     const endBounds = this.getFileLandingCloneBounds(clones, "end");
-    const endX = endBounds.left + endBounds.width / 2 - labelWidth / 2;
-    const endY = endBounds.top - labelHeight - gap;
+    const endX = labelRect?.left ?? (endBounds.left + endBounds.width / 2 - labelWidth / 2);
+    const endY = labelRect?.top ?? (endBounds.top - labelHeight - gap);
 
     gsap.set(label, { x: endX, y: endY });
 
@@ -2985,9 +2992,8 @@ export class ChatActor {
   private renderFileLandingLabel(label: FileLandingLabel | null, progress: number): void {
     if (!label) return;
 
-    const fadeIn = clampUnit(progress / 0.16);
     const fadeOut = clampUnit((1 - progress) / 0.16);
-    label.setOpacity(Math.min(fadeIn, fadeOut));
+    label.setOpacity(fadeOut);
   }
 
   private getFileLandingCloneBounds(
