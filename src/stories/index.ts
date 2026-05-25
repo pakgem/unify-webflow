@@ -27,6 +27,7 @@ import {
   INPUT_ENTRY_LEAD_TIME,
   mailboxConnectionSteps,
   responsiveElementTarget,
+  sequenceStepClickSteps,
   SIGNUP_EMAIL_TARGET,
   SIGNUP_ENTRY_LEAD_TIME,
   SIGNUP_SUBMIT_TARGET,
@@ -1642,6 +1643,7 @@ export const defaultStories: StoryDefinition[] = [
         { kind: "cursorClick", at: "-=0.02" },
         { kind: "custom", build: () => ctx.chat.sequencePerson("visitor-outreach-sequences", sequenceThirdPersonIndex), at: "-=0.03" },
         { kind: "custom", build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat + 0.28 }), at: "+=0.04" },
+        ...sequenceStepClickSteps("visitor-outreach-sequences", [1, 2, 3], "+=0.08"),
         {
           kind: "cursorMove",
           target: sequenceKickoffTarget,
@@ -1649,7 +1651,7 @@ export const defaultStories: StoryDefinition[] = [
         },
         { kind: "cursorClick", at: "-=0.02" },
         { kind: "custom", build: () => ctx.chat.sequenceKickoff("visitor-outreach-sequences"), at: "-=0.04" },
-        { kind: "status", text: "sequence kicked off", at: "<" },
+        { kind: "custom", build: () => ctx.chat.enrollmentProgress({ total: 50 }), at: "+=0.08" },
       ]);
     },
   },

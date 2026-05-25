@@ -150,6 +150,12 @@ type SequenceRailRuntime = {
   rail: HTMLElement;
   card: HTMLElement;
 };
+type EnrollmentProgressConfig = {
+  total?: number;
+  duration?: number;
+  label?: string;
+  detail?: string;
+};
 type SignupLogoTransfer = {
   el: HTMLElement;
   startX: number;
@@ -400,6 +406,14 @@ const SEQUENCE_THINKING_LOGO = {
   templateHold: motionDuration(0.54),
   progressDuration: motionDuration(3.9),
   finalHold: motionDuration(0.34),
+};
+
+const SEQUENCE_ENROLLMENT_PROGRESS = {
+  duration: motionDuration(2.2),
+  finalHold: motionDuration(0.48),
+  title: (count: number, total: number) => `Enrolling ${count} / ${total}`,
+  label: "Queuing personalized sequences",
+  detail: "Scheduling email, social, and call steps for every selected visitor.",
 };
 
 /* --------------------------------------------------------------------------
@@ -2566,6 +2580,67 @@ export class ChatActor {
     return tl;
   }
 
+  sequenceStep(sequenceId: string, stepIndex: number): gsap.core.Timeline {
+    const section = this.findSequenceEngagement(sequenceId);
+    const tl = gsap.timeline();
+
+    if (!section) return tl;
+
+    const activeIndex = this.getActiveSequenceIndex(section);
+    const card = this.getSequenceCardRuntime(section, activeIndex).displayCard;
+
+    if (!card) return tl;
+
+    return tl.call(() => {
+      this.selectSequenceStep(card, stepIndex, { cancelPersonTransition: true });
+    });
+  }
+
+  enrollmentProgress(config: EnrollmentProgressConfig = {}): gsap.core.Timeline {
+    const total = Math.max(1, Math.round(config.total ?? 50));
+    const progress = { value: 0 };
+    const item = this.createThinkingStep(
+      {
+        label: config.label ?? SEQUENCE_ENROLLMENT_PROGRESS.label,
+        detail: config.detail ?? SEQUENCE_ENROLLMENT_PROGRESS.detail,
+        disclosure: DEFAULT_THINKING_DISCLOSURE,
+      },
+      0,
+    );
+    const thinking = this.claimThinkingMessage(
+      [item],
+      "",
+      SEQUENCE_ENROLLMENT_PROGRESS.title(0, total),
+    );
+    const duration = config.duration ?? SEQUENCE_ENROLLMENT_PROGRESS.duration;
+
+    return gsap.timeline()
+      .call(() => {
+        this.prepareThinkingMessage(thinking, [item], 6);
+        gsap.set(thinking.elapsed, { display: "none", autoAlpha: 0 });
+      })
+      .add(this.revealMessage(thinking.message))
+      .add(this.revealThinkingHeader(thinking, 0.24))
+      .call(() => {
+        gsap.set(thinking.elapsed, { display: "none", autoAlpha: 0 });
+      })
+      .call(() => this.activateThinkingStep([item], 0))
+      .add(this.moveThinkingLogoToStep(thinking, item), "<")
+      .add(this.createThinkingStepReveal(item), "<")
+      .to(progress, {
+        value: total,
+        duration,
+        ease: "power1.inOut",
+        onUpdate: () => {
+          const count = Math.min(total, Math.max(0, Math.round(progress.value)));
+          this.setThinkingTitle(thinking, SEQUENCE_ENROLLMENT_PROGRESS.title(count, total));
+          this.requestMessageScroll(thinking.message);
+        },
+      }, "+=0.04")
+      .add(this.completeProgressThinking(thinking, [item], SEQUENCE_ENROLLMENT_PROGRESS.title(total, total)))
+      .to({}, { duration: SEQUENCE_ENROLLMENT_PROGRESS.finalHold });
+  }
+
   private playSequencePersonInteraction(sequenceId: string, index: number): void {
     this.activeSequencePersonTimelines.get(sequenceId)?.kill();
 
@@ -4231,6 +4306,50 @@ export class ChatActor {
     delete thinking.title.dataset.thinkingActive;
     delete thinking.title.dataset.streaming;
     gsap.set(thinking.elapsed, { display: "none" });
+  }
+
+  private setThinkingTitle(thinking: ClaimedThinkingMessage, title: string): void {
+    thinking.title.dataset.activeText = title;
+    thinking.title.dataset.fullText = title;
+    thinking.title.textContent = title;
+  }
+
+  private completeProgressThinking(
+    thinking: ClaimedThinkingMessage,
+    items: HTMLElement[],
+    title: string,
+  ): gsap.core.Timeline {
+    return gsap.timeline()
+      .call(() => {
+        this.markThinkingStepsComplete(items);
+        this.setLocalLogoMode(thinking.traveler, "done");
+        this.setThinkingTitle(thinking, title);
+        gsap.set(thinking.elapsed, { display: "none", autoAlpha: 0 });
+        gsap.set(thinking.steps, {
+          height: thinking.steps.offsetHeight,
+          overflow: "hidden",
+        });
+      })
+      .add(this.moveThinkingLogoTo(thinking, thinking.headerGlyph, THINKING_LOGO_TRAVEL.returnDuration), 0)
+      .add(this.moveThinkingGuideToStart(thinking, THINKING_LOGO_TRAVEL.returnDuration), 0)
+      .to(thinking.steps, {
+        autoAlpha: 0,
+        y: THINKING_BLOCK_COLLAPSE.y,
+        height: 0,
+        duration: THINKING_BLOCK_COLLAPSE.duration,
+        ease: THINKING_BLOCK_COLLAPSE.ease,
+      }, 0)
+      .call(() => {
+        gsap.set(thinking.steps, {
+          display: "none",
+          height: "",
+          overflow: "",
+          y: 0,
+        });
+        delete thinking.title.dataset.thinkingActive;
+        delete thinking.title.dataset.streaming;
+        this.animateMessageScrollIntoView(thinking.message);
+      });
   }
 
   private runThinkingSequence(thinkingState: NormalizedThinkingState, options: ThinkingSequenceOptions): gsap.core.Timeline {

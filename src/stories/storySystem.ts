@@ -291,6 +291,39 @@ export function elementPerusalSteps(items: ElementPerusalItem[]): StoryStep[] {
   });
 }
 
+export function sequenceStepClickSteps(sequenceId: string, stepIndexes: number[], at: TimelinePosition = "+=0.08"): StoryStep[] {
+  return stepIndexes.flatMap((stepIndex, index) => {
+    const selector =
+      `[data-sequence-engagement="${escapeAttributeValue(sequenceId)}"] ` +
+      `.wa-sequence-card[data-active="true"] .wa-sequence-step[data-step-index="${stepIndex}"]`;
+
+    return [
+      {
+        kind: "cursorMove" as const,
+        target: responsiveElementTarget(selector, "center", {}, false),
+        options: {
+          mode: "pointer" as const,
+          intent: "click" as const,
+          speed: "normal" as const,
+          label: `${sequenceId}-step-${stepIndex}`,
+        },
+        at: index === 0 ? at : "+=0.14",
+      },
+      { kind: "cursorClick" as const, at: "-=0.02" },
+      {
+        kind: "custom" as const,
+        build: (ctx) => ctx.chat.sequenceStep(sequenceId, stepIndex),
+        at: "-=0.03",
+      },
+      {
+        kind: "custom" as const,
+        build: (ctx) => ctx.timeline().to({}, { duration: STORY_TIMING.beat + 0.18 }),
+        at: "+=0.02",
+      },
+    ];
+  });
+}
+
 export function dataTableFooterPerusalStep(
   tableId: string,
   duration = STORY_TIMING.beat + 0.18,
