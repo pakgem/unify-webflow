@@ -735,6 +735,7 @@ export class ChatActor {
   private threadContentFitFrame: number | null = null;
   private threadContentResizeObserver: ResizeObserver | null = null;
   private threadContentMutationObserver: MutationObserver | null = null;
+  private windowSceneMeasure: HTMLElement | null = null;
 
   private readonly handleDataTableControlPointerOver = (event: PointerEvent): void => {
     const control = this.findDataTableControl(event.target);
@@ -865,6 +866,8 @@ export class ChatActor {
     }
     this.threadContentResizeObserver?.disconnect();
     this.threadContentMutationObserver?.disconnect();
+    this.windowSceneMeasure?.remove();
+    this.windowSceneMeasure = null;
     this.clearDataTableState();
     this.clearSequencePersonTimelines();
   }
@@ -3225,15 +3228,16 @@ export class ChatActor {
   }
 
   private applyWindowSceneScale(contentWidth: number): void {
+    const baseSize = this.getWindowSceneBaseSize();
     const availableWidth = this.getWindowSceneAvailableWidth();
     const desiredWidth = Math.ceil(Math.max(
-      this.browserWindow.offsetWidth,
+      baseSize.width,
       this.getWindowSceneBaseWidth(),
       contentWidth,
     ));
     const scale = this.getWindowSceneScale(desiredWidth, availableWidth);
     const nextScale = Math.min(1, Math.max(0.01, scale));
-    const shouldResize = desiredWidth > this.browserWindow.offsetWidth + 0.5;
+    const shouldResize = desiredWidth > baseSize.width + 0.5;
 
     if (nextScale >= 0.999 && !shouldResize) {
       this.clearWindowSceneScaleState();
@@ -3242,8 +3246,10 @@ export class ChatActor {
 
     const roundedScale = nextScale >= 0.999 ? 1 : Number(nextScale.toFixed(4));
     const nextScaleText = String(roundedScale);
+    const unscaledHeight = Math.ceil(baseSize.height * (desiredWidth / Math.max(1, baseSize.width)));
     const sceneWidth = `${desiredWidth}px`;
-    const sceneHeight = `${Math.ceil(this.browserWindow.offsetHeight * roundedScale)}px`;
+    const sceneHeight = `${Math.ceil(unscaledHeight * roundedScale)}px`;
+    const sceneUnscaledHeight = `${unscaledHeight}px`;
 
     this.stage.dataset.windowContentScale = roundedScale < 1 ? "scaled" : "sized";
 
@@ -3258,6 +3264,10 @@ export class ChatActor {
     if (this.stage.style.getPropertyValue("--wa-window-scene-height") !== sceneHeight) {
       this.stage.style.setProperty("--wa-window-scene-height", sceneHeight);
     }
+
+    if (this.stage.style.getPropertyValue("--wa-window-scene-unscaled-height") !== sceneUnscaledHeight) {
+      this.stage.style.setProperty("--wa-window-scene-unscaled-height", sceneUnscaledHeight);
+    }
   }
 
   private clearWindowSceneScaleState(): void {
@@ -3265,6 +3275,7 @@ export class ChatActor {
     this.stage.style.removeProperty("--wa-window-scene-scale");
     this.stage.style.removeProperty("--wa-window-scene-width");
     this.stage.style.removeProperty("--wa-window-scene-height");
+    this.stage.style.removeProperty("--wa-window-scene-unscaled-height");
   }
 
   private getThreadContentScale(): number {
@@ -3288,6 +3299,42 @@ export class ChatActor {
     const width = Number.parseFloat(value);
 
     return Number.isFinite(width) && width > 0 ? width : 0;
+  }
+
+  private getWindowSceneBaseSize(): { width: number; height: number } {
+    const measure = this.getWindowSceneMeasure();
+
+    measure.style.width = "var(--wa-window-width)";
+    measure.style.height = "var(--wa-window-height)";
+
+    const width = measure.offsetWidth || this.browserWindow.offsetWidth;
+    const height = measure.offsetHeight || this.browserWindow.offsetHeight;
+
+    return {
+      width: Math.max(1, width),
+      height: Math.max(1, height),
+    };
+  }
+
+  private getWindowSceneMeasure(): HTMLElement {
+    if (this.windowSceneMeasure) return this.windowSceneMeasure;
+
+    const measure = document.createElement("div");
+
+    measure.setAttribute("aria-hidden", "true");
+    measure.style.position = "absolute";
+    measure.style.left = "-10000px";
+    measure.style.top = "0";
+    measure.style.display = "block";
+    measure.style.visibility = "hidden";
+    measure.style.pointerEvents = "none";
+    measure.style.overflow = "hidden";
+    measure.style.contain = "strict";
+
+    this.stage.append(measure);
+    this.windowSceneMeasure = measure;
+
+    return measure;
   }
 
   private getVisibleThreadContentHeight(): number {
@@ -6630,7 +6677,7 @@ export class ChatActor {
 
     target.dataset.sequenceContentSwapActive = "true";
     target.style.minWidth = `${box.width}px`;
-    target.style.minHeight = `${box.height}px`;
+    target.style.minHeight = `${this.formatSequenceSwapSize(box.height)}px`;
     target.replaceChildren(currentClone, incomingClone);
     this.setDataTablePageCellSwapState([currentClone], 1, 0);
     this.setDataTablePageCellSwapState([incomingClone], 0, DATA_TABLE_PAGE_CELL_MOTION.incomingY);
@@ -6646,15 +6693,19 @@ export class ChatActor {
 
   private measureSequenceContentSwapBox(target: HTMLElement, currentHtml: string, finalHtml: string): { width: number; height: number } {
     const rect = target.getBoundingClientRect();
-    const heights = [rect.height, target.offsetHeight, target.scrollHeight];
+    const locksShellRowHeight = this.isSequenceCopyPanelShellRow(target);
+    const heights = locksShellRowHeight
+      ? [rect.height]
+      : [rect.height, target.offsetHeight, target.scrollHeight];
     const parent = target.parentElement;
-    const motionBuffer =
-      Math.ceil(Math.max(Math.abs(DATA_TABLE_PAGE_CELL_MOTION.incomingY), Math.abs(DATA_TABLE_PAGE_CELL_MOTION.outgoingY))) + 2;
+    const motionBuffer = locksShellRowHeight
+      ? 0
+      : Math.ceil(Math.max(Math.abs(DATA_TABLE_PAGE_CELL_MOTION.incomingY), Math.abs(DATA_TABLE_PAGE_CELL_MOTION.outgoingY))) + 2;
 
     if (!parent || rect.width <= 0) {
       return {
         width: rect.width,
-        height: Math.ceil(Math.max(...heights)) + motionBuffer,
+        height: Math.max(...heights) + motionBuffer,
       };
     }
 
@@ -6677,14 +6728,28 @@ export class ChatActor {
     parent.append(measure);
     [currentHtml, finalHtml].forEach((html) => {
       measure.innerHTML = html;
-      heights.push(measure.offsetHeight, measure.scrollHeight, measure.getBoundingClientRect().height);
+      if (locksShellRowHeight) {
+        heights.push(measure.getBoundingClientRect().height);
+      } else {
+        heights.push(measure.offsetHeight, measure.scrollHeight, measure.getBoundingClientRect().height);
+      }
     });
     measure.remove();
 
     return {
       width: rect.width,
-      height: Math.ceil(Math.max(...heights)) + motionBuffer,
+      height: Math.max(...heights) + motionBuffer,
     };
+  }
+
+  private isSequenceCopyPanelShellRow(target: HTMLElement): boolean {
+    return target.classList.contains("wa-sequence-copy-panel__meta") ||
+      target.classList.contains("wa-sequence-copy-panel__subject") ||
+      target.classList.contains("wa-sequence-copy-panel__body");
+  }
+
+  private formatSequenceSwapSize(value: number): string {
+    return Number.isFinite(value) ? value.toFixed(2) : "0";
   }
 
   private createSequenceContentSwapClone(html: string, state: "current" | "incoming"): HTMLElement {

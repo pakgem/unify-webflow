@@ -412,6 +412,7 @@ body {
   --wa-window-scene-scale: 1;
   --wa-window-scene-width: var(--wa-window-width);
   --wa-window-scene-height: var(--wa-stage-min-height);
+  --wa-window-scene-unscaled-height: var(--wa-window-height);
   --wa-window-scene-min-width: 0px;
   position: relative;
   grid-column: 2;
@@ -421,6 +422,7 @@ body {
 }
 
 .wa-stage[data-window-content-scale] {
+  height: var(--wa-window-scene-height);
   min-height: var(--wa-window-scene-height);
 }
 
@@ -452,9 +454,18 @@ body {
 }
 
 .wa-stage[data-window-content-scale] .wa-window {
+  position: absolute;
+  top: 0;
+  left: 50%;
   width: var(--wa-window-scene-width);
-  transform: scale(var(--wa-window-scene-scale));
+  margin: 0;
+  transform: translateX(-50%) scale(var(--wa-window-scene-scale));
+  transform-origin: top center;
   will-change: transform;
+}
+
+.wa-stage[data-window-content-scale] .wa-chat-shell {
+  height: var(--wa-window-scene-unscaled-height);
 }
 
 .wa-chat-shell {
@@ -727,20 +738,6 @@ body {
 .wa-thread > .wa-message:first-child,
 .wa-message--first-active {
   margin-top: var(--wa-chat-first-entry-offset);
-}
-
-.wa-chat-shell__body[data-chat-content-fit="short"] .wa-thread {
-  align-self: center;
-  align-content: center;
-}
-
-.wa-chat-shell__body[data-chat-content-fit="short"] .wa-thread {
-  width: 100%;
-}
-
-.wa-chat-shell__body[data-chat-content-fit="short"] .wa-thread > .wa-message:first-child,
-.wa-chat-shell__body[data-chat-content-fit="short"] .wa-message--first-active {
-  margin-top: 0;
 }
 
 /* --------------------------------------------------------------------------
@@ -5462,6 +5459,10 @@ body {
     overflow: visible;
   }
 
+  .wa-stage[data-window-content-scale] {
+    min-height: var(--wa-window-scene-height);
+  }
+
   .wa-stage__media {
     top: 180px;
     right: auto;
@@ -5604,6 +5605,10 @@ body {
     min-height: var(--wa-window-height);
     margin-top: 0;
     overflow: visible;
+  }
+
+  .wa-stage[data-window-content-scale] {
+    min-height: var(--wa-window-scene-height);
   }
 
   .wa-stage__media {
