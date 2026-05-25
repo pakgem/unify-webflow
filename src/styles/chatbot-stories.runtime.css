@@ -120,8 +120,8 @@ body {
   --wa-chat-thinking-weight: 400;
   --wa-chat-detail-weight: 400;
   --wa-thinking-logo-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 11'%3E%3Cpath fill='black' d='M5.71835 3.84074V0H0V5.12789C0 7.97387 2.13981 10.9988 6.10463 10.9988H8.4998V5.49938L7.40298 5.48406C6.46808 5.4708 5.71706 4.7386 5.71706 3.8395L5.71835 3.84074Z'/%3E%3Cpath fill='black' d='M11.2814 7.15899V10.9997H16.9998V5.87225C16.9998 3.02586 14.86 0.000976562 10.8952 0.000976562H8.5V5.50036L9.59682 5.51568C10.5317 5.52893 11.2827 6.26113 11.2827 7.16023L11.2814 7.15899Z'/%3E%3C/svg%3E");
-  --wa-composer-side-inset: -21px;
-  --wa-composer-bottom-outset: -21px;
+  --wa-composer-side-inset: 10px;
+  --wa-composer-bottom-outset: 10px;
   --wa-composer-height: 102px;
   --wa-composer-send-size: 36px;
   --wa-history-resume-height: 42px;
@@ -4893,11 +4893,11 @@ body {
   margin: 0;
   overflow: hidden;
   border: 1px solid var(--wa-color-input-line);
-  border-radius: 17px;
+  border-radius: 9px;
   background: var(--wa-panel);
   box-shadow:
-    0 48px 88px rgba(5, 5, 4, 0.34),
-    0 18px 38px rgba(5, 5, 4, 0.18),
+    0 14px 28px rgba(5, 5, 4, 0.1),
+    0 4px 10px rgba(5, 5, 4, 0.06),
     0 1px 0 rgba(255, 255, 255, 0.74) inset;
   transform-origin: center center;
   contain: layout paint style;
@@ -5494,8 +5494,8 @@ body {
   .wa-section {
     --wa-mobile-page-inset: clamp(24px, 7vw, 34px);
     --wa-chat-x-padding: 12px;
-    --wa-composer-side-inset: -21px;
-    --wa-composer-bottom-outset: -21px;
+    --wa-composer-side-inset: 10px;
+    --wa-composer-bottom-outset: 10px;
     --wa-composer-height: 88px;
     --wa-composer-send-size: 32px;
     --wa-history-resume-height: 40px;
@@ -6082,7 +6082,7 @@ body {
     grid-template-columns: minmax(0, 1fr);
     height: var(--wa-composer-height);
     padding: 14px 9px 9px 14px;
-    border-radius: 15px;
+    border-radius: 9px;
   }
 
   .wa-composer__placeholder {
