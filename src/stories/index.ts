@@ -828,7 +828,7 @@ const ENGAGEMENT_SEQUENCE_LAUNCH = {
       company: "Square",
       title: "VP Sales",
       signal: "ROI calculator",
-      subject: "Square’s ROI-calculator research",
+      subject: "Saw Square using the ROI calculator",
       personalization: "Jamie used the ROI calculator, so the outreach leads with measurable pipeline coverage and better list quality.",
       steps: [
         {
@@ -1007,7 +1007,10 @@ const ENGAGEMENT_SEQUENCE_LAUNCH = {
   channels: [],
 } satisfies SequenceEngagementConfig;
 
-export const sequencePreviewSandboxConfig = ENGAGEMENT_SEQUENCE_LAUNCH;
+export const sequencePreviewSandboxConfig = {
+  ...ENGAGEMENT_SEQUENCE_LAUNCH,
+  initialStepIndex: 1,
+} satisfies SequenceEngagementConfig;
 
 const ENGAGEMENT_SEQUENCE_THINKING = {
   id: "visitor-sequence-build",

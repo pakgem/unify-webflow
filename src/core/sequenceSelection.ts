@@ -1,11 +1,15 @@
 import type { SequenceEngagementConfig } from "./types";
 
-export function getInitialSequenceIndex(config: Pick<SequenceEngagementConfig, "sequences">): number {
+export function getInitialSequenceIndex(config: Pick<SequenceEngagementConfig, "sequences" | "initialSequenceIndex">): number {
+  if (typeof config.initialSequenceIndex === "number" && Number.isFinite(config.initialSequenceIndex)) {
+    return Math.min(Math.max(0, Math.round(config.initialSequenceIndex)), Math.max(0, config.sequences.length - 1));
+  }
+
   return Math.max(0, Math.floor((config.sequences.length - 1) / 2));
 }
 
 export function getPreviewSequenceIndexes(
-  config: Pick<SequenceEngagementConfig, "sequences">,
+  config: Pick<SequenceEngagementConfig, "sequences" | "initialSequenceIndex">,
   count: number,
 ): number[] {
   const initialIndex = getInitialSequenceIndex(config);

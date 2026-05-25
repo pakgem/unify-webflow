@@ -172,6 +172,8 @@ export type SequenceEngagementConfig = {
   subtitle?: string;
   peopleCount: string;
   launchLabel?: string;
+  initialSequenceIndex?: number;
+  initialStepIndex?: number;
   sequences: Array<{
     name: string;
     company: string;
