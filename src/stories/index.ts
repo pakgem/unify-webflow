@@ -719,7 +719,7 @@ const ENGAGEMENT_SEQUENCE_LAUNCH = {
         {
           channel: "linkedin",
           label: "light proof",
-          body: "Reference a similar sales team using Unify to turn inbound intent into researched outbound lists.",
+          body: "Maya, saw OrbitGrid hiring RevOps while you were looking at pricing. I work on turning that intent into focused account lists. Worth connecting?",
         },
         {
           channel: "email",
@@ -729,7 +729,7 @@ const ENGAGEMENT_SEQUENCE_LAUNCH = {
         {
           channel: "call",
           label: "use context",
-          body: "Open with the pricing visit and ask whether pipeline quality or source coverage is the bigger gap.",
+          body: "Hi Maya, noticed OrbitGrid looked at pricing while adding RevOps roles. Is the bigger priority cleaner account fit, better coverage, or faster follow-up on intent?",
         },
       ],
     },
@@ -749,7 +749,7 @@ const ENGAGEMENT_SEQUENCE_LAUNCH = {
         {
           channel: "linkedin",
           label: "ask a narrow question",
-          body: "Ask whether partner signals are already part of Northstar Dev’s outbound scoring.",
+          body: "Evan, saw Northstar Dev digging into integrations as your sales team expands. Curious if partner-fit signals are part of outbound scoring today.",
         },
         {
           channel: "email",
@@ -759,7 +759,7 @@ const ENGAGEMENT_SEQUENCE_LAUNCH = {
         {
           channel: "call",
           label: "reference the path",
-          body: "Mention the integrations research and ask if sales is prioritizing ecosystem-led campaigns this quarter.",
+          body: "Hi Evan, I saw the integrations-page research and Northstar Dev’s sales expansion. Are ecosystem-led accounts already a named campaign, or still mostly rep judgment?",
         },
       ],
     },
@@ -779,7 +779,7 @@ const ENGAGEMENT_SEQUENCE_LAUNCH = {
         {
           channel: "linkedin",
           label: "share a takeaway",
-          body: "Send one concise observation about BrightLayer’s likely expansion motion based on the page viewed.",
+          body: "Clara, saw BrightLayer reading customer proof. I’m curious if your team is trying to find more accounts with that same buying pattern.",
         },
         {
           channel: "email",
@@ -789,7 +789,7 @@ const ENGAGEMENT_SEQUENCE_LAUNCH = {
         {
           channel: "call",
           label: "ask for fit",
-          body: "Ask whether revenue is looking for more accounts like the case-study customer or a new adjacent segment.",
+          body: "Hi Clara, noticed the case-study research. Are you trying to replicate that customer profile, or test an adjacent segment where the proof still lands?",
         },
       ],
     },
@@ -809,7 +809,7 @@ const ENGAGEMENT_SEQUENCE_LAUNCH = {
         {
           channel: "linkedin",
           label: "share the angle",
-          body: "Mention that Unify can turn page intent into researched account clusters without stitching tabs together.",
+          body: "Andre, saw Ramp’s demo-page research while growth roles are opening up. I work on turning those signals into researched account clusters.",
         },
         {
           channel: "email",
@@ -819,7 +819,7 @@ const ENGAGEMENT_SEQUENCE_LAUNCH = {
         {
           channel: "call",
           label: "ask about timing",
-          body: "Open by asking whether demo research is tied to a current sales expansion push.",
+          body: "Hi Andre, saw the demo interest and Ramp’s growth hiring. Is this tied to a current expansion push, or are you mainly tightening account prioritization?",
         },
       ],
     },
@@ -839,7 +839,7 @@ const ENGAGEMENT_SEQUENCE_LAUNCH = {
         {
           channel: "linkedin",
           label: "use one proof point",
-          body: "Share a short proof point about teams consolidating research, enrichment, and sequencing in Unify.",
+          body: "Jamie, saw Square using the ROI calculator. We help teams turn that account-quality question into researched lists and sequences in one workflow.",
         },
         {
           channel: "email",
@@ -849,7 +849,7 @@ const ENGAGEMENT_SEQUENCE_LAUNCH = {
         {
           channel: "call",
           label: "qualify the metric",
-          body: "Ask whether Square is optimizing for more contacts, better account fit, or higher rep throughput.",
+          body: "Hi Jamie, saw Square pressure-testing the ROI calculator. Are you optimizing for more contacts, better account fit, or higher rep throughput?",
         },
       ],
     },
@@ -869,7 +869,7 @@ const ENGAGEMENT_SEQUENCE_LAUNCH = {
         {
           channel: "linkedin",
           label: "ask the process question",
-          body: "Ask how Mercury currently reviews new data sources before putting them into outbound workflows.",
+          body: "Nina, saw Mercury reviewing security content. Curious how your team evaluates new GTM data before it reaches outbound workflows.",
         },
         {
           channel: "email",
@@ -879,7 +879,7 @@ const ENGAGEMENT_SEQUENCE_LAUNCH = {
         {
           channel: "call",
           label: "surface blocker",
-          body: "Ask whether security review or data quality is the larger barrier to using richer GTM data.",
+          body: "Hi Nina, noticed the security-page research. When richer GTM data comes up, is the bigger blocker security review, data quality, or operational control?",
         },
       ],
     },
@@ -899,7 +899,7 @@ const ENGAGEMENT_SEQUENCE_LAUNCH = {
         {
           channel: "linkedin",
           label: "ask about workflow",
-          body: "Ask whether Stripe’s team is trying to automate research, enrichment, or sequencing first.",
+          body: "David, saw Stripe come through the docs. Curious whether the team is looking hardest at automating research, enrichment, or sequencing first.",
         },
         {
           channel: "email",
@@ -909,7 +909,7 @@ const ENGAGEMENT_SEQUENCE_LAUNCH = {
         {
           channel: "call",
           label: "probe use case",
-          body: "Ask whether the team wants rep-assist workflows or fully agentic list building.",
+          body: "Hi David, saw the docs-led research. Are you evaluating this as rep-assist workflow automation, or as fully agentic list building?",
         },
       ],
     },
@@ -929,7 +929,7 @@ const ENGAGEMENT_SEQUENCE_LAUNCH = {
         {
           channel: "linkedin",
           label: "ask what matters",
-          body: "Ask whether the buying criteria is coverage, workflow speed, or personalization quality.",
+          body: "Sam, saw Apollo reviewing comparison content. Curious whether the real criteria is coverage, workflow speed, or personalization quality.",
         },
         {
           channel: "email",
@@ -939,7 +939,7 @@ const ENGAGEMENT_SEQUENCE_LAUNCH = {
         {
           channel: "call",
           label: "qualify priority",
-          body: "Ask which workflow currently takes reps out of their selling motion most often.",
+          body: "Hi Sam, saw the comparison-page visit. Which workflow is pulling reps out of selling most often: data search, enrichment, or writing the sequence?",
         },
       ],
     },
@@ -959,7 +959,7 @@ const ENGAGEMENT_SEQUENCE_LAUNCH = {
         {
           channel: "linkedin",
           label: "share focused proof",
-          body: "Point to teams using Unify to build smaller, higher-fit lists instead of expanding generic coverage.",
+          body: "Rachel, saw Retool pricing interest during a sales hiring push. We help teams build smaller, higher-fit lists instead of just expanding coverage.",
         },
         {
           channel: "email",
@@ -969,7 +969,7 @@ const ENGAGEMENT_SEQUENCE_LAUNCH = {
         {
           channel: "call",
           label: "ask about handoff",
-          body: "Ask how Retool currently hands intent signals from marketing to sales.",
+          body: "Hi Rachel, noticed Retool’s pricing interest alongside sales hiring. How are intent signals getting handed to reps today, and where does the handoff break?",
         },
       ],
     },
@@ -989,7 +989,7 @@ const ENGAGEMENT_SEQUENCE_LAUNCH = {
         {
           channel: "linkedin",
           label: "ask one thing",
-          body: "Ask whether Linear’s sales team is prioritizing outbound efficiency or better personalization this quarter.",
+          body: "Owen, saw Linear’s demo-page research. Curious if the team is prioritizing outbound efficiency or better personalization this quarter.",
         },
         {
           channel: "email",
@@ -999,7 +999,7 @@ const ENGAGEMENT_SEQUENCE_LAUNCH = {
         {
           channel: "call",
           label: "connect to timing",
-          body: "Ask if the demo research is connected to an active evaluation window.",
+          body: "Hi Owen, saw the demo-page visit. Is this tied to an active evaluation window, or are you mapping what a cleaner outbound workflow could look like?",
         },
       ],
     },
