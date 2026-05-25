@@ -43,9 +43,11 @@ async function auditViewport(browser, viewport) {
     return {
       documentWidth: document.documentElement.scrollWidth,
       rootMounted: root?.dataset.chatbotStoriesMounted === "true",
+      shellHeight: document.querySelector("[data-chat-shell]")?.getBoundingClientRect().height ?? 0,
       shellCount: document.querySelectorAll("[data-chat-shell]").length,
       storyCountText: document.querySelector("[data-story-count]")?.textContent?.trim() ?? "",
       tabCount: tabs.length,
+      viewportHeight: window.innerHeight,
       viewportWidth: window.innerWidth,
       visibleTabCount: visibleTabs.length,
     };
@@ -53,6 +55,11 @@ async function auditViewport(browser, viewport) {
 
   assert(metrics.rootMounted, `${viewport.name}: auto root was not marked mounted`, metrics);
   assert(metrics.shellCount === 1, `${viewport.name}: expected one chat shell`, metrics);
+  assert(
+    metrics.shellHeight <= metrics.viewportHeight * 0.9 + 1,
+    `${viewport.name}: fake browser exceeded 90% of viewport height`,
+    metrics,
+  );
   assert(metrics.documentWidth <= metrics.viewportWidth + 1, `${viewport.name}: document has horizontal overflow`, metrics);
   assert(metrics.tabCount === 5, `${viewport.name}: expected five story tabs`, metrics);
   assert(metrics.storyCountText.includes("/ 5"), `${viewport.name}: story counter was not populated`, metrics);

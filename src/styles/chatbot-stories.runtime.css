@@ -155,9 +155,9 @@ body {
   background: var(--wa-bg);
 }
 
-@supports (height: 100svh) {
+@supports (height: 100dvh) {
   .wa-section {
-    --wa-window-max-height: 90svh;
+    --wa-window-max-height: min(90vh, 90dvh);
   }
 }
 
@@ -475,6 +475,7 @@ body {
 
 .wa-stage[data-window-content-scale] .wa-chat-shell {
   height: var(--wa-window-scene-unscaled-height);
+  max-height: none;
 }
 
 .wa-chat-shell {
@@ -482,6 +483,7 @@ body {
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
   height: var(--wa-window-height);
+  max-height: var(--wa-window-max-height);
   overflow: visible;
   border: 1px solid var(--wa-browser-line);
   border-radius: var(--wa-radius-window);

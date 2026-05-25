@@ -270,6 +270,9 @@ const MESSAGE_KIND_CLASSES = [
 
 const MOTION_TIME_SCALE = 1.28;
 const motionDuration = (seconds: number): number => Number((seconds * MOTION_TIME_SCALE).toFixed(3));
+const WINDOW_SCENE_FIT = {
+  maxViewportHeightRatio: 0.9,
+};
 const SEQUENCE_WAIT_DAY_DEFAULTS = [3, 3, 3];
 const SEQUENCE_PHONE_OVERRIDES: Record<string, string> = {
   "David Kim": "+1 (917) 234-3381",
@@ -3263,21 +3266,29 @@ export class ChatActor {
     this.clearWindowSceneScaleState();
   }
 
-  private getWindowSceneScale(contentWidth: number, availableWidth: number): number {
-    if (!contentWidth || !availableWidth || contentWidth <= availableWidth + 0.5) return 1;
+  private getWindowSceneScale(
+    contentWidth: number,
+    availableWidth: number,
+    contentHeight: number,
+    availableHeight: number,
+  ): number {
+    const widthScale = contentWidth > availableWidth + 0.5 ? availableWidth / contentWidth : 1;
+    const heightScale = contentHeight > availableHeight + 0.5 ? availableHeight / contentHeight : 1;
 
-    return Math.min(1, availableWidth / contentWidth);
+    return Math.min(1, widthScale, heightScale);
   }
 
   private applyWindowSceneScale(contentWidth: number): void {
     const baseSize = this.getWindowSceneBaseSize();
     const availableWidth = this.getWindowSceneAvailableWidth();
+    const availableHeight = this.getWindowSceneAvailableHeight();
     const desiredWidth = Math.ceil(Math.max(
       baseSize.width,
       this.getWindowSceneBaseWidth(),
       contentWidth,
     ));
-    const scale = this.getWindowSceneScale(desiredWidth, availableWidth);
+    const unscaledHeight = Math.ceil(baseSize.height * (desiredWidth / Math.max(1, baseSize.width)));
+    const scale = this.getWindowSceneScale(desiredWidth, availableWidth, unscaledHeight, availableHeight);
     const nextScale = Math.min(1, Math.max(0.01, scale));
     const shouldResize = desiredWidth > baseSize.width + 0.5;
 
@@ -3288,7 +3299,6 @@ export class ChatActor {
 
     const roundedScale = nextScale >= 0.999 ? 1 : Number(nextScale.toFixed(4));
     const nextScaleText = String(roundedScale);
-    const unscaledHeight = Math.ceil(baseSize.height * (desiredWidth / Math.max(1, baseSize.width)));
     const sceneWidth = `${desiredWidth}px`;
     const sceneHeight = `${Math.ceil(unscaledHeight * roundedScale)}px`;
     const sceneUnscaledHeight = `${unscaledHeight}px`;
@@ -3334,6 +3344,12 @@ export class ChatActor {
     if (parentWidth > 0) return parentWidth;
 
     return this.root.clientWidth;
+  }
+
+  private getWindowSceneAvailableHeight(): number {
+    const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+
+    return Math.max(1, viewportHeight * WINDOW_SCENE_FIT.maxViewportHeightRatio);
   }
 
   private getWindowSceneBaseWidth(): number {
