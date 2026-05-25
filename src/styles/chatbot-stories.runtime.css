@@ -4258,6 +4258,11 @@ body {
 }
 
 .wa-sequence-steps {
+  --wa-sequence-dot-color: #8d8b84;
+  --wa-sequence-dot-selected: #050505;
+  --wa-sequence-dot-stroke: var(--wa-panel);
+  --wa-sequence-dot-center: 8.5px;
+  --wa-sequence-step-size: 82px;
   display: grid;
   position: relative;
   grid-template-columns: 52px 10px minmax(0, 1fr);
@@ -4279,7 +4284,7 @@ body {
   row-gap: 8px;
   align-items: start;
   width: 100%;
-  min-height: 82px;
+  min-height: var(--wa-sequence-step-size);
   padding: 0;
   border: 0;
   border-radius: 0;
@@ -4293,25 +4298,27 @@ body {
 .wa-sequence-step::before {
   content: "";
   position: absolute;
-  top: 5px;
-  left: 1.5px;
+  top: calc(var(--wa-sequence-dot-center) - 5.5px);
+  left: -0.5px;
   z-index: 2;
   width: 7px;
   height: 7px;
+  box-sizing: content-box;
+  border: 2px solid var(--wa-sequence-dot-stroke);
   border-radius: 999px;
-  background: #8d8b84;
+  background: var(--wa-sequence-dot-color);
 }
 
 .wa-sequence-step::after {
   content: "";
   position: absolute;
-  top: 12px;
+  top: var(--wa-sequence-dot-center);
   left: 4.5px;
   z-index: 1;
   width: 1px;
-  height: 95px;
+  height: var(--wa-sequence-step-size);
   border-radius: 999px;
-  background: #8d8b84;
+  background: var(--wa-sequence-dot-color);
 }
 
 .wa-sequence-step:last-of-type::after {
@@ -4331,8 +4338,9 @@ body {
   background: transparent;
   font-size: 12px;
   line-height: 1;
-  font-weight: 560;
+  font-weight: 500;
   text-transform: none;
+  transform: translateY(1px);
 }
 
 .wa-sequence-step__icon {
@@ -4342,6 +4350,7 @@ body {
   align-items: center;
   justify-content: center;
   color: currentColor;
+  transform: translateY(-1px);
 }
 
 .wa-sequence-step__icon svg {
@@ -4350,7 +4359,7 @@ body {
   height: 14px;
   fill: none;
   stroke: currentColor;
-  stroke-width: 1.8;
+  stroke-width: 2.05;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
@@ -4439,7 +4448,11 @@ body {
 }
 
 .wa-sequence-step[data-step-selected="true"]::before {
-  background: #050505;
+  background: var(--wa-sequence-dot-selected);
+}
+
+.wa-sequence-step[data-step-selected="true"] .wa-sequence-step__channel {
+  color: #050505;
 }
 
 .wa-sequence-step[data-step-open="false"] .wa-sequence-step__copy span {
@@ -4449,17 +4462,18 @@ body {
 .wa-sequence-wait {
   display: grid;
   grid-column: 1;
-  align-items: start;
+  align-items: center;
   justify-items: end;
-  min-height: 30px;
-  margin-top: -54px;
+  min-height: var(--wa-sequence-step-size);
+  margin-top: 0;
   padding: 0 8px 0 0;
   color: #5f5d56;
-  font-size: 12px;
-  line-height: 1.08;
+  font-size: 10px;
+  line-height: 1.12;
   font-weight: 560;
   letter-spacing: 0;
-  text-align: center;
+  text-align: right;
+  transform: translateY(calc(var(--wa-sequence-dot-center) - var(--wa-sequence-step-size)));
 }
 
 .wa-sequence-wait::before {
@@ -4467,9 +4481,16 @@ body {
 }
 
 .wa-sequence-wait__label {
-  display: block;
+  display: grid;
   width: 44px;
+  justify-items: end;
+  text-align: right;
   white-space: normal;
+}
+
+.wa-sequence-wait__prefix,
+.wa-sequence-wait__value {
+  display: block;
 }
 
 .wa-sequence-copy-panel {
@@ -4526,7 +4547,7 @@ body {
   color: var(--wa-ink);
   font-size: 14px;
   line-height: 1.12;
-  font-weight: 620;
+  font-weight: 600;
 }
 
 .wa-sequence-copy-panel[data-copy-channel="connect"] .wa-sequence-copy-panel__subject {
@@ -4539,7 +4560,7 @@ body {
   color: #080806;
   font-size: 13px;
   line-height: 1.45;
-  font-weight: 520;
+  font-weight: 500;
 }
 
 .wa-sequence-copy-panel[data-copy-channel="call"] .wa-sequence-copy-panel__subject {
@@ -4550,7 +4571,7 @@ body {
   color: #080806;
   font-size: 15px;
   line-height: 1.45;
-  font-weight: 520;
+  font-weight: 500;
 }
 
 .wa-sequence-copy-panel__body {
@@ -4559,7 +4580,7 @@ body {
   color: var(--wa-ink);
   font-size: 13px;
   line-height: 1.48;
-  font-weight: 410;
+  font-weight: 500;
   white-space: pre-line;
 }
 

@@ -6115,10 +6115,22 @@ export class ChatActor {
     wait.dataset.sequenceWaitIndex = String(index);
     wait.dataset.waitDays = String(waitDays);
     label.className = "wa-sequence-wait__label";
-    label.textContent = this.formatSequenceWaitLabel(waitDays);
+    this.populateSequenceWaitLabel(label, waitDays);
     wait.append(label);
 
     return wait;
+  }
+
+  private populateSequenceWaitLabel(label: HTMLElement, days: number): void {
+    const prefix = document.createElement("span");
+    const value = document.createElement("span");
+
+    prefix.className = "wa-sequence-wait__prefix";
+    prefix.textContent = "wait";
+    value.className = "wa-sequence-wait__value";
+    value.textContent = `${days} ${days === 1 ? "day" : "days"}`;
+    label.setAttribute("aria-label", this.formatSequenceWaitLabel(days));
+    label.replaceChildren(prefix, value);
   }
 
   private getSequenceStepWaitDays(
@@ -6547,7 +6559,7 @@ export class ChatActor {
         wait.dataset.waitDays = String(waitDays);
       }
       if (waitLabel && Number.isFinite(waitDays) && waitDays > 0) {
-        waitLabel.textContent = this.formatSequenceWaitLabel(waitDays);
+        this.populateSequenceWaitLabel(waitLabel, waitDays);
       }
     });
 
