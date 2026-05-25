@@ -109,6 +109,9 @@ type SequencePersonTransitionState = {
   committed: boolean;
   swaps: SequenceContentSwap[];
 };
+type SequenceStepSelectionOptions = {
+  cancelPersonTransition?: boolean;
+};
 type DataTablePageTransitionState = {
   canSwitch: boolean;
   committed: boolean;
@@ -5972,7 +5975,7 @@ export class ChatActor {
           }
           stepEl.setAttribute("aria-pressed", String(stepIndex === 0));
           stepEl.addEventListener("click", () => {
-            this.selectSequenceStep(card, stepIndex);
+            this.selectSequenceStep(card, stepIndex, { cancelPersonTransition: true });
           });
           channel.className = "wa-sequence-step__channel";
           channel.append(
@@ -6580,12 +6583,17 @@ export class ChatActor {
     this.selectSequenceStep(displayCard, Math.min(selectedIndex, Math.max(0, displaySteps.length - 1)));
   }
 
-  private selectSequenceStep(card: HTMLElement, index: number): void {
+  private selectSequenceStep(card: HTMLElement, index: number, options: SequenceStepSelectionOptions = {}): void {
     const steps = this.queryElements(card, ".wa-sequence-step");
     const selected = steps.find((step) => Number(step.dataset.stepIndex) === index) ?? steps[0];
     const meta = card.querySelector<HTMLElement>("[data-sequence-copy-meta]");
     const subject = card.querySelector<HTMLElement>("[data-sequence-copy-subject]");
     const body = card.querySelector<HTMLElement>("[data-sequence-copy-body]");
+
+    if (options.cancelPersonTransition) {
+      this.cancelSequencePersonTransitionForCard(card);
+      this.cleanupInlineSequencePersonContentSwaps(card);
+    }
 
     steps.forEach((step) => {
       const active = step === selected;
@@ -6596,6 +6604,20 @@ export class ChatActor {
     });
 
     this.renderSequenceCopyPanel(card, selected, meta, subject, body);
+  }
+
+  private cancelSequencePersonTransitionForCard(card: HTMLElement): void {
+    const section = card.closest<HTMLElement>("[data-sequence-engagement]");
+    const sequenceId = section?.dataset.sequenceEngagement;
+
+    if (!sequenceId) return;
+
+    const timeline = this.activeSequencePersonTimelines.get(sequenceId);
+
+    if (!timeline) return;
+
+    timeline.kill();
+    this.activeSequencePersonTimelines.delete(sequenceId);
   }
 
   private renderSequenceCopyPanel(

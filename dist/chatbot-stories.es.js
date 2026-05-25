@@ -5442,7 +5442,7 @@ class Ul {
         C.className = "wa-sequence-steps", v.forEach((D, L) => {
           const M = document.createElement("button"), U = document.createElement("span"), $ = document.createElement("span"), qe = document.createElement("strong"), Se = this.getSequenceStepWaitDays(D, L, v.length);
           M.className = "wa-sequence-step", M.type = "button", M.tabIndex = -1, M.dataset.stepIndex = String(L), M.dataset.stepOpen = String(L === k), M.dataset.stepSelected = String(L === k), M.dataset.channel = this.slugChannelName(D.channel), M.dataset.stepSubject = L === 0 ? h.subject : D.label, M.dataset.stepBody = this.getSequenceStepCopy(h, D), M.dataset.stepTemplateChannel = D.channel, M.dataset.stepTemplateLabel = D.label, M.dataset.stepTemplateSubject = L === 0 ? h.subject : D.label, M.dataset.stepTemplateBody = this.getSequenceStepCopy(h, D), Se && (M.dataset.waitDays = String(Se), M.dataset.stepTemplateWaitDays = String(Se)), M.setAttribute("aria-pressed", String(L === 0)), M.addEventListener("click", () => {
-            this.selectSequenceStep(p, L);
+            this.selectSequenceStep(p, L, { cancelPersonTransition: !0 });
           }), U.className = "wa-sequence-step__channel", U.append(
             this.createSequenceChannelIcon(D.channel),
             document.createTextNode(this.formatSequenceChannelLabel(D.channel))
@@ -5712,12 +5712,18 @@ class Ul {
       f && (f.style.display = Number.isFinite(p) && p > 0 ? "grid" : "none", f.dataset.waitDays = String(p)), w && Number.isFinite(p) && p > 0 && this.populateSequenceWaitLabel(w, p);
     }), e.dataset.activeSequenceIndex = String(i), this.selectSequenceStep(t, Math.min(n, Math.max(0, o.length - 1)));
   }
-  selectSequenceStep(e, t) {
-    const a = this.queryElements(e, ".wa-sequence-step"), i = a.find((l) => Number(l.dataset.stepIndex) === t) ?? a[0], n = e.querySelector("[data-sequence-copy-meta]"), o = e.querySelector("[data-sequence-copy-subject]"), s = e.querySelector("[data-sequence-copy-body]");
-    a.forEach((l) => {
-      const c = l === i;
-      l.dataset.stepSelected = String(c), l.dataset.stepOpen = String(c), l.setAttribute("aria-pressed", String(c));
-    }), this.renderSequenceCopyPanel(e, i, n, o, s);
+  selectSequenceStep(e, t, a = {}) {
+    const i = this.queryElements(e, ".wa-sequence-step"), n = i.find((c) => Number(c.dataset.stepIndex) === t) ?? i[0], o = e.querySelector("[data-sequence-copy-meta]"), s = e.querySelector("[data-sequence-copy-subject]"), l = e.querySelector("[data-sequence-copy-body]");
+    a.cancelPersonTransition && (this.cancelSequencePersonTransitionForCard(e), this.cleanupInlineSequencePersonContentSwaps(e)), i.forEach((c) => {
+      const d = c === n;
+      c.dataset.stepSelected = String(d), c.dataset.stepOpen = String(d), c.setAttribute("aria-pressed", String(d));
+    }), this.renderSequenceCopyPanel(e, n, o, s, l);
+  }
+  cancelSequencePersonTransitionForCard(e) {
+    const a = e.closest("[data-sequence-engagement]")?.dataset.sequenceEngagement;
+    if (!a) return;
+    const i = this.activeSequencePersonTimelines.get(a);
+    i && (i.kill(), this.activeSequencePersonTimelines.delete(a));
   }
   renderSequenceCopyPanel(e, t, a, i, n) {
     const o = e.querySelector("[data-sequence-copy-panel]"), s = t?.dataset.channel ?? "", l = s.includes("linkedin") || s.includes("social"), c = s.includes("call") || s.includes("dial");
