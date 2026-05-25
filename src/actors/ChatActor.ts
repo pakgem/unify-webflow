@@ -2518,6 +2518,8 @@ export class ChatActor {
     this.activeSequencePersonTimelines.get(sequenceId)?.kill();
 
     const timeline = this.sequencePerson(sequenceId, index);
+    const handleComplete = timeline.eventCallback("onComplete") as (() => void) | null;
+    const handleInterrupt = timeline.eventCallback("onInterrupt") as (() => void) | null;
     const cleanup = () => {
       if (this.activeSequencePersonTimelines.get(sequenceId) === timeline) {
         this.activeSequencePersonTimelines.delete(sequenceId);
@@ -2527,8 +2529,14 @@ export class ChatActor {
     if (timeline.duration() <= 0) return;
 
     this.activeSequencePersonTimelines.set(sequenceId, timeline);
-    timeline.eventCallback("onComplete", cleanup);
-    timeline.eventCallback("onInterrupt", cleanup);
+    timeline.eventCallback("onComplete", () => {
+      handleComplete?.();
+      cleanup();
+    });
+    timeline.eventCallback("onInterrupt", () => {
+      handleInterrupt?.();
+      cleanup();
+    });
   }
 
   private clearSequencePersonTimelines(): void {
