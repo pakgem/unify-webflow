@@ -101,7 +101,8 @@ body {
   --wa-media-width: 418px;
   --wa-media-height: 720px;
   --wa-window-width: 590px;
-  --wa-window-height: 530px;
+  --wa-window-max-height: 90vh;
+  --wa-window-height: min(530px, var(--wa-window-max-height));
   --wa-chat-x-padding: 24px;
   --wa-chat-entry-gap: 16px;
   --wa-chat-top-fade: calc(var(--wa-chat-x-padding) + 4px);
@@ -152,6 +153,12 @@ body {
   font-family: var(--wa-font-sans);
   letter-spacing: 0;
   background: var(--wa-bg);
+}
+
+@supports (height: 100svh) {
+  .wa-section {
+    --wa-window-max-height: 90svh;
+  }
 }
 
 .wa-section[data-theme="dark"] {
@@ -5356,7 +5363,7 @@ body {
     --wa-feature-title-size: clamp(36px, 3.5vw, 44px);
     --wa-feature-copy-size: clamp(20px, 2.1vw, 25px);
     --wa-window-width: min(82vw, 912px);
-    --wa-window-height: min(820px, 74vw);
+    --wa-window-height: min(820px, 74vw, var(--wa-window-max-height));
     --wa-chat-x-padding: 24px;
     padding: 88px clamp(56px, 6vw, 80px) 118px;
   }
@@ -5542,7 +5549,7 @@ body {
     --wa-composer-send-size: 32px;
     --wa-history-resume-height: 40px;
     --wa-window-width: 590px;
-    --wa-window-height: 860px;
+    --wa-window-height: min(860px, var(--wa-window-max-height));
     padding: 38px 0 0;
   }
 
