@@ -119,22 +119,27 @@ function collectBuilderStoryAssetUrls(story: BuilderStory): string[] {
   for (const step of story.steps) {
     if (step.kind !== "component" || !step.component) continue;
 
-    const component = step.component;
-    if (component.kind === "table") {
-      collectDataTableAssetUrls(toDataTable(component, `${story.id}-${step.id}`)).forEach((url) => urls.add(url));
-    }
-    if (component.kind === "dataSources") {
-      collectDataSourceAssetUrls(toDataSources(component)).forEach((url) => urls.add(url));
-    }
-    if (component.kind === "proximityList") {
-      collectProximityAssetUrls(toProximityList(component)).forEach((url) => urls.add(url));
-    }
-    if (component.kind === "sequenceEngagement") {
-      collectSequenceAssetUrls(toSequenceEngagement(component, `${story.id}-${step.id}`)).forEach((url) => urls.add(url));
+    switch (step.component.kind) {
+      case "table":
+        addAssetUrls(urls, collectDataTableAssetUrls(toDataTable(step.component, `${story.id}-${step.id}`)));
+        break;
+      case "dataSources":
+        addAssetUrls(urls, collectDataSourceAssetUrls(toDataSources(step.component)));
+        break;
+      case "proximityList":
+        addAssetUrls(urls, collectProximityAssetUrls(toProximityList(step.component)));
+        break;
+      case "sequenceEngagement":
+        addAssetUrls(urls, collectSequenceAssetUrls(toSequenceEngagement(step.component, `${story.id}-${step.id}`)));
+        break;
     }
   }
 
   return [...urls];
+}
+
+function addAssetUrls(urls: Set<string>, collectedUrls: string[]): void {
+  for (const url of collectedUrls) urls.add(url);
 }
 
 function getRuntimeEntry(storyId: string, baseStory: StoryDefinition): StoryDefinition["entry"] {

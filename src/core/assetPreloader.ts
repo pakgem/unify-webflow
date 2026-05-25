@@ -9,6 +9,8 @@ import type {
 
 const preloadedImageUrls = new Set<string>();
 const preloadLinkUrls = new Set<string>();
+const DATA_TABLE_DIRECT_AVATAR_KEYS = ["avatarUrl", "mutualConnectionAvatarUrl"] as const;
+const DATA_TABLE_PERSON_KEYS = ["name", "contact", "prospect", "fullName", "mutualConnection", "connector"] as const;
 
 export function preloadStoriesAround(stories: StoryDefinition[], index: number): void {
   if (!stories.length) return;
@@ -24,41 +26,41 @@ export function preloadStoryAssets(story: StoryDefinition | undefined): void {
 }
 
 export function collectDataTableAssetUrls(table: DataTableConfig): string[] {
-  const urls = new Set<string>();
-  const addRow = (row: DataTableConfig["rows"][number]) => addDataTableRowAssetUrls(urls, row.values);
-
-  table.rows.forEach(addRow);
-  table.pagination?.pages.forEach((page) => page.rows.forEach(addRow));
-
-  return [...urls];
+  return collectUniqueAssetUrls(getDataTableRows(table).flatMap((row) => getDataTableRowAssetUrlCandidates(row.values)));
 }
 
 export function collectDataSourceAssetUrls(config: DataSourceGridConfig): string[] {
-  return config.sources.map((source) => source.logoSrc).filter(isAssetUrl);
+  return collectUniqueAssetUrls(config.sources.map((source) => source.logoSrc));
 }
 
 export function collectProximityAssetUrls(config: ProximityLeadListConfig): string[] {
-  return config.leads.map((lead) => getProfilePhotoUrl(lead.name, lead.avatarUrl)).filter(isAssetUrl);
+  return collectUniqueAssetUrls(config.leads.map((lead) => getProfilePhotoUrl(lead.name, lead.avatarUrl)));
 }
 
 export function collectSequenceAssetUrls(config: SequenceEngagementConfig): string[] {
-  return config.sequences.map((sequence) => getProfilePhotoUrl(sequence.name, sequence.avatarUrl)).filter(isAssetUrl);
+  return collectUniqueAssetUrls(config.sequences.map((sequence) => getProfilePhotoUrl(sequence.name, sequence.avatarUrl)));
 }
 
-function addDataTableRowAssetUrls(urls: Set<string>, values: Record<string, string>): void {
-  for (const key of ["avatarUrl", "mutualConnectionAvatarUrl"]) {
-    if (isAssetUrl(values[key])) urls.add(values[key]);
-  }
+function getDataTableRows(table: DataTableConfig): DataTableConfig["rows"] {
+  return [
+    ...table.rows,
+    ...(table.pagination?.pages.flatMap((page) => page.rows) ?? []),
+  ];
+}
 
-  for (const key of ["name", "contact", "prospect", "fullName", "mutualConnection", "connector"]) {
+function getDataTableRowAssetUrlCandidates(values: Record<string, string>): Array<string | undefined> {
+  const urls: Array<string | undefined> = DATA_TABLE_DIRECT_AVATAR_KEYS.map((key) => values[key]);
+
+  for (const key of DATA_TABLE_PERSON_KEYS) {
     const name = values[key];
     if (!name) continue;
     if (!shouldPreloadDataTablePerson(key, values)) continue;
 
     const explicit = key === "mutualConnection" || key === "connector" ? values.mutualConnectionAvatarUrl : values.avatarUrl;
-    const url = getProfilePhotoUrl(name, explicit);
-    if (isAssetUrl(url)) urls.add(url);
+    urls.push(getProfilePhotoUrl(name, explicit));
   }
+
+  return urls;
 }
 
 function shouldPreloadDataTablePerson(key: string, values: Record<string, string>): boolean {
@@ -89,6 +91,16 @@ function preloadImage(url: string): void {
   image.loading = "eager";
   image.src = absoluteUrl;
   void image.decode?.().catch(() => undefined);
+}
+
+function collectUniqueAssetUrls(values: unknown[]): string[] {
+  const urls = new Set<string>();
+
+  for (const value of values) {
+    if (isAssetUrl(value)) urls.add(value);
+  }
+
+  return [...urls];
 }
 
 function addPreloadLink(url: string): void {
