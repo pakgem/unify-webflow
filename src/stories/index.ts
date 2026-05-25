@@ -588,7 +588,7 @@ const GMAIL_MAILBOX_CONNECTION = {
 
 const PYLON_BUSINESS_REPORT = {
   id: "pylon-business-report",
-  title: "Pylon business report",
+  title: "Messaging strategy",
   subtitle: "How to win Pylon's market from the uploaded business context.",
   signals: [
     {

@@ -2027,7 +2027,7 @@ function createSeedSteps(storyId: string, fallbackSummary: string): BuilderStep[
       ]),
       {
         kind: "component",
-        text: "Pylon business report",
+        text: "Messaging strategy",
         note: "Single report focused on the winning wedge, GTM motion, displacement angle, and proof to use.",
         component: createStyleProfileComponent(),
       },
@@ -2565,7 +2565,7 @@ function createMailboxConnectionComponent(): BuilderMailboxConnectionComponent {
 function createStyleProfileComponent(): BuilderStyleProfileComponent {
   return {
     kind: "styleProfile",
-    title: "Pylon business report",
+    title: "Messaging strategy",
     subtitle: "How to win Pylon's market from the uploaded business context.",
     signals: [
       {

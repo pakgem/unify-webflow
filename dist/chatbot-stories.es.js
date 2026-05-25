@@ -8748,7 +8748,7 @@ const _d = [
   signals: ["sent emails", "reply patterns", "calendar context", "signature and tone"]
 }, Yn = {
   id: "pylon-business-report",
-  title: "Pylon business report",
+  title: "Messaging strategy",
   subtitle: "How to win Pylon's market from the uploaded business context.",
   signals: [
     {
