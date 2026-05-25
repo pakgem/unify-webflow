@@ -4408,6 +4408,8 @@ body {
   inset: 0;
   box-sizing: border-box;
   display: block;
+  width: 100%;
+  max-width: 100%;
   min-width: 0;
   padding: inherit;
   gap: inherit;
@@ -4417,6 +4419,17 @@ body {
   pointer-events: none;
   opacity: 0;
   visibility: hidden;
+}
+
+.wa-sequence-step__copy strong .wa-sequence-content-swap-clone {
+  display: block;
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .wa-sequence-copy-panel__meta .wa-sequence-content-swap-clone {
@@ -4457,6 +4470,10 @@ body {
 
 .wa-sequence-step[data-step-open="false"] .wa-sequence-step__copy span {
   display: none;
+}
+
+.wa-sequence-step[data-step-open="false"] .wa-sequence-step__copy strong .wa-sequence-content-swap-clone {
+  display: block;
 }
 
 .wa-sequence-wait {

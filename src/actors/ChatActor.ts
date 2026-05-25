@@ -2490,20 +2490,21 @@ export class ChatActor {
       return tl;
     }
 
-    this.setSequencePersonRailState(section, index, true);
+    tl.call(() => {
+      this.setSequencePersonRailState(section, index, true);
+      state.swaps = this.prepareSequencePersonContentSwaps(section, activeCard, targetCard, index);
+      this.setMotionHints(this.getSequencePersonSwapMotionTargets(state));
+      this.renderSequencePersonContentSwaps(state, progress.value);
+    }, undefined, 0);
 
     tl.to(progress, {
       value: 1,
       duration: DATA_TABLE_PAGE_CELL_MOTION.totalDuration,
       ease: "none",
-      onStart: () => {
-        state.swaps = this.prepareSequencePersonContentSwaps(section, activeCard, targetCard, index);
-        this.setMotionHints(this.getSequencePersonSwapMotionTargets(state));
-      },
       onUpdate: () => {
         this.renderSequencePersonContentSwaps(state, progress.value);
       },
-    }).call(() => {
+    }, 0).call(() => {
       this.commitSequencePersonContentSwaps(state);
     });
 
@@ -6355,7 +6356,7 @@ export class ChatActor {
 
   private getSequenceTransitionTargets(card: HTMLElement): HTMLElement[] {
     return this.compactElements(
-      card.querySelector<HTMLElement>(".wa-sequence-step[data-step-selected=\"true\"] .wa-sequence-step__copy strong"),
+      ...this.queryElements(card, ".wa-sequence-step__copy strong"),
       card.querySelector<HTMLElement>("[data-sequence-copy-meta]"),
       card.querySelector<HTMLElement>("[data-sequence-copy-subject]"),
       card.querySelector<HTMLElement>("[data-sequence-copy-body]"),
@@ -6505,6 +6506,10 @@ export class ChatActor {
 
   private cleanupInlineSequencePersonContentSwaps(card: HTMLElement): void {
     this.queryElements(card, "[data-sequence-content-swap-active=\"true\"]").forEach((target) => {
+      const incomingClone = target.querySelector<HTMLElement>("[data-sequence-content-swap-clone=\"incoming\"]");
+      const currentClone = target.querySelector<HTMLElement>("[data-sequence-content-swap-clone=\"current\"]");
+
+      target.innerHTML = incomingClone?.innerHTML ?? currentClone?.innerHTML ?? target.innerHTML;
       delete target.dataset.sequenceContentSwapActive;
       target.style.minWidth = "";
       target.style.minHeight = "";
