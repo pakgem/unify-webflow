@@ -105,6 +105,7 @@ body {
   --wa-window-height: min(530px, var(--wa-window-max-height));
   --wa-chat-x-padding: 24px;
   --wa-chat-shadow-gutter: min(24px, var(--wa-chat-x-padding));
+  --wa-chat-thread-bleed: calc(var(--wa-chat-x-padding) + var(--wa-chat-shadow-gutter));
   --wa-chat-entry-gap: 16px;
   --wa-chat-top-fade: calc(var(--wa-chat-x-padding) + 4px);
   --wa-chat-bottom-clearance: 110px;
@@ -587,7 +588,11 @@ body {
   gap: 0;
   min-height: 0;
   padding: 0 var(--wa-chat-x-padding);
-  overflow: hidden;
+  overflow: visible;
+  clip-path: inset(
+    0 calc(-1 * var(--wa-chat-shadow-gutter)) 0 calc(-1 * var(--wa-chat-shadow-gutter)) round 0 0
+      calc(var(--wa-radius-window) - 1px) calc(var(--wa-radius-window) - 1px)
+  );
   border-radius: 0 0 calc(var(--wa-radius-window) - 1px) calc(var(--wa-radius-window) - 1px);
   background: var(--wa-panel);
   background-clip: padding-box;
@@ -739,13 +744,14 @@ body {
   display: grid;
   gap: var(--wa-chat-entry-gap);
   align-content: start;
+  justify-self: start;
   box-sizing: border-box;
-  width: calc(100% + var(--wa-chat-shadow-gutter) + var(--wa-chat-shadow-gutter));
+  width: calc(100% + var(--wa-chat-thread-bleed) + var(--wa-chat-thread-bleed));
   height: 100%;
   min-height: 0;
   max-height: none;
-  margin-inline: calc(-1 * var(--wa-chat-shadow-gutter));
-  padding-inline: var(--wa-chat-shadow-gutter);
+  margin-inline: calc(-1 * var(--wa-chat-thread-bleed));
+  padding-inline: var(--wa-chat-thread-bleed);
   padding-bottom: var(--wa-chat-bottom-clearance);
   overflow: hidden;
   overscroll-behavior: auto;
