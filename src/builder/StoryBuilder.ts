@@ -17,6 +17,7 @@ import {
   type BuilderComponent,
   type BuilderDataSourcesComponent,
   type BuilderEnrichmentComponent,
+  type BuilderGenericComponent,
   type BuilderMailboxConnectionComponent,
   type BuilderPersonalizationSwipeComponent,
   type BuilderProximityListComponent,
@@ -131,7 +132,11 @@ export class StoryBuilder {
 
       if (!button) return;
 
-      this.selectStory(Number(button.dataset.builderStoryTab));
+      const storyIndex = toIndex(button.dataset.builderStoryTab);
+
+      if (storyIndex === null) return;
+
+      this.selectStory(storyIndex);
     });
 
     this.on(refs.addRail, "click", (event) => {
@@ -588,32 +593,42 @@ export class StoryBuilder {
   private createComponentBody(step: BuilderStep): HTMLElement {
     step.component ??= createFallbackComponent(step.text);
 
-    if (step.component.kind === "table") return this.createTableComponentBody(step, step.component);
-    if (step.component.kind === "strategyCards") return this.createStrategyComponentBody(step, step.component);
-    if (step.component.kind === "enrichment") return this.createEnrichmentComponentBody(step, step.component);
-    if (step.component.kind === "dataSources") return this.createDataSourcesComponentBody(step, step.component);
-    if (step.component.kind === "uploadedFiles") return this.createUploadedFilesComponentBody(step, step.component);
-    if (step.component.kind === "mailboxConnection") {
-      return this.createMailboxConnectionComponentBody(step, step.component);
+    switch (step.component.kind) {
+      case "table":
+        return this.createTableComponentBody(step, step.component);
+      case "strategyCards":
+        return this.createStrategyComponentBody(step, step.component);
+      case "enrichment":
+        return this.createEnrichmentComponentBody(step, step.component);
+      case "dataSources":
+        return this.createDataSourcesComponentBody(step, step.component);
+      case "uploadedFiles":
+        return this.createUploadedFilesComponentBody(step, step.component);
+      case "mailboxConnection":
+        return this.createMailboxConnectionComponentBody(step, step.component);
+      case "styleProfile":
+        return this.createStyleProfileComponentBody(step, step.component);
+      case "proximityList":
+        return this.createProximityListComponentBody(step, step.component);
+      case "personalizationSwipeGame":
+        return this.createPersonalizationSwipeComponentBody(step, step.component);
+      case "sequenceEngagement":
+        return this.createSequenceEngagementComponentBody(step, step.component);
+      case "generic":
+        return this.createGenericComponentBody(step, step.component);
     }
-    if (step.component.kind === "styleProfile") return this.createStyleProfileComponentBody(step, step.component);
-    if (step.component.kind === "proximityList") return this.createProximityListComponentBody(step, step.component);
-    if (step.component.kind === "personalizationSwipeGame") {
-      return this.createPersonalizationSwipeComponentBody(step, step.component);
-    }
-    if (step.component.kind === "sequenceEngagement") {
-      return this.createSequenceEngagementComponentBody(step, step.component);
-    }
+  }
 
+  private createGenericComponentBody(step: BuilderStep, component: BuilderGenericComponent): HTMLElement {
     const { card, content } = this.createStructuredComponentParts("Component");
 
-    const title = this.createComponentField(step.id, "title", step.component.title, {
+    const title = this.createComponentField(step.id, "title", component.title, {
       className: "wa-builder-component-card__title",
     });
 
     const items = document.createElement("div");
     items.className = "wa-builder-component-list";
-    step.component.items.forEach((item, index) => {
+    component.items.forEach((item, index) => {
       items.append(
         this.createComponentField(step.id, "item", item, {
           itemIndex: index,
@@ -2836,67 +2851,67 @@ function updateComponentValue(
 ): void {
   if (field === "title") component.title = value;
 
-  if (component.kind === "generic" && field === "item" && indexes.itemIndex !== null) {
-    component.items[indexes.itemIndex] = value;
-  }
+  switch (component.kind) {
+    case "generic":
+      if (field === "item" && indexes.itemIndex !== null) component.items[indexes.itemIndex] = value;
+      return;
 
-  if (component.kind === "dataSources") {
-    if (field === "subtitle") component.subtitle = value;
+    case "dataSources": {
+      if (field === "subtitle") component.subtitle = value;
+      if (indexes.itemIndex === null) return;
 
-    if (indexes.itemIndex !== null) {
       const source = component.sources[indexes.itemIndex];
       if (!source) return;
 
       if (field === "sourceCategory") source.category = value;
       if (field === "sourceName") source.name = value;
       if (field === "sourceDetail") source.detail = value;
+      return;
     }
-  }
 
-  if (component.kind === "uploadedFiles" && indexes.itemIndex !== null) {
-    const file = component.files[indexes.itemIndex];
-    if (!file) return;
+    case "uploadedFiles": {
+      if (indexes.itemIndex === null) return;
 
-    if (field === "fileType") file.type = value;
-    if (field === "fileName") file.name = value;
-    if (field === "fileDetail") file.detail = value;
-  }
+      const file = component.files[indexes.itemIndex];
+      if (!file) return;
 
-  if (component.kind === "mailboxConnection") {
-    if (field === "subtitle") component.subtitle = value;
-    if (field === "mailboxProvider") component.provider = value;
-    if (field === "mailboxAccount") component.account = value;
-    if (field === "mailboxStatus") component.status = value;
-    if (field === "mailboxCtaLabel") component.ctaLabel = value;
-    if (field === "mailboxSecondaryCtaLabel") component.secondaryCtaLabel = value;
-    if (field === "mailboxLoadingLabel") component.loadingLabel = value;
-    if (field === "mailboxLearningTitle") component.learningTitle = value;
-    if (field === "mailboxLearningDetail") component.learningDetail = value;
-    if (field === "mailboxLearningReadyDetail") component.learningReadyDetail = value;
-
-    if (field === "mailboxSignal" && indexes.itemIndex !== null) {
-      component.signals[indexes.itemIndex] = value;
+      if (field === "fileType") file.type = value;
+      if (field === "fileName") file.name = value;
+      if (field === "fileDetail") file.detail = value;
+      return;
     }
-  }
 
-  if (component.kind === "styleProfile") {
-    if (field === "subtitle") component.subtitle = value;
+    case "mailboxConnection":
+      if (field === "subtitle") component.subtitle = value;
+      if (field === "mailboxProvider") component.provider = value;
+      if (field === "mailboxAccount") component.account = value;
+      if (field === "mailboxStatus") component.status = value;
+      if (field === "mailboxCtaLabel") component.ctaLabel = value;
+      if (field === "mailboxSecondaryCtaLabel") component.secondaryCtaLabel = value;
+      if (field === "mailboxLoadingLabel") component.loadingLabel = value;
+      if (field === "mailboxLearningTitle") component.learningTitle = value;
+      if (field === "mailboxLearningDetail") component.learningDetail = value;
+      if (field === "mailboxLearningReadyDetail") component.learningReadyDetail = value;
+      if (field === "mailboxSignal" && indexes.itemIndex !== null) component.signals[indexes.itemIndex] = value;
+      return;
 
-    if (indexes.itemIndex !== null) {
-      const signal = component.signals[indexes.itemIndex];
-      if (signal) {
-        if (field === "signalLabel") signal.label = value;
-        if (field === "signalValue") signal.value = value;
-      }
-
+    case "styleProfile": {
+      if (field === "subtitle") component.subtitle = value;
+      if (indexes.itemIndex === null) return;
       if (field === "styleExample") component.examples[indexes.itemIndex] = value;
+
+      const signal = component.signals[indexes.itemIndex];
+      if (!signal) return;
+
+      if (field === "signalLabel") signal.label = value;
+      if (field === "signalValue") signal.value = value;
+      return;
     }
-  }
 
-  if (component.kind === "proximityList") {
-    if (field === "subtitle") component.subtitle = value;
+    case "proximityList": {
+      if (field === "subtitle") component.subtitle = value;
+      if (indexes.itemIndex === null) return;
 
-    if (indexes.itemIndex !== null) {
       const lead = component.leads[indexes.itemIndex];
       if (!lead) return;
 
@@ -2907,29 +2922,29 @@ function updateComponentValue(
       if (field === "leadTitle") lead.title = value;
       if (field === "leadProximity") lead.proximity = value;
       if (field === "leadPersonalization") lead.personalization = value;
+      return;
     }
-  }
 
-  if (component.kind === "personalizationSwipeGame") {
-    if (field === "subtitle") component.subtitle = value;
-    if (field === "prompt") component.prompt = value;
+    case "personalizationSwipeGame": {
+      if (field === "subtitle") component.subtitle = value;
+      if (field === "prompt") component.prompt = value;
+      if (indexes.itemIndex === null) return;
 
-    if (indexes.itemIndex !== null) {
       const signal = component.signals[indexes.itemIndex];
       if (!signal) return;
 
       if (field === "swipeDecision") signal.decision = value === "avoid" ? "avoid" : "use";
       if (field === "swipeLabel") signal.label = value;
       if (field === "swipeDetail") signal.detail = value;
+      return;
     }
-  }
 
-  if (component.kind === "sequenceEngagement") {
-    if (field === "subtitle") component.subtitle = value;
-    if (field === "peopleCount") component.peopleCount = value;
-    if (field === "launchLabel") component.launchLabel = value;
+    case "sequenceEngagement": {
+      if (field === "subtitle") component.subtitle = value;
+      if (field === "peopleCount") component.peopleCount = value;
+      if (field === "launchLabel") component.launchLabel = value;
+      if (indexes.itemIndex === null) return;
 
-    if (indexes.itemIndex !== null) {
       const sequence = component.sequences[indexes.itemIndex];
       if (sequence) {
         if (field === "sequenceName") sequence.name = value;
@@ -2954,74 +2969,57 @@ function updateComponentValue(
         if (field === "channelDetail") channel.detail = value;
         if (field === "channelBadge") channel.badge = value;
       }
-    }
-  }
-
-  if (component.kind === "table") {
-    if (field === "eyebrow") component.eyebrow = value;
-    if (field === "count") component.count = value;
-
-    if (field === "column" && indexes.columnIndex !== null) {
-      component.columns[indexes.columnIndex] = value;
+      return;
     }
 
-    if (field === "cell" && indexes.rowIndex !== null && indexes.columnIndex !== null) {
-      component.rows[indexes.rowIndex] ??= [];
-      component.rows[indexes.rowIndex][indexes.columnIndex] = value;
-    }
-
-    if (indexes.itemIndex !== null) {
-      const action = component.actions?.[indexes.itemIndex];
-      if (action) {
-        if (field === "actionLabel") action.label = value;
-        if (field === "actionTooltip") action.tooltip = value;
-        if (field === "actionBadge") action.badge = value;
+    case "table":
+      if (field === "eyebrow") component.eyebrow = value;
+      if (field === "count") component.count = value;
+      if (field === "column" && indexes.columnIndex !== null) component.columns[indexes.columnIndex] = value;
+      if (field === "cell" && indexes.rowIndex !== null && indexes.columnIndex !== null) {
+        component.rows[indexes.rowIndex] ??= [];
+        component.rows[indexes.rowIndex][indexes.columnIndex] = value;
       }
-
-      if (field === "pageRange" && component.pagination) {
-        component.pagination.ranges[indexes.itemIndex] = value;
+      if (indexes.itemIndex !== null) {
+        const action = component.actions?.[indexes.itemIndex];
+        if (action) {
+          if (field === "actionLabel") action.label = value;
+          if (field === "actionTooltip") action.tooltip = value;
+          if (field === "actionBadge") action.badge = value;
+        }
+        if (field === "pageRange" && component.pagination) component.pagination.ranges[indexes.itemIndex] = value;
       }
-    }
-  }
+      return;
 
-  if (component.kind === "strategyCards" && indexes.cardIndex !== null) {
-    const card = component.cards[indexes.cardIndex];
+    case "strategyCards": {
+      if (indexes.cardIndex === null) return;
 
-    if (!card) return;
+      const card = component.cards[indexes.cardIndex];
+      if (!card) return;
 
-    if (field === "cardLabel") card.label = value;
-    if (field === "cardTitle") card.title = value;
-    if (field === "cardSummary") card.summary = value;
-  }
-
-  if (component.kind === "enrichment") {
-    if (field === "subtitle") component.subtitle = value;
-
-    if (field === "fieldTitle" && indexes.fieldIndex !== null) {
-      const group = component.fields[indexes.fieldIndex];
-      if (group) group.title = value;
+      if (field === "cardLabel") card.label = value;
+      if (field === "cardTitle") card.title = value;
+      if (field === "cardSummary") card.summary = value;
+      return;
     }
 
-    if (field === "fieldStep" && indexes.fieldIndex !== null && indexes.itemIndex !== null) {
-      const group = component.fields[indexes.fieldIndex];
-      if (group) group.steps[indexes.itemIndex] = value;
+    case "enrichment": {
+      if (field === "subtitle") component.subtitle = value;
+      if (field === "fieldTitle" && indexes.fieldIndex !== null) {
+        const group = component.fields[indexes.fieldIndex];
+        if (group) group.title = value;
+      }
+      if (field === "fieldStep" && indexes.fieldIndex !== null && indexes.itemIndex !== null) {
+        const group = component.fields[indexes.fieldIndex];
+        if (group) group.steps[indexes.itemIndex] = value;
+      }
+      return;
     }
   }
 }
 
 function getComponentDisplayText(component: BuilderComponent): string {
-  if (component.kind === "table") return `Table: ${component.title}`;
-  if (component.kind === "strategyCards") return component.title;
-  if (component.kind === "enrichment") return component.title;
-  if (component.kind === "dataSources") return component.title;
-  if (component.kind === "uploadedFiles") return component.title;
-  if (component.kind === "mailboxConnection") return component.title;
-  if (component.kind === "styleProfile") return component.title;
-  if (component.kind === "proximityList") return component.title;
-  if (component.kind === "personalizationSwipeGame") return component.title;
-  if (component.kind === "sequenceEngagement") return component.title;
-
-  return component.title;
+  return component.kind === "table" ? `Table: ${component.title}` : component.title;
 }
 
 function cloneStep(step: BuilderStep): BuilderStep {

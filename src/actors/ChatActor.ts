@@ -134,10 +134,21 @@ type DataTablePageRuntime = {
   targetButton?: HTMLElement;
   range: HTMLElement | null;
 };
+type DataTablePageButtonRuntime = {
+  table: HTMLElement;
+  tableId: string;
+  page: number;
+  initialPage: number | null;
+  initialRangeText: string | null;
+};
 type SequenceCardRuntime = {
   cards: HTMLElement[];
   displayCard: HTMLElement | null;
   templateCard: HTMLElement | null;
+};
+type SequenceRailRuntime = {
+  rail: HTMLElement;
+  card: HTMLElement;
 };
 type SignupLogoTransfer = {
   el: HTMLElement;
@@ -776,28 +787,24 @@ export class ChatActor {
 
     if (!pageButton) return;
 
-    const table = pageButton.closest<HTMLElement>(DATA_TABLE_SELECTOR);
-    const tableId = table?.dataset.dataTable;
-    const page = Number(pageButton.dataset.tablePageButton);
+    const pageRuntime = this.getDataTablePageButtonRuntime(pageButton);
 
-    if (!tableId || !Number.isFinite(page)) return;
+    if (!pageRuntime) return;
 
     event.preventDefault();
-    const initialPage = Number(table.dataset.activePage);
-    const initialRangeText = table.querySelector<HTMLElement>(DATA_TABLE_PAGE_RANGE_SELECTOR)?.textContent ?? null;
 
-    this.updateDataTablePageControlsForTable(table, page, pageButton.dataset.pageRange ?? null);
-    this.activeTablePageTimelines.get(tableId)?.kill();
-    const timeline = this.dataTablePage(tableId, page, {
+    this.updateDataTablePageControlsForTable(pageRuntime.table, pageRuntime.page, pageButton.dataset.pageRange ?? null);
+    this.activeTablePageTimelines.get(pageRuntime.tableId)?.kill();
+    const timeline = this.dataTablePage(pageRuntime.tableId, pageRuntime.page, {
       updateExpected: false,
-      initialPage,
-      initialRangeText,
+      initialPage: pageRuntime.initialPage,
+      initialRangeText: pageRuntime.initialRangeText,
     });
 
-    this.activeTablePageTimelines.set(tableId, timeline);
+    this.activeTablePageTimelines.set(pageRuntime.tableId, timeline);
     timeline.eventCallback("onComplete", () => {
-      if (this.activeTablePageTimelines.get(tableId) === timeline) {
-        this.activeTablePageTimelines.delete(tableId);
+      if (this.activeTablePageTimelines.get(pageRuntime.tableId) === timeline) {
+        this.activeTablePageTimelines.delete(pageRuntime.tableId);
       }
       this.showTooltipForDataTableControl(pageButton);
     });
@@ -1788,7 +1795,7 @@ export class ChatActor {
   }
 
   private updateDataTablePageButton(button: HTMLElement, page: number): void {
-    const active = Number(button.dataset.tablePageButton) === page;
+    const active = this.parseFiniteNumber(button.dataset.tablePageButton) === page;
 
     button.dataset.active = String(active);
     button.setAttribute("aria-current", active ? "page" : "false");
@@ -2402,7 +2409,7 @@ export class ChatActor {
 
   sequenceEngagement(config: SequenceEngagementConfig): gsap.core.Timeline {
     const panel = this.createSequenceEngagement(config);
-    const initialIndex = Number(panel.dataset.activeSequenceIndex ?? "0");
+    const initialIndex = this.getActiveSequenceIndex(panel);
     const hasSequenceSteps = config.sequences.some((sequence) => sequence.steps?.length);
     const revealTargets = hasSequenceSteps
       ? ".wa-sequence-people-wrap, .wa-sequence-engagement__sequences, .wa-sequence-kickoff"
@@ -2527,7 +2534,7 @@ export class ChatActor {
     const runtime = this.getSequenceCardRuntime(section, index);
     const activeCard = runtime.displayCard;
     const targetCard = runtime.templateCard;
-    const currentIndex = Number(section.dataset.activeSequenceIndex ?? "0");
+    const currentIndex = this.getActiveSequenceIndex(section);
 
     if (!targetCard || !activeCard || currentIndex === index) {
       this.setActiveSequencePerson(section, index, true);
@@ -4680,21 +4687,17 @@ export class ChatActor {
   ): void {
     const cellType = this.getDataTableCellType(column);
 
-    if (cellType === "person") {
-      cell.append(this.createDataTablePerson(values, values[column.key] ?? "", column.person));
-      return;
+    switch (cellType) {
+      case "person":
+        cell.append(this.createDataTablePerson(values, values[column.key] ?? "", column.person));
+        return;
+      case "mutualConnection":
+        this.appendDataTableMutualConnectionCell(cell, column, values);
+        return;
+      case "text":
+        this.appendDataTableTextCell(cell, values[column.key] ?? "");
+        return;
     }
-
-    if (cellType === "mutualConnection") {
-      const options = this.getMutualConnectionPersonOptions(column);
-      const badgeKey = options.badgeKey ?? "mutualConnectionBadge";
-
-      cell.append(this.createDataTablePerson(values, values[column.key] ?? "", options));
-      if (values[badgeKey]) cell.append(this.createDataTableCellBadge(values[badgeKey]));
-      return;
-    }
-
-    this.appendDataTableTextCell(cell, values[column.key] ?? "");
   }
 
   private getDataTableCellType(column: DataTableColumnConfig): DataTableCellType {
@@ -4713,6 +4716,18 @@ export class ChatActor {
       companyKey: "mutualConnectionCompany",
       ...column.person,
     };
+  }
+
+  private appendDataTableMutualConnectionCell(
+    cell: HTMLElement,
+    column: DataTableColumnConfig,
+    values: Record<string, string>,
+  ): void {
+    const options = this.getMutualConnectionPersonOptions(column);
+    const badgeKey = options.badgeKey ?? "mutualConnectionBadge";
+
+    cell.append(this.createDataTablePerson(values, values[column.key] ?? "", options));
+    if (values[badgeKey]) cell.append(this.createDataTableCellBadge(values[badgeKey]));
   }
 
   private appendDataTableTextCell(cell: HTMLElement, value: string): void {
@@ -4943,6 +4958,22 @@ export class ChatActor {
     return target.closest<HTMLElement>(DATA_TABLE_PAGE_BUTTON_SELECTOR);
   }
 
+  private getDataTablePageButtonRuntime(pageButton: HTMLElement): DataTablePageButtonRuntime | null {
+    const table = pageButton.closest<HTMLElement>(DATA_TABLE_SELECTOR);
+    const tableId = table?.dataset.dataTable;
+    const page = this.parseFiniteNumber(pageButton.dataset.tablePageButton);
+
+    if (!table || !tableId || page === null) return null;
+
+    return {
+      table,
+      tableId,
+      page,
+      initialPage: this.parseFiniteNumber(table.dataset.activePage),
+      initialRangeText: table.querySelector<HTMLElement>(DATA_TABLE_PAGE_RANGE_SELECTOR)?.textContent ?? null,
+    };
+  }
+
   private findDataTable(tableId: string): HTMLElement | null {
     return this.root.querySelector<HTMLElement>(`[data-data-table="${this.escapeSelectorValue(tableId)}"]`);
   }
@@ -4960,7 +4991,7 @@ export class ChatActor {
       currentRows: this.getVisibleDataTableRows(table),
       targetRows: this.queryElements(table, `.wa-data-table__row[data-page="${page}"]`),
       buttons,
-      targetButton: buttons.find((button) => Number(button.dataset.tablePageButton) === page),
+      targetButton: buttons.find((button) => this.parseFiniteNumber(button.dataset.tablePageButton) === page),
       range: table.querySelector<HTMLElement>(DATA_TABLE_PAGE_RANGE_SELECTOR),
     };
   }
@@ -6431,7 +6462,18 @@ export class ChatActor {
   }
 
   private getSequenceTemplateCardFromCards(cards: HTMLElement[], index: number): HTMLElement | null {
-    return cards.find((card) => Number(card.dataset.sequenceIndex) === index) ?? null;
+    return cards.find((card) => this.parseFiniteNumber(card.dataset.sequenceIndex) === index) ?? null;
+  }
+
+  private getSequenceRailRuntime(section: HTMLElement, index: number): SequenceRailRuntime | null {
+    const rail = section.querySelector<HTMLElement>(SEQUENCE_PEOPLE_RAIL_SELECTOR);
+    const card = rail?.querySelector<HTMLElement>(`[data-sequence-person-index="${index}"]`);
+
+    return rail && card ? { rail, card } : null;
+  }
+
+  private getActiveSequenceIndex(section: HTMLElement): number {
+    return this.parseFiniteNumber(section.dataset.activeSequenceIndex) ?? 0;
   }
 
   private clearSequencePersonCardMotionStyles(section: HTMLElement): void {
@@ -6550,7 +6592,7 @@ export class ChatActor {
 
     section.dataset.activeSequenceIndex = String(index);
     personCards.forEach((personCard) => {
-      const active = Number(personCard.dataset.sequencePersonIndex) === index;
+      const active = this.parseFiniteNumber(personCard.dataset.sequencePersonIndex) === index;
 
       personCard.dataset.active = String(active);
       personCard.setAttribute("aria-pressed", String(active));
@@ -6559,11 +6601,11 @@ export class ChatActor {
   }
 
   private centerSequencePersonCard(section: HTMLElement, index: number): void {
-    const rail = section.querySelector<HTMLElement>(SEQUENCE_PEOPLE_RAIL_SELECTOR);
-    const card = rail?.querySelector<HTMLElement>(`[data-sequence-person-index="${index}"]`);
+    const runtime = this.getSequenceRailRuntime(section, index);
 
-    if (!rail || !card) return;
+    if (!runtime) return;
 
+    const { rail, card } = runtime;
     const target = this.getSequencePersonRailScrollTarget(rail, card);
 
     gsap.killTweensOf(rail, "scrollLeft");
@@ -6590,10 +6632,11 @@ export class ChatActor {
   }
 
   private setSequencePersonRailPosition(section: HTMLElement, index: number, retries = 3): void {
-    const rail = section.querySelector<HTMLElement>(SEQUENCE_PEOPLE_RAIL_SELECTOR);
-    const card = rail?.querySelector<HTMLElement>(`[data-sequence-person-index="${index}"]`);
+    const runtime = this.getSequenceRailRuntime(section, index);
 
-    if (!rail || !card) return;
+    if (!runtime) return;
+
+    const { rail, card } = runtime;
     if ((rail.clientWidth <= 0 || card.getBoundingClientRect().width <= 0) && retries > 0) {
       requestAnimationFrame(() => this.setSequencePersonRailPosition(section, index, retries - 1));
       return;
@@ -6619,7 +6662,7 @@ export class ChatActor {
       if (rail.clientWidth <= 0) return;
 
       requestAnimationFrame(() => {
-        const activeIndex = Number(section.dataset.activeSequenceIndex ?? "0");
+        const activeIndex = this.getActiveSequenceIndex(section);
 
         this.setSequencePersonRailPosition(section, activeIndex);
         window.setTimeout(() => this.setSequencePersonRailPosition(section, activeIndex), 80);
@@ -6662,7 +6705,7 @@ export class ChatActor {
   private getSelectedSequenceStepIndex(card: HTMLElement): number {
     const selected = card.querySelector<HTMLElement>(".wa-sequence-step[data-step-selected=\"true\"]");
 
-    return Number(selected?.dataset.stepIndex ?? "0");
+    return this.parseFiniteNumber(selected?.dataset.stepIndex) ?? 0;
   }
 
   private getSequenceTransitionTargets(card: HTMLElement): HTMLElement[] {
@@ -6936,14 +6979,14 @@ export class ChatActor {
       if (label) label.textContent = this.formatSequenceStepTitle(templateStep.dataset.stepTemplateLabel ?? label.textContent ?? "");
 
       const wait = displayWaits[stepIndex];
-      const waitDays = Number(step.dataset.waitDays);
+      const waitDays = this.parsePositiveNumber(step.dataset.waitDays);
       const waitLabel = wait?.querySelector<HTMLElement>(".wa-sequence-wait__label");
 
       if (wait) {
-        wait.style.display = Number.isFinite(waitDays) && waitDays > 0 ? "grid" : "none";
-        wait.dataset.waitDays = String(waitDays);
+        wait.style.display = waitDays === null ? "none" : "grid";
+        wait.dataset.waitDays = String(waitDays ?? "");
       }
-      if (waitLabel && Number.isFinite(waitDays) && waitDays > 0) {
+      if (waitLabel && waitDays !== null) {
         this.populateSequenceWaitLabel(waitLabel, waitDays);
       }
     });
@@ -6954,7 +6997,7 @@ export class ChatActor {
 
   private selectSequenceStep(card: HTMLElement, index: number, options: SequenceStepSelectionOptions = {}): void {
     const steps = this.queryElements(card, ".wa-sequence-step");
-    const selected = steps.find((step) => Number(step.dataset.stepIndex) === index) ?? steps[0];
+    const selected = steps.find((step) => this.parseFiniteNumber(step.dataset.stepIndex) === index) ?? steps[0];
     const meta = card.querySelector<HTMLElement>("[data-sequence-copy-meta]");
     const subject = card.querySelector<HTMLElement>("[data-sequence-copy-subject]");
     const body = card.querySelector<HTMLElement>("[data-sequence-copy-body]");
@@ -7215,6 +7258,12 @@ export class ChatActor {
     const number = Number(value);
 
     return Number.isFinite(number) ? number : null;
+  }
+
+  private parsePositiveNumber(value: string | null | undefined): number | null {
+    const number = this.parseFiniteNumber(value);
+
+    return number !== null && number > 0 ? number : null;
   }
 
   private getSwipeCards(game: HTMLElement | null | undefined): HTMLElement[] {
