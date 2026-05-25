@@ -1532,6 +1532,7 @@ body {
   justify-content: center;
   border-radius: 5px;
   border: 1px solid var(--wa-file-color, #916135);
+  border-color: color-mix(in oklch, var(--wa-file-color, #916135) 46%, var(--wa-file-bg, #faf1e8));
   color: var(--wa-file-color, #916135);
   background: var(--wa-file-bg, #faf1e8);
   font-size: 9px;
