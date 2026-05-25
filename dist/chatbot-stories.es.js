@@ -6253,7 +6253,7 @@ function ca(o, e, t) {
       end: e,
       duration: t.reducedMotion ? 0.12 : 0.08
     };
-  const s = e.x - o.x, l = e.y - o.y, c = s / i, d = l / i, u = -d, h = c, g = a() > 0.5 ? 1 : -1, m = t.curve ?? 1, w = Je(i * (r === "drag" ? 0.1 : r === "click" ? 0.17 : 0.22) * m, 18, 150) * g * (0.72 + a() * 0.44), y = i / tc[n] + 0.16, b = Je(
+  const s = e.x - o.x, l = e.y - o.y, c = s / i, d = l / i, u = -d, h = c, g = a() > 0.5 ? 1 : -1, m = t.curve ?? 1, w = Je(i * (r === "drag" ? 0.1 : r === "click" ? 0.17 : 0.22), 18, 150) * m * g * (0.72 + a() * 0.44), y = i / tc[n] + 0.16, b = Je(
     y * ac[r] * ic * (t.durationScale ?? 1),
     0.3,
     1.98
@@ -7140,13 +7140,16 @@ function ho(o) {
         mode: "pointer",
         intent: "hover",
         speed: "normal",
+        curve: 0.18,
+        ease: "sine.inOut",
+        durationScale: 1.08,
         overshoot: !1,
         settle: !0,
         label: `mailbox-connect-${o.id}`
       },
       at: "+=0.08"
     },
-    { kind: "cursorClick", at: "-=0.02" },
+    { kind: "cursorClick", at: "+=0.04" },
     {
       kind: "custom",
       build: (t) => t.chat.connectMailbox(o.id),
