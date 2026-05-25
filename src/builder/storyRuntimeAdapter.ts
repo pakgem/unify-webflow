@@ -910,13 +910,15 @@ function getBuilderTableShape(component: BuilderTableComponent, fallbackId: stri
 function getBuilderTableColumnWidth(label: string, foldsRoleIntoName: boolean): string | undefined {
   const normalized = label.toLowerCase();
 
-  if (normalized === "email" || normalized === "work email") return "max-content";
-  if (!foldsRoleIntoName) return undefined;
+  if (foldsRoleIntoName) {
+    if (normalized.includes("connector") || normalized.includes("connection")) return "minmax(170px,0.78fr)";
+    if (normalized.includes("email")) return "minmax(190px,0.95fr)";
+    if (normalized.includes("mobile")) return "minmax(150px,0.72fr)";
+    return "minmax(130px,1fr)";
+  }
 
-  if (normalized.includes("connector") || normalized.includes("connection")) return "minmax(170px,0.78fr)";
-  if (normalized.includes("email")) return "minmax(190px,0.95fr)";
-  if (normalized.includes("mobile")) return "minmax(150px,0.72fr)";
-  return "minmax(130px,1fr)";
+  if (normalized === "email" || normalized === "work email") return "max-content";
+  return undefined;
 }
 
 function getTableColumnOverride(fallbackId: string, label: string): Partial<DataTableColumn> {

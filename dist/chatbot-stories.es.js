@@ -7890,9 +7890,9 @@ function jc(r, e) {
 }
 function Kc(r, e) {
   const t = r.toLowerCase();
-  if (t === "email" || t === "work email") return "max-content";
   if (e)
     return t.includes("connector") || t.includes("connection") ? "minmax(170px,0.78fr)" : t.includes("email") ? "minmax(190px,0.95fr)" : t.includes("mobile") ? "minmax(150px,0.72fr)" : "minmax(130px,1fr)";
+  if (t === "email" || t === "work email") return "max-content";
 }
 function Xc(r, e) {
   const t = e.trim().toLowerCase();
