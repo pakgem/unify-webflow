@@ -83,6 +83,7 @@ body {
   --wa-media-base-1: #1a0908;
   --wa-media-base-2: #6b2820;
   --wa-media-base-3: #24100d;
+  --wa-media-image: url("/media/chat-background.png");
 
   /* Shadow tokens */
   --wa-media-shadow: 0 44px 96px rgba(24, 20, 16, 0.18);
@@ -129,10 +130,10 @@ body {
   --wa-cursor-default-height: 23px;
 
   /* Type tokens */
-  --wa-title-size: clamp(38px, 3vw, 54px);
-  --wa-title-line-height: 1.12;
-  --wa-feature-title-size: clamp(25px, 1.7vw, 34px);
-  --wa-feature-copy-size: clamp(16px, 1vw, 20px);
+  --wa-title-size: 40px;
+  --wa-title-line-height: 1.2;
+  --wa-feature-title-size: 28px;
+  --wa-feature-copy-size: 16px;
 
   /* Radius tokens */
   --wa-radius-sm: 8px;
@@ -282,7 +283,7 @@ body {
   font-family: var(--wa-font-sans);
   font-size: var(--wa-title-size);
   line-height: var(--wa-title-line-height);
-  font-weight: 520;
+  font-weight: 400;
   letter-spacing: 0;
 }
 
@@ -319,9 +320,9 @@ body {
   display: grid;
   grid-template-columns: 4px minmax(0, 1fr);
   gap: 30px;
-  align-items: start;
+  align-items: stretch;
   width: 100%;
-  min-height: 80px;
+  min-height: 0;
   padding: 0;
   border: 0;
   color: var(--wa-color-heading-strong);
@@ -333,8 +334,9 @@ body {
 .wa-story-tab__marker {
   position: relative;
   display: block;
+  align-self: stretch;
   width: 4px;
-  min-height: 80px;
+  min-height: 0;
   overflow: hidden;
   background: var(--wa-soft);
   cursor: ns-resize;
@@ -368,14 +370,14 @@ body {
 .wa-story-tab__body {
   display: grid;
   gap: 24px;
-  padding-top: 18px;
+  padding-top: 0;
 }
 
 .wa-story-tab__title {
   color: var(--wa-color-heading-strong);
   font-size: var(--wa-feature-title-size);
   line-height: 1.08;
-  font-weight: 520;
+  font-weight: 400;
   letter-spacing: 0;
 }
 
@@ -384,7 +386,7 @@ body {
   color: var(--wa-color-copy);
   font-size: var(--wa-feature-copy-size);
   line-height: 1.25;
-  font-weight: 450;
+  font-weight: 400;
 }
 
 .wa-story-tab:not(.is-active) .wa-story-tab__description {
@@ -446,13 +448,11 @@ body {
   width: var(--wa-media-width);
   height: var(--wa-media-height);
   border-radius: 3px;
-  background:
-    linear-gradient(66deg, var(--wa-media-warm-1), transparent 24%),
-    linear-gradient(124deg, var(--wa-media-warm-2), var(--wa-media-warm-3) 42%, var(--wa-media-warm-4)),
-    repeating-linear-gradient(114deg, var(--wa-media-line) 0 2px, transparent 2px 46px),
-    linear-gradient(18deg, var(--wa-media-base-1), var(--wa-media-base-2) 58%, var(--wa-media-base-3));
+  background-image: var(--wa-media-image);
+  background-position: center;
+  background-size: cover;
   box-shadow: var(--wa-media-shadow);
-  opacity: 0.84;
+  opacity: 1;
   pointer-events: none;
 }
 
