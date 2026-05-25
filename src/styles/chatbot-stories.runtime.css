@@ -3835,26 +3835,12 @@ body {
 }
 
 .wa-sequence-engagement__header {
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr);
   align-items: start;
 }
 
 .wa-sequence-engagement__subtitle {
   grid-column: 1 / -1;
-}
-
-.wa-sequence-engagement__count {
-  display: inline-flex;
-  align-items: center;
-  min-height: 23px;
-  padding: 0 9px;
-  border-radius: 999px;
-  color: var(--wa-color-inverse);
-  background: var(--wa-color-dark-surface);
-  font-size: 10px;
-  line-height: 1;
-  font-weight: 680;
-  white-space: nowrap;
 }
 
 .wa-style-profile__rows {

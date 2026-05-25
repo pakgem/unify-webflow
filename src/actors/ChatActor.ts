@@ -6099,13 +6099,7 @@ export class ChatActor {
     section.dataset.peopleCount = config.peopleCount;
     section.dataset.activeSequenceIndex = String(initialIndex);
 
-    const count = document.createElement("span");
-    count.className = "wa-sequence-engagement__count";
-    count.dataset.sequenceCount = "";
-    count.textContent = config.sequences.some((sequence) => sequence.steps?.length)
-      ? this.getSequenceCountLabel(initialIndex, config.peopleCount)
-      : config.peopleCount;
-    const header = this.createSectionHeader("wa-sequence-engagement", config.title, config.subtitle, count);
+    const header = this.createSectionHeader("wa-sequence-engagement", config.title, config.subtitle);
 
     const sequences = document.createElement("div");
     sequences.className = "wa-sequence-engagement__sequences";
@@ -6498,7 +6492,6 @@ export class ChatActor {
 
   private setSequencePersonRailState(section: HTMLElement, index: number, shouldCenter = false): void {
     const personCards = this.queryElements(section, "[data-sequence-person-card]");
-    const count = section.querySelector<HTMLElement>("[data-sequence-count]");
 
     section.dataset.activeSequenceIndex = String(index);
     personCards.forEach((personCard) => {
@@ -6507,7 +6500,6 @@ export class ChatActor {
       personCard.dataset.active = String(active);
       personCard.setAttribute("aria-pressed", String(active));
     });
-    if (count) count.textContent = this.getSequenceCountLabel(index, section.dataset.peopleCount ?? "");
     if (shouldCenter) this.centerSequencePersonCard(section, index);
   }
 
@@ -6610,12 +6602,6 @@ export class ChatActor {
       (rail.clientWidth - cardRect.width) / 2;
 
     return Math.min(maxScroll, Math.max(0, target));
-  }
-
-  private getSequenceCountLabel(index: number, peopleCount: string): string {
-    const total = peopleCount.match(/\d+/)?.[0] ?? peopleCount;
-
-    return `${index + 1}/${total}`;
   }
 
   private getSequenceDisplayCard(section: HTMLElement): HTMLElement | null {
