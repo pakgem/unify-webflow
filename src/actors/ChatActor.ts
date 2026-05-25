@@ -510,10 +510,6 @@ const STORY_SWITCH_EXIT_MOTION = {
 };
 
 const MARKETING_PAGE_MOTION = {
-  threadY: -176,
-  threadOpacity: 0,
-  revealDuration: motionDuration(0.62),
-  revealEase: "power3.inOut",
   cardDuration: motionDuration(0.28),
 };
 const STRATEGY_REVEAL_SCROLL_EXTRA = 4;
@@ -1943,92 +1939,29 @@ export class ChatActor {
 
   marketingDataSourcesGrid(config: DataSourceGridConfig): gsap.core.Timeline {
     const page = this.createMarketingDataSourcesGrid(config);
-    const logos = this.queryElements(page, ".wa-data-vendor-logo");
-    const groups = this.queryElements(page, ".wa-data-source-group");
     const header = page.querySelector<HTMLElement>(".wa-data-source-grid__header");
-    const introTargets = this.compactElements(header, ...groups, ...logos);
+    const introTargets = this.compactElements(
+      header,
+      ...this.queryElements(page, ".wa-data-source-group"),
+      ...this.queryElements(page, ".wa-data-vendor-logo"),
+    );
 
-    return gsap
-      .timeline()
-      .call(() => {
-        this.clearMarketingPanels();
-        this.stopScrollMotion();
-        this.chatBody.append(page);
-      })
-      .set(page, {
-        autoAlpha: 0,
-        y: 72,
-        scale: 0.985,
-        transformOrigin: "center bottom",
-      })
-      .set(introTargets, {
-        autoAlpha: 0,
-        y: 12,
-      })
-      .to(
-        this.thread,
-        {
-          scrollTop: () => this.getThreadBottomScrollTarget(),
-          duration: MARKETING_PAGE_MOTION.revealDuration,
-          ease: MARKETING_PAGE_MOTION.revealEase,
-          overwrite: "auto",
-        },
-        0,
-      )
-      .to(
-        this.thread,
-        {
-          y: MARKETING_PAGE_MOTION.threadY,
-          autoAlpha: MARKETING_PAGE_MOTION.threadOpacity,
-          duration: MARKETING_PAGE_MOTION.revealDuration,
-          ease: MARKETING_PAGE_MOTION.revealEase,
-          overwrite: "auto",
-        },
-        0.04,
-      )
-      .to(
-        page,
-        {
-          autoAlpha: 1,
-          y: 0,
-          scale: 1,
-          duration: MARKETING_PAGE_MOTION.revealDuration,
-          ease: MARKETING_PAGE_MOTION.revealEase,
-        },
-        0.16,
-      )
-      .to(
-        header,
-        {
-          autoAlpha: 1,
-          y: 0,
-          duration: motionDuration(0.28),
-          ease: "power2.out",
-        },
-        0.28,
-      )
-      .to(
-        groups,
-        {
-          autoAlpha: 1,
-          y: 0,
-          duration: motionDuration(0.3),
-          ease: "power2.out",
-          stagger: 0.04,
-        },
-        0.36,
-      )
-      .to(
-        logos,
-        {
+    this.clearMarketingPanels();
+    page.dataset.scrollAlign = "equal-inset";
+
+    return gsap.timeline()
+      .call(() => this.setMarketingDataGridScale(page))
+      .add(this.revealComponentItems("sources", page, introTargets, {
+        from: { autoAlpha: 0, y: 10 },
+        to: {
           autoAlpha: 1,
           y: 0,
           duration: MARKETING_PAGE_MOTION.cardDuration,
           ease: "power2.out",
           stagger: 0.025,
         },
-        0.42,
-      );
+        position: "-=0.16",
+      }));
   }
 
   outreachStyleProfile(
@@ -3298,6 +3231,8 @@ export class ChatActor {
   }
 
   private updateThreadContentFitState(): void {
+    this.updateMarketingDataGridScales();
+
     const contentWidth = this.getVisibleThreadContentWidth();
     this.applyWindowSceneScale(contentWidth);
 
@@ -5749,21 +5684,36 @@ export class ChatActor {
   }
 
   private setMarketingDataGridScale(section: HTMLElement): void {
-    const rect = this.chatBody.getBoundingClientRect();
     const styles = getComputedStyle(this.chatBody);
     const gutterLeft = Number.parseFloat(styles.paddingLeft) || 0;
     const gutterRight = Number.parseFloat(styles.paddingRight) || gutterLeft;
-    const widthScale = Math.max(0, rect.width - gutterLeft - gutterRight) / MARKETING_DATA_GRID_ARTBOARD.contentWidth;
-    const heightScale = Math.max(0, rect.height) / MARKETING_DATA_GRID_ARTBOARD.height;
+    const width = this.chatBody.clientWidth || this.chatBody.getBoundingClientRect().width;
+    const height = this.chatBody.clientHeight || this.chatBody.getBoundingClientRect().height;
+    const widthScale = Math.max(0, width - gutterLeft - gutterRight) / MARKETING_DATA_GRID_ARTBOARD.contentWidth;
+    const heightScale = Math.max(0, height) / MARKETING_DATA_GRID_ARTBOARD.height;
     const scale = Math.min(widthScale || 1, heightScale || 1);
     const artboardGutterLeft = scale > 0 ? gutterLeft / scale : 0;
     const artboardGutterRight = scale > 0 ? gutterRight / scale : artboardGutterLeft;
     const artboardWidth = MARKETING_DATA_GRID_ARTBOARD.contentWidth + artboardGutterLeft + artboardGutterRight;
+    const scaledHeight = Math.ceil(MARKETING_DATA_GRID_ARTBOARD.height * scale);
 
-    section.style.setProperty("--wa-data-grid-scale", String(scale));
-    section.style.setProperty("--wa-data-grid-artboard-width", `${artboardWidth}px`);
-    section.style.setProperty("--wa-data-grid-gutter-left", `${artboardGutterLeft}px`);
-    section.style.setProperty("--wa-data-grid-gutter-right", `${artboardGutterRight}px`);
+    this.setStyleProperty(section, "--wa-data-grid-scale", String(scale));
+    this.setStyleProperty(section, "--wa-data-grid-artboard-width", `${artboardWidth}px`);
+    this.setStyleProperty(section, "--wa-data-grid-gutter-left", `${artboardGutterLeft}px`);
+    this.setStyleProperty(section, "--wa-data-grid-gutter-right", `${artboardGutterRight}px`);
+    this.setStyleProperty(section, "--wa-data-grid-scaled-height", `${scaledHeight}px`);
+  }
+
+  private updateMarketingDataGridScales(): void {
+    this.queryElements(this.thread, MARKETING_PANEL_SELECTOR).forEach((section) => {
+      this.setMarketingDataGridScale(section);
+    });
+  }
+
+  private setStyleProperty(element: HTMLElement, property: string, value: string): void {
+    if (element.style.getPropertyValue(property) !== value) {
+      element.style.setProperty(property, value);
+    }
   }
 
   private createMarketingDataSourceGroup(groupConfig: DataSourceGroup): HTMLElement {
@@ -7410,9 +7360,6 @@ export class ChatActor {
       this.isVisibleForStorySwitchExit(this.thread) ? this.thread : null,
       this.composerVisible && this.isVisibleForStorySwitchExit(this.composer) ? this.composer : null,
       this.isVisibleForStorySwitchExit(this.signupScene) ? this.signupScene : null,
-      ...this.queryElements(this.chatBody, MARKETING_PANEL_SELECTOR).filter((panel) =>
-        this.isVisibleForStorySwitchExit(panel)
-      ),
     );
   }
 

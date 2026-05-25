@@ -446,7 +446,7 @@ function addStep(
         ctx,
         ctx.chat.marketingDataSourcesGrid(step.config),
         step.at,
-        `[data-marketing-data-sources-grid="${escapeAttributeValue(step.config.id)}"]`,
+        chatThreadSelector(`[data-marketing-data-sources-grid="${escapeAttributeValue(step.config.id)}"]`),
         `marketing-sources-${step.config.id}`,
       );
       return;
