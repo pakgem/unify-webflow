@@ -4317,7 +4317,7 @@ body {
   border-radius: 0;
   color: #85837b;
   background: transparent;
-  font-size: 18px;
+  font-size: 15px;
   line-height: 1;
   font-weight: 560;
   text-transform: none;
@@ -4325,8 +4325,8 @@ body {
 
 .wa-sequence-step__icon {
   display: inline-flex;
-  width: 22px;
-  height: 22px;
+  width: 18px;
+  height: 18px;
   align-items: center;
   justify-content: center;
   color: currentColor;
@@ -4334,8 +4334,8 @@ body {
 
 .wa-sequence-step__icon svg {
   display: block;
-  width: 21px;
-  height: 21px;
+  width: 18px;
+  height: 18px;
   fill: none;
   stroke: currentColor;
   stroke-width: 1.8;
@@ -4362,7 +4362,7 @@ body {
 
 .wa-sequence-step__copy strong {
   color: currentColor;
-  font-size: 24px;
+  font-size: 19px;
   line-height: 1.04;
   font-weight: 520;
   overflow: hidden;
@@ -4387,6 +4387,10 @@ body {
   background: transparent;
 }
 
+.wa-sequence-step[data-step-selected="true"]::before {
+  background: #050505;
+}
+
 .wa-sequence-step[data-step-open="false"] .wa-sequence-step__copy span {
   display: none;
 }
@@ -4400,7 +4404,7 @@ body {
   margin-top: -34px;
   padding: 0 10px 0 0;
   color: #5f5d56;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1.12;
   font-weight: 560;
   letter-spacing: 0;
@@ -4442,7 +4446,7 @@ body {
   padding: 0 18px;
   border-bottom: 1px solid #c7c4bc;
   color: #86847d;
-  font-size: 20px;
+  font-size: 16px;
   line-height: 1;
   font-weight: 410;
   text-transform: none;
@@ -4466,7 +4470,7 @@ body {
   padding: 0 18px;
   border-bottom: 1px solid #c7c4bc;
   color: var(--wa-ink);
-  font-size: 20px;
+  font-size: 17px;
   line-height: 1.12;
   font-weight: 620;
 }
@@ -4479,7 +4483,7 @@ body {
   border: 2px solid #8f8d85;
   border-radius: 6px;
   color: #080806;
-  font-size: 21px;
+  font-size: 18px;
   line-height: 1.45;
   font-weight: 520;
 }
@@ -4488,7 +4492,7 @@ body {
   margin: 0;
   padding: 21px 18px;
   color: var(--wa-ink);
-  font-size: 22px;
+  font-size: 18px;
   line-height: 1.48;
   font-weight: 410;
   white-space: pre-line;
@@ -4499,7 +4503,7 @@ body {
   margin: 0;
   padding: 12px 24px 0 0;
   color: #5f5d56;
-  font-size: 18px;
+  font-size: 15px;
   line-height: 1;
   font-weight: 520;
   white-space: normal;
