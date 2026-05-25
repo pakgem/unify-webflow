@@ -4382,6 +4382,45 @@ body {
   white-space: nowrap;
 }
 
+.wa-sequence-step__copy strong[data-sequence-content-swap-active="true"],
+.wa-sequence-copy-panel__meta[data-sequence-content-swap-active="true"],
+.wa-sequence-copy-panel__subject[data-sequence-content-swap-active="true"],
+.wa-sequence-copy-panel__body[data-sequence-content-swap-active="true"] {
+  position: relative;
+  overflow: hidden;
+}
+
+.wa-sequence-step__copy strong[data-sequence-content-swap-active="true"] {
+  display: block;
+}
+
+.wa-sequence-content-swap-clone {
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  display: block;
+  min-width: 0;
+  padding: inherit;
+  gap: inherit;
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.wa-sequence-copy-panel__meta .wa-sequence-content-swap-clone {
+  display: flex;
+  align-items: center;
+}
+
+.wa-sequence-copy-panel[data-copy-channel="call"] .wa-sequence-copy-panel__body .wa-sequence-content-swap-clone {
+  display: grid;
+  align-items: inherit;
+  justify-items: inherit;
+}
+
 .wa-sequence-step__copy span {
   color: var(--wa-color-muted);
   font-size: 10px;

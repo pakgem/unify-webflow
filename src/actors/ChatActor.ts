@@ -98,6 +98,17 @@ type DataTablePageCellSwap = {
   clone: HTMLElement;
   delay: number;
 };
+type SequenceContentSwap = {
+  target: HTMLElement;
+  currentClone: HTMLElement;
+  incomingClone: HTMLElement;
+  finalHtml: string;
+  delay: number;
+};
+type SequencePersonTransitionState = {
+  committed: boolean;
+  swaps: SequenceContentSwap[];
+};
 type DataTablePageTransitionState = {
   canSwitch: boolean;
   committed: boolean;
@@ -368,16 +379,13 @@ const SEQUENCE_THINKING_LOGO = {
 
       0ms   selected person tab updates immediately
       0ms   rail starts centering with transform-friendly scroll motion
-      0ms   visible copy swaps to the selected person's sequence
-    210ms   new copy settles in without changing scroll position
+      0ms   old sequence copy fades/slides down, top-left → bottom-right
+    100ms   new sequence copy fades/slides in from above on the same stagger
+    950ms   final HTML is committed without changing scroll position
    -------------------------------------------------------------------------- */
 
 const SEQUENCE_PERSON_SWITCH = {
-  enterDuration: motionDuration(0.2),
   railCenterDuration: motionDuration(0.34),
-  enterY: 3,
-  stagger: 0.004,
-  enterEase: "power3.out",
   railCenterEase: "power3.out",
 };
 
@@ -2464,6 +2472,11 @@ export class ChatActor {
   sequencePerson(sequenceId: string, index: number): gsap.core.Timeline {
     const section = this.findSequenceEngagement(sequenceId);
     const tl = gsap.timeline({ defaults: { overwrite: "auto" } });
+    const progress = { value: 0 };
+    const state: SequencePersonTransitionState = {
+      committed: false,
+      swaps: [],
+    };
 
     if (!section) return tl;
 
@@ -2479,26 +2492,24 @@ export class ChatActor {
 
     this.setSequencePersonRailState(section, index, true);
 
-    const transitionTargets = this.getSequenceTransitionTargets(activeCard);
+    tl.to(progress, {
+      value: 1,
+      duration: DATA_TABLE_PAGE_CELL_MOTION.totalDuration,
+      ease: "none",
+      onStart: () => {
+        state.swaps = this.prepareSequencePersonContentSwaps(section, activeCard, targetCard, index);
+        this.setMotionHints(this.getSequencePersonSwapMotionTargets(state));
+      },
+      onUpdate: () => {
+        this.renderSequencePersonContentSwaps(state, progress.value);
+      },
+    }).call(() => {
+      this.commitSequencePersonContentSwaps(state);
+    });
 
-    gsap.killTweensOf(transitionTargets);
-
-    tl.call(() => {
-      this.applySequenceTemplateToDisplayCard(section, activeCard, targetCard, index);
-      gsap.set(transitionTargets, {
-        autoAlpha: 0,
-        y: SEQUENCE_PERSON_SWITCH.enterY,
-        force3D: true,
-      });
-    }, undefined, 0)
-      .to(transitionTargets, {
-        autoAlpha: 1,
-        y: 0,
-        duration: SEQUENCE_PERSON_SWITCH.enterDuration,
-        ease: SEQUENCE_PERSON_SWITCH.enterEase,
-        stagger: SEQUENCE_PERSON_SWITCH.stagger,
-        force3D: true,
-      }, 0.01);
+    tl.eventCallback("onInterrupt", () => {
+      this.cleanupSequencePersonContentSwaps(state);
+    });
 
     return tl;
   }
@@ -6329,6 +6340,159 @@ export class ChatActor {
       card.querySelector<HTMLElement>("[data-sequence-copy-subject]"),
       card.querySelector<HTMLElement>("[data-sequence-copy-body]"),
     );
+  }
+
+  private prepareSequencePersonContentSwaps(
+    section: HTMLElement,
+    displayCard: HTMLElement,
+    templateCard: HTMLElement,
+    index: number,
+  ): SequenceContentSwap[] {
+    const targets = this.getSequenceTransitionTargets(displayCard);
+    const currentHtmlByTarget = new Map<HTMLElement, string>();
+
+    gsap.killTweensOf(targets);
+    this.cleanupInlineSequencePersonContentSwaps(displayCard);
+    targets.forEach((target) => {
+      currentHtmlByTarget.set(target, target.innerHTML);
+    });
+
+    this.applySequenceTemplateToDisplayCard(section, displayCard, templateCard, index);
+
+    const finalTargets = this.getSequenceTransitionTargets(displayCard);
+    const delays = this.getSequencePersonContentSwapDelays(finalTargets);
+
+    return finalTargets.flatMap((target) => {
+      const finalHtml = target.innerHTML;
+      const currentHtml = currentHtmlByTarget.get(target) ?? "";
+
+      if (currentHtml === finalHtml) return [];
+
+      return [this.prepareSequencePersonContentSwap(target, currentHtml, finalHtml, delays.get(target) ?? 0)];
+    });
+  }
+
+  private prepareSequencePersonContentSwap(
+    target: HTMLElement,
+    currentHtml: string,
+    finalHtml: string,
+    delay: number,
+  ): SequenceContentSwap {
+    const rect = target.getBoundingClientRect();
+    const currentClone = this.createSequenceContentSwapClone(currentHtml, "current");
+    const incomingClone = this.createSequenceContentSwapClone(finalHtml, "incoming");
+
+    target.dataset.sequenceContentSwapActive = "true";
+    target.style.minWidth = `${rect.width}px`;
+    target.style.minHeight = `${rect.height}px`;
+    target.replaceChildren(currentClone, incomingClone);
+    this.setDataTablePageCellSwapState([currentClone], 1, 0);
+    this.setDataTablePageCellSwapState([incomingClone], 0, DATA_TABLE_PAGE_CELL_MOTION.incomingY);
+
+    return {
+      target,
+      currentClone,
+      incomingClone,
+      finalHtml,
+      delay,
+    };
+  }
+
+  private createSequenceContentSwapClone(html: string, state: "current" | "incoming"): HTMLElement {
+    const clone = document.createElement("span");
+
+    clone.className = "wa-sequence-content-swap-clone";
+    clone.dataset.sequenceContentSwapClone = state;
+    clone.setAttribute("aria-hidden", "true");
+    clone.innerHTML = html;
+
+    return clone;
+  }
+
+  private getSequencePersonContentSwapDelays(targets: HTMLElement[]): Map<HTMLElement, number> {
+    const orderedTargets = targets
+      .map((target) => ({ target, rect: target.getBoundingClientRect() }))
+      .sort((a, b) => {
+        const topDelta = a.rect.top - b.rect.top;
+
+        return Math.abs(topDelta) > 6 ? topDelta : a.rect.left - b.rect.left;
+      });
+    const rowTops: number[] = [];
+    const rowColumnCounts = new Map<number, number>();
+    const delays = new Map<HTMLElement, number>();
+
+    orderedTargets.forEach(({ target, rect }) => {
+      let rowIndex = rowTops.findIndex((top) => Math.abs(top - rect.top) <= 6);
+
+      if (rowIndex === -1) {
+        rowIndex = rowTops.length;
+        rowTops.push(rect.top);
+      }
+
+      const columnIndex = rowColumnCounts.get(rowIndex) ?? 0;
+      rowColumnCounts.set(rowIndex, columnIndex + 1);
+      delays.set(target, this.getDataTablePageCellDelay(rowIndex, columnIndex));
+    });
+
+    return delays;
+  }
+
+  private renderSequencePersonContentSwaps(state: SequencePersonTransitionState, progress: number): void {
+    const elapsed = progress * DATA_TABLE_PAGE_CELL_MOTION.totalDuration;
+
+    state.swaps.forEach((swap) => {
+      const outgoingLocalProgress = clampUnit(
+        (elapsed - swap.delay) /
+          DATA_TABLE_PAGE_CELL_MOTION.duration,
+      );
+      const incomingLocalProgress = clampUnit(
+        (elapsed - swap.delay - DATA_TABLE_PAGE_CELL_MOTION.incomingLag) /
+          DATA_TABLE_PAGE_CELL_MOTION.duration,
+      );
+      const incomingProgress = DATA_TABLE_PAGE_CELL_EASE.in(incomingLocalProgress);
+      const outgoingProgress = DATA_TABLE_PAGE_CELL_EASE.out(outgoingLocalProgress);
+
+      this.setDataTablePageCellSwapState(
+        [swap.currentClone],
+        1 - outgoingProgress,
+        this.interpolate(0, DATA_TABLE_PAGE_CELL_MOTION.outgoingY, outgoingProgress),
+      );
+      this.setDataTablePageCellSwapState(
+        [swap.incomingClone],
+        incomingProgress,
+        this.interpolate(DATA_TABLE_PAGE_CELL_MOTION.incomingY, 0, incomingProgress),
+      );
+    });
+  }
+
+  private commitSequencePersonContentSwaps(state: SequencePersonTransitionState): void {
+    state.committed = true;
+    this.cleanupSequencePersonContentSwaps(state);
+  }
+
+  private cleanupSequencePersonContentSwaps(state: SequencePersonTransitionState): void {
+    const motionTargets = this.getSequencePersonSwapMotionTargets(state);
+
+    if (motionTargets.length) this.clearMotionHints(motionTargets);
+    state.swaps.forEach((swap) => {
+      swap.target.innerHTML = swap.finalHtml;
+      delete swap.target.dataset.sequenceContentSwapActive;
+      swap.target.style.minWidth = "";
+      swap.target.style.minHeight = "";
+    });
+    state.swaps = [];
+  }
+
+  private cleanupInlineSequencePersonContentSwaps(card: HTMLElement): void {
+    this.queryElements(card, "[data-sequence-content-swap-active=\"true\"]").forEach((target) => {
+      delete target.dataset.sequenceContentSwapActive;
+      target.style.minWidth = "";
+      target.style.minHeight = "";
+    });
+  }
+
+  private getSequencePersonSwapMotionTargets(state: SequencePersonTransitionState): HTMLElement[] {
+    return state.swaps.flatMap((swap) => [swap.currentClone, swap.incomingClone]);
   }
 
   private applySequenceTemplateToDisplayCard(
