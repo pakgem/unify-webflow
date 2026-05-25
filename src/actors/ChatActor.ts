@@ -226,6 +226,9 @@ const MESSAGE_KIND_CLASSES = [
 const MOTION_TIME_SCALE = 1.28;
 const motionDuration = (seconds: number): number => Number((seconds * MOTION_TIME_SCALE).toFixed(3));
 const SEQUENCE_WAIT_DAY_DEFAULTS = [3, 3, 3];
+const SEQUENCE_PHONE_OVERRIDES: Record<string, string> = {
+  "David Kim": "+1 (917) 234-3381",
+};
 const MAILBOX_CONNECT_MOTION = {
   pressDuration: motionDuration(0.09),
   releaseDuration: motionDuration(0.2),
@@ -5874,11 +5877,14 @@ export class ChatActor {
       card.dataset.active = String(index === initialIndex);
       card.dataset.sequenceName = sequence.name;
       card.dataset.sequenceMeta = [sequence.title, sequence.company].filter(Boolean).join(", ");
+      card.dataset.sequenceAvatarUrl = sequence.avatarUrl ?? "";
       card.dataset.sequenceTemplateName = sequence.name;
       card.dataset.sequenceTemplateMeta = [sequence.title, sequence.company].filter(Boolean).join(", ");
       card.dataset.sequenceTemplateAvatarUrl = sequence.avatarUrl ?? "";
       card.dataset.sequenceEmail = this.getSequenceRecipientEmail(sequence);
       card.dataset.sequenceTemplateEmail = this.getSequenceRecipientEmail(sequence);
+      card.dataset.sequencePhone = this.getSequenceRecipientPhone(sequence);
+      card.dataset.sequenceTemplatePhone = this.getSequenceRecipientPhone(sequence);
       if (index !== initialIndex) {
         card.style.display = "none";
         gsap.set(card, { autoAlpha: 0, y: 8 });
@@ -5917,7 +5923,7 @@ export class ChatActor {
         const copyPanel = document.createElement("div");
         const copyMeta = document.createElement("span");
         const copySubject = document.createElement("strong");
-        const copyBody = document.createElement("p");
+        const copyBody = document.createElement("div");
 
         steps.className = "wa-sequence-steps";
         sequenceSteps.forEach((step, stepIndex) => {
@@ -6340,8 +6346,12 @@ export class ChatActor {
       templateCard.dataset.sequenceTemplateName ?? templateCard.dataset.sequenceName ?? "";
     displayCard.dataset.sequenceMeta =
       templateCard.dataset.sequenceTemplateMeta ?? templateCard.dataset.sequenceMeta ?? "";
+    displayCard.dataset.sequenceAvatarUrl =
+      templateCard.dataset.sequenceTemplateAvatarUrl ?? templateCard.dataset.sequenceAvatarUrl ?? "";
     displayCard.dataset.sequenceEmail =
       templateCard.dataset.sequenceTemplateEmail ?? templateCard.dataset.sequenceEmail ?? "";
+    displayCard.dataset.sequencePhone =
+      templateCard.dataset.sequenceTemplatePhone ?? templateCard.dataset.sequencePhone ?? "";
 
     displaySteps.forEach((step, stepIndex) => {
       const templateStep = templateSteps[stepIndex];
@@ -6418,20 +6428,20 @@ export class ChatActor {
     if (isConnect) {
       if (meta) meta.textContent = "Send connection request";
       if (subject) subject.textContent = selected?.dataset.stepBody ?? "";
-      if (body) body.textContent = "0/200";
+      if (body) body.replaceChildren(document.createTextNode("0/200"));
       return;
     }
 
     if (isCall) {
-      if (meta) meta.textContent = "Call notes";
-      if (subject) subject.textContent = this.formatSequenceStepTitle(selected?.dataset.stepSubject ?? "");
-      if (body) body.textContent = selected?.dataset.stepBody ?? "";
+      if (meta) this.setSequenceCallMeta(meta, card.dataset.sequencePhone ?? "");
+      if (subject) subject.textContent = selected?.dataset.stepBody ?? "";
+      if (body) this.renderSequenceCallAction(body, card);
       return;
     }
 
     if (meta) this.setSequenceCopyMeta(meta, card.dataset.sequenceEmail ?? "");
     if (subject) subject.textContent = selected?.dataset.stepSubject ?? "";
-    if (body) body.textContent = selected?.dataset.stepBody ?? "";
+    if (body) body.replaceChildren(document.createTextNode(selected?.dataset.stepBody ?? ""));
   }
 
   private setSequenceCopyMeta(meta: HTMLElement, email: string): void {
@@ -6441,6 +6451,45 @@ export class ChatActor {
     label.textContent = "to:";
     value.textContent = email;
     meta.replaceChildren(label, document.createTextNode(" "), value);
+  }
+
+  private setSequenceCallMeta(meta: HTMLElement, phone: string): void {
+    const label = document.createElement("span");
+    const value = document.createElement("strong");
+
+    label.textContent = "call:";
+    value.textContent = phone;
+    meta.replaceChildren(label, document.createTextNode(" "), value);
+  }
+
+  private renderSequenceCallAction(container: HTMLElement, card: HTMLElement): void {
+    const action = document.createElement("span");
+    const avatar = document.createElement("span");
+    const copy = document.createElement("span");
+    const name = document.createElement("strong");
+    const meta = document.createElement("span");
+    const button = document.createElement("span");
+    const icon = document.createElement("span");
+    const label = document.createElement("span");
+
+    action.className = "wa-sequence-call-action";
+    avatar.className = "wa-sequence-call-action__avatar";
+    this.setProfileAvatar(avatar, card.dataset.sequenceName ?? "", card.dataset.sequenceAvatarUrl);
+
+    copy.className = "wa-sequence-call-action__copy";
+    name.textContent = card.dataset.sequenceName ?? "";
+    meta.textContent = card.dataset.sequenceMeta ?? "";
+    copy.append(name, meta);
+
+    button.className = "wa-sequence-call-action__button";
+    icon.className = "wa-sequence-call-action__icon";
+    icon.setAttribute("aria-hidden", "true");
+    icon.innerHTML = `<svg viewBox="0 0 24 24" focusable="false"><path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -16 -16a2 2 0 0 1 2 -2"></path></svg>`;
+    label.textContent = "Start";
+    button.append(icon, label);
+
+    action.append(avatar, copy, button);
+    container.replaceChildren(action);
   }
 
   private getSequenceStepCopy(
@@ -6476,6 +6525,21 @@ export class ChatActor {
     const domain = this.getCompanyLogoDomain(sequence.company) || `${this.getCompanyKey(sequence.company)}.com`;
 
     return `${first}.${last}@${domain}`;
+  }
+
+  private getSequenceRecipientPhone(sequence: SequenceEngagementConfig["sequences"][number]): string {
+    const override = SEQUENCE_PHONE_OVERRIDES[sequence.name];
+    if (override) return override;
+
+    const seed = `${sequence.name}:${sequence.company}`
+      .split("")
+      .reduce((sum, char) => sum + char.charCodeAt(0), 0);
+    const areaCodes = [628, 917, 415, 646, 312, 424, 206, 650];
+    const area = areaCodes[seed % areaCodes.length];
+    const prefix = 200 + (seed % 700);
+    const line = 1000 + ((seed * 37) % 9000);
+
+    return `+1 (${area}) ${String(prefix).padStart(3, "0")}-${String(line).padStart(4, "0")}`;
   }
 
   private slugChannelName(channel: string): string {
