@@ -2041,77 +2041,12 @@ body {
   min-height: 18px;
   padding: 0 7px 1px;
   border-radius: 999px;
-  color: #5f5b55;
-  background: #eeece5;
+  color: #6d5300;
+  background: #fff0a6;
   font-size: 9px;
   line-height: 1;
   font-weight: 560;
   white-space: nowrap;
-}
-
-.wa-data-table-action__tooltip {
-  display: none;
-}
-
-.wa-data-table-floating-tooltip {
-  position: absolute;
-  z-index: 7;
-  top: 0;
-  left: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 29px;
-  padding: 0 11px;
-  border-radius: 6px;
-  color: #fffffb;
-  background: #11110f;
-  box-shadow: 0 8px 20px rgba(23, 23, 20, 0.18);
-  font-size: 11px;
-  line-height: 1;
-  font-weight: 580;
-  pointer-events: none;
-  white-space: nowrap;
-  opacity: 0;
-  visibility: hidden;
-  transition:
-    opacity 120ms ease,
-    visibility 120ms ease;
-}
-
-.wa-data-table-floating-tooltip[data-has-badge="true"] {
-  flex-direction: column;
-  align-items: flex-start;
-  min-height: 50px;
-  padding: 8px 10px;
-  gap: 6px;
-}
-
-.wa-data-table-floating-tooltip[data-visible="true"] {
-  opacity: 1;
-  visibility: visible;
-}
-
-.wa-section[data-chat-history-paused="true"] .wa-data-table-floating-tooltip {
-  opacity: 0;
-  visibility: hidden;
-}
-
-.wa-data-table-floating-tooltip__label {
-  display: block;
-}
-
-.wa-data-table-floating-tooltip__badge {
-  display: inline-flex;
-  align-items: center;
-  min-height: 15px;
-  padding: 0 6px;
-  border-radius: 999px;
-  color: #11110f;
-  background: #fffffb;
-  font-size: 8px;
-  line-height: 1;
-  font-weight: 650;
 }
 
 .wa-data-table__pagination {
@@ -2154,9 +2089,7 @@ body {
 }
 
 .wa-data-table-action:hover,
-.wa-data-table-action[data-tooltip-visible="true"],
-.wa-data-table__page-button:hover,
-.wa-data-table__page-button[data-tooltip-visible="true"] {
+.wa-data-table__page-button:hover {
   border-color: #bdb7ae;
   color: #11110f;
 }
@@ -5926,24 +5859,6 @@ body {
     min-height: 16px;
     padding: 0 6px 1px;
     font-size: 8px;
-  }
-
-  .wa-data-table-floating-tooltip {
-    min-height: 25px;
-    padding: 0 9px;
-    font-size: 9.5px;
-  }
-
-  .wa-data-table-floating-tooltip[data-has-badge="true"] {
-    min-height: 43px;
-    padding: 7px 9px;
-    gap: 5px;
-  }
-
-  .wa-data-table-floating-tooltip__badge {
-    min-height: 13px;
-    padding: 0 5px;
-    font-size: 7px;
   }
 
   .wa-data-table__pagination {

@@ -24,7 +24,6 @@ export type BuilderTableComponent = {
   rows: string[][];
   actions?: Array<{
     label: string;
-    tooltip: string;
     badge: string;
   }>;
   pagination?: {

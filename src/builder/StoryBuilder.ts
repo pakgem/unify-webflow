@@ -701,10 +701,6 @@ export class StoryBuilder {
           itemIndex,
           className: "wa-builder-table-editor__cell",
         }),
-        this.createComponentInput(step.id, "actionTooltip", action.tooltip, {
-          itemIndex,
-          className: "wa-builder-table-editor__cell",
-        }),
         this.createComponentInput(step.id, "actionBadge", action.badge, {
           itemIndex,
           className: "wa-builder-table-editor__cell",
@@ -2071,7 +2067,7 @@ function createSeedSteps(storyId: string, fallbackSummary: string): BuilderStep[
           ["Ava Garcia", "Gusto", "VP Revenue", "7h ago", "Demo page"],
         ]),
       },
-      { kind: "cursor", text: "Cursor clicks page 2, hovers the dialer icon, then clicks the email icon.", note: "Dialer tooltip reads “Coming soon!”; the outreach sequence button has no tooltip." },
+      { kind: "cursor", text: "Cursor clicks page 2, hovers the dialer icon, then clicks the email icon.", note: "Power dial shows an inline “Coming soon!” badge." },
       createThinkingStepSeed(
         [
           "generating sequence template from company offering",
@@ -2250,12 +2246,10 @@ function createWebsiteVisitorTableComponent(title: string, rows: string[][]): Bu
     actions: [
       {
         label: "Power dialer",
-        tooltip: "Coming soon!",
-        badge: "coming soon",
+        badge: "Coming soon!",
       },
       {
         label: "Create outreach sequence",
-        tooltip: "",
         badge: "",
       },
     ],
@@ -2984,7 +2978,6 @@ function updateComponentValue(
         const action = component.actions?.[indexes.itemIndex];
         if (action) {
           if (field === "actionLabel") action.label = value;
-          if (field === "actionTooltip") action.tooltip = value;
           if (field === "actionBadge") action.badge = value;
         }
         if (field === "pageRange" && component.pagination) component.pagination.ranges[indexes.itemIndex] = value;

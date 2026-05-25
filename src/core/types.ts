@@ -258,7 +258,6 @@ export type DataTableConfig = {
     id: string;
     label: string;
     icon?: "dialer" | "email";
-    tooltip?: string;
     badge?: string;
     variant?: "primary" | "secondary";
   }>;

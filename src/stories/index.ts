@@ -1113,8 +1113,7 @@ const WEBSITE_VISITOR_SALES_TABLE = {
       id: "power-dialer",
       label: "Power dial",
       icon: "dialer",
-      tooltip: "Coming soon!",
-      badge: "coming soon",
+      badge: "Coming soon!",
       variant: "primary",
     },
     {
@@ -1636,9 +1635,7 @@ export const defaultStories: StoryDefinition[] = [
           },
           at: "+=0.42",
         },
-        { kind: "custom", build: () => ctx.chat.dataTableActionTooltip("website-visitors-sales", "power-dialer", true) },
         { kind: "custom", build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat + 2 }), at: "+=0.12" },
-        { kind: "custom", build: () => ctx.chat.dataTableActionTooltip("website-visitors-sales", "power-dialer", false) },
         {
           kind: "cursorMove",
           target: emailSequenceTarget,

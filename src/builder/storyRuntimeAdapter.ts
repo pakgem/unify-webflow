@@ -349,9 +349,7 @@ function buildEngagementStory(ctx: StoryContext, story: BuilderStory): gsap.core
         },
         at: "+=0.42",
       },
-      { kind: "custom" as const, build: () => ctx.chat.dataTableActionTooltip("website-visitors-sales", "power-dialer", true) },
       { kind: "custom" as const, build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat + 2 }), at: "+=0.12" },
-      { kind: "custom" as const, build: () => ctx.chat.dataTableActionTooltip("website-visitors-sales", "power-dialer", false) },
       {
         kind: "cursorMove" as const,
         target: emailSequenceTarget,
@@ -1119,7 +1117,6 @@ function toDataTableAction(action: NonNullable<BuilderTableComponent["actions"]>
     id,
     label: id === "power-dialer" ? "Power dial" : "Outreach sequence",
     icon: id === "power-dialer" ? "dialer" : "email",
-    tooltip: action.tooltip.trim() || undefined,
     badge: action.badge || undefined,
   };
 }

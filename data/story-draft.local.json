@@ -917,12 +917,10 @@
             "actions": [
               {
                 "label": "Power dialer",
-                "tooltip": "Coming soon!",
-                "badge": "coming soon"
+                "badge": "Coming soon!"
               },
               {
                 "label": "Create outreach sequence",
-                "tooltip": "",
                 "badge": ""
               }
             ],
@@ -938,7 +936,7 @@
           "id": "research-brief-step-3",
           "kind": "cursor",
           "text": "Cursor clicks page 2, hovers the dialer icon, then clicks the email icon.",
-          "note": "Dialer tooltip reads “Coming soon!”; the outreach sequence button has no tooltip."
+          "note": "Power dial shows an inline “Coming soon!” badge."
         },
         {
           "id": "research-brief-step-4",
