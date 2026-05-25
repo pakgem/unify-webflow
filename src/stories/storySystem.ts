@@ -308,10 +308,10 @@ const SEQUENCE_STEP_CURSOR_MOTION = {
   betweenStepDelay: "+=0.24",
   clickDelay: "+=0.08",
   sequenceUpdateAt: "-=0.03",
-  firstDurationScale: 1.55,
-  durationScale: 1.28,
-  firstCurve: 0.28,
-  curve: 0.18,
+  firstDurationScale: 3.2,
+  durationScale: 2.35,
+  firstCurve: 0.2,
+  curve: 0.14,
   reviewHold: STORY_TIMING.beat + 0.22,
 } as const;
 
