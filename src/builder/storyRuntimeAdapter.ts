@@ -398,7 +398,7 @@ function buildEngagementStory(ctx: StoryContext, story: BuilderStory): gsap.core
       { kind: "cursorClick" as const, at: "-=0.02" },
       { kind: "custom" as const, build: () => ctx.chat.sequencePerson("visitor-outreach-sequences", sequenceThirdPersonIndex), at: "-=0.03" },
       { kind: "custom" as const, build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat + 0.28 }), at: "+=0.04" },
-      ...sequenceStepClickSteps("visitor-outreach-sequences", [1, 2, 3], "+=0.08"),
+      ...sequenceStepClickSteps("visitor-outreach-sequences", [1, 2, 3], "+=0.22"),
       {
         kind: "cursorMove" as const,
         target: sequenceKickoffTarget,

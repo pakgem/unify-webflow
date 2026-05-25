@@ -294,11 +294,37 @@ export function elementPerusalSteps(items: ElementPerusalItem[]): StoryStep[] {
   });
 }
 
-export function sequenceStepClickSteps(sequenceId: string, stepIndexes: number[], at: TimelinePosition = "+=0.08"): StoryStep[] {
+/* --------------------------------------------------------------------------
+   Sequence Step Cursor
+
+      0ms   cursor leaves the person rail with a slower direct path
+    720ms   cursor settles over the step before clicking
+    800ms   step click updates the copy panel
+   1100ms   cursor moves to the next step with a smaller path
+   -------------------------------------------------------------------------- */
+
+const SEQUENCE_STEP_CURSOR_MOTION = {
+  firstMoveDelay: "+=0.22",
+  betweenStepDelay: "+=0.24",
+  clickDelay: "+=0.08",
+  sequenceUpdateAt: "-=0.03",
+  firstDurationScale: 1.55,
+  durationScale: 1.28,
+  firstCurve: 0.28,
+  curve: 0.18,
+  reviewHold: STORY_TIMING.beat + 0.22,
+} as const;
+
+export function sequenceStepClickSteps(
+  sequenceId: string,
+  stepIndexes: number[],
+  at: TimelinePosition = SEQUENCE_STEP_CURSOR_MOTION.firstMoveDelay,
+): StoryStep[] {
   return stepIndexes.flatMap((stepIndex, index) => {
     const selector =
       `[data-sequence-engagement="${escapeAttributeValue(sequenceId)}"] ` +
       `.wa-sequence-card[data-active="true"] .wa-sequence-step[data-step-index="${stepIndex}"]`;
+    const isFirstStepAfterRail = index === 0;
 
     return [
       {
@@ -307,20 +333,27 @@ export function sequenceStepClickSteps(sequenceId: string, stepIndexes: number[]
         options: {
           mode: "pointer" as const,
           intent: "click" as const,
-          speed: "normal" as const,
+          speed: "slow" as const,
+          ease: "sine.inOut",
+          durationScale: isFirstStepAfterRail
+            ? SEQUENCE_STEP_CURSOR_MOTION.firstDurationScale
+            : SEQUENCE_STEP_CURSOR_MOTION.durationScale,
+          curve: isFirstStepAfterRail ? SEQUENCE_STEP_CURSOR_MOTION.firstCurve : SEQUENCE_STEP_CURSOR_MOTION.curve,
+          overshoot: false,
+          settle: false,
           label: `${sequenceId}-step-${stepIndex}`,
         },
-        at: index === 0 ? at : "+=0.14",
+        at: index === 0 ? at : SEQUENCE_STEP_CURSOR_MOTION.betweenStepDelay,
       },
-      { kind: "cursorClick" as const, at: "-=0.02" },
+      { kind: "cursorClick" as const, at: SEQUENCE_STEP_CURSOR_MOTION.clickDelay },
       {
         kind: "custom" as const,
         build: (ctx) => ctx.chat.sequenceStep(sequenceId, stepIndex),
-        at: "-=0.03",
+        at: SEQUENCE_STEP_CURSOR_MOTION.sequenceUpdateAt,
       },
       {
         kind: "custom" as const,
-        build: (ctx) => ctx.timeline().to({}, { duration: STORY_TIMING.beat + 0.18 }),
+        build: (ctx) => ctx.timeline().to({}, { duration: SEQUENCE_STEP_CURSOR_MOTION.reviewHold }),
         at: "+=0.02",
       },
     ];
