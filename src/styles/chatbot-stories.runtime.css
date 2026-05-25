@@ -2279,16 +2279,17 @@ body {
   justify-self: start;
   display: inline-flex;
   align-items: center;
-  min-height: 18px;
-  padding: 2px 7px 3px;
-  border: 1px solid #e2ddd5;
-  border-radius: 999px;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
   color: #5f5b55;
-  background: #fbfaf2;
+  background: transparent;
   font-size: 11px;
   line-height: 1;
   font-weight: 520;
   white-space: nowrap;
+  box-shadow: none;
 }
 
 .wa-data-table-pill-detail__detail {
