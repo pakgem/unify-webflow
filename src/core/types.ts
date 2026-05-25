@@ -229,7 +229,7 @@ export type DataTableColumnConfig = {
   key: string;
   label: string;
   width?: string;
-  cellType?: "text" | "person" | "mutualConnection";
+  cellType?: "text" | "person" | "mutualConnection" | "pillDetail";
   person?: DataTablePersonColumnConfig;
 };
 

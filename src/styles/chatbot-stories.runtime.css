@@ -2228,7 +2228,11 @@ body {
 }
 
 .wa-data-table--proximity .wa-data-table__row:not([data-header="true"]) {
-  min-height: 38px;
+  min-height: 52px;
+}
+
+.wa-data-table--proximity {
+  --wa-data-table-scroll-width: 100%;
 }
 
 .wa-data-table--proximity .wa-data-table__row[data-header="true"] .wa-data-table__cell[data-column-key="connection"] {
@@ -2239,6 +2243,7 @@ body {
 }
 
 .wa-data-table--proximity .wa-data-table__row:not([data-header="true"]) .wa-data-table__cell[data-column-key="connection"] {
+  align-items: center;
   color: var(--wa-ink);
   font-size: 13.5px;
   line-height: 1.18;
@@ -2247,6 +2252,41 @@ body {
 }
 
 .wa-data-table--proximity .wa-data-table__cell[data-column-key="connection"] .wa-data-table__cell-text {
+  overflow-wrap: normal;
+  white-space: normal;
+  word-break: normal;
+}
+
+.wa-data-table-pill-detail {
+  display: grid;
+  align-content: center;
+  gap: 5px;
+  min-width: 0;
+}
+
+.wa-data-table-pill-detail__pill {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  min-height: 18px;
+  padding: 2px 7px 3px;
+  border: 1px solid #e2ddd5;
+  border-radius: 999px;
+  color: #5f5b55;
+  background: #fbfaf2;
+  font-size: 11px;
+  line-height: 1;
+  font-weight: 520;
+  white-space: nowrap;
+}
+
+.wa-data-table-pill-detail__detail {
+  display: block;
+  min-width: 0;
+  color: #252521;
+  font-size: 13.5px;
+  line-height: 1.22;
+  font-weight: 500;
   overflow-wrap: normal;
   white-space: normal;
   word-break: normal;

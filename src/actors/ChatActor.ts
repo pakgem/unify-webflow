@@ -4754,6 +4754,9 @@ export class ChatActor {
       case "mutualConnection":
         this.appendDataTableMutualConnectionCell(cell, column, values);
         return;
+      case "pillDetail":
+        this.appendDataTablePillDetailCell(cell, column, values);
+        return;
       case "text":
         this.appendDataTableTextCell(cell, values[column.key] ?? "");
         return;
@@ -4797,6 +4800,28 @@ export class ChatActor {
     text.textContent = value || "-";
     cell.append(text);
     if (!value) cell.dataset.empty = "true";
+  }
+
+  private appendDataTablePillDetailCell(
+    cell: HTMLElement,
+    column: DataTableColumnConfig,
+    values: Record<string, string>,
+  ): void {
+    const wrapper = document.createElement("span");
+    const pill = document.createElement("span");
+    const detail = document.createElement("span");
+    const pillText = values[`${column.key}Pill`] ?? "";
+    const detailText = values[column.key] ?? "";
+
+    wrapper.className = "wa-data-table-pill-detail";
+    pill.className = "wa-data-table-pill-detail__pill";
+    pill.textContent = pillText || "-";
+    detail.className = "wa-data-table-pill-detail__detail";
+    detail.textContent = detailText || "-";
+
+    wrapper.append(pill, detail);
+    cell.append(wrapper);
+    if (!detailText) cell.dataset.empty = "true";
   }
 
   private createDataTableAddIcon(): SVGSVGElement {
@@ -6063,18 +6088,18 @@ export class ChatActor {
       eyebrow: "ranked leads",
       count: `${config.leads.length} leads`,
       columns: [
-        { key: "name", label: "Prospect", width: "1.18fr" },
-        { key: "company", label: "Company", width: "0.88fr" },
-        { key: "connection", label: "Connection", width: "2.05fr" },
+        { key: "name", label: "Prospect", width: "1.18fr", cellType: "person" },
+        { key: "connection", label: "Connection", width: "2fr", cellType: "pillDetail" },
       ],
       rows: config.leads.map((lead) => ({
         id: `proximity-${lead.rank}`,
         values: {
           name: lead.name,
-          prospectDetail: lead.title,
+          prospectDetail: `${lead.title} at ${lead.company}`,
           company: lead.company,
-          connection: this.formatLeadConnection(lead),
-          source: "signal",
+          connection: lead.personalization.trim(),
+          connectionPill: lead.proximity.trim(),
+          source: "company",
           avatarTone: lead.rank,
           avatarUrl: lead.avatarUrl ?? "",
           score: lead.score,
@@ -6085,16 +6110,6 @@ export class ChatActor {
     table.classList.add("wa-data-table--proximity");
     table.dataset.proximityList = config.id;
     return table;
-  }
-
-  private formatLeadConnection(lead: ProximityLeadListConfig["leads"][number]): string {
-    const connection = lead.personalization.trim();
-    const label = lead.proximity.trim();
-
-    if (!label) return connection;
-    if (!connection) return label;
-
-    return `${label}: ${connection}`;
   }
 
   private createPersonalizationSwipeGame(config: PersonalizationSwipeGameConfig): HTMLElement {
