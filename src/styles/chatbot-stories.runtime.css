@@ -696,6 +696,9 @@ body {
 }
 
 .wa-thread {
+  --wa-thread-content-scale: 1;
+  --wa-thread-content-inverse-scale: 1;
+  --wa-thread-scaled-min-height: 100%;
   position: relative;
   z-index: 0;
   display: grid;
@@ -707,6 +710,15 @@ body {
   padding-bottom: var(--wa-chat-bottom-clearance);
   overflow: hidden;
   overscroll-behavior: auto;
+  transform-origin: top center;
+}
+
+.wa-thread[data-thread-content-scale="scaled"] {
+  justify-self: center;
+  width: calc(100% * var(--wa-thread-content-inverse-scale));
+  min-height: var(--wa-thread-scaled-min-height);
+  transform: scale(var(--wa-thread-content-scale));
+  will-change: transform;
 }
 
 .wa-thread > .wa-message:first-child,
@@ -717,6 +729,9 @@ body {
 .wa-chat-shell__body[data-chat-content-fit="short"] .wa-thread {
   align-self: center;
   align-content: center;
+}
+
+.wa-chat-shell__body[data-chat-content-fit="short"] .wa-thread:not([data-thread-content-scale="scaled"]) {
   width: 100%;
 }
 
@@ -1660,6 +1675,7 @@ body {
 
 .wa-uploaded-files[data-uploaded-file-count="4"] {
   --wa-uploaded-file-target-width: 230px;
+  --wa-story-fit-width: 467px;
   width: min(467px, calc(100vw - 72px));
   max-width: 100%;
 }
@@ -3220,6 +3236,7 @@ body {
 .wa-style-profile,
 .wa-proximity-list,
 .wa-sequence-engagement {
+  --wa-story-fit-width: 540px;
   display: grid;
   gap: 10px;
   width: min(100%, 540px);
@@ -3237,6 +3254,7 @@ body {
 
 .wa-sequence-engagement {
   --wa-sequence-tab-line-stroke: rgba(17, 17, 15, 0.28);
+  --wa-story-fit-width: 712px;
   gap: 14px;
   width: min(100%, 712px);
 }

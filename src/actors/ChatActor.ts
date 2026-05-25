@@ -3152,7 +3152,11 @@ export class ChatActor {
     }
 
     if (typeof MutationObserver !== "undefined") {
-      this.threadContentMutationObserver = new MutationObserver(() => this.requestThreadContentFitUpdate());
+      this.threadContentMutationObserver = new MutationObserver((records) => {
+        if (this.shouldIgnoreThreadContentFitMutations(records)) return;
+
+        this.requestThreadContentFitUpdate();
+      });
       this.threadContentMutationObserver.observe(this.thread, {
         attributes: true,
         attributeFilter: ["class", "style", "data-active", "data-step-open", "data-step-selected"],
@@ -3174,9 +3178,28 @@ export class ChatActor {
     });
   }
 
+  private shouldIgnoreThreadContentFitMutations(records: MutationRecord[]): boolean {
+    return records.length > 0 && records.every((record) =>
+      record.type === "attributes" &&
+      record.target === this.thread &&
+      record.attributeName === "style",
+    );
+  }
+
   private updateThreadContentFitState(): void {
+    this.clearThreadContentScaleState();
+
+    const contentWidth = this.getVisibleThreadContentWidth();
+    const availableWidth = this.thread.clientWidth;
+    const scale = this.getThreadContentFitScale(contentWidth, availableWidth);
+    const scaledAvailableHeight = scale < 1
+      ? this.chatBody.clientHeight / scale
+      : Math.max(this.thread.clientHeight, this.chatBody.clientHeight);
+
+    this.applyThreadContentScale(scale);
+
     const contentHeight = this.getVisibleThreadContentHeight();
-    const availableHeight = Math.max(this.thread.clientHeight, this.chatBody.clientHeight);
+    const availableHeight = scaledAvailableHeight;
     const isShort = contentHeight > 0 && availableHeight > 0 && contentHeight <= availableHeight - 1;
 
     if (!contentHeight || !availableHeight) {
@@ -3193,6 +3216,52 @@ export class ChatActor {
   private clearThreadContentFitState(): void {
     delete this.chatBody.dataset.chatContentFit;
     delete this.thread.dataset.threadContentFit;
+    this.clearThreadContentScaleState();
+  }
+
+  private getThreadContentFitScale(contentWidth: number, availableWidth: number): number {
+    if (!contentWidth || !availableWidth || contentWidth <= availableWidth + 0.5) return 1;
+
+    return Math.min(1, availableWidth / contentWidth);
+  }
+
+  private applyThreadContentScale(scale: number): void {
+    const nextScale = Math.min(1, Math.max(0.01, scale));
+
+    if (nextScale >= 0.999) {
+      this.clearThreadContentScaleState();
+      return;
+    }
+
+    const roundedScale = Number(nextScale.toFixed(4));
+    const inverseScale = Number((1 / roundedScale).toFixed(4));
+    const scaledMinHeight = `${Math.ceil(this.chatBody.clientHeight * inverseScale)}px`;
+    const currentScale = this.thread.style.getPropertyValue("--wa-thread-content-scale");
+    const nextScaleText = String(roundedScale);
+
+    this.thread.dataset.threadContentScale = "scaled";
+
+    if (currentScale !== nextScaleText) {
+      this.thread.style.setProperty("--wa-thread-content-scale", nextScaleText);
+      this.thread.style.setProperty("--wa-thread-content-inverse-scale", String(inverseScale));
+    }
+
+    if (this.thread.style.getPropertyValue("--wa-thread-scaled-min-height") !== scaledMinHeight) {
+      this.thread.style.setProperty("--wa-thread-scaled-min-height", scaledMinHeight);
+    }
+  }
+
+  private clearThreadContentScaleState(): void {
+    delete this.thread.dataset.threadContentScale;
+    this.thread.style.removeProperty("--wa-thread-content-scale");
+    this.thread.style.removeProperty("--wa-thread-content-inverse-scale");
+    this.thread.style.removeProperty("--wa-thread-scaled-min-height");
+  }
+
+  private getThreadContentScale(): number {
+    const scale = Number.parseFloat(this.thread.style.getPropertyValue("--wa-thread-content-scale"));
+
+    return Number.isFinite(scale) && scale > 0 ? scale : 1;
   }
 
   private getVisibleThreadContentHeight(): number {
@@ -3206,6 +3275,70 @@ export class ChatActor {
     const bottom = Math.max(...visibleChildren.map((child) => child.offsetTop + child.offsetHeight));
 
     return Math.max(0, bottom - top);
+  }
+
+  private getVisibleThreadContentWidth(): number {
+    const visibleChildren = Array.from(this.thread.children).flatMap((child) => {
+      if (!(child instanceof HTMLElement) || !this.isMeasurableThreadChild(child)) return [];
+
+      return this.getThreadWidthMeasureTargets(child);
+    }).filter(
+      (child): child is HTMLElement => child instanceof HTMLElement && this.isMeasurableThreadChild(child),
+    );
+
+    if (!visibleChildren.length) return 0;
+
+    const bounds = visibleChildren.map((child) => {
+      const style = window.getComputedStyle(child);
+      const marginLeft = Number.parseFloat(style.marginLeft) || 0;
+      const marginRight = Number.parseFloat(style.marginRight) || 0;
+      const left = this.getElementOffsetLeftWithinThread(child) - marginLeft;
+      const width = Math.max(child.offsetWidth, this.getDeclaredThreadContentFitWidth(child));
+
+      return {
+        left,
+        right: left + width + marginLeft + marginRight,
+      };
+    });
+
+    const left = Math.min(...bounds.map((bound) => bound.left));
+    const right = Math.max(...bounds.map((bound) => bound.right));
+
+    return Math.max(0, right - left);
+  }
+
+  private getThreadWidthMeasureTargets(child: HTMLElement): HTMLElement[] {
+    const body = child.querySelector<HTMLElement>(":scope > .wa-message__body");
+    const bodyChildren = body
+      ? Array.from(body.children).filter((node): node is HTMLElement => node instanceof HTMLElement)
+      : [];
+
+    return bodyChildren.length ? bodyChildren : [child];
+  }
+
+  private getDeclaredThreadContentFitWidth(element: HTMLElement): number {
+    const value = window.getComputedStyle(element).getPropertyValue("--wa-story-fit-width").trim();
+    const width = Number.parseFloat(value);
+
+    return Number.isFinite(width) && width > 0 ? width : 0;
+  }
+
+  private getElementOffsetLeftWithinThread(element: HTMLElement): number {
+    let left = 0;
+    let node: HTMLElement | null = element;
+
+    while (node && node !== this.thread) {
+      left += node.offsetLeft;
+      node = node.offsetParent as HTMLElement | null;
+    }
+
+    if (node === this.thread) return left;
+
+    const elementRect = element.getBoundingClientRect();
+    const threadRect = this.thread.getBoundingClientRect();
+    const scale = this.getThreadContentScale();
+
+    return (elementRect.left - threadRect.left) / scale;
   }
 
   private isMeasurableThreadChild(child: HTMLElement): boolean {
@@ -7020,7 +7153,8 @@ export class ChatActor {
 
   private getAlignedElementScrollTarget(element: HTMLElement, extraScroll = 0): number {
     const sideInset = this.getElementSideInset(element);
-    const target = this.getElementOffsetTopWithinThread(element) - sideInset + extraScroll;
+    const scale = this.getThreadContentScale();
+    const target = this.getElementOffsetTopWithinThread(element) - (sideInset / scale) + (extraScroll / scale);
     const maxTarget = Math.max(this.getThreadBottomScrollTarget(), this.getElementBottomScrollTarget(element));
 
     return Math.min(Math.max(0, target), maxTarget);
@@ -7061,13 +7195,15 @@ export class ChatActor {
   }
 
   private getElementBottomScrollTarget(element: HTMLElement, extraScroll = 0): number {
+    const scale = this.getThreadContentScale();
+
     return Math.max(
       0,
       this.getElementOffsetTopWithinThread(element) +
         element.offsetHeight +
         this.getThreadBottomPadding() -
         this.thread.clientHeight +
-        extraScroll,
+        (extraScroll / scale),
     );
   }
 
