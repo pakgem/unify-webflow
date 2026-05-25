@@ -5487,7 +5487,7 @@ body {
     --wa-composer-height: 88px;
     --wa-composer-send-size: 32px;
     --wa-history-resume-height: 40px;
-    --wa-window-width: 100vw;
+    --wa-window-width: 590px;
     --wa-window-height: 860px;
     padding: 38px 0 0;
   }
@@ -5606,8 +5606,8 @@ body {
   }
 
   .wa-window {
-    width: 100vw;
-    margin: 0;
+    width: var(--wa-window-width);
+    margin: 0 auto;
     border-radius: 0;
   }
 
@@ -5616,35 +5616,6 @@ body {
     border-right: 0;
     border-left: 0;
     border-radius: 0;
-  }
-
-  .wa-chat-shell__bar {
-    --wa-browser-tab-left: 148px;
-    --wa-browser-tab-width: 162px;
-    height: 80px;
-    padding: 0 32px;
-    border-radius: 0;
-  }
-
-  .wa-chat-shell__lights {
-    gap: 12px;
-  }
-
-  .wa-chat-shell__lights span {
-    width: 18px;
-    height: 18px;
-  }
-
-  .wa-chat-shell__tab {
-    height: 58px;
-    min-width: var(--wa-browser-tab-width);
-    padding: 0 22px;
-    gap: 12px;
-    border-radius: 10px 10px 0 0;
-  }
-
-  .wa-chat-shell__title {
-    font-size: 22px;
   }
 
   .wa-chat-shell__body {
