@@ -4883,10 +4883,12 @@ body {
 }
 
 .wa-sequence-actions {
-  display: inline-flex;
+  display: flex;
   gap: 8px;
   align-items: center;
-  justify-self: end;
+  justify-content: center;
+  justify-self: stretch;
+  width: 100%;
 }
 
 .wa-sequence-action,
@@ -4896,7 +4898,7 @@ body {
   justify-content: center;
   width: auto;
   min-width: 0;
-  min-height: 36px;
+  min-height: 32px;
   padding: 0 12px;
   border: 1px solid var(--wa-ink);
   border-radius: var(--wa-radius-sm);
@@ -4923,10 +4925,21 @@ body {
   font-weight: 580;
 }
 
-.wa-sequence-kickoff[data-launched="true"] {
-  border-color: var(--wa-color-accent);
-  color: var(--wa-ink);
-  background: var(--wa-color-accent);
+.wa-sequence-kickoff[data-processing="true"] {
+  gap: 7px;
+  cursor: progress;
+}
+
+.wa-sequence-kickoff[data-processing="true"]::before {
+  content: "";
+  display: block;
+  width: 11px;
+  height: 11px;
+  border: 1.4px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 999px;
+  opacity: 0.86;
+  animation: wa-spin 720ms linear infinite;
 }
 
 .wa-composer {

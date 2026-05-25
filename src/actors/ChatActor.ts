@@ -2616,8 +2616,10 @@ export class ChatActor {
       if (!section || !button) return;
 
       section.dataset.sequenceLaunched = "true";
-      button.dataset.launched = "true";
-      if (label) label.textContent = `Enrolled ${section.dataset.peopleCount ?? "50 people"}`;
+      button.dataset.processing = "true";
+      button.setAttribute("aria-busy", "true");
+      button.setAttribute("aria-label", "Enrolling");
+      if (label) label.textContent = "Enrolling";
     });
   }
 
@@ -6488,6 +6490,7 @@ export class ChatActor {
     kickoffLabel.textContent = `Enroll ${config.peopleCount}`;
     kickoff.append(kickoffLabel);
     kickoff.addEventListener("click", () => {
+      if (kickoff.dataset.processing === "true") return;
       this.sequenceKickoff(config.id).play();
     });
     actions.append(draft, kickoff);
