@@ -2992,8 +2992,7 @@ export class ChatActor {
   private renderFileLandingLabel(label: FileLandingLabel | null, progress: number): void {
     if (!label) return;
 
-    const fadeOut = clampUnit((1 - progress) / 0.16);
-    label.setOpacity(fadeOut);
+    label.setOpacity(1);
   }
 
   private getFileLandingCloneBounds(
