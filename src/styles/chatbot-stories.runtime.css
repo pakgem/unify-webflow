@@ -1464,10 +1464,10 @@ body {
 }
 
 .wa-file-landing-label {
-  color: #5e5c55;
-  font-size: 12px;
+  color: #716d66;
+  font-size: 10.5px;
   line-height: 1;
-  font-weight: 540;
+  font-weight: 520;
   white-space: nowrap;
 }
 
@@ -1689,6 +1689,7 @@ body {
   font-size: 10.5px;
   line-height: 1;
   font-weight: 520;
+  white-space: nowrap;
 }
 
 .wa-uploaded-files__list {
