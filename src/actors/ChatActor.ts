@@ -730,6 +730,9 @@ export class ChatActor {
   private activeTablePageTimelines = new Map<string, gsap.core.Timeline>();
   private expectedDataTablePages = new Map<string, number>();
   private activeSequencePersonTimelines = new Map<string, gsap.core.Timeline>();
+  private threadContentFitFrame: number | null = null;
+  private threadContentResizeObserver: ResizeObserver | null = null;
+  private threadContentMutationObserver: MutationObserver | null = null;
 
   private readonly handleDataTableControlPointerOver = (event: PointerEvent): void => {
     const control = this.findDataTableControl(event.target);
@@ -802,6 +805,7 @@ export class ChatActor {
     this.removeElements("[data-thinking], [data-research-steps], [data-result-grid]");
     this.removeElements(TRANSIENT_ELEMENT_SELECTOR);
     this.clearMarketingPanels();
+    this.observeThreadContentFit();
   }
 
   reset(): void {
@@ -821,6 +825,7 @@ export class ChatActor {
     this.setSignupEmailFilled(false);
     this.status?.replaceChildren(document.createTextNode("Ready"));
     this.clearCustomResults();
+    this.clearThreadContentFitState();
 
     this.thread.scrollTop = 0;
     gsap.set(this.thread, {
@@ -842,12 +847,20 @@ export class ChatActor {
     for (const card of this.cardPool) {
       card.style.display = "none";
     }
+
+    this.requestThreadContentFitUpdate();
   }
 
   destroy(): void {
     this.chatShell.removeEventListener("pointerover", this.handleDataTableControlPointerOver);
     this.chatShell.removeEventListener("pointerout", this.handleDataTableControlPointerOut);
     this.chatShell.removeEventListener("click", this.handleDataTableControlClick);
+    if (this.threadContentFitFrame !== null) {
+      cancelAnimationFrame(this.threadContentFitFrame);
+      this.threadContentFitFrame = null;
+    }
+    this.threadContentResizeObserver?.disconnect();
+    this.threadContentMutationObserver?.disconnect();
     this.clearDataTableState();
     this.clearSequencePersonTimelines();
   }
@@ -1465,6 +1478,7 @@ export class ChatActor {
       resolvedElement = resolveElement();
 
       this.stopScrollMotion();
+      this.updateThreadContentFitState();
       scrollTarget = resolvedElement
         ? this.getElementScrollTarget(resolvedElement, options)
         : this.getMissingScrollTarget(options.fallback ?? "current");
@@ -3099,6 +3113,7 @@ export class ChatActor {
         message.style.display = "grid";
         this.setMotionHints(message);
         this.forceThreadLayout(message);
+        this.updateThreadContentFitState();
         if (this.composerVisible) this.pinThreadToBottom();
         scrollTarget = this.getMessageScrollTarget(message, scrollAnchor, scrollOffset);
       })
@@ -3124,6 +3139,79 @@ export class ChatActor {
   private forceThreadLayout(message: HTMLElement): void {
     void message.offsetHeight;
     void this.thread.scrollHeight;
+  }
+
+  private observeThreadContentFit(): void {
+    this.threadContentResizeObserver?.disconnect();
+    this.threadContentMutationObserver?.disconnect();
+
+    if (typeof ResizeObserver !== "undefined") {
+      this.threadContentResizeObserver = new ResizeObserver(() => this.requestThreadContentFitUpdate());
+      this.threadContentResizeObserver.observe(this.chatBody);
+      this.threadContentResizeObserver.observe(this.thread);
+    }
+
+    if (typeof MutationObserver !== "undefined") {
+      this.threadContentMutationObserver = new MutationObserver(() => this.requestThreadContentFitUpdate());
+      this.threadContentMutationObserver.observe(this.thread, {
+        attributes: true,
+        attributeFilter: ["class", "style", "data-active", "data-step-open", "data-step-selected"],
+        characterData: true,
+        childList: true,
+        subtree: true,
+      });
+    }
+
+    this.requestThreadContentFitUpdate();
+  }
+
+  private requestThreadContentFitUpdate(): void {
+    if (this.threadContentFitFrame !== null) return;
+
+    this.threadContentFitFrame = requestAnimationFrame(() => {
+      this.threadContentFitFrame = null;
+      this.updateThreadContentFitState();
+    });
+  }
+
+  private updateThreadContentFitState(): void {
+    const contentHeight = this.getVisibleThreadContentHeight();
+    const availableHeight = Math.max(this.thread.clientHeight, this.chatBody.clientHeight);
+    const isShort = contentHeight > 0 && availableHeight > 0 && contentHeight <= availableHeight - 1;
+
+    if (!contentHeight || !availableHeight) {
+      this.clearThreadContentFitState();
+      return;
+    }
+
+    const fit = isShort ? "short" : "overflow";
+
+    this.chatBody.dataset.chatContentFit = fit;
+    this.thread.dataset.threadContentFit = fit;
+  }
+
+  private clearThreadContentFitState(): void {
+    delete this.chatBody.dataset.chatContentFit;
+    delete this.thread.dataset.threadContentFit;
+  }
+
+  private getVisibleThreadContentHeight(): number {
+    const visibleChildren = Array.from(this.thread.children).filter(
+      (child): child is HTMLElement => child instanceof HTMLElement && this.isMeasurableThreadChild(child),
+    );
+
+    if (!visibleChildren.length) return 0;
+
+    const top = Math.min(...visibleChildren.map((child) => child.offsetTop));
+    const bottom = Math.max(...visibleChildren.map((child) => child.offsetTop + child.offsetHeight));
+
+    return Math.max(0, bottom - top);
+  }
+
+  private isMeasurableThreadChild(child: HTMLElement): boolean {
+    const style = window.getComputedStyle(child);
+
+    return style.display !== "none" && style.visibility !== "hidden" && child.offsetHeight > 0;
   }
 
   private setMotionHints(targets: gsap.TweenTarget, willChange = "transform, opacity"): void {
@@ -6993,6 +7081,7 @@ export class ChatActor {
     scrollAnchor: HTMLElement | null = null,
     scrollOffset = 0,
   ): void {
+    this.updateThreadContentFitState();
     const target = this.getMessageScrollTarget(message, scrollAnchor, scrollOffset);
 
     if (this.prefersReducedMotion || Math.abs(this.thread.scrollTop - target) < 1) {
