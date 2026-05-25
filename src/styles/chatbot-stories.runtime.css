@@ -2161,7 +2161,8 @@ body {
   [data-column-key="name"],
   [data-column-key="contact"],
   [data-column-key="fullName"],
-  [data-column-key="mutualConnection"]
+  [data-column-key="mutualConnection"],
+  [data-column-key="connector"]
 ) {
   overflow: visible;
   color: #050505;

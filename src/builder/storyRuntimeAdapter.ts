@@ -724,10 +724,21 @@ type BuilderTableShape = {
   sourceIndexes: number[];
   foldedRoleIndex?: number;
   mutualConnectionKey?: string;
+  connectorPersonKey?: string;
   variant?: DataTableConfig["variant"];
 };
 
 type DataTableColumn = DataTableConfig["columns"][number];
+type DataTablePersonColumn = NonNullable<DataTableColumn["person"]>;
+
+const CONNECTOR_PERSON_COLUMN: DataTablePersonColumn = {
+  detailKey: "connectorDetail",
+  avatarToneKey: "connectorAvatarTone",
+  avatarUrlKey: "connectorAvatarUrl",
+  avatarKey: "connectorAvatar",
+  sourceKey: "connectorSource",
+  companyKey: "connectorCompany",
+};
 
 const MUTUAL_CONNECTION_COMPANY_BY_NAME: Record<string, { title: string; company: string }> = {
   "dev singh": { title: "RevOps Lead @ Brex", company: "Brex" },
@@ -791,7 +802,7 @@ function normalizeDataMarketplaceProspectTable(config: DataTableConfig): void {
 function normalizeDataMarketplaceProspectValues(values: Record<string, string>): void {
   if (values.name && "company" in values) values.company = "Stripe";
   if (values.prospectDetail) values.prospectDetail = normalizeProspectDetailToStripe(values.prospectDetail);
-  if (values.connector) values.connector = normalizeConnectorLabel(values.connector);
+  if (values.connector && !values.connectorDetail) values.connector = normalizeConnectorLabel(values.connector);
 }
 
 function normalizeProspectDetailToStripe(detail: string): string {
@@ -932,6 +943,7 @@ function getBuilderTableShape(component: BuilderTableComponent, fallbackId: stri
     sourceIndexes,
     foldedRoleIndex: foldedDetailIndex,
     mutualConnectionKey: columns.some((column) => column.key === "mutualConnection") ? "mutualConnection" : undefined,
+    connectorPersonKey: columns.some((column) => column.key === "connector" && column.cellType === "person") ? "connector" : undefined,
     variant: columns.some((column) => column.key === "mutualConnection") ? "connections" : undefined,
   };
 }
@@ -963,6 +975,15 @@ function getTableColumnOverride(fallbackId: string, label: string): Partial<Data
     if (normalized === "full name") return { key: "fullName", width: TABLE_COLUMN_WIDTHS.cleanName, cellType: "person" };
     if (normalized === "work email") return { width: TABLE_COLUMN_WIDTHS.cleanEmail };
     if (normalized === "company") return { width: TABLE_COLUMN_WIDTHS.cleanCompany };
+  }
+
+  if (normalized === "connector") {
+    return {
+      key: "connector",
+      width: TABLE_COLUMN_WIDTHS.foldedConnector,
+      cellType: "person",
+      person: CONNECTOR_PERSON_COLUMN,
+    };
   }
 
   return {};
@@ -1010,6 +1031,14 @@ function toDataTableRow(
     values.mutualConnectionContext = parsed.context;
     values.mutualConnectionCompany = parsed.company;
     if (parsed.name && additionalConnections) values.mutualConnectionBadge = additionalConnections;
+  }
+
+  if (shape.connectorPersonKey) {
+    const parsed = parseMutualConnection(values[shape.connectorPersonKey] ?? "");
+
+    values[shape.connectorPersonKey] = parsed.name;
+    values.connectorDetail = parsed.title;
+    values.connectorCompany = parsed.company;
   }
 
   return {
