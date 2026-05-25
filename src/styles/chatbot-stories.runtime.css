@@ -409,11 +409,19 @@ body {
    -------------------------------------------------------------------------- */
 
 .wa-stage {
+  --wa-window-scene-scale: 1;
+  --wa-window-scene-width: var(--wa-window-width);
+  --wa-window-scene-height: var(--wa-stage-min-height);
+  --wa-window-scene-min-width: 0px;
   position: relative;
   grid-column: 2;
   grid-row: 2;
   width: var(--wa-stage-width);
   min-height: var(--wa-stage-min-height);
+}
+
+.wa-stage[data-window-content-scale] {
+  min-height: var(--wa-window-scene-height);
 }
 
 .wa-stage__media {
@@ -440,6 +448,13 @@ body {
   margin: 108px 0 0 155px;
   border-radius: var(--wa-radius-window);
   box-shadow: var(--wa-window-shadow);
+  transform-origin: top left;
+}
+
+.wa-stage[data-window-content-scale] .wa-window {
+  width: var(--wa-window-scene-width);
+  transform: scale(var(--wa-window-scene-scale));
+  will-change: transform;
 }
 
 .wa-chat-shell {
@@ -696,9 +711,6 @@ body {
 }
 
 .wa-thread {
-  --wa-thread-content-scale: 1;
-  --wa-thread-content-inverse-scale: 1;
-  --wa-thread-scaled-min-height: 100%;
   position: relative;
   z-index: 0;
   display: grid;
@@ -710,15 +722,6 @@ body {
   padding-bottom: var(--wa-chat-bottom-clearance);
   overflow: hidden;
   overscroll-behavior: auto;
-  transform-origin: top center;
-}
-
-.wa-thread[data-thread-content-scale="scaled"] {
-  justify-self: center;
-  width: calc(100% * var(--wa-thread-content-inverse-scale));
-  min-height: var(--wa-thread-scaled-min-height);
-  transform: scale(var(--wa-thread-content-scale));
-  will-change: transform;
 }
 
 .wa-thread > .wa-message:first-child,
@@ -731,7 +734,7 @@ body {
   align-content: center;
 }
 
-.wa-chat-shell__body[data-chat-content-fit="short"] .wa-thread:not([data-thread-content-scale="scaled"]) {
+.wa-chat-shell__body[data-chat-content-fit="short"] .wa-thread {
   width: 100%;
 }
 
@@ -5591,6 +5594,7 @@ body {
   }
 
   .wa-stage {
+    --wa-window-scene-min-width: 590px;
     width: 100vw;
     min-height: var(--wa-window-height);
     margin-top: 0;
