@@ -1093,6 +1093,7 @@ const WEBSITE_VISITOR_SALES_TABLE = {
       label: "Power dial",
       icon: "dialer",
       tooltip: "Coming soon!",
+      badge: "coming soon",
       variant: "primary",
     },
     {

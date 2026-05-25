@@ -1984,10 +1984,10 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 8px;
   min-width: 0;
-  min-height: 32px;
-  padding: 0 10px;
+  min-height: 38px;
+  padding: 0 13px;
   border: 1px solid #ded9d2;
   border-radius: 6px;
   color: #555452;
@@ -2018,25 +2018,24 @@ body {
 
 .wa-data-table-action__label {
   display: inline-block;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1;
   font-weight: 520;
 }
 
 .wa-data-table-action__badge {
-  position: absolute;
-  top: -5px;
-  right: -5px;
-  display: none;
+  display: inline-flex;
+  flex: 0 0 auto;
   align-items: center;
-  min-height: 15px;
-  padding: 0 5px;
+  min-height: 18px;
+  padding: 0 7px 1px;
   border-radius: 999px;
-  color: #11110f;
-  background: var(--wa-orange);
-  font-size: 8px;
+  color: #5f5b55;
+  background: #eeece5;
+  font-size: 9px;
   line-height: 1;
-  font-weight: 680;
+  font-weight: 560;
+  white-space: nowrap;
 }
 
 .wa-data-table-action__tooltip {
@@ -5883,8 +5882,8 @@ body {
   }
 
   .wa-data-table-action {
-    min-height: 28px;
-    padding: 0 8px;
+    min-height: 34px;
+    padding: 0 10px;
     border-radius: 5px;
   }
 
@@ -5894,13 +5893,13 @@ body {
   }
 
   .wa-data-table-action__label {
-    font-size: 10px;
+    font-size: 11px;
   }
 
   .wa-data-table-action__badge {
-    min-height: 12px;
-    padding: 0 4px;
-    font-size: 6.5px;
+    min-height: 16px;
+    padding: 0 6px 1px;
+    font-size: 8px;
   }
 
   .wa-data-table-floating-tooltip {

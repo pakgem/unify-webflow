@@ -2251,7 +2251,7 @@ function createWebsiteVisitorTableComponent(title: string, rows: string[][]): Bu
       {
         label: "Power dialer",
         tooltip: "Coming soon!",
-        badge: "",
+        badge: "coming soon",
       },
       {
         label: "Create outreach sequence",
