@@ -627,11 +627,11 @@
         {
           "id": "crm-update-step-3",
           "kind": "component",
-          "text": "Pylon business report",
+          "text": "Messaging strategy",
           "note": "Summarizes the messaging, competitive positioning, and GTM strategy learned from the uploaded context.",
           "component": {
             "kind": "styleProfile",
-            "title": "Pylon business report",
+            "title": "Messaging strategy",
             "subtitle": "What Unify learned from the uploaded business context.",
             "signals": [
               {
