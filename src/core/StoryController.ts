@@ -30,6 +30,9 @@ type StorySwitchOptions = {
 const CHAT_HISTORY_SCROLL = {
   minPixelDelta: 0.5,
 };
+const SCRUB_SEEK = {
+  resumeDelay: 0.08,
+};
 const ENABLE_PAUSED_CURSOR_MIMIC = true;
 
 export class StoryController implements ChatbotStoriesInstance {
@@ -81,6 +84,8 @@ export class StoryController implements ChatbotStoriesInstance {
   play(): void {
     const shouldRestoreDataTables = this.historyPaused;
 
+    this.seekTween?.kill();
+    this.seekTween = null;
     this.setHistoryPaused(false);
     this.chat.scrollToLive();
     this.playing = true;
@@ -96,6 +101,8 @@ export class StoryController implements ChatbotStoriesInstance {
     this.playing = false;
     this.activeTimeline?.pause();
     this.autoAdvance?.kill();
+    this.seekTween?.kill();
+    this.seekTween = null;
     this.updatePlayButton();
     this.resumeRestoreTimeline?.kill();
     this.resumeRestoreTimeline = null;
@@ -316,14 +323,14 @@ export class StoryController implements ChatbotStoriesInstance {
     this.activeIndex = storyIndex;
     preloadStoriesAround(this.stories, this.activeIndex);
     this.activeTimeline = this.buildTimeline(this.activeIndex, startPoint);
-    this.activeTimeline.progress(progress).pause();
+    this.renderActiveTimelineProgress(progress);
     this.updateStoryMeta();
-    this.updateProgress();
   }
 
   private stopTimeline(): void {
     this.autoAdvance?.kill();
     this.seekTween?.kill();
+    this.seekTween = null;
     this.resumeRestoreTimeline?.kill();
     this.resumeRestoreTimeline = null;
     this.cancelHistoryParkMotion();
@@ -356,31 +363,28 @@ export class StoryController implements ChatbotStoriesInstance {
     });
   }
 
-  private seekTo(progress: number, duration = 0.28): void {
+  private seekTo(progress: number): void {
     if (!this.activeTimeline) return;
 
     const wasPlaying = this.playing;
     this.autoAdvance?.kill();
     this.seekTween?.kill();
+    this.seekTween = null;
     this.setHistoryPaused(false);
     this.chat.stopScrollMotion();
+    this.cursor.clearTransientInteraction();
 
-    const clampedProgress = clampProgress(progress);
-    const timelineDuration = this.activeTimeline.duration();
     this.playing = wasPlaying;
-    this.seekTween = gsap.to(this.activeTimeline, {
-      time: timelineDuration * clampedProgress,
-      duration,
-      ease: "power2.out",
-      overwrite: true,
-      onUpdate: () => this.updateProgress(),
-      onComplete: () => {
-        if (wasPlaying) this.resumeActiveTimeline();
-        this.updatePlayButton();
-      },
-    });
+    this.renderActiveTimelineProgress(progress);
 
-    this.activeTimeline.pause();
+    if (wasPlaying) {
+      this.seekTween = gsap.delayedCall(SCRUB_SEEK.resumeDelay, () => {
+        this.seekTween = null;
+        if (this.playing) this.resumeActiveTimeline();
+        this.updatePlayButton();
+      });
+    }
+
     this.updatePlayButton();
   }
 
@@ -585,6 +589,7 @@ export class StoryController implements ChatbotStoriesInstance {
   private prepareActiveTimelineForProgressScrub(): void {
     this.autoAdvance?.kill();
     this.seekTween?.kill();
+    this.seekTween = null;
     this.resumeRestoreTimeline?.kill();
     this.resumeRestoreTimeline = null;
     this.setHistoryPaused(false);
@@ -597,7 +602,13 @@ export class StoryController implements ChatbotStoriesInstance {
   private setActiveTimelineProgress(progress: number): void {
     if (!this.activeTimeline) return;
 
-    this.activeTimeline.progress(clampProgress(progress)).pause();
+    this.renderActiveTimelineProgress(progress);
+  }
+
+  private renderActiveTimelineProgress(progress: number): void {
+    if (!this.activeTimeline) return;
+
+    this.activeTimeline.progress(clampProgress(progress), false).pause();
     this.updateProgress();
   }
 
@@ -722,6 +733,7 @@ export class StoryController implements ChatbotStoriesInstance {
     this.playing = false;
     this.autoAdvance?.kill();
     this.seekTween?.kill();
+    this.seekTween = null;
     this.activeTimeline?.pause();
     this.chat.stopScrollMotion();
     this.chat.prepareForChatHistoryPause();
