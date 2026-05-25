@@ -1343,12 +1343,16 @@ body {
 }
 
 .wa-chat-shell__body:has(.wa-result-grid.has-strategy-plans),
+.wa-thread:has(.wa-result-grid.has-strategy-plans) {
+  overflow: visible;
+  clip-path: none;
+}
+
 .wa-chat-shell__body:has(.wa-style-profile) {
   overflow: visible;
   clip-path: inset(0 -32px 0 -32px);
 }
 
-.wa-thread:has(.wa-result-grid.has-strategy-plans),
 .wa-thread:has(.wa-style-profile) {
   overflow: hidden;
   clip-path: inset(0 -32px 0 -32px);
