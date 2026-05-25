@@ -4437,6 +4437,11 @@ body {
   align-items: center;
 }
 
+.wa-sequence-copy-panel:not([data-copy-channel="connect"]):not([data-copy-channel="call"]) .wa-sequence-copy-panel__subject .wa-sequence-content-swap-clone {
+  display: flex;
+  align-items: center;
+}
+
 .wa-sequence-copy-panel[data-copy-channel="call"] .wa-sequence-copy-panel__body .wa-sequence-content-swap-clone {
   display: grid;
   align-items: inherit;
