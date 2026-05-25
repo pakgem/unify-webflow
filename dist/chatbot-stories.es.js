@@ -9276,7 +9276,7 @@ const Id = {
   count: "50 sales leaders",
   variant: "filtered",
   scrollAlign: "equal-inset",
-  footerClearance: 88,
+  footerClearance: 28,
   columns: Dd,
   rows: Kn,
   pagination: {

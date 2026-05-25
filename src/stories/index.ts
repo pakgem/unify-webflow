@@ -1096,7 +1096,7 @@ const WEBSITE_VISITOR_SALES_TABLE = {
   count: "50 sales leaders",
   variant: "filtered",
   scrollAlign: "equal-inset",
-  footerClearance: 88,
+  footerClearance: 28,
   columns: WEBSITE_VISITOR_SALES_COLUMNS,
   rows: WEBSITE_VISITOR_SALES_PAGE_ONE,
   pagination: {
