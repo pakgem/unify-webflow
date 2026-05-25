@@ -3883,7 +3883,7 @@ body {
   padding: 3px max(16px, calc(50% - var(--wa-sequence-person-card-min-width) / 2)) 0;
   overflow-x: auto;
   overflow-y: visible;
-  scroll-snap-type: x mandatory;
+  scroll-snap-type: none;
   scroll-padding-inline: max(16px, calc(50% - var(--wa-sequence-person-card-min-width) / 2));
   scrollbar-width: none;
   -webkit-mask-image: linear-gradient(to right, transparent 0, #000 34px, #000 calc(100% - 34px), transparent 100%);
@@ -3920,7 +3920,7 @@ body {
   text-align: left;
   opacity: 0.66;
   cursor: pointer;
-  scroll-snap-align: center;
+  scroll-snap-align: none;
   transform: translateZ(0);
   transform-origin: center;
   backface-visibility: hidden;

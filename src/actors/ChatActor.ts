@@ -365,18 +365,15 @@ const SEQUENCE_THINKING_LOGO = {
 
       0ms   selected person tab updates immediately
       0ms   rail starts centering with transform-friendly scroll motion
-     90ms   visible copy swaps to the selected person's sequence
-    250ms   new copy settles in without changing scroll position
+      0ms   visible copy swaps to the selected person's sequence
+    210ms   new copy settles in without changing scroll position
    -------------------------------------------------------------------------- */
 
 const SEQUENCE_PERSON_SWITCH = {
-  exitDuration: motionDuration(0.08),
   enterDuration: motionDuration(0.2),
   railCenterDuration: motionDuration(0.34),
-  exitY: -1,
   enterY: 3,
   stagger: 0.004,
-  exitEase: "power1.out",
   enterEase: "power3.out",
   railCenterEase: "power3.out",
 };
@@ -2351,14 +2348,32 @@ export class ChatActor {
   sequenceEngagement(config: SequenceEngagementConfig): gsap.core.Timeline {
     const panel = this.createSequenceEngagement(config);
     const initialIndex = Number(panel.dataset.activeSequenceIndex ?? "0");
+    const hasSequenceSteps = config.sequences.some((sequence) => sequence.steps?.length);
+    const revealTargets = hasSequenceSteps
+      ? ".wa-sequence-people-wrap, .wa-sequence-engagement__sequences, .wa-sequence-kickoff"
+      : ".wa-sequence-people-wrap, .wa-sequence-card, .wa-sequence-step, .wa-sequence-wait, .wa-sequence-copy-panel, .wa-engage-channel, .wa-sequence-kickoff";
+    const revealPreset = hasSequenceSteps
+      ? {
+        from: { autoAlpha: 0, y: 9, scale: 0.99 },
+        to: {
+          autoAlpha: 1,
+          y: 0,
+          scale: 1,
+          duration: motionDuration(0.24),
+          ease: "power2.out",
+          stagger: 0,
+        },
+      }
+      : COMPONENT_CHILD_REVEAL.stackCard;
 
     return this.revealComponentItems(
       "sequence",
       panel,
-      ".wa-sequence-people-wrap, .wa-sequence-card, .wa-sequence-step, .wa-sequence-wait, .wa-sequence-copy-panel, .wa-engage-channel, .wa-sequence-kickoff",
-      COMPONENT_CHILD_REVEAL.stackCard,
+      revealTargets,
+      revealPreset,
     )
       .call(() => this.setSequencePersonRailPosition(panel, initialIndex), undefined, 0.01)
+      .call(() => this.setSequencePersonRailPosition(panel, initialIndex), undefined, 0.12)
       .call(() => this.clearSequencePersonCardMotionStyles(panel));
   }
 
@@ -2461,34 +2476,26 @@ export class ChatActor {
 
     this.setSequencePersonRailState(section, index, true);
 
-    const outgoingTargets = this.getSequenceTransitionTargets(activeCard);
+    const transitionTargets = this.getSequenceTransitionTargets(activeCard);
 
-    gsap.killTweensOf(outgoingTargets);
+    gsap.killTweensOf(transitionTargets);
 
-    tl.to(outgoingTargets, {
-      autoAlpha: 0,
-      y: SEQUENCE_PERSON_SWITCH.exitY,
-      duration: SEQUENCE_PERSON_SWITCH.exitDuration,
-      ease: SEQUENCE_PERSON_SWITCH.exitEase,
-      stagger: SEQUENCE_PERSON_SWITCH.stagger,
-      force3D: true,
-    })
-      .call(() => {
-        this.applySequenceTemplateToDisplayCard(section, activeCard, targetCard, index);
-        gsap.set(outgoingTargets, {
-          autoAlpha: 0,
-          y: SEQUENCE_PERSON_SWITCH.enterY,
-          force3D: true,
-        });
-      })
-      .to(outgoingTargets, {
+    tl.call(() => {
+      this.applySequenceTemplateToDisplayCard(section, activeCard, targetCard, index);
+      gsap.set(transitionTargets, {
+        autoAlpha: 0,
+        y: SEQUENCE_PERSON_SWITCH.enterY,
+        force3D: true,
+      });
+    }, undefined, 0)
+      .to(transitionTargets, {
         autoAlpha: 1,
         y: 0,
         duration: SEQUENCE_PERSON_SWITCH.enterDuration,
         ease: SEQUENCE_PERSON_SWITCH.enterEase,
         stagger: SEQUENCE_PERSON_SWITCH.stagger,
         force3D: true,
-      });
+      }, 0.01);
 
     return tl;
   }
@@ -6024,6 +6031,7 @@ export class ChatActor {
 
     if (hasSequenceSteps) {
       section.append(...this.compactElements(header, peopleNav, sequences, kickoff));
+      this.observeInitialSequenceRailCenter(section);
     } else {
       section.append(header, sequences, channels);
     }
@@ -6182,19 +6190,74 @@ export class ChatActor {
     });
   }
 
-  private setSequencePersonRailPosition(section: HTMLElement, index: number): void {
+  private setSequencePersonRailPosition(section: HTMLElement, index: number, retries = 3): void {
     const rail = section.querySelector<HTMLElement>("[data-sequence-people-rail]");
     const card = rail?.querySelector<HTMLElement>(`[data-sequence-person-index="${index}"]`);
 
     if (!rail || !card) return;
+    if ((rail.clientWidth <= 0 || card.getBoundingClientRect().width <= 0) && retries > 0) {
+      requestAnimationFrame(() => this.setSequencePersonRailPosition(section, index, retries - 1));
+      return;
+    }
 
+    rail.dataset.sequenceCentering = "true";
     rail.scrollLeft = this.getSequencePersonRailScrollTarget(rail, card);
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        delete rail.dataset.sequenceCentering;
+      });
+    });
+  }
+
+  private observeInitialSequenceRailCenter(section: HTMLElement): void {
+    const rail = section.querySelector<HTMLElement>("[data-sequence-people-rail]");
+
+    if (!rail || typeof ResizeObserver === "undefined") return;
+
+    const observers: Array<{ disconnect: () => void }> = [];
+    const cleanup = () => observers.forEach((observer) => observer.disconnect());
+    const centerWhenReady = () => {
+      if (rail.clientWidth <= 0) return;
+
+      requestAnimationFrame(() => {
+        const activeIndex = Number(section.dataset.activeSequenceIndex ?? "0");
+
+        this.setSequencePersonRailPosition(section, activeIndex);
+        window.setTimeout(() => this.setSequencePersonRailPosition(section, activeIndex), 80);
+        cleanup();
+      });
+    };
+
+    const resizeObserver = new ResizeObserver(centerWhenReady);
+    resizeObserver.observe(rail);
+    observers.push(resizeObserver);
+
+    requestAnimationFrame(() => {
+      const message = section.closest<HTMLElement>(".wa-message");
+
+      if (!message || typeof MutationObserver === "undefined") {
+        centerWhenReady();
+        return;
+      }
+
+      const mutationObserver = new MutationObserver(centerWhenReady);
+      mutationObserver.observe(message, { attributes: true, attributeFilter: ["class", "style"] });
+      observers.push(mutationObserver);
+      centerWhenReady();
+    });
   }
 
   private getSequencePersonRailScrollTarget(rail: HTMLElement, card: HTMLElement): number {
     const maxScroll = Math.max(0, rail.scrollWidth - rail.clientWidth);
+    const railRect = rail.getBoundingClientRect();
+    const cardRect = card.getBoundingClientRect();
+    const target =
+      rail.scrollLeft +
+      cardRect.left -
+      railRect.left -
+      (rail.clientWidth - cardRect.width) / 2;
 
-    return Math.min(maxScroll, Math.max(0, card.offsetLeft - (rail.clientWidth - card.offsetWidth) / 2));
+    return Math.min(maxScroll, Math.max(0, target));
   }
 
   private getSequenceCountLabel(index: number, peopleCount: string): string {
