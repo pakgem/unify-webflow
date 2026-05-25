@@ -1,6 +1,7 @@
 import { createEngine } from "./core/createEngine";
 import { createPublicInitializer } from "./core/createPublicInitializer";
 import type { ChatbotStoriesConfig, ChatbotStoriesInstance } from "./core/types";
+import { mountSequencePreviewSandbox } from "./sandbox/sequencePreviewSandbox";
 import { defaultStories } from "./stories";
 import builderStyles from "./styles/chatbot-stories.builder.css?inline";
 import runtimeStyles from "./styles/chatbot-stories.runtime.css?inline";
@@ -31,6 +32,20 @@ const api = {
   defaultStories,
 };
 
+function shouldMountSequenceSandbox(): boolean {
+  return new URLSearchParams(window.location.search).get("sandbox") === "sequence";
+}
+
+function boot(): void {
+  if (shouldMountSequenceSandbox()) {
+    injectStyles();
+    mountSequencePreviewSandbox();
+    return;
+  }
+
+  initializer.autoInit();
+}
+
 declare global {
   interface Window {
     ChatbotStories?: typeof api;
@@ -41,9 +56,9 @@ if (typeof window !== "undefined") {
   window.ChatbotStories = api;
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initializer.autoInit, { once: true });
+    document.addEventListener("DOMContentLoaded", boot, { once: true });
   } else {
-    initializer.autoInit();
+    boot();
   }
 }
 

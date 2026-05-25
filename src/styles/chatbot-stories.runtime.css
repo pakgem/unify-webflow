@@ -714,6 +714,123 @@ body {
   margin-top: var(--wa-chat-first-entry-offset);
 }
 
+/* --------------------------------------------------------------------------
+   Sequence Preview Sandbox
+   -------------------------------------------------------------------------- */
+
+.wa-sequence-sandbox {
+  min-height: 100svh;
+  overflow: auto;
+  padding: clamp(28px, 4vw, 56px);
+}
+
+.wa-sequence-sandbox .wa-section__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+  width: min(1100px, 100%);
+}
+
+.wa-sequence-sandbox .wa-copy,
+.wa-sequence-sandbox .wa-story-controls,
+.wa-sequence-sandbox .wa-stage__media,
+.wa-sequence-sandbox .wa-composer,
+.wa-sequence-sandbox .wa-signup-scene,
+.wa-sequence-sandbox .wa-history-resume {
+  display: none !important;
+}
+
+.wa-sequence-sandbox__header {
+  display: flex;
+  gap: 24px;
+  align-items: end;
+  justify-content: space-between;
+}
+
+.wa-sequence-sandbox__copy {
+  display: grid;
+  gap: 6px;
+  max-width: 720px;
+}
+
+.wa-sequence-sandbox__eyebrow {
+  margin: 0;
+  color: var(--wa-orange);
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 620;
+}
+
+.wa-sequence-sandbox__title {
+  margin: 0;
+  color: var(--wa-ink);
+  font-size: clamp(30px, 4vw, 48px);
+  line-height: 1;
+  font-weight: 520;
+}
+
+.wa-sequence-sandbox__note {
+  margin: 0;
+  color: var(--wa-color-muted);
+  font-size: 14px;
+  line-height: 1.45;
+  font-weight: 410;
+}
+
+.wa-sequence-sandbox__back {
+  flex: 0 0 auto;
+  color: var(--wa-color-muted);
+  font-size: 13px;
+  line-height: 1;
+  font-weight: 520;
+  text-decoration: none;
+}
+
+.wa-sequence-sandbox__back:hover {
+  color: var(--wa-ink);
+}
+
+.wa-sequence-sandbox .wa-stage {
+  grid-column: 1;
+  grid-row: auto;
+  justify-self: center;
+  width: min(100%, 960px);
+  min-height: 0;
+}
+
+.wa-sequence-sandbox .wa-window {
+  width: 100%;
+  margin: 0;
+}
+
+.wa-sequence-sandbox .wa-chat-shell {
+  height: auto;
+  min-height: 620px;
+}
+
+.wa-sequence-sandbox .wa-chat-shell__body {
+  min-height: 570px;
+  padding: 0 40px;
+}
+
+.wa-sequence-sandbox .wa-chat-shell__body::before {
+  content: none;
+}
+
+.wa-sequence-sandbox .wa-thread {
+  height: auto;
+  padding: 40px 0;
+  overflow: visible;
+}
+
+.wa-sequence-sandbox .wa-message {
+  max-width: 100%;
+}
+
+.wa-sequence-sandbox .wa-message--component {
+  width: 100%;
+}
+
 .wa-section[data-active-story="crm-update"] {
   --wa-chat-first-entry-offset: calc(var(--wa-chat-top-fade) + 3px);
 }

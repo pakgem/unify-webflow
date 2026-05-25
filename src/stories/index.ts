@@ -1007,6 +1007,8 @@ const ENGAGEMENT_SEQUENCE_LAUNCH = {
   channels: [],
 } satisfies SequenceEngagementConfig;
 
+export const sequencePreviewSandboxConfig = ENGAGEMENT_SEQUENCE_LAUNCH;
+
 const ENGAGEMENT_SEQUENCE_THINKING = {
   id: "visitor-sequence-build",
   title: "building outbound sequence",
