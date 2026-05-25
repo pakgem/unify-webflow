@@ -4470,7 +4470,7 @@ body {
   color: #5f5d56;
   font-size: 10px;
   line-height: 1.12;
-  font-weight: 560;
+  font-weight: 500;
   letter-spacing: 0;
   text-align: right;
   transform: translateY(calc(var(--wa-sequence-dot-center) - var(--wa-sequence-step-size)));
@@ -4491,6 +4491,10 @@ body {
 .wa-sequence-wait__prefix,
 .wa-sequence-wait__value {
   display: block;
+}
+
+.wa-sequence-wait__prefix {
+  padding-right: 1px;
 }
 
 .wa-sequence-copy-panel {
