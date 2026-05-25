@@ -2,7 +2,7 @@ import { gsap } from "gsap";
 import type { CursorMode, CursorMoveOptions, Point, ResponsiveTarget } from "../core/types";
 import type { TargetResolver } from "../core/TargetResolver";
 import { createHumanCursorPath, type CursorPathPlan } from "../motion/createHumanCursorPath";
-import { clamp, sampleCubicBezier } from "../motion/geometry";
+import { clamp, distance, sampleCubicBezier } from "../motion/geometry";
 
 type CursorActorOptions = {
   reducedMotion?: boolean;
@@ -13,6 +13,18 @@ type CursorScanOptions = {
   duration?: number;
   match?: "first" | "last";
   passes?: number;
+};
+
+type CursorSkimOptions = {
+  label?: string;
+  duration?: number;
+  match?: CursorScanOptions["match"];
+};
+
+type PolylinePlan = {
+  points: Point[];
+  segmentLengths: number[];
+  totalLength: number;
 };
 
 const POINTER_TARGET_SELECTOR = [
@@ -355,6 +367,40 @@ export class CursorActor {
     return tl;
   }
 
+  skimThrough(targets: Array<string | HTMLElement>, options: CursorSkimOptions = {}): gsap.core.Timeline {
+    const label = options.label ?? `skim-${this.moveIndex}`;
+    const tl = gsap.timeline();
+
+    this.moveIndex += 1;
+
+    if (this.options.reducedMotion || !targets.length) {
+      return tl.to({}, { duration: 0.08 });
+    }
+
+    tl.call(() => {
+      this.stopIdleFloat();
+      this.clearPayloadDragState();
+      this.modeOverride = null;
+      this.syncModeToPoint(this.currentPosition);
+    });
+
+    tl.add(
+      this.polylineTweenFromFactory(
+        () => this.resolveSkimPoints(targets, `${this.storyId}:${label}:skim`, options.match),
+        options.duration ?? 1.05,
+        "sine.inOut",
+      ),
+    ).to({}, { duration: 0.08 });
+
+    tl.call(() => {
+      this.modeOverride = null;
+      this.syncModeToPoint(this.currentPosition);
+      this.queueIdleFloat();
+    });
+
+    return tl;
+  }
+
   click(_nextMode: CursorMode = "pointer"): gsap.core.Timeline {
     const tl = gsap.timeline();
 
@@ -662,6 +708,39 @@ export class CursorActor {
     });
   }
 
+  private polylineTweenFromFactory(
+    factory: () => Point[],
+    duration: number,
+    ease = "sine.inOut",
+  ): gsap.core.Tween {
+    const proxy = { t: 0 };
+    let plan = createPolylinePlan([{ ...this.currentPosition }]);
+
+    return gsap.fromTo(proxy, { t: 0 }, {
+      t: 1,
+      duration,
+      ease,
+      onStart: () => {
+        proxy.t = 0;
+        plan = createPolylinePlan(factory());
+      },
+      onUpdate: () => {
+        const point = samplePolyline(plan, proxy.t);
+        this.currentPosition = point;
+        this.renderPosition(point);
+        if (!this.modeOverride) this.maybeSyncModeToPoint(point);
+      },
+      onComplete: () => {
+        const end = plan.points[plan.points.length - 1] ?? this.currentPosition;
+
+        this.currentPosition = { ...end };
+        this.plannedPosition = { ...end };
+        this.renderPosition(end);
+        if (!this.modeOverride) this.syncModeToPoint(end);
+      },
+    });
+  }
+
   private resolveScanPath(
     target: string | HTMLElement,
     seed: string,
@@ -681,6 +760,50 @@ export class CursorActor {
       c1: interpolatePoint(start, guideStart, 0.64),
       c2: interpolatePoint(guideStart, end, 0.42),
       end,
+    };
+  }
+
+  private resolveSkimPoints(
+    targets: Array<string | HTMLElement>,
+    seed: string,
+    match: CursorScanOptions["match"] = "first",
+  ): Point[] {
+    const waypoints = targets
+      .map((target, index) => this.resolveSkimPoint(target, `${seed}:${index}`, index, match))
+      .filter((point): point is Point => Boolean(point));
+
+    return [{ ...this.currentPosition }, ...waypoints];
+  }
+
+  private resolveSkimPoint(
+    target: string | HTMLElement,
+    seed: string,
+    index: number,
+    match: CursorScanOptions["match"] = "first",
+  ): Point | null {
+    const element = typeof target === "string" ? this.findVisibleScanElement(target, match) : target;
+
+    if (!element) return null;
+
+    this.resolver.refresh();
+
+    const random = this.seededScanRandom(seed);
+    const rootRect = this.root.getBoundingClientRect();
+    const rect = element.getBoundingClientRect();
+    const shellRect = this.getChatShellRect();
+    const left = shellRect ? Math.max(rect.left, shellRect.left + 18) : rect.left;
+    const right = shellRect ? Math.min(rect.right, shellRect.right - 18) : rect.right;
+    const top = shellRect ? Math.max(rect.top, shellRect.top + 58) : rect.top;
+    const bottom = shellRect ? Math.min(rect.bottom, shellRect.bottom - 34) : rect.bottom;
+    const width = Math.max(1, right - left);
+    const height = Math.max(1, bottom - top);
+    const direction = index % 2 === 0 ? 1 : -1;
+    const xRatio = clamp(0.62 + direction * 0.08 + (random() - 0.5) * 0.08, 0.48, 0.78);
+    const yRatio = clamp(0.5 + (random() - 0.5) * 0.16, 0.34, 0.66);
+
+    return {
+      x: left - rootRect.left + width * xRatio,
+      y: top - rootRect.top + height * yRatio,
     };
   }
 
@@ -1114,6 +1237,44 @@ function interpolatePoint(start: Point, end: Point, amount: number): Point {
     x: start.x + (end.x - start.x) * amount,
     y: start.y + (end.y - start.y) * amount,
   };
+}
+
+function createPolylinePlan(points: Point[]): PolylinePlan {
+  const segmentLengths: number[] = [];
+  let totalLength = 0;
+
+  for (let index = 0; index < points.length - 1; index += 1) {
+    const segmentLength = distance(points[index], points[index + 1]);
+
+    segmentLengths.push(segmentLength);
+    totalLength += segmentLength;
+  }
+
+  return { points, segmentLengths, totalLength };
+}
+
+function samplePolyline(plan: PolylinePlan, progress: number): Point {
+  const { points, segmentLengths, totalLength } = plan;
+
+  if (points.length <= 1) return points[0] ?? { x: 0, y: 0 };
+  if (totalLength <= 0) return points[points.length - 1] ?? points[0];
+
+  let remaining = clamp(progress, 0, 1) * totalLength;
+
+  for (let index = 0; index < segmentLengths.length; index += 1) {
+    const segmentLength = segmentLengths[index];
+
+    if (remaining <= segmentLength || index === segmentLengths.length - 1) {
+      const localProgress = segmentLength <= 0 ? 1 : remaining / segmentLength;
+      const easedProgress = localProgress * localProgress * (3 - 2 * localProgress);
+
+      return interpolatePoint(points[index], points[index + 1], easedProgress);
+    }
+
+    remaining -= segmentLength;
+  }
+
+  return points[points.length - 1] ?? points[0];
 }
 
 function normalizeAngle(angle: number): number {

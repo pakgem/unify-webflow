@@ -568,19 +568,23 @@ function strategyPlansAttention(
   plans: StrategyPlanConfig[],
 ): gsap.core.Timeline {
   const tl = createBuildTimeline(ctx);
+  const cardSelectors = plans.map(
+    (plan) => `${selector} [data-strategy-plan="${escapeAttributeValue(plan.id)}"]`,
+  );
+  const skimDuration = 0.94 + Math.max(0, plans.length - 1) * 0.15;
+  const hoverHold = 0.28;
 
-  plans.forEach((plan, index) => {
-    const cardSelector = `${selector} [data-strategy-plan="${escapeAttributeValue(plan.id)}"]`;
+  tl.add(ctx.cursor.skimThrough(cardSelectors, {
+    duration: skimDuration,
+    label: `strategy-card-skim-${plans.map((plan) => plan.id).join("-")}`,
+  }), 0);
 
-    tl.add(
-      ctx.cursor.scanAcross(cardSelector, {
-        duration: index === 0 ? 0.42 : 0.34,
-        label: `strategy-card-${plan.id}`,
-      }),
-      index === 0 ? 0 : "+=0.03",
-    );
-    tl.add(ctx.chat.strategyPlanHover(cardSelector, true), "<+=0.08");
-    tl.add(ctx.chat.strategyPlanHover(cardSelector, false), "-=0.04");
+  cardSelectors.forEach((cardSelector, index) => {
+    const passAt = plans.length === 1 ? 0.12 : skimDuration * ((index + 0.5) / plans.length);
+    const hoverAt = Math.max(0, passAt - hoverHold * 0.48);
+
+    tl.add(ctx.chat.strategyPlanHover(cardSelector, true), hoverAt);
+    tl.add(ctx.chat.strategyPlanHover(cardSelector, false), hoverAt + hoverHold);
   });
 
   return releaseBuildTimeline(tl);
