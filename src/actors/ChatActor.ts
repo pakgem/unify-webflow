@@ -5584,20 +5584,22 @@ export class ChatActor {
     const styles = getComputedStyle(this.chatBody);
     const gutterLeft = Number.parseFloat(styles.paddingLeft) || 0;
     const gutterRight = Number.parseFloat(styles.paddingRight) || gutterLeft;
-    const width = this.chatBody.clientWidth || this.chatBody.getBoundingClientRect().width;
+    const sectionWidth = section.clientWidth || section.getBoundingClientRect().width;
+    const width = sectionWidth || Math.max(
+      0,
+      (this.chatBody.clientWidth || this.chatBody.getBoundingClientRect().width) - gutterLeft - gutterRight,
+    );
     const height = this.chatBody.clientHeight || this.chatBody.getBoundingClientRect().height;
-    const widthScale = Math.max(0, width - gutterLeft - gutterRight) / MARKETING_DATA_GRID_ARTBOARD.contentWidth;
+    const widthScale = Math.max(0, width) / MARKETING_DATA_GRID_ARTBOARD.contentWidth;
     const heightScale = Math.max(0, height) / MARKETING_DATA_GRID_ARTBOARD.height;
     const scale = Math.min(widthScale || 1, heightScale || 1);
-    const artboardGutterLeft = scale > 0 ? gutterLeft / scale : 0;
-    const artboardGutterRight = scale > 0 ? gutterRight / scale : artboardGutterLeft;
-    const artboardWidth = MARKETING_DATA_GRID_ARTBOARD.contentWidth + artboardGutterLeft + artboardGutterRight;
+    const artboardWidth = MARKETING_DATA_GRID_ARTBOARD.contentWidth;
     const scaledHeight = Math.ceil(MARKETING_DATA_GRID_ARTBOARD.height * scale);
 
     this.setStyleProperty(section, "--wa-data-grid-scale", String(scale));
     this.setStyleProperty(section, "--wa-data-grid-artboard-width", `${artboardWidth}px`);
-    this.setStyleProperty(section, "--wa-data-grid-gutter-left", `${artboardGutterLeft}px`);
-    this.setStyleProperty(section, "--wa-data-grid-gutter-right", `${artboardGutterRight}px`);
+    this.setStyleProperty(section, "--wa-data-grid-gutter-left", "0px");
+    this.setStyleProperty(section, "--wa-data-grid-gutter-right", "0px");
     this.setStyleProperty(section, "--wa-data-grid-scaled-height", `${scaledHeight}px`);
   }
 
