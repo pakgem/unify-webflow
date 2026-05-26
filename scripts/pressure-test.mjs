@@ -191,6 +191,77 @@ async function auditStoryControls(page, label) {
 
   assert(scrubResults.every((state) => state.progress >= 0 && state.progress <= 1), `${label}: scrub progress left bounds`, { scrubResults });
   assert(scrubResults.every((state) => !state.playing), `${label}: paused scrub unexpectedly resumed playback`, { scrubResults });
+
+  const scrubIntegrity = await page.evaluate(async () => {
+    const host = document.createElement("section");
+    host.dataset.chatbotStories = "";
+    document.body.append(host);
+
+    const api = window.ChatbotStories.init(host, {
+      autoplay: false,
+      builderDraftEndpoint: false,
+      showBuilder: false,
+    });
+    const scrubber = host.querySelector("[data-story-scrubber]");
+    const anomalies = [];
+    const isVisible = (element) => {
+      if (!element) return false;
+      const style = getComputedStyle(element);
+      const rect = element.getBoundingClientRect();
+
+      return style.display !== "none" && style.visibility !== "hidden" && Number(style.opacity) > 0.01 && rect.width > 0 && rect.height > 0;
+    };
+    const collectThinkingAnomalies = (storyIndex, value) => {
+      host.querySelectorAll(".wa-thinking-block").forEach((block, blockIndex) => {
+        const title = block.querySelector(".wa-thinking__title")?.textContent?.trim() ?? "";
+        const steps = block.querySelector(".wa-research-steps");
+        const traveler = block.querySelector(".wa-thinking-logo-traveler");
+        const header = block.querySelector(".wa-thinking");
+        const visibleStepCount = [...block.querySelectorAll(".wa-research-step")]
+          .filter((step) => isVisible(step)).length;
+        const isCollapsed = /^Thought(?:\s|$)/.test(title);
+        const travelerRect = traveler?.getBoundingClientRect();
+        const headerRect = header?.getBoundingClientRect();
+        const travelerIsStranded = Boolean(
+          travelerRect &&
+          headerRect &&
+          isVisible(traveler) &&
+          travelerRect.top - headerRect.bottom > 24,
+        );
+
+        if (!isCollapsed && travelerIsStranded && visibleStepCount === 0) {
+          anomalies.push({
+            storyIndex,
+            value,
+            blockIndex,
+            title,
+            stepsDisplay: steps ? getComputedStyle(steps).display : null,
+            travelerOffset: travelerRect.top - headerRect.bottom,
+          });
+        }
+      });
+    };
+
+    api.pause();
+    for (let storyIndex = 0; storyIndex < 5; storyIndex += 1) {
+      api.goTo(storyIndex);
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+      for (const value of [120, 520, 880, 240, 760, 340, 920, 180, 610, 1000, 420, 0, 730]) {
+        scrubber.value = String(value);
+        scrubber.dispatchEvent(new Event("input", { bubbles: true }));
+        await new Promise((resolve) => setTimeout(resolve, 30));
+        collectThinkingAnomalies(storyIndex, value);
+      }
+    }
+
+    api.destroy();
+    host.remove();
+
+    return anomalies;
+  });
+
+  assert(scrubIntegrity.length === 0, `${label}: scrub left a thinking logo stranded with hidden steps`, { scrubIntegrity });
 }
 
 async function auditStoryComponents(page, label) {

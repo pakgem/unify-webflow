@@ -981,20 +981,33 @@ export class ChatActor {
 
   typeComposer(text: string, duration = 1.1): gsap.core.Timeline {
     const proxy = { count: 0 };
-    const tl = gsap.timeline();
+    let lastCount = -1;
 
-    tl.call(() => {
-      this.composerText.textContent = "";
-    }).to(proxy, {
-      count: text.length,
-      duration,
-      ease: "none",
-      onUpdate: () => {
-        this.composerText.textContent = text.slice(0, Math.round(proxy.count));
+    return gsap.timeline().fromTo(
+      proxy,
+      { count: 0 },
+      {
+        count: text.length,
+        duration,
+        ease: "none",
+        immediateRender: false,
+        onUpdate: () => {
+          const nextCount = Math.round(proxy.count);
+
+          if (nextCount === lastCount) return;
+
+          lastCount = nextCount;
+          this.composerText.textContent = text.slice(0, nextCount);
+        },
+        onComplete: () => {
+          this.composerText.textContent = text;
+        },
+        onReverseComplete: () => {
+          lastCount = -1;
+          this.composerText.textContent = "";
+        },
       },
-    });
-
-    return tl;
+    );
   }
 
   sendComposerText(): gsap.core.Timeline {
@@ -1259,23 +1272,39 @@ export class ChatActor {
 
   typeSignupEmail(email: string, duration = 0.86): gsap.core.Timeline {
     const proxy = { count: 0 };
+    let lastCount = -1;
 
     return gsap
       .timeline()
-      .call(() => {
-        this.signupEmail.textContent = "";
-        this.setSignupEmailFilled(false);
-      })
-      .to(proxy, {
-        count: email.length,
-        duration,
-        ease: "none",
-        onUpdate: () => {
-          const typedEmail = email.slice(0, Math.round(proxy.count));
-          this.signupEmail.textContent = typedEmail;
-          this.setSignupEmailFilled(Boolean(typedEmail));
+      .fromTo(
+        proxy,
+        { count: 0 },
+        {
+          count: email.length,
+          duration,
+          ease: "none",
+          immediateRender: false,
+          onUpdate: () => {
+            const nextCount = Math.round(proxy.count);
+
+            if (nextCount === lastCount) return;
+
+            lastCount = nextCount;
+            const typedEmail = email.slice(0, nextCount);
+            this.signupEmail.textContent = typedEmail;
+            this.setSignupEmailFilled(Boolean(typedEmail));
+          },
+          onComplete: () => {
+            this.signupEmail.textContent = email;
+            this.setSignupEmailFilled(Boolean(email));
+          },
+          onReverseComplete: () => {
+            lastCount = -1;
+            this.signupEmail.textContent = "";
+            this.setSignupEmailFilled(false);
+          },
         },
-      });
+      );
   }
 
   submitSignup(): gsap.core.Timeline {
@@ -3756,31 +3785,40 @@ export class ChatActor {
 
     return gsap
       .timeline()
-      .call(() => {
-        target.dataset.streaming = "true";
-        target.textContent = "";
-        lastCount = 0;
-      })
-      .to(proxy, {
-        count: text.length,
-        duration: options.duration,
-        ease: "none",
-        onUpdate: () => {
-          const nextCount = Math.round(proxy.count);
+      .fromTo(
+        proxy,
+        { count: 0 },
+        {
+          count: text.length,
+          duration: options.duration,
+          ease: "none",
+          immediateRender: false,
+          onStart: () => {
+            target.dataset.streaming = "true";
+          },
+          onUpdate: () => {
+            const nextCount = Math.round(proxy.count);
 
-          if (nextCount === lastCount) return;
+            if (nextCount === lastCount) return;
 
-          lastCount = nextCount;
-          target.textContent = text.slice(0, nextCount);
-          this.requestMessageScroll(options.targetForScroll);
+            lastCount = nextCount;
+            target.textContent = text.slice(0, nextCount);
+            this.requestMessageScroll(options.targetForScroll);
+          },
+          onComplete: () => {
+            target.textContent = text;
+            delete target.dataset.streaming;
+            this.cancelScheduledScroll();
+            this.animateMessageScrollIntoView(options.targetForScroll, CHAT_SCROLL_MOTION.followDuration * 0.7);
+          },
+          onReverseComplete: () => {
+            lastCount = -1;
+            target.textContent = "";
+            delete target.dataset.streaming;
+            this.cancelScheduledScroll();
+          },
         },
-      })
-      .call(() => {
-        target.textContent = text;
-        delete target.dataset.streaming;
-        this.cancelScheduledScroll();
-        this.animateMessageScrollIntoView(options.targetForScroll, CHAT_SCROLL_MOTION.followDuration * 0.7);
-      });
+      );
   }
 
   private foldThinkingStep(item: HTMLElement): gsap.core.Timeline {
@@ -3791,32 +3829,31 @@ export class ChatActor {
 
     return gsap
       .timeline()
-      .call(() => {
-        foldTargets.forEach((target) => {
-          gsap.set(target, {
-            height: target.offsetHeight,
-            overflow: "hidden",
-          });
-        });
-      })
       .to(foldTargets, {
         autoAlpha: 0,
         height: 0,
         marginTop: 0,
         y: THINKING_STEP_FOLD.detailOffsetY,
+        overflow: "hidden",
         transformOrigin: "left top",
         duration: THINKING_STEP_FOLD.duration,
         ease: "power2.inOut",
-      })
-      .call(() => {
-        item.dataset.stepState = "complete";
-        gsap.set(foldTargets, {
-          height: 0,
-          marginTop: 0,
-          overflow: "hidden",
-          y: 0,
-        });
-        this.animateMessageScrollIntoView(this.getMessageScrollTargetElement(item));
+        onComplete: () => {
+          item.dataset.stepState = "complete";
+          gsap.set(foldTargets, {
+            height: 0,
+            marginTop: 0,
+            overflow: "hidden",
+            y: 0,
+          });
+          this.animateMessageScrollIntoView(this.getMessageScrollTargetElement(item));
+        },
+        onReverseComplete: () => {
+          item.dataset.stepState = "current";
+          gsap.set(foldTargets, {
+            clearProps: "height,marginTop,overflow,opacity,visibility,y,transform",
+          });
+        },
       });
   }
 
@@ -3829,8 +3866,15 @@ export class ChatActor {
     items: HTMLElement[],
     itemStartY: number,
   ): void {
+    const foldTargets = items.flatMap((item) =>
+      this.queryElements(item, ".wa-research-step__detail, .wa-sequence-thinking-progress"),
+    );
+
     items.forEach((item) => {
       item.dataset.stepState = "pending";
+    });
+    gsap.set(foldTargets, {
+      clearProps: "height,marginTop,overflow,opacity,visibility,y,transform",
     });
     gsap.set(thinking.header, { autoAlpha: 0, y: 5 });
     gsap.set(thinking.traveler, { autoAlpha: 0, x: 0, y: 0 });
@@ -4109,18 +4153,27 @@ export class ChatActor {
         height: 0,
         duration: THINKING_BLOCK_COLLAPSE.duration,
         ease: THINKING_BLOCK_COLLAPSE.ease,
-        onComplete: () => this.setThinkingHeaderCollapsed(thinking),
-        onReverseComplete: () => this.setThinkingHeaderActive(thinking),
-      }, 0)
-      .call(() => {
-        gsap.set(thinking.steps, {
-          display: "none",
-          height: "",
-          overflow: "",
-          y: 0,
-        });
-        this.animateMessageScrollIntoView(thinking.message);
-      });
+        onComplete: () => {
+          this.setThinkingHeaderCollapsed(thinking);
+          gsap.set(thinking.steps, {
+            height: 0,
+            overflow: "hidden",
+            y: THINKING_BLOCK_COLLAPSE.y,
+          });
+          this.animateMessageScrollIntoView(thinking.message);
+        },
+        onReverseComplete: () => {
+          this.setThinkingHeaderActive(thinking);
+          this.setLocalLogoMode(thinking.traveler, "thinking");
+          gsap.set(thinking.steps, {
+            display: "grid",
+            autoAlpha: 1,
+            height: "",
+            overflow: "",
+            y: 0,
+          });
+        },
+      }, 0);
   }
 
   private getActiveThinkingTitle(titleText = DEFAULT_THINKING_TITLE): string {
@@ -4182,18 +4235,28 @@ export class ChatActor {
         height: 0,
         duration: THINKING_BLOCK_COLLAPSE.duration,
         ease: THINKING_BLOCK_COLLAPSE.ease,
-      }, 0)
-      .call(() => {
-        gsap.set(thinking.steps, {
-          display: "none",
-          height: "",
-          overflow: "",
-          y: 0,
-        });
-        delete thinking.title.dataset.thinkingActive;
-        delete thinking.title.dataset.streaming;
-        this.animateMessageScrollIntoView(thinking.message);
-      });
+        onComplete: () => {
+          delete thinking.title.dataset.thinkingActive;
+          delete thinking.title.dataset.streaming;
+          gsap.set(thinking.steps, {
+            height: 0,
+            overflow: "hidden",
+            y: THINKING_BLOCK_COLLAPSE.y,
+          });
+          this.animateMessageScrollIntoView(thinking.message);
+        },
+        onReverseComplete: () => {
+          this.setThinkingHeaderActive(thinking);
+          this.setLocalLogoMode(thinking.traveler, "thinking");
+          gsap.set(thinking.steps, {
+            display: "grid",
+            autoAlpha: 1,
+            height: "",
+            overflow: "",
+            y: 0,
+          });
+        },
+      }, 0);
   }
 
   private runThinkingSequence(thinkingState: NormalizedThinkingState, options: ThinkingSequenceOptions): gsap.core.Timeline {
@@ -4227,12 +4290,17 @@ export class ChatActor {
       if (itemIndex > activeIndex) {
         item.dataset.stepState = "pending";
         gsap.set(item, { display: "none" });
+        return;
       }
 
       if (itemIndex === activeIndex) {
         item.dataset.stepState = "current";
         gsap.set(item, { display: "grid" });
+        return;
       }
+
+      item.dataset.stepState = "complete";
+      gsap.set(item, { display: "grid" });
     });
   }
 

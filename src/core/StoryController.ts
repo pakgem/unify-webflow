@@ -6,6 +6,7 @@ import { PausedCursorMimic } from "./PausedCursorMimic";
 import type {
   ChatbotStoriesConfig,
   ChatbotStoriesInstance,
+  Point,
   StoryContext,
   StoryDefinition,
 } from "./types";
@@ -40,6 +41,7 @@ export class StoryController implements ChatbotStoriesInstance {
   private activeTimeline: gsap.core.Timeline | null = null;
   private autoAdvance: gsap.core.Tween | null = null;
   private seekTween: gsap.core.Tween | null = null;
+  private activeTimelineStartPoint: Point | null = null;
   private resumeRestoreTimeline: gsap.core.Timeline | null = null;
   private storySwitchTimeline: gsap.core.Timeline | null = null;
   private resizeObserver: ResizeObserver | null = null;
@@ -322,6 +324,7 @@ export class StoryController implements ChatbotStoriesInstance {
   ): void {
     this.activeIndex = storyIndex;
     preloadStoriesAround(this.stories, this.activeIndex);
+    this.activeTimelineStartPoint = startPoint;
     this.activeTimeline = this.buildTimeline(this.activeIndex, startPoint);
     this.renderActiveTimelineProgress(progress);
     this.updateStoryMeta();
@@ -579,6 +582,7 @@ export class StoryController implements ChatbotStoriesInstance {
 
     this.stopTimeline();
     this.activeIndex = storyIndex;
+    this.activeTimelineStartPoint = startPoint;
     this.activeTimeline = this.buildTimeline(this.activeIndex, startPoint);
     this.playing = wasPlaying;
     this.updateStoryMeta();
@@ -608,8 +612,36 @@ export class StoryController implements ChatbotStoriesInstance {
   private renderActiveTimelineProgress(progress: number): void {
     if (!this.activeTimeline) return;
 
-    this.activeTimeline.progress(clampProgress(progress), false).pause();
+    const targetProgress = clampProgress(progress);
+
+    if (this.shouldRebuildTimelineForSeek(targetProgress)) {
+      this.rebuildTimelineForDeterministicSeek(targetProgress);
+      return;
+    }
+
+    this.activeTimeline.progress(targetProgress, false).pause();
     this.updateProgress();
+  }
+
+  private shouldRebuildTimelineForSeek(targetProgress: number): boolean {
+    const currentProgress = this.activeTimeline?.progress() ?? 0;
+
+    return targetProgress < currentProgress - 0.002;
+  }
+
+  private rebuildTimelineForDeterministicSeek(progress: number): void {
+    const storyIndex = this.activeIndex;
+    const startPoint = this.activeTimelineStartPoint ?? this.cursor.getPosition();
+    const wasPlaying = this.playing;
+
+    this.stopTimeline();
+    this.activeIndex = storyIndex;
+    this.activeTimelineStartPoint = startPoint;
+    this.activeTimeline = this.buildTimeline(this.activeIndex, startPoint);
+    this.playing = wasPlaying;
+    this.activeTimeline.progress(progress, false).pause();
+    this.updateProgress();
+    this.updateStoryMeta();
   }
 
   private resumeActiveTimeline(): void {
