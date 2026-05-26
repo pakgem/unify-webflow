@@ -436,7 +436,7 @@ const SEQUENCE_PERSON_SWITCH = {
 
    0ms   hidden shell is a compact centered pill
    0ms   show: pill frame morphs to full input dimensions
-   0ms   chat reserves final composer clearance
+   0ms   chat reserves final composer clearance and scrolls upward smoothly
    0ms   send: message enters while full input collapses into its center
  done   hidden shell is removed from pointer and accessibility flow
    -------------------------------------------------------------------------- */
@@ -450,9 +450,11 @@ const COMPOSER_MOTION = {
   hideDuration: motionDuration(0.32),
   contentShowDelay: motionDuration(0.1),
   contentHideDuration: motionDuration(0.1),
+  threadPushDuration: motionDuration(0.38),
   showEase: "expo.out",
   hideEase: "power3.in",
   contentEase: "power2.out",
+  threadPushEase: "power3.out",
   threadGap: 44,
 };
 
@@ -1057,7 +1059,7 @@ export class ChatActor {
       .set(this.thread, {
         paddingBottom: () => Math.max(CHAT_BOTTOM_CLEARANCE, this.getComposerThreadInsetForFrame(fullFrame)),
       }, 0)
-      .call(() => this.pinThreadToBottom(), undefined, 0)
+      .add(this.tweenThreadToBottom(COMPOSER_MOTION.threadPushDuration, COMPOSER_MOTION.threadPushEase), 0)
       .to(this.composer, {
         left: fullFrame.left,
         bottom: fullFrame.bottom,
@@ -7390,6 +7392,26 @@ export class ChatActor {
 
   private pinThreadToBottom(): void {
     this.thread.scrollTop = this.getThreadBottomScrollTarget();
+  }
+
+  private tweenThreadToBottom(duration = CHAT_SCROLL_MOTION.followDuration, ease = CHAT_SCROLL_MOTION.followEase): gsap.core.Timeline {
+    const tl = gsap.timeline();
+    let target = this.thread.scrollTop;
+
+    tl.call(() => {
+      this.stopScrollMotion();
+      this.updateThreadContentFitState();
+      target = this.getThreadBottomScrollTarget();
+    });
+
+    tl.to(this.thread, {
+      scrollTop: () => target,
+      duration,
+      ease,
+      overwrite: "auto",
+    });
+
+    return tl;
   }
 
   private animateMessageScrollIntoView(
