@@ -2639,6 +2639,8 @@ body {
   max-width: 100%;
   min-width: 0;
   overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 44px), transparent);
+  mask-image: linear-gradient(to right, #000 calc(100% - 44px), transparent);
 }
 
 .wa-waterfall-service-step {
