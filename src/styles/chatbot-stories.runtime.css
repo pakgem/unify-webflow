@@ -1204,7 +1204,7 @@ body {
   align-content: start;
   gap: var(--wa-thinking-column-gap);
   align-items: start;
-  min-height: 58px;
+  min-height: 0;
   overflow: visible;
   padding: 0;
   color: #56534f;
@@ -5746,7 +5746,7 @@ body {
   }
 
   .wa-research-step {
-    min-height: 64px;
+    min-height: 0;
     gap: 8px;
     padding-left: 0;
   }

@@ -3784,22 +3784,38 @@ export class ChatActor {
   }
 
   private foldThinkingStep(item: HTMLElement): gsap.core.Timeline {
-    const foldTargets = item.querySelectorAll<HTMLElement>(
+    const foldTargets = this.queryElements(
+      item,
       ".wa-research-step__detail, .wa-sequence-thinking-progress",
     );
 
     return gsap
       .timeline()
+      .call(() => {
+        foldTargets.forEach((target) => {
+          gsap.set(target, {
+            height: target.offsetHeight,
+            overflow: "hidden",
+          });
+        });
+      })
       .to(foldTargets, {
         autoAlpha: 0,
+        height: 0,
+        marginTop: 0,
         y: THINKING_STEP_FOLD.detailOffsetY,
-        scaleY: 0.96,
         transformOrigin: "left top",
         duration: THINKING_STEP_FOLD.duration,
         ease: "power2.inOut",
       })
       .call(() => {
         item.dataset.stepState = "complete";
+        gsap.set(foldTargets, {
+          height: 0,
+          marginTop: 0,
+          overflow: "hidden",
+          y: 0,
+        });
         this.animateMessageScrollIntoView(this.getMessageScrollTargetElement(item));
       });
   }
