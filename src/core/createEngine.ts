@@ -1,6 +1,10 @@
 import { StoryBuilder } from "../builder/StoryBuilder";
 import { createStoryRuntime } from "./createStoryRuntime";
-import { loadRuntimeDraftStories } from "./loadRuntimeDraftStories";
+import {
+  getRuntimeDraftStories,
+  getRuntimeDraftStoriesFromScript,
+  loadRuntimeDraftStories,
+} from "./loadRuntimeDraftStories";
 import type { ChatbotStoriesConfig, ChatbotStoriesInstance } from "./types";
 import { renderDefaultMarkup } from "./renderDefaultMarkup";
 
@@ -8,6 +12,14 @@ export function createEngine(root: HTMLElement, config: ChatbotStoriesConfig = {
   renderDefaultMarkup(root, { showBuilder: config.showBuilder !== false });
 
   const runtime = createStoryRuntime(root, config);
+  const initialDraftStories =
+    getRuntimeDraftStories(config.builderDraft) ??
+    getRuntimeDraftStoriesFromScript(config.builderDraftScriptId);
+
+  if (initialDraftStories) {
+    runtime.applyBuilderStories(initialDraftStories);
+  }
+
   const builder =
     config.showBuilder === false
       ? null

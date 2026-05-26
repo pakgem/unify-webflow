@@ -1,0 +1,82 @@
+<script src="https://cdn.example.com/unify-chatbot-stories/chatbot-stories.js"></script>
+<script>
+  (function () {
+    function readJsonScript(script) {
+      try {
+        return JSON.parse(script.textContent || "{}");
+      } catch (error) {
+        console.warn("Invalid chatbot CMS JSON", script, error);
+        return null;
+      }
+    }
+
+    function cleanStep(step) {
+      if (!step.thinking) delete step.thinking;
+      if (!step.component) delete step.component;
+      delete step.storyId;
+      delete step.sort;
+      return step;
+    }
+
+    function buildDraftFromCms() {
+      var stories = new Map();
+
+      document.querySelectorAll('script[type="application/json"][data-wa-cms-story]').forEach(function (script) {
+        var story = readJsonScript(script);
+        if (!story || !story.id) return;
+
+        stories.set(story.id, {
+          id: story.id,
+          label: story.label || story.id,
+          summary: story.summary || "",
+          sort: Number.isFinite(Number(story.sort)) ? Number(story.sort) : 0,
+          steps: []
+        });
+      });
+
+      document.querySelectorAll('script[type="application/json"][data-wa-cms-step]').forEach(function (script) {
+        var step = readJsonScript(script);
+        if (!step || !step.storyId || !step.kind) return;
+
+        if (!stories.has(step.storyId)) {
+          stories.set(step.storyId, {
+            id: step.storyId,
+            label: step.storyId,
+            summary: "",
+            sort: 0,
+            steps: []
+          });
+        }
+
+        stories.get(step.storyId).steps.push(step);
+      });
+
+      return {
+        schemaVersion: 3,
+        stories: Array.from(stories.values())
+          .sort(function (a, b) { return a.sort - b.sort; })
+          .map(function (story) {
+            story.steps = story.steps
+              .sort(function (a, b) { return Number(a.sort || 0) - Number(b.sort || 0); })
+              .map(cleanStep);
+            delete story.sort;
+            return story;
+          })
+          .filter(function (story) { return story.steps.length > 0; })
+      };
+    }
+
+    window.addEventListener("DOMContentLoaded", function () {
+      if (!window.ChatbotStories) return;
+
+      window.ChatbotStories.init("[data-chatbot-stories]", {
+        builderDraft: buildDraftFromCms(),
+        builderDraftEndpoint: false,
+        assetBaseUrl: "https://cdn.example.com/unify-chatbot-stories/assets",
+        autoplay: true,
+        loop: true,
+        autoAdvanceDelay: 3.2
+      });
+    });
+  })();
+</script>

@@ -73,8 +73,71 @@ export function createPublicInitializer(
     if (!roots.length) return;
 
     injectStyles?.();
-    roots.forEach((root) => init(root, { injectStyles: false }));
+    roots.forEach((root) => init(root, { ...readRootDatasetConfig(root), injectStyles: false }));
   }
 
   return { autoInit, init };
+}
+
+function readRootDatasetConfig(root: HTMLElement): ChatbotStoriesConfig {
+  const config: ChatbotStoriesConfig = {};
+  const dataset = root.dataset;
+
+  config.autoplay = parseBooleanDatasetValue(dataset.autoplay);
+  config.loop = parseBooleanDatasetValue(dataset.loop);
+  config.reducedMotion = parseBooleanDatasetValue(dataset.reducedMotion);
+
+  if (dataset.autoAdvanceDelay) {
+    const autoAdvanceDelay = Number(dataset.autoAdvanceDelay);
+    if (Number.isFinite(autoAdvanceDelay)) config.autoAdvanceDelay = autoAdvanceDelay;
+  }
+
+  if (dataset.initialStory) {
+    const initialStory = Number(dataset.initialStory);
+    config.initialStory = Number.isFinite(initialStory) ? initialStory : dataset.initialStory;
+  }
+
+  if (dataset.assetBaseUrl) config.assetBaseUrl = dataset.assetBaseUrl;
+  if (dataset.builderDraftScriptId) {
+    config.builderDraftScriptId = dataset.builderDraftScriptId === "false" ? false : dataset.builderDraftScriptId;
+  }
+
+  if (dataset.assetUrlMap) {
+    const assetUrlMap = parseAssetUrlMap(dataset.assetUrlMap);
+    if (assetUrlMap) config.assetUrlMap = assetUrlMap;
+  }
+
+  if (dataset.builderDraftEndpoint) {
+    config.builderDraftEndpoint = dataset.builderDraftEndpoint === "false" ? false : dataset.builderDraftEndpoint;
+  }
+
+  return removeUndefinedConfigValues(config);
+}
+
+function parseBooleanDatasetValue(value: string | undefined): boolean | undefined {
+  if (value === undefined) return undefined;
+  if (value === "true" || value === "") return true;
+  if (value === "false") return false;
+
+  return undefined;
+}
+
+function parseAssetUrlMap(value: string): Record<string, string> | undefined {
+  try {
+    const parsed = JSON.parse(value);
+
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return undefined;
+
+    return Object.fromEntries(
+      Object.entries(parsed).filter(
+        (entry): entry is [string, string] => typeof entry[0] === "string" && typeof entry[1] === "string",
+      ),
+    );
+  } catch {
+    return undefined;
+  }
+}
+
+function removeUndefinedConfigValues(config: ChatbotStoriesConfig): ChatbotStoriesConfig {
+  return Object.fromEntries(Object.entries(config).filter(([, value]) => value !== undefined)) as ChatbotStoriesConfig;
 }

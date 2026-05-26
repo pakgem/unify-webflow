@@ -1,6 +1,7 @@
 import { gsap } from "gsap";
 import type { ChatActor, DataTablePageRestore } from "../actors/ChatActor";
 import type { CursorActor } from "../actors/CursorActor";
+import type { AssetUrlResolver } from "./assetUrls";
 import { preloadStoriesAround } from "./assetPreloader";
 import { PausedCursorMimic } from "./PausedCursorMimic";
 import type {
@@ -13,7 +14,9 @@ import type {
 import type { TargetResolver } from "./TargetResolver";
 
 type ControllerOptions = Required<Pick<ChatbotStoriesConfig, "autoplay" | "loop" | "autoAdvanceDelay">> &
-  Pick<ChatbotStoriesConfig, "initialStory" | "onStoryChange">;
+  Pick<ChatbotStoriesConfig, "initialStory" | "onStoryChange"> & {
+    resolveAssetUrl?: AssetUrlResolver;
+  };
 type StoryProgressScrubState = {
   storyIndex: number;
   wasPlaying: boolean;
@@ -205,7 +208,7 @@ export class StoryController implements ChatbotStoriesInstance {
 
     this.updateStoryMeta();
     this.updateAllTabProgress();
-    preloadStoriesAround(this.stories, this.activeIndex);
+    preloadStoriesAround(this.stories, this.activeIndex, this.options.resolveAssetUrl);
   }
 
   goTo(story: number | string, options: StorySwitchOptions = {}): void {
@@ -323,7 +326,7 @@ export class StoryController implements ChatbotStoriesInstance {
     progress = 0,
   ): void {
     this.activeIndex = storyIndex;
-    preloadStoriesAround(this.stories, this.activeIndex);
+    preloadStoriesAround(this.stories, this.activeIndex, this.options.resolveAssetUrl);
     this.activeTimelineStartPoint = startPoint;
     this.activeTimeline = this.buildTimeline(this.activeIndex, startPoint);
     this.renderActiveTimelineProgress(progress);

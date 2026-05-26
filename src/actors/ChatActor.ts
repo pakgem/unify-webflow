@@ -29,6 +29,8 @@ import { addTimelineElapsedTimer } from "../motion/elapsedTimer";
 import { COMPANY_FAVICON_URLS } from "../assets/companyFavicons";
 import { getProfilePhotoUrl } from "../assets/profilePhotos";
 import { createUnifyMarkSvg } from "../assets/unifyMark";
+import type { AssetUrlResolver } from "../core/assetUrls";
+import { identityAssetUrlResolver } from "../core/assetUrls";
 import gmailConnectorIconSvg from "../assets/email-connectors/gmail.svg?raw";
 import outlookConnectorIconSvg from "../assets/email-connectors/outlook.svg?raw";
 import { getInitialSequenceIndex } from "../core/sequenceSelection";
@@ -59,6 +61,9 @@ type PreparedCursorFile = {
 };
 type ComponentRevealOptions = {
   scrollAlign?: "equal-inset";
+};
+type ChatActorOptions = {
+  resolveAssetUrl?: AssetUrlResolver;
 };
 type ChatElementScrollOptions = {
   duration?: number;
@@ -750,6 +755,7 @@ export class ChatActor {
   private dropRevealWatchers = new WeakMap<HTMLElement, () => void>();
   private lastStreamScrollAt = 0;
   private prefersReducedMotion = false;
+  private readonly resolveAssetUrl: AssetUrlResolver;
   private composerVisible = false;
   private activeTablePageTimelines = new Map<string, gsap.core.Timeline>();
   private expectedDataTablePages = new Map<string, number>();
@@ -786,7 +792,8 @@ export class ChatActor {
     });
   };
 
-  constructor(private root: HTMLElement) {
+  constructor(private root: HTMLElement, options: ChatActorOptions = {}) {
+    this.resolveAssetUrl = options.resolveAssetUrl ?? identityAssetUrlResolver;
     this.stage = this.required(".wa-stage");
     this.browserWindow = this.required(".wa-window");
     this.chatShell = this.required("[data-chat-shell]");
@@ -4944,7 +4951,7 @@ export class ChatActor {
       img.remove();
       badge.dataset.hasLogo = "false";
     }, { once: true });
-    img.src = logoUrl;
+    img.src = this.resolveAssetUrl(logoUrl);
     badge.append(img);
     return badge;
   }
@@ -4963,7 +4970,7 @@ export class ChatActor {
 
     img.alt = "";
     img.decoding = "async";
-    img.src = logoUrl;
+    img.src = this.resolveAssetUrl(logoUrl);
     badge.append(img);
 
     return badge;
@@ -5089,7 +5096,8 @@ export class ChatActor {
     explicitUrl?: string,
     fallbackText?: string,
   ): void {
-    const avatarUrl = getProfilePhotoUrl(name, explicitUrl);
+    const rawAvatarUrl = getProfilePhotoUrl(name, explicitUrl);
+    const avatarUrl = rawAvatarUrl ? this.resolveAssetUrl(rawAvatarUrl) : "";
 
     avatar.replaceChildren();
     avatar.dataset.hasPhoto = String(Boolean(avatarUrl));
@@ -5557,7 +5565,7 @@ export class ChatActor {
       mark.decoding = "async";
       mark.draggable = false;
       mark.loading = "lazy";
-      mark.src = source.logoSrc;
+      mark.src = this.resolveAssetUrl(source.logoSrc);
     } else {
       mark.className = "wa-data-vendor-logo__mark";
       mark.textContent = source.name;
@@ -5797,7 +5805,7 @@ export class ChatActor {
   private createMailboxProviderIcon(provider: MailboxConnectorProvider): HTMLImageElement {
     const image = document.createElement("img");
     image.className = "wa-mailbox-connection__provider-icon";
-    image.src = MAILBOX_CONNECTOR_ICON_SRC[provider];
+    image.src = this.resolveAssetUrl(MAILBOX_CONNECTOR_ICON_SRC[provider]);
     image.alt = "";
     image.decoding = "async";
     image.loading = "eager";

@@ -317,6 +317,10 @@ export type ChatbotStoriesConfig = {
   autoAdvanceDelay?: number;
   initialStory?: number | string;
   injectStyles?: boolean;
+  assetBaseUrl?: string;
+  assetUrlMap?: Record<string, string>;
+  builderDraft?: unknown;
+  builderDraftScriptId?: string | false;
   reducedMotion?: boolean;
   showBuilder?: boolean;
   builderDraftEndpoint?: string | false;

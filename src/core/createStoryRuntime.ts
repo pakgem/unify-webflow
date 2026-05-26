@@ -3,6 +3,7 @@ import { CursorActor } from "../actors/CursorActor";
 import type { BuilderStory } from "../builder/draftTypes";
 import { createStoriesFromBuilderDraft } from "../builder/storyRuntimeAdapter";
 import { defaultStories } from "../stories";
+import { applyRuntimeAssetUrls, createAssetUrlResolver } from "./assetUrls";
 import { StoryController } from "./StoryController";
 import { TargetResolver } from "./TargetResolver";
 import type { ChatbotStoriesConfig, ChatbotStoriesInstance, StoryDefinition } from "./types";
@@ -24,12 +25,14 @@ type StoryRuntime = {
 export function createStoryRuntime(root: HTMLElement, config: ChatbotStoriesConfig = {}): StoryRuntime {
   const stories = config.stories?.length ? config.stories : defaultStories;
   const draftEndpoint = config.builderDraftEndpoint ?? "/api/story-draft";
+  const resolveAssetUrl = createAssetUrlResolver(config);
+  applyRuntimeAssetUrls(root, resolveAssetUrl);
   const reducedMotion =
     config.reducedMotion ??
     window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ??
     false;
   const resolver = new TargetResolver(root);
-  const chat = new ChatActor(root);
+  const chat = new ChatActor(root, { resolveAssetUrl });
   const cursor = new CursorActor(root, resolver, { reducedMotion });
   const controller = new StoryController(root, stories, resolver, cursor, chat, {
     autoplay: config.autoplay ?? true,
@@ -37,6 +40,7 @@ export function createStoryRuntime(root: HTMLElement, config: ChatbotStoriesConf
     autoAdvanceDelay: config.autoAdvanceDelay ?? 3.2,
     initialStory: config.initialStory ?? 0,
     onStoryChange: config.onStoryChange,
+    resolveAssetUrl,
   });
   const applyBuilderStories = (builderStories: BuilderStory[], options: ApplyBuilderStoriesOptions = {}) => {
     controller.updateStories(createStoriesFromBuilderDraft(builderStories, stories), {

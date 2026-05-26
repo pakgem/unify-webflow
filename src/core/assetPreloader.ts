@@ -1,4 +1,6 @@
 import { getProfilePhotoUrl } from "../assets/profilePhotos";
+import type { AssetUrlResolver } from "./assetUrls";
+import { identityAssetUrlResolver } from "./assetUrls";
 import type {
   DataSourceGridConfig,
   DataTableConfig,
@@ -12,17 +14,24 @@ const preloadLinkUrls = new Set<string>();
 const DATA_TABLE_DIRECT_AVATAR_KEYS = ["avatarUrl", "mutualConnectionAvatarUrl"] as const;
 const DATA_TABLE_PERSON_KEYS = ["name", "contact", "prospect", "fullName", "mutualConnection", "connector"] as const;
 
-export function preloadStoriesAround(stories: StoryDefinition[], index: number): void {
+export function preloadStoriesAround(
+  stories: StoryDefinition[],
+  index: number,
+  resolveAssetUrl: AssetUrlResolver = identityAssetUrlResolver,
+): void {
   if (!stories.length) return;
 
-  preloadStoryAssets(stories[index]);
-  preloadStoryAssets(stories[(index + 1) % stories.length]);
+  preloadStoryAssets(stories[index], resolveAssetUrl);
+  preloadStoryAssets(stories[(index + 1) % stories.length], resolveAssetUrl);
 }
 
-export function preloadStoryAssets(story: StoryDefinition | undefined): void {
+export function preloadStoryAssets(
+  story: StoryDefinition | undefined,
+  resolveAssetUrl: AssetUrlResolver = identityAssetUrlResolver,
+): void {
   if (!story?.assetUrls?.length) return;
 
-  for (const url of story.assetUrls) preloadImage(url);
+  for (const url of story.assetUrls) preloadImage(url, resolveAssetUrl);
 }
 
 export function collectDataTableAssetUrls(table: DataTableConfig): string[] {
@@ -76,10 +85,10 @@ function shouldPreloadDataTablePerson(key: string, values: Record<string, string
   );
 }
 
-function preloadImage(url: string): void {
+function preloadImage(url: string, resolveAssetUrl: AssetUrlResolver): void {
   if (typeof document === "undefined" || typeof Image === "undefined") return;
 
-  const absoluteUrl = normalizeAssetUrl(url);
+  const absoluteUrl = normalizeAssetUrl(resolveAssetUrl(url));
 
   if (!absoluteUrl || preloadedImageUrls.has(absoluteUrl)) return;
   preloadedImageUrls.add(absoluteUrl);

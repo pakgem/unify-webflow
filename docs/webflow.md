@@ -1,48 +1,88 @@
-# Webflow Usage
+# Webflow Handoff
 
-Build the runtime:
+Generate the Webflow package:
 
 ```bash
-npm run build
+npm run build:webflow
 ```
 
-Upload `dist/chatbot-stories.js` to your CDN or Webflow assets, then add:
+This writes `webflow-export/`, which is the folder to give to the Webflow developer. It includes:
+
+- `chatbot-stories.js`: the production playback runtime.
+- `assets/media/chat-background.png`: the background image used by the stage.
+- `assets/data-logos/*`: vendor logos used by the data marketplace story.
+- `embed-element.html`: Webflow HTML Embed snippet.
+- `before-body-code.html`: Webflow page/project custom code snippet.
+- `asset-url-map.template.html`: fallback for Webflow Asset uploads with generated CDN URLs.
+- `webflow-cms.md`: instructions for replacing the local draft data with Webflow CMS.
+- `cms-collection-list-adapter.template.html`: builds the story draft from hidden CMS Collection Lists.
+- `cms-json-script.template.html`: simpler one-item CMS JSON setup.
+- `cms-draft.example.json`: minified copy of the current draft, useful for seeding CMS.
+- `asset-manifest.json`: runtime paths and asset filenames.
+
+## Preferred Install
+
+Use this when the dev can host `webflow-export/` on a CDN or static host while preserving the `assets/` folder.
+
+1. Upload `webflow-export/chatbot-stories.js`.
+2. Upload the complete `webflow-export/assets/` folder.
+3. Paste `webflow-export/embed-element.html` into a Webflow HTML Embed where the animation should render.
+4. Replace `data-asset-base-url` with the hosted `/assets` URL.
+5. Paste `webflow-export/before-body-code.html` before `</body>`.
+6. Replace the script `src` with the hosted `chatbot-stories.js` URL.
+
+Example embed:
 
 ```html
-<section data-chatbot-stories data-auto-init></section>
-<script src="https://your-cdn.example/chatbot-stories.js"></script>
+<section
+  data-chatbot-stories
+  data-auto-init
+  data-theme="light"
+  data-builder-draft-endpoint="false"
+  data-asset-base-url="https://cdn.example.com/unify-chatbot-stories/assets"
+></section>
 ```
 
-The runtime injects its own CSS by default and uses these font families:
-
-```css
---wa-font-sans: "Saans";
---wa-font-feature: "Feature Text";
-```
-
-If Webflow already loads Saans and Feature Text, the section will use them automatically. To use custom markup, keep these hooks:
+Example script:
 
 ```html
-<section data-chatbot-stories>
-  <div data-chat-shell>
-    <div data-chat-thread></div>
-    <div data-thinking><span data-thinking-label></span></div>
-    <div data-result-grid></div>
-    <div data-chat-input>
-      <span data-composer-text></span>
-      <button data-send-button>Send</button>
-    </div>
-  </div>
-  <div data-story-tabs></div>
-  <input data-story-scrubber type="range" min="0" max="1000" value="0">
-</section>
+<script src="https://cdn.example.com/unify-chatbot-stories/chatbot-stories.js"></script>
 ```
 
-Initialize manually when you want to pass options:
+## Webflow Assets Fallback
+
+If the dev uploads files one-by-one through Webflow Assets, Webflow will produce generated URLs and will not preserve `/media/...` or `/data-logos/...` paths. In that case:
+
+1. Use this root element without `data-auto-init`:
+
+```html
+<section data-chatbot-stories data-theme="light"></section>
+```
+
+2. Paste `webflow-export/asset-url-map.template.html` before `</body>`.
+3. Replace the placeholder URLs in `assetUrlMap` with the actual Webflow asset URLs.
+4. Keep the left-side map keys unchanged.
+
+## Runtime Options
+
+The Webflow bundle supports these data attributes on `[data-chatbot-stories]`:
+
+- `data-theme="light"`, `data-theme="dark"`, or `data-theme="system"`.
+- `data-asset-base-url="https://.../assets"` for hosted assets that preserve folder paths.
+- `data-builder-draft-endpoint="false"` for production Webflow pages.
+- `data-builder-draft-script-id="unify-chatbot-stories-cms-draft"` to load CMS-provided draft JSON from a script tag.
+- `data-autoplay="false"` to load paused.
+- `data-loop="false"` to stop at the final story.
+- `data-auto-advance-delay="3.2"` to change story advance timing.
+- `data-initial-story="data-marketplace"` or a zero-based index.
+
+Manual initialization is also supported:
 
 ```html
 <script>
-  const stories = ChatbotStories.init("[data-chatbot-stories]", {
+  window.ChatbotStories.init("[data-chatbot-stories]", {
+    assetBaseUrl: "https://cdn.example.com/unify-chatbot-stories/assets",
+    builderDraftEndpoint: false,
     autoplay: true,
     loop: true,
     autoAdvanceDelay: 3.2
@@ -50,60 +90,10 @@ Initialize manually when you want to pass options:
 </script>
 ```
 
-Theme styles are centralized at the top of `src/styles/chatbot-stories.runtime.css`. Builder-only styles live in `src/styles/chatbot-stories.builder.css`. Use a `data-theme` attribute on the root when embedding:
+## Webflow CMS
 
-The Webflow bundle is the playback runtime only. The visual story builder and editor CSS stay in the local app entry so the production payload does not ship builder controls.
+See `webflow-export/webflow-cms.md` for the CMS migration path. The important rule is that CMS owns content, but the bundle keeps animation choreography. CMS data should be converted to the builder draft schema with `schemaVersion: 3`.
 
-```html
-<section data-chatbot-stories data-auto-init data-theme="light"></section>
-<section data-chatbot-stories data-auto-init data-theme="dark"></section>
-<section data-chatbot-stories data-auto-init data-theme="system"></section>
-```
+## Notes
 
-Cursor targets should use semantic anchors, not fixed pixels:
-
-```ts
-ctx.cursor.moveTo({
-  target: "[data-send-button]",
-  anchor: "center",
-  humanOffset: true
-});
-```
-
-Story `entry` should be the first thing the cursor actually interacts with. The controller starts the story body shortly before the entry move completes, so lightweight setup such as status changes can begin while the cursor is still arriving.
-
-```ts
-export const story = {
-  id: "lead-scoring",
-  entry: {
-    desktop: {
-      target: "[data-chat-input]",
-      anchor: "center",
-      offset: { x: -72 },
-      humanOffset: true
-    },
-    mobile: {
-      target: "[data-chat-input]",
-      anchor: "center",
-      offset: { x: -54 },
-      humanOffset: true
-    }
-  },
-  entryLeadTime: 0.24,
-  build(ctx) {
-    return ctx.timeline()
-      .add(ctx.chat.setStatus("Listening"))
-      .add(ctx.cursor.click("text"))
-      .add(ctx.chat.typeComposer("Show me the best accounts."));
-  }
-};
-```
-
-For breakpoint-specific choreography:
-
-```ts
-ctx.cursor.moveTo({
-  desktop: { target: "[data-result-card='lead-list']", anchor: "right" },
-  mobile: { target: "[data-result-action='create-sequence']", anchor: "center" }
-});
-```
+The runtime injects its own CSS. Do not paste the JS bundle inline into Webflow custom code; use a hosted script URL. Saans and Feature Text are used automatically if the Webflow site already loads them, with system fallbacks otherwise.

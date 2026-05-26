@@ -1,0 +1,178 @@
+{
+  "generatedAt": "2026-05-26T17:46:58.253Z",
+  "bundle": {
+    "file": "chatbot-stories.js",
+    "bytes": 498132
+  },
+  "assetBasePath": "assets",
+  "assets": [
+    {
+      "file": "data-logos/5x5.svg",
+      "runtimePath": "/data-logos/5x5.svg"
+    },
+    {
+      "file": "data-logos/Adbeat.svg",
+      "runtimePath": "/data-logos/Adbeat.svg"
+    },
+    {
+      "file": "data-logos/Adyntel.png",
+      "runtimePath": "/data-logos/Adyntel.png"
+    },
+    {
+      "file": "data-logos/Adyntel.svg",
+      "runtimePath": "/data-logos/Adyntel.svg"
+    },
+    {
+      "file": "data-logos/Built With.svg",
+      "runtimePath": "/data-logos/Built%20With.svg"
+    },
+    {
+      "file": "data-logos/BuiltWith.png",
+      "runtimePath": "/data-logos/BuiltWith.png"
+    },
+    {
+      "file": "data-logos/BuyerCaddy.png",
+      "runtimePath": "/data-logos/BuyerCaddy.png"
+    },
+    {
+      "file": "data-logos/BuyerCaddy.svg",
+      "runtimePath": "/data-logos/BuyerCaddy.svg"
+    },
+    {
+      "file": "data-logos/Demandbase.svg",
+      "runtimePath": "/data-logos/Demandbase.svg"
+    },
+    {
+      "file": "data-logos/FullEnrich.svg",
+      "runtimePath": "/data-logos/FullEnrich.svg"
+    },
+    {
+      "file": "data-logos/Harmonic.svg",
+      "runtimePath": "/data-logos/Harmonic.svg"
+    },
+    {
+      "file": "data-logos/HubSpot.png",
+      "runtimePath": "/data-logos/HubSpot.png"
+    },
+    {
+      "file": "data-logos/HubSpot.svg",
+      "runtimePath": "/data-logos/HubSpot.svg"
+    },
+    {
+      "file": "data-logos/LinkedIn.png",
+      "runtimePath": "/data-logos/LinkedIn.png"
+    },
+    {
+      "file": "data-logos/MixRank.png",
+      "runtimePath": "/data-logos/MixRank.png"
+    },
+    {
+      "file": "data-logos/mixrank.svg",
+      "runtimePath": "/data-logos/mixrank.svg"
+    },
+    {
+      "file": "data-logos/Ocean_io.svg",
+      "runtimePath": "/data-logos/Ocean_io.svg"
+    },
+    {
+      "file": "data-logos/Oceanio.svg",
+      "runtimePath": "/data-logos/Oceanio.svg"
+    },
+    {
+      "file": "data-logos/OpenMart.svg",
+      "runtimePath": "/data-logos/OpenMart.svg"
+    },
+    {
+      "file": "data-logos/PDL.png",
+      "runtimePath": "/data-logos/PDL.png"
+    },
+    {
+      "file": "data-logos/People Data Labs.svg",
+      "runtimePath": "/data-logos/People%20Data%20Labs.svg"
+    },
+    {
+      "file": "data-logos/PostHog.svg",
+      "runtimePath": "/data-logos/PostHog.svg"
+    },
+    {
+      "file": "data-logos/PredictLeads.png",
+      "runtimePath": "/data-logos/PredictLeads.png"
+    },
+    {
+      "file": "data-logos/PredictLeads.svg",
+      "runtimePath": "/data-logos/PredictLeads.svg"
+    },
+    {
+      "file": "data-logos/Ramp.svg",
+      "runtimePath": "/data-logos/Ramp.svg"
+    },
+    {
+      "file": "data-logos/Salesforce.svg",
+      "runtimePath": "/data-logos/Salesforce.svg"
+    },
+    {
+      "file": "data-logos/SE Ranking.svg",
+      "runtimePath": "/data-logos/SE%20Ranking.svg"
+    },
+    {
+      "file": "data-logos/Segment.svg",
+      "runtimePath": "/data-logos/Segment.svg"
+    },
+    {
+      "file": "data-logos/Serpstat.svg",
+      "runtimePath": "/data-logos/Serpstat.svg"
+    },
+    {
+      "file": "data-logos/Snitcher.svg",
+      "runtimePath": "/data-logos/Snitcher.svg"
+    },
+    {
+      "file": "data-logos/Store Leads.svg",
+      "runtimePath": "/data-logos/Store%20Leads.svg"
+    },
+    {
+      "file": "data-logos/Store_Leads.png",
+      "runtimePath": "/data-logos/Store_Leads.png"
+    },
+    {
+      "file": "data-logos/The Swarm.svg",
+      "runtimePath": "/data-logos/The%20Swarm.svg"
+    },
+    {
+      "file": "data-logos/The_Swarm.svg",
+      "runtimePath": "/data-logos/The_Swarm.svg"
+    },
+    {
+      "file": "data-logos/TheirStack.svg",
+      "runtimePath": "/data-logos/TheirStack.svg"
+    },
+    {
+      "file": "data-logos/Theirstack.webp",
+      "runtimePath": "/data-logos/Theirstack.webp"
+    },
+    {
+      "file": "data-logos/Trigify.svg",
+      "runtimePath": "/data-logos/Trigify.svg"
+    },
+    {
+      "file": "data-logos/UpRiver.svg",
+      "runtimePath": "/data-logos/UpRiver.svg"
+    },
+    {
+      "file": "data-logos/Waterfall.svg",
+      "runtimePath": "/data-logos/Waterfall.svg"
+    },
+    {
+      "file": "data-logos/ZeroBounce.png",
+      "runtimePath": "/data-logos/ZeroBounce.png"
+    },
+    {
+      "file": "data-logos/zerobounce.svg",
+      "runtimePath": "/data-logos/zerobounce.svg"
+    },
+    {
+      "file": "media/chat-background.png",
+      "runtimePath": "/media/chat-background.png"
+    }
+  ]
+}
