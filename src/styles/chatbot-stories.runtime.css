@@ -5204,7 +5204,7 @@ body {
 }
 
 .wa-cursor[data-cursor-mimicking="true"][data-cursor-mode="default"] .wa-cursor__mimic-tail {
-  animation: wa-cursor-tail-wag 245ms infinite;
+  animation: wa-cursor-tail-wag 215ms infinite;
 }
 
 .wa-cursor[data-cursor-mode="pointer"] .wa-cursor__glyph,
@@ -5249,17 +5249,17 @@ body {
 
   24% {
     animation-timing-function: cubic-bezier(0.16, 0, 0.24, 1);
-    transform: translate3d(0.22px, 0, 0) rotate(9.5deg) skewX(1.65deg);
+    transform: translate3d(0.32px, 0, 0) rotate(12deg) skewX(2deg);
   }
 
   38% {
     animation-timing-function: cubic-bezier(0.16, 0.88, 0.24, 1);
-    transform: translate3d(0.08px, 0, 0) rotate(3.6deg) skewX(0.65deg);
+    transform: translate3d(0.1px, 0, 0) rotate(4.2deg) skewX(0.75deg);
   }
 
   64% {
     animation-timing-function: cubic-bezier(0.2, 0, 0.24, 1);
-    transform: translate3d(-0.2px, 0, 0) rotate(-8.5deg) skewX(-1.5deg);
+    transform: translate3d(-0.3px, 0, 0) rotate(-11deg) skewX(-1.9deg);
   }
 }
 
