@@ -1570,7 +1570,7 @@ body {
   background: var(--wa-file-bg, #faf1e8);
   font-size: 9px;
   line-height: 1;
-  font-weight: 760;
+  font-weight: 680;
 }
 
 .wa-cursor-file__icon {
