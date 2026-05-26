@@ -2909,7 +2909,7 @@ body {
 }
 
 .wa-strategy-plan {
-  --wa-strategy-hover-scale: 1.035;
+  --wa-strategy-hover-scale: 1.0175;
   --wa-strategy-hover-border: #c8c3bb;
   display: block;
   min-height: 0;
