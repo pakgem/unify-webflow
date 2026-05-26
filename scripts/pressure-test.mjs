@@ -172,6 +172,50 @@ async function auditStoryControls(page, label) {
     assert(Boolean(result.activeStory), `${label}: story switch did not set data-active-story`, result);
   }
 
+  const titleClickResults = await page.evaluate(async () => {
+    if (window.innerWidth < 700) return { skipped: true };
+
+    const root = document.querySelector("[data-chatbot-stories]");
+    const api = window.ChatbotStories.init(root, { autoplay: false, builderDraftEndpoint: false });
+    const firstTitle = [...root.querySelectorAll(".wa-story-tab__title")].find(
+      (title) => title.textContent.trim() === "Hit the ground running",
+    );
+    const firstTab = firstTitle?.closest(".wa-story-tab");
+    const scrubber = root.querySelector("[data-story-scrubber]");
+
+    api.pause();
+    api.goTo(1);
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    firstTitle?.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, view: window }));
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    const switchedToFirst = api.getState().index === 0 && firstTab?.classList.contains("is-active");
+
+    scrubber.value = "650";
+    scrubber.dispatchEvent(new Event("input", { bubbles: true }));
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    const progressedBeforeRestart = api.getState().progress;
+    firstTitle?.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, view: window }));
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    const restartedProgress = api.getState().progress;
+
+    return {
+      firstTitleExists: Boolean(firstTitle),
+      restartedProgress,
+      switchedToFirst,
+      progressedBeforeRestart,
+    };
+  });
+
+  if (!titleClickResults.skipped) {
+    assert(titleClickResults.firstTitleExists, `${label}: first story title was not rendered`, titleClickResults);
+    assert(titleClickResults.switchedToFirst, `${label}: clicking the first story title did not switch stories`, titleClickResults);
+    assert(
+      titleClickResults.progressedBeforeRestart > 0.5 && titleClickResults.restartedProgress < 0.08,
+      `${label}: clicking the active first story title did not restart it`,
+      titleClickResults,
+    );
+  }
+
   const scrubResults = await page.evaluate(async () => {
     const root = document.querySelector("[data-chatbot-stories]");
     const api = window.ChatbotStories.init(root, { autoplay: false, builderDraftEndpoint: false });

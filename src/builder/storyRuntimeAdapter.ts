@@ -187,7 +187,6 @@ function buildHitGroundRunningStory(ctx: StoryContext, story: BuilderStory): gsa
     { kind: "cursorClick", nextMode: "default", at: "-=0.03" },
     { kind: "custom", build: () => ctx.chat.submitSignup(), at: "<" },
     { kind: "status", text: "Building workspace", at: "-=0.08" },
-    { kind: "custom", build: () => ctx.chat.transferSignupLogoToNextThinking(), at: "<" },
     { kind: "transitionSignupToChat", at: `+=${STORY_TIMING.beat}` },
     ...(thinkingStep ? [{ kind: "status" as const, text: thinkingStep.text || "Researching", at: "<" }] : []),
     ...(thinkingStep ? [toThinkingStoryStep(thinkingStep, { hold: 0.46, at: "<" })] : []),

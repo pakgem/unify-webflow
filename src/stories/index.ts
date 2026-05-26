@@ -41,7 +41,7 @@ import {
       0ms   cursor heads to first visible sign-up field
     300ms   email typing starts before the cursor fully settles
    1500ms   cursor clicks the sign-in button
-   1800ms   sign-up scene scrolls up while the logo transfers into thinking
+   1800ms   sign-up scene scrolls up into the first thinking state
    2600ms   research steps cycle through public company signals
    5700ms   three GTM strategies reveal as compact strategy cards
    -------------------------------------------------------------------------- */
@@ -1360,7 +1360,6 @@ export const defaultStories: StoryDefinition[] = [
         { kind: "cursorClick", nextMode: "default", at: "-=0.03" },
         { kind: "custom", build: () => ctx.chat.submitSignup(), at: "<" },
         { kind: "status", text: "Building workspace", at: "-=0.08" },
-        { kind: "custom", build: () => ctx.chat.transferSignupLogoToNextThinking(), at: "<" },
         { kind: "transitionSignupToChat", at: `+=${STORY_TIMING.beat}` },
         { kind: "status", text: "Researching Vercel", at: "<" },
         { kind: "thinking", steps: GTM_RESEARCH_STEPS, hold: 0.46, at: "<" },
