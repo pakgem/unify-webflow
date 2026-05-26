@@ -257,6 +257,10 @@ async function auditStoryControls(page, label) {
     };
     const collectThinkingAnomalies = (storyIndex, value) => {
       host.querySelectorAll(".wa-thinking-block").forEach((block, blockIndex) => {
+        const message = block.closest(".wa-message");
+
+        if (!isVisible(message)) return;
+
         const title = block.querySelector(".wa-thinking__title")?.textContent?.trim() ?? "";
         const steps = block.querySelector(".wa-research-steps");
         const traveler = block.querySelector(".wa-thinking-logo-traveler");
@@ -266,6 +270,8 @@ async function auditStoryControls(page, label) {
         const isCollapsed = /^Thought(?:\s|$)/.test(title);
         const travelerRect = traveler?.getBoundingClientRect();
         const headerRect = header?.getBoundingClientRect();
+        const stepsRect = steps?.getBoundingClientRect();
+        const stepsStyle = steps ? getComputedStyle(steps) : null;
         const travelerIsStranded = Boolean(
           travelerRect &&
           headerRect &&
@@ -283,6 +289,35 @@ async function auditStoryControls(page, label) {
             travelerOffset: travelerRect.top - headerRect.bottom,
           });
         }
+
+        if (isCollapsed && steps && stepsStyle?.visibility === "hidden" && (stepsRect?.height ?? 0) < 1) {
+          anomalies.push({
+            storyIndex,
+            value,
+            blockIndex,
+            title,
+            reason: "collapsed thinking steps lost reserved layout height",
+            stepsHeight: stepsRect?.height ?? 0,
+          });
+        }
+
+        block.querySelectorAll('.wa-research-step[data-step-state="complete"] .wa-research-step__detail').forEach((detail) => {
+          const detailStyle = getComputedStyle(detail);
+          const detailRect = detail.getBoundingClientRect();
+          const isVisuallyFolded = detailStyle.visibility === "hidden" || Number(detailStyle.opacity) < 0.01;
+
+          if (isVisuallyFolded && detailRect.height < 1) {
+            anomalies.push({
+              storyIndex,
+              value,
+              blockIndex,
+              title,
+              reason: "folded thinking detail lost reserved layout height",
+              detailText: detail.textContent?.trim() ?? "",
+              detailHeight: detailRect.height,
+            });
+          }
+        });
       });
     };
 

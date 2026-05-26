@@ -377,6 +377,7 @@ const THINKING_STEP_FOLD = {
   detailOffsetY: 0,
   duration: motionDuration(0.24),
 };
+const THINKING_LAYOUT_RESERVATION_CLEAR_PROPS = "height,minHeight,overflow,opacity,visibility,y,transform";
 
 const THINKING_LOGO_TRAVEL = {
   duration: motionDuration(0.34),
@@ -385,7 +386,7 @@ const THINKING_LOGO_TRAVEL = {
 };
 
 const THINKING_BLOCK_COLLAPSE = {
-  y: -4,
+  y: 0,
   duration: motionDuration(0.26),
   ease: "power2.inOut",
 };
@@ -3806,10 +3807,9 @@ export class ChatActor {
 
     return gsap
       .timeline()
+      .call(() => this.reserveElementHeights(foldTargets))
       .to(foldTargets, {
         autoAlpha: 0,
-        height: 0,
-        marginTop: 0,
         y: THINKING_STEP_FOLD.detailOffsetY,
         overflow: "hidden",
         transformOrigin: "left top",
@@ -3818,20 +3818,49 @@ export class ChatActor {
         onComplete: () => {
           item.dataset.stepState = "complete";
           gsap.set(foldTargets, {
-            height: 0,
-            marginTop: 0,
             overflow: "hidden",
             y: 0,
           });
-          this.animateMessageScrollIntoView(this.getMessageScrollTargetElement(item));
         },
         onReverseComplete: () => {
           item.dataset.stepState = "current";
-          gsap.set(foldTargets, {
-            clearProps: "height,marginTop,overflow,opacity,visibility,y,transform",
-          });
+          this.clearElementHeightReservations(foldTargets);
         },
       });
+  }
+
+  private reserveElementHeights(elements: HTMLElement[]): void {
+    elements.forEach((element) => {
+      const cachedHeight = Number.parseFloat(element.dataset.reservedLayoutHeight ?? "");
+      const measuredHeight = Math.max(
+        element.getBoundingClientRect().height,
+        element.offsetHeight,
+        Number.isFinite(cachedHeight) ? cachedHeight : 0,
+      );
+
+      if (measuredHeight <= 0) return;
+
+      const height = Math.ceil(measuredHeight * 100) / 100;
+
+      element.dataset.reservedLayoutHeight = String(height);
+
+      gsap.set(element, {
+        height,
+        minHeight: height,
+        overflow: "hidden",
+      });
+    });
+  }
+
+  private clearElementHeightReservations(elements: HTMLElement[]): void {
+    if (!elements.length) return;
+
+    elements.forEach((element) => {
+      delete element.dataset.reservedLayoutHeight;
+    });
+    gsap.set(elements, {
+      clearProps: THINKING_LAYOUT_RESERVATION_CLEAR_PROPS,
+    });
   }
 
   private getMessageScrollTargetElement(element: HTMLElement): HTMLElement {
@@ -3850,9 +3879,8 @@ export class ChatActor {
     items.forEach((item) => {
       item.dataset.stepState = "pending";
     });
-    gsap.set(foldTargets, {
-      clearProps: "height,marginTop,overflow,opacity,visibility,y,transform",
-    });
+    this.clearElementHeightReservations(foldTargets);
+    this.clearElementHeightReservations([thinking.steps]);
     gsap.set(thinking.header, { autoAlpha: 0, y: 5 });
     gsap.set(thinking.traveler, { autoAlpha: 0, x: 0, y: 0 });
     gsap.set(thinking.steps, { display: "grid", autoAlpha: 1, y: 0 });
@@ -4022,38 +4050,27 @@ export class ChatActor {
       .call(() => {
         this.markThinkingStepsComplete(items);
         this.setLocalLogoMode(thinking.traveler, "done");
-        gsap.set(thinking.steps, {
-          height: thinking.steps.offsetHeight,
-          overflow: "hidden",
-        });
+        this.reserveElementHeights([thinking.steps]);
       })
       .add(this.moveThinkingLogoTo(thinking, thinking.headerGlyph, THINKING_LOGO_TRAVEL.returnDuration), 0)
       .add(this.moveThinkingGuideToStart(thinking, THINKING_LOGO_TRAVEL.returnDuration), 0)
       .to(thinking.steps, {
         autoAlpha: 0,
         y: THINKING_BLOCK_COLLAPSE.y,
-        height: 0,
         duration: THINKING_BLOCK_COLLAPSE.duration,
         ease: THINKING_BLOCK_COLLAPSE.ease,
         onComplete: () => {
           this.setThinkingHeaderCollapsed(thinking);
           gsap.set(thinking.steps, {
-            height: 0,
             overflow: "hidden",
             y: THINKING_BLOCK_COLLAPSE.y,
           });
-          this.animateMessageScrollIntoView(thinking.message);
         },
         onReverseComplete: () => {
           this.setThinkingHeaderActive(thinking);
           this.setLocalLogoMode(thinking.traveler, "thinking");
-          gsap.set(thinking.steps, {
-            display: "grid",
-            autoAlpha: 1,
-            height: "",
-            overflow: "",
-            y: 0,
-          });
+          gsap.set(thinking.steps, { display: "grid", autoAlpha: 1 });
+          this.clearElementHeightReservations([thinking.steps]);
         },
       }, 0);
   }
@@ -4104,39 +4121,28 @@ export class ChatActor {
         this.setLocalLogoMode(thinking.traveler, "done");
         this.setThinkingTitle(thinking, title);
         gsap.set(thinking.elapsed, { display: "none", autoAlpha: 0 });
-        gsap.set(thinking.steps, {
-          height: thinking.steps.offsetHeight,
-          overflow: "hidden",
-        });
+        this.reserveElementHeights([thinking.steps]);
       })
       .add(this.moveThinkingLogoTo(thinking, thinking.headerGlyph, THINKING_LOGO_TRAVEL.returnDuration), 0)
       .add(this.moveThinkingGuideToStart(thinking, THINKING_LOGO_TRAVEL.returnDuration), 0)
       .to(thinking.steps, {
         autoAlpha: 0,
         y: THINKING_BLOCK_COLLAPSE.y,
-        height: 0,
         duration: THINKING_BLOCK_COLLAPSE.duration,
         ease: THINKING_BLOCK_COLLAPSE.ease,
         onComplete: () => {
           delete thinking.title.dataset.thinkingActive;
           delete thinking.title.dataset.streaming;
           gsap.set(thinking.steps, {
-            height: 0,
             overflow: "hidden",
             y: THINKING_BLOCK_COLLAPSE.y,
           });
-          this.animateMessageScrollIntoView(thinking.message);
         },
         onReverseComplete: () => {
           this.setThinkingHeaderActive(thinking);
           this.setLocalLogoMode(thinking.traveler, "thinking");
-          gsap.set(thinking.steps, {
-            display: "grid",
-            autoAlpha: 1,
-            height: "",
-            overflow: "",
-            y: 0,
-          });
+          gsap.set(thinking.steps, { display: "grid", autoAlpha: 1 });
+          this.clearElementHeightReservations([thinking.steps]);
         },
       }, 0);
   }
