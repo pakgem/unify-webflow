@@ -1499,6 +1499,7 @@ export const defaultStories: StoryDefinition[] = [
         { kind: "custom", build: () => dropArea.activate(), at: "<+=0.02" },
         { kind: "custom", build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat }) },
         { kind: "custom", build: () => dropArea.complete() },
+        { kind: "custom", build: () => cursorFile.releaseAtDrop(), at: "<" },
         { kind: "custom", build: () => cursorFile.landAsUploadedFiles(AGENT_CONTEXT_FILES), at: "<" },
         { kind: "status", text: "Learning Pylon's business", at: "<" },
         {
@@ -1716,6 +1717,7 @@ export const defaultStories: StoryDefinition[] = [
         { kind: "custom", build: () => dropArea.activate(), at: "<+=0.02" },
         { kind: "custom", build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat }) },
         { kind: "custom", build: () => dropArea.complete() },
+        { kind: "custom", build: () => cursorFile.releaseAtDrop(), at: "<" },
         { kind: "custom", build: () => cursorFile.landAsUploadedFile("may_webinar_attendees.csv", "54 records"), at: "<" },
         { kind: "dataTable", config: CSV_RAW_TABLE, at: "+=0.08" },
         { kind: "status", text: "Cleaning CSV", at: "<" },

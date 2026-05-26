@@ -85,6 +85,7 @@ export class CursorActor {
   private mode: CursorMode = "default";
   private modeOverride: CursorMode | null = null;
   private payloadDragActive = false;
+  private payloadReleaseActive = false;
   private modeTargetsDirty = true;
   private pointerTargets: Element[] = [];
   private textTargets: Element[] = [];
@@ -189,6 +190,10 @@ export class CursorActor {
   }
 
   setMode(mode: CursorMode): void {
+    if (mode === "drag" && this.payloadReleaseActive && !this.payloadDragActive) {
+      return;
+    }
+
     if (this.mode === mode && this.el.dataset.cursorMode === mode) {
       this.updateModeWatch();
       return;
@@ -435,9 +440,12 @@ export class CursorActor {
   }
 
   beginDragPayload(): void {
+    if (this.payloadReleaseActive) return;
+
     const wasActive = this.payloadDragActive;
 
     this.payloadDragActive = true;
+    this.payloadReleaseActive = false;
     this.stopIdleFloat();
     this.modeOverride = "drag";
     this.setMode("drag");
@@ -455,6 +463,7 @@ export class CursorActor {
     return gsap.timeline()
       .call(() => {
         this.payloadDragActive = false;
+        this.payloadReleaseActive = true;
         this.stopIdleFloat();
         this.modeOverride = "release";
         this.setMode("release");
@@ -472,6 +481,7 @@ export class CursorActor {
         overwrite: "auto",
       })
       .call(() => {
+        this.payloadReleaseActive = false;
         this.modeOverride = null;
         this.syncModeToPoint(this.currentPosition);
         this.queueIdleFloat();
@@ -504,11 +514,13 @@ export class CursorActor {
         this.options.reducedMotion ? 0 : 0.03,
       )
       .call(() => {
+        this.payloadReleaseActive = false;
         this.modeOverride = "drag";
         this.setMode("drag");
       })
       .to({}, { duration: options.releaseHold ?? 0 })
       .call(() => {
+        this.payloadReleaseActive = true;
         this.modeOverride = "release";
         this.setMode("release");
       })
@@ -523,6 +535,7 @@ export class CursorActor {
         ease: "back.out(2.5)",
       })
       .call(() => {
+        this.payloadReleaseActive = false;
         this.modeOverride = null;
         this.syncModeToPoint(this.currentPosition);
         this.queueIdleFloat();
@@ -561,6 +574,7 @@ export class CursorActor {
 
   private clearPayloadDragState(): void {
     this.payloadDragActive = false;
+    this.payloadReleaseActive = false;
   }
 
   private pathTween(

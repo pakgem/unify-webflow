@@ -53,6 +53,7 @@ type PreparedCursorFile = {
   el: HTMLElement;
   startFollow: () => gsap.core.Timeline;
   stopFollow: () => gsap.core.Timeline;
+  releaseAtDrop: () => gsap.core.Timeline;
   landAsUploadedFile: (fileName: string, detail?: string) => gsap.core.Timeline;
   landAsUploadedFiles: (files: UploadedFileConfig[]) => gsap.core.Timeline;
 };
@@ -2632,17 +2633,20 @@ export class ChatActor {
             duration: motionDuration(0.18),
             ease: "power2.in",
           }),
+      releaseAtDrop: () =>
+        gsap
+          .timeline()
+          .call(stopFollowing)
+          .add(cursor.releaseDragPayload(), 0),
       landAsUploadedFile: (landedFileName, detail = "CSV uploaded") =>
         gsap
           .timeline()
           .call(stopFollowing)
-          .add(cursor.releaseDragPayload(), 0)
           .add(this.uploadedFileMessageFromCursorFile(file, landedFileName, detail), 0),
       landAsUploadedFiles: (files) =>
         gsap
           .timeline()
           .call(stopFollowing)
-          .add(cursor.releaseDragPayload(), 0)
           .add(this.uploadedFilesMessageFromCursorFile(file, files), 0),
     };
   }

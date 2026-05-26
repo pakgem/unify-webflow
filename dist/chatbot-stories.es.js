@@ -3787,8 +3787,9 @@ class Jl {
         duration: S(0.18),
         ease: "power2.in"
       }),
-      landAsUploadedFile: (c, d = "CSV uploaded") => f.timeline().call(l).add(t.releaseDragPayload(), 0).add(this.uploadedFileMessageFromCursorFile(n, c, d), 0),
-      landAsUploadedFiles: (c) => f.timeline().call(l).add(t.releaseDragPayload(), 0).add(this.uploadedFilesMessageFromCursorFile(n, c), 0)
+      releaseAtDrop: () => f.timeline().call(l).add(t.releaseDragPayload(), 0),
+      landAsUploadedFile: (c, d = "CSV uploaded") => f.timeline().call(l).add(this.uploadedFileMessageFromCursorFile(n, c, d), 0),
+      landAsUploadedFiles: (c) => f.timeline().call(l).add(this.uploadedFilesMessageFromCursorFile(n, c), 0)
     };
   }
   uploadedFileMessage(e, t = "CSV uploaded") {
@@ -6264,6 +6265,7 @@ class oc {
   mode = "default";
   modeOverride = null;
   payloadDragActive = !1;
+  payloadReleaseActive = !1;
   modeTargetsDirty = !0;
   pointerTargets = [];
   textTargets = [];
@@ -6316,11 +6318,13 @@ class oc {
     this.currentPosition = { ...e }, this.plannedPosition = { ...e }, this.renderPosition(e);
   }
   setMode(e) {
-    if (this.mode === e && this.el.dataset.cursorMode === e) {
-      this.updateModeWatch();
-      return;
+    if (!(e === "drag" && this.payloadReleaseActive && !this.payloadDragActive)) {
+      if (this.mode === e && this.el.dataset.cursorMode === e) {
+        this.updateModeWatch();
+        return;
+      }
+      this.mode = e, this.el.dataset.cursorMode = e, this.updateModeWatch();
     }
-    this.mode = e, this.el.dataset.cursorMode = e, this.updateModeWatch();
   }
   moveTo(e, t = {}) {
     const a = t.label ?? `move-${this.moveIndex}`, i = t.mode ?? "default", n = `${this.storyId}:${a}:${this.resolver.getBreakpoint()}`, r = this.resolver.resolve(e, n), s = { ...this.plannedPosition }, l = t.ease ?? "power2.inOut", c = ca(s, r, {
@@ -6441,8 +6445,9 @@ class oc {
     }), t;
   }
   beginDragPayload() {
+    if (this.payloadReleaseActive) return;
     const e = this.payloadDragActive;
-    this.payloadDragActive = !0, this.stopIdleFloat(), this.modeOverride = "drag", this.setMode("drag"), !e && f.to(this.el, {
+    this.payloadDragActive = !0, this.payloadReleaseActive = !1, this.stopIdleFloat(), this.modeOverride = "drag", this.setMode("drag"), !e && f.to(this.el, {
       scale: 0.9,
       duration: this.options.reducedMotion ? 0.04 : 0.16,
       ease: "power2.out",
@@ -6451,7 +6456,7 @@ class oc {
   }
   releaseDragPayload() {
     return f.timeline().call(() => {
-      this.payloadDragActive = !1, this.stopIdleFloat(), this.modeOverride = "release", this.setMode("release");
+      this.payloadDragActive = !1, this.payloadReleaseActive = !0, this.stopIdleFloat(), this.modeOverride = "release", this.setMode("release");
     }).to(this.el, {
       scale: 1.04,
       duration: this.options.reducedMotion ? 0.03 : 0.1,
@@ -6463,7 +6468,7 @@ class oc {
       ease: "back.out(2.5)",
       overwrite: "auto"
     }).call(() => {
-      this.modeOverride = null, this.syncModeToPoint(this.currentPosition), this.queueIdleFloat();
+      this.payloadReleaseActive = !1, this.modeOverride = null, this.syncModeToPoint(this.currentPosition), this.queueIdleFloat();
     });
   }
   dragTo(e, t = {}) {
@@ -6486,9 +6491,9 @@ class oc {
       }),
       this.options.reducedMotion ? 0 : 0.03
     ).call(() => {
-      this.modeOverride = "drag", this.setMode("drag");
+      this.payloadReleaseActive = !1, this.modeOverride = "drag", this.setMode("drag");
     }).to({}, { duration: t.releaseHold ?? 0 }).call(() => {
-      this.modeOverride = "release", this.setMode("release");
+      this.payloadReleaseActive = !0, this.modeOverride = "release", this.setMode("release");
     }).to(this.el, {
       scale: 1.04,
       duration: this.options.reducedMotion ? 0.03 : 0.1,
@@ -6498,7 +6503,7 @@ class oc {
       duration: this.options.reducedMotion ? 0.05 : 0.18,
       ease: "back.out(2.5)"
     }).call(() => {
-      this.modeOverride = null, this.syncModeToPoint(this.currentPosition), this.queueIdleFloat();
+      this.payloadReleaseActive = !1, this.modeOverride = null, this.syncModeToPoint(this.currentPosition), this.queueIdleFloat();
     }), a;
   }
   destroy() {
@@ -6511,7 +6516,7 @@ class oc {
     this.clearPayloadDragState(), this.modeOverride = null, f.killTweensOf(this.el, "scale"), f.set(this.el, { scale: 1 }), this.syncModeToPoint(this.currentPosition);
   }
   clearPayloadDragState() {
-    this.payloadDragActive = !1;
+    this.payloadDragActive = !1, this.payloadReleaseActive = !1;
   }
   pathTween(e, t, a, i, n, r = "power2.inOut") {
     const s = { t: 0 };
@@ -7615,6 +7620,7 @@ function Yc(o, e) {
       { kind: "custom", build: () => r.activate(), at: "<+=0.02" },
       { kind: "custom", build: () => o.timeline().to({}, { duration: E.beat }) },
       { kind: "custom", build: () => r.complete() },
+      { kind: "custom", build: () => l.releaseAtDrop(), at: "<" },
       { kind: "custom", build: () => l.landAsUploadedFiles(n), at: "<" }
     );
   }
@@ -7765,6 +7771,7 @@ function jc(o, e) {
     { kind: "custom", build: () => u.activate(), at: "<+=0.02" },
     { kind: "custom", build: () => o.timeline().to({}, { duration: E.beat }) },
     { kind: "custom", build: () => u.complete() },
+    { kind: "custom", build: () => h.releaseAtDrop(), at: "<" },
     { kind: "custom", build: () => h.landAsUploadedFile(c, d), at: "<" },
     ...s ? [{ kind: "dataTable", config: ea(s.component, "raw-webinar-attendees"), at: "+=0.08" }] : [],
     { kind: "status", text: "Cleaning CSV", at: "<" },
@@ -9645,6 +9652,7 @@ const Rd = {
         { kind: "custom", build: () => e.activate(), at: "<+=0.02" },
         { kind: "custom", build: () => o.timeline().to({}, { duration: E.beat }) },
         { kind: "custom", build: () => e.complete() },
+        { kind: "custom", build: () => t.releaseAtDrop(), at: "<" },
         { kind: "custom", build: () => t.landAsUploadedFiles(Wn), at: "<" },
         { kind: "status", text: "Learning Pylon's business", at: "<" },
         {
@@ -9852,6 +9860,7 @@ const Rd = {
         { kind: "custom", build: () => e.activate(), at: "<+=0.02" },
         { kind: "custom", build: () => o.timeline().to({}, { duration: E.beat }) },
         { kind: "custom", build: () => e.complete() },
+        { kind: "custom", build: () => t.releaseAtDrop(), at: "<" },
         { kind: "custom", build: () => t.landAsUploadedFile("may_webinar_attendees.csv", "54 records"), at: "<" },
         { kind: "dataTable", config: qd, at: "+=0.08" },
         { kind: "status", text: "Cleaning CSV", at: "<" },

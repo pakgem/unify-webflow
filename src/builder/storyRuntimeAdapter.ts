@@ -255,6 +255,7 @@ function buildContextLearningStory(ctx: StoryContext, story: BuilderStory): gsap
       { kind: "custom" as const, build: () => dropArea.activate(), at: "<+=0.02" },
       { kind: "custom" as const, build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat }) },
       { kind: "custom" as const, build: () => dropArea.complete() },
+      { kind: "custom" as const, build: () => cursorFile.releaseAtDrop(), at: "<" },
       { kind: "custom" as const, build: () => cursorFile.landAsUploadedFiles(files), at: "<" },
     );
   }
@@ -452,6 +453,7 @@ function buildCsvCleanupStory(ctx: StoryContext, story: BuilderStory): gsap.core
     { kind: "custom", build: () => dropArea.activate(), at: "<+=0.02" },
     { kind: "custom", build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat }) },
     { kind: "custom", build: () => dropArea.complete() },
+    { kind: "custom", build: () => cursorFile.releaseAtDrop(), at: "<" },
     { kind: "custom", build: () => cursorFile.landAsUploadedFile(fileName, fileDetail), at: "<" },
     ...(rawTableStep ? [{ kind: "dataTable" as const, config: toDataTable(rawTableStep.component, "raw-webinar-attendees"), at: "+=0.08" }] : []),
     { kind: "status", text: "Cleaning CSV", at: "<" },
