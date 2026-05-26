@@ -93,12 +93,13 @@ body {
 
   /* Layout tokens */
   --wa-section-padding: 126px 32px 140px;
-  --wa-content-max: 1400px;
+  --wa-content-max: 1230px;
   --wa-copy-max: 1100px;
-  --wa-left-column: minmax(420px, 570px);
+  --wa-left-column: minmax(420px, 510px);
   --wa-right-column: minmax(560px, 660px);
-  --wa-column-gap: 116px;
+  --wa-column-gap: 60px;
   --wa-row-gap: 82px;
+  --wa-stage-y-offset: -120px;
   --wa-stage-width: 660px;
   --wa-stage-min-height: 650px;
   --wa-media-width: 418px;
@@ -434,6 +435,7 @@ body {
   grid-row: 2;
   width: var(--wa-stage-width);
   min-height: var(--wa-stage-min-height);
+  top: var(--wa-stage-y-offset);
 }
 
 .wa-stage[data-window-content-scale] {
@@ -444,7 +446,7 @@ body {
 .wa-stage__media {
   position: absolute;
   top: -38px;
-  right: -128px;
+  right: -44px;
   width: var(--wa-media-width);
   height: var(--wa-media-height);
   border-radius: 3px;
@@ -460,7 +462,7 @@ body {
   position: relative;
   z-index: 2;
   width: var(--wa-window-width);
-  margin: 108px 0 0 155px;
+  margin: 108px 0 0 70px;
   border-radius: var(--wa-radius-window);
   box-shadow: var(--wa-window-shadow);
   transform-origin: top left;
@@ -5316,6 +5318,7 @@ body {
     --wa-window-width: min(82vw, 912px);
     --wa-window-height: min(820px, 74vw, var(--wa-window-max-height));
     --wa-chat-x-padding: 24px;
+    --wa-stage-y-offset: 0px;
     padding: 88px clamp(56px, 6vw, 80px) 118px;
   }
 
