@@ -2622,6 +2622,8 @@ body {
   width: 100%;
   max-width: 100%;
   min-width: 0;
+  margin-left: -1px;
+  padding-left: 1px;
   overflow: hidden;
   -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 44px), transparent);
   mask-image: linear-gradient(to right, #000 calc(100% - 44px), transparent);
