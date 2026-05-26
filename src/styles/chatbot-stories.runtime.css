@@ -4918,7 +4918,7 @@ body {
   overflow: hidden;
   border: 1px solid var(--wa-color-input-line);
   border-radius: 9px;
-  background: var(--wa-panel);
+  background: var(--wa-color-data-table-surface);
   box-shadow:
     0 14px 28px rgba(5, 5, 4, 0.1),
     0 4px 10px rgba(5, 5, 4, 0.06),
