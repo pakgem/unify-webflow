@@ -199,9 +199,11 @@ export function mailboxConnectionSteps(config: MailboxConnectionConfig): StorySt
     },
     ...elementPerusalSteps([
       {
-        selector: `[data-mailbox-connection="${escapeAttributeValue(config.id)}"]`,
+        selector:
+          `[data-mailbox-connection="${escapeAttributeValue(config.id)}"] ` +
+          ".wa-mailbox-connection__copy",
         label: `mailbox-cta-skim-${config.id}`,
-        scanDuration: 0.68,
+        scanDuration: 0.5,
         at: "+=0.16",
       },
     ]),
@@ -210,13 +212,13 @@ export function mailboxConnectionSteps(config: MailboxConnectionConfig): StorySt
       target: buttonTarget,
       options: {
         mode: "pointer",
-        intent: "hover",
-        speed: "normal",
-        curve: 0.18,
-        ease: "sine.inOut",
-        durationScale: 1.08,
+        intent: "click",
+        speed: "quick",
+        curve: 0.08,
+        ease: "power1.inOut",
+        durationScale: 0.82,
         overshoot: false,
-        settle: true,
+        settle: false,
         label: `mailbox-connect-${config.id}`,
       },
       at: "+=0.08",

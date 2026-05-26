@@ -7046,9 +7046,9 @@ function lo(o) {
     },
     ...uo([
       {
-        selector: `[data-mailbox-connection="${ge(o.id)}"]`,
+        selector: `[data-mailbox-connection="${ge(o.id)}"] .wa-mailbox-connection__copy`,
         label: `mailbox-cta-skim-${o.id}`,
-        scanDuration: 0.68,
+        scanDuration: 0.5,
         at: "+=0.16"
       }
     ]),
@@ -7057,13 +7057,13 @@ function lo(o) {
       target: e,
       options: {
         mode: "pointer",
-        intent: "hover",
-        speed: "normal",
-        curve: 0.18,
-        ease: "sine.inOut",
-        durationScale: 1.08,
+        intent: "click",
+        speed: "quick",
+        curve: 0.08,
+        ease: "power1.inOut",
+        durationScale: 0.82,
         overshoot: !1,
-        settle: !0,
+        settle: !1,
         label: `mailbox-connect-${o.id}`
       },
       at: "+=0.08"
