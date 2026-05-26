@@ -270,9 +270,6 @@ const MESSAGE_KIND_CLASSES = [
 
 const MOTION_TIME_SCALE = 1.28;
 const motionDuration = (seconds: number): number => Number((seconds * MOTION_TIME_SCALE).toFixed(3));
-const WINDOW_SCENE_FIT = {
-  maxViewportHeightRatio: 0.9,
-};
 const SEQUENCE_WAIT_DAY_DEFAULTS = [3, 3, 3];
 const SEQUENCE_PHONE_OVERRIDES: Record<string, string> = {
   "David Kim": "+1 (917) 234-3381",
@@ -3183,8 +3180,7 @@ export class ChatActor {
   private updateThreadContentFitState(): void {
     this.updateMarketingDataGridScales();
 
-    const contentWidth = this.getVisibleThreadContentWidth();
-    this.applyWindowSceneScale(contentWidth);
+    this.applyWindowSceneScale();
 
     const contentHeight = this.getVisibleThreadContentHeight();
     const availableHeight = Math.max(this.thread.clientHeight, this.chatBody.clientHeight);
@@ -3208,44 +3204,23 @@ export class ChatActor {
     this.clearWindowSceneScaleState();
   }
 
-  private getWindowSceneScale(
-    contentWidth: number,
-    availableWidth: number,
-    contentHeight: number,
-    availableHeight: number,
-  ): number {
-    const widthScale = contentWidth > availableWidth + 0.5 ? availableWidth / contentWidth : 1;
-    const heightScale = contentHeight > availableHeight + 0.5 ? availableHeight / contentHeight : 1;
-
-    return Math.min(1, widthScale, heightScale);
-  }
-
-  private applyWindowSceneScale(contentWidth: number): void {
+  private applyWindowSceneScale(): void {
     const baseSize = this.getWindowSceneBaseSize();
     const availableWidth = this.getWindowSceneAvailableWidth();
-    const availableHeight = this.getWindowSceneAvailableHeight();
-    const desiredWidth = Math.ceil(Math.max(
-      baseSize.width,
-      this.getWindowSceneBaseWidth(),
-      contentWidth,
-    ));
-    const unscaledHeight = Math.ceil(baseSize.height * (desiredWidth / Math.max(1, baseSize.width)));
-    const scale = this.getWindowSceneScale(desiredWidth, availableWidth, unscaledHeight, availableHeight);
-    const nextScale = Math.min(1, Math.max(0.01, scale));
-    const shouldResize = desiredWidth > baseSize.width + 0.5;
+    const minViewportWidth = Math.max(baseSize.width, this.getWindowSceneBaseWidth());
 
-    if (nextScale >= 0.999 && !shouldResize) {
+    if (availableWidth >= minViewportWidth - 0.5) {
       this.clearWindowSceneScaleState();
       return;
     }
 
-    const roundedScale = nextScale >= 0.999 ? 1 : Number(nextScale.toFixed(4));
+    const roundedScale = Number(Math.max(0.01, availableWidth / minViewportWidth).toFixed(4));
     const nextScaleText = String(roundedScale);
-    const sceneWidth = `${desiredWidth}px`;
-    const sceneHeight = `${Math.ceil(unscaledHeight * roundedScale)}px`;
-    const sceneUnscaledHeight = `${unscaledHeight}px`;
+    const sceneWidth = `${Math.ceil(minViewportWidth)}px`;
+    const sceneHeight = `${Math.ceil(baseSize.height * roundedScale)}px`;
+    const sceneUnscaledHeight = `${Math.ceil(baseSize.height)}px`;
 
-    this.stage.dataset.windowContentScale = roundedScale < 1 ? "scaled" : "sized";
+    this.stage.dataset.windowContentScale = "scaled";
 
     if (this.stage.style.getPropertyValue("--wa-window-scene-scale") !== nextScaleText) {
       this.stage.style.setProperty("--wa-window-scene-scale", nextScaleText);
@@ -3286,12 +3261,6 @@ export class ChatActor {
     if (parentWidth > 0) return parentWidth;
 
     return this.root.clientWidth;
-  }
-
-  private getWindowSceneAvailableHeight(): number {
-    const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
-
-    return Math.max(1, viewportHeight * WINDOW_SCENE_FIT.maxViewportHeightRatio);
   }
 
   private getWindowSceneBaseWidth(): number {
@@ -3348,45 +3317,6 @@ export class ChatActor {
     const bottom = Math.max(...visibleChildren.map((child) => child.offsetTop + child.offsetHeight));
 
     return Math.max(0, bottom - top);
-  }
-
-  private getVisibleThreadContentWidth(): number {
-    const visibleChildren = Array.from(this.thread.children).flatMap((child) => {
-      if (!(child instanceof HTMLElement) || !this.isMeasurableThreadChild(child)) return [];
-
-      return this.getThreadWidthMeasureTargets(child);
-    }).filter(
-      (child): child is HTMLElement => child instanceof HTMLElement && this.isMeasurableThreadChild(child),
-    );
-
-    if (!visibleChildren.length) return 0;
-
-    const widths = visibleChildren.map((child) => {
-      const style = window.getComputedStyle(child);
-      const marginLeft = Number.parseFloat(style.marginLeft) || 0;
-      const marginRight = Number.parseFloat(style.marginRight) || 0;
-      const width = Math.max(child.offsetWidth, this.getDeclaredThreadContentFitWidth(child));
-
-      return width + marginLeft + marginRight;
-    });
-
-    return Math.max(0, ...widths);
-  }
-
-  private getThreadWidthMeasureTargets(child: HTMLElement): HTMLElement[] {
-    const body = child.querySelector<HTMLElement>(":scope > .wa-message__body");
-    const bodyChildren = body
-      ? Array.from(body.children).filter((node): node is HTMLElement => node instanceof HTMLElement)
-      : [];
-
-    return bodyChildren.length ? bodyChildren : [child];
-  }
-
-  private getDeclaredThreadContentFitWidth(element: HTMLElement): number {
-    const value = window.getComputedStyle(element).getPropertyValue("--wa-story-fit-width").trim();
-    const width = Number.parseFloat(value);
-
-    return Number.isFinite(width) && width > 0 ? width : 0;
   }
 
   private isMeasurableThreadChild(child: HTMLElement): boolean {
