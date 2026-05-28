@@ -617,7 +617,7 @@ export class StoryController implements ChatbotStoriesInstance {
 
     body.append(count, title);
 
-    if (story.navDescription) {
+    if (story.navDescription || story.summary) {
       const description = document.createElement("span");
       description.className = "wa-story-tab__description";
       this.appendStoryDescriptionContent(description, story);
@@ -629,7 +629,7 @@ export class StoryController implements ChatbotStoriesInstance {
   }
 
   private appendStoryDescriptionContent(description: HTMLElement, story: StoryDefinition): void {
-    const text = story.navDescription ?? "";
+    const text = story.navDescription ?? story.summary ?? "";
     const link = story.navDescriptionLink;
     const linkIndex = link ? text.indexOf(link.text) : -1;
 
@@ -1059,6 +1059,7 @@ function didStoryTabsChange(previous: StoryDefinition[], next: StoryDefinition[]
       prior.id !== story.id ||
       prior.label !== story.label ||
       prior.navLabel !== story.navLabel ||
+      prior.summary !== story.summary ||
       prior.navDescription !== story.navDescription ||
       !areStoryDescriptionLinksEqual(prior.navDescriptionLink, story.navDescriptionLink)
     );

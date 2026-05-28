@@ -11750,14 +11750,14 @@ class oh {
     const l = document.createElement("span");
     l.className = "wa-story-tab__count", l.textContent = `${t + 1} / ${this.stories.length}`;
     const d = document.createElement("span");
-    if (d.className = "wa-story-tab__title", d.textContent = e.navLabel ?? e.label, c.append(l, d), e.navDescription) {
+    if (d.className = "wa-story-tab__title", d.textContent = e.navLabel ?? e.label, c.append(l, d), e.navDescription || e.summary) {
       const u = document.createElement("span");
       u.className = "wa-story-tab__description", this.appendStoryDescriptionContent(u, e), c.append(u);
     }
     return a.append(o, c), a;
   }
   appendStoryDescriptionContent(e, t) {
-    const a = t.navDescription ?? "", i = t.navDescriptionLink, n = i ? a.indexOf(i.text) : -1;
+    const a = t.navDescription ?? t.summary ?? "", i = t.navDescriptionLink, n = i ? a.indexOf(i.text) : -1;
     if (!i || n < 0) {
       e.textContent = a;
       return;
@@ -11957,7 +11957,7 @@ function ki(r) {
 function sh(r, e) {
   return r.length !== e.length ? !0 : e.some((t, a) => {
     const i = r[a];
-    return !i || i.id !== t.id || i.label !== t.label || i.navLabel !== t.navLabel || i.navDescription !== t.navDescription || !lh(i.navDescriptionLink, t.navDescriptionLink);
+    return !i || i.id !== t.id || i.label !== t.label || i.navLabel !== t.navLabel || i.summary !== t.summary || i.navDescription !== t.navDescription || !lh(i.navDescriptionLink, t.navDescriptionLink);
   });
 }
 function lh(r, e) {
