@@ -1,5 +1,5 @@
 import { gsap } from "gsap";
-import type { ChatActor, DataTablePageRestore } from "../actors/ChatActor";
+import { THINKING_INTERACTION_PAUSE_EVENT, type ChatActor, type DataTablePageRestore } from "../actors/ChatActor";
 import type { CursorActor } from "../actors/CursorActor";
 import type { AssetUrlResolver } from "./assetUrls";
 import { preloadStoriesAround } from "./assetPreloader";
@@ -30,6 +30,7 @@ type StoryProgressScrubState = {
 type StorySwitchOptions = {
   animateExit?: boolean;
 };
+type ThemePreference = "light" | "dark" | "system";
 
 const CHAT_HISTORY_SCROLL = {
   minPixelDelta: 0.5,
@@ -37,7 +38,16 @@ const CHAT_HISTORY_SCROLL = {
 const SCRUB_SEEK = {
   resumeDelay: 0.08,
 };
+const RESTORE_PAGE_CURSOR_MOVE = {
+  duration: 0.52,
+  curve: 0.1,
+  ease: "sine.inOut",
+  overshoot: false,
+  settle: false,
+} as const;
 const ENABLE_PAUSED_CURSOR_MIMIC = true;
+const THEME_STORAGE_KEY = "chatbotStoriesTheme";
+const THEME_PREFERENCES = new Set<ThemePreference>(["light", "dark", "system"]);
 
 export class StoryController implements ChatbotStoriesInstance {
   private activeIndex = 0;
@@ -55,10 +65,14 @@ export class StoryController implements ChatbotStoriesInstance {
   private storyProgress: number[];
   private historyParkTimeline: gsap.core.Timeline | null = null;
   private pausedCursorMimic: PausedCursorMimic | null = null;
-  private storyTabButtons: HTMLButtonElement[] = [];
+  private storyTabButtons: HTMLElement[] = [];
   private scrubber: HTMLInputElement | null = null;
   private playButton: HTMLButtonElement | null = null;
   private resumeButton: HTMLButtonElement | null = null;
+  private themeButton: HTMLButtonElement | null = null;
+  private themeLabel: HTMLElement | null = null;
+  private themePreference: ThemePreference = "system";
+  private systemThemeQuery: MediaQueryList | null = null;
   private playing = false;
   private historyPaused = false;
   private storyTabListeners: Array<() => void> = [];
@@ -92,6 +106,7 @@ export class StoryController implements ChatbotStoriesInstance {
     this.seekTween?.kill();
     this.seekTween = null;
     this.setHistoryPaused(false);
+    this.chat.collapsePausedThinkingInteractions();
     this.chat.scrollToLive();
     this.playing = true;
     this.updatePlayButton();
@@ -148,12 +163,13 @@ export class StoryController implements ChatbotStoriesInstance {
             mode: "pointer",
             intent: "click",
             speed: "quick",
+            ...RESTORE_PAGE_CURSOR_MOVE,
             label: `restore-${restore.tableId}-page-${restore.expectedPage}`,
           },
         ),
       )
-      .add(this.cursor.click(), "-=0.02")
-      .add(this.chat.dataTablePage(restore.tableId, restore.expectedPage, { updateExpected: false }), "-=0.03");
+      .add(this.cursor.click(), "+=0.04")
+      .add(this.chat.dataTablePage(restore.tableId, restore.expectedPage, { updateExpected: false }), "-=0.02");
 
     return timeline;
   }
@@ -424,6 +440,8 @@ export class StoryController implements ChatbotStoriesInstance {
   private updatePlayButton(): void {
     const button = this.playButton;
 
+    this.root.dataset.storyPaused = String(!this.playing);
+
     if (!button) return;
 
     button.textContent = this.playing ? "Pause" : "Play";
@@ -436,6 +454,9 @@ export class StoryController implements ChatbotStoriesInstance {
     this.scrubber = this.root.querySelector<HTMLInputElement>("[data-story-scrubber]");
     this.playButton = this.root.querySelector<HTMLButtonElement>("[data-toggle-play]");
     this.resumeButton = this.root.querySelector<HTMLButtonElement>("[data-history-resume]");
+    this.themeButton = this.root.querySelector<HTMLButtonElement>("[data-theme-toggle]");
+    this.themeLabel = this.root.querySelector<HTMLElement>("[data-theme-toggle-label]");
+    this.attachThemeToggle();
 
     this.on("[data-prev-story]", "click", () => this.previous());
     this.on("[data-next-story]", "click", () => this.next());
@@ -447,6 +468,10 @@ export class StoryController implements ChatbotStoriesInstance {
       }
     });
     this.on("[data-history-resume]", "click", () => this.play());
+    this.onRoot(THINKING_INTERACTION_PAUSE_EVENT, (event) => {
+      event.preventDefault();
+      if (this.playing) this.pauseForChatHistory();
+    });
     this.on("[data-story-scrubber]", "input", (event) => {
       const input = event.currentTarget as HTMLInputElement;
       this.seekTo(Number(input.value) / 1000);
@@ -454,15 +479,102 @@ export class StoryController implements ChatbotStoriesInstance {
     this.attachChatHistoryScroll();
   }
 
-  private createStoryTab(story: StoryDefinition, index: number): HTMLButtonElement {
-    const button = document.createElement("button");
-    button.className = "wa-story-tab";
-    button.type = "button";
-    button.dataset.storyTab = story.id;
-    button.style.setProperty("--wa-tab-progress", "0");
-    button.setAttribute("aria-pressed", "false");
+  private attachThemeToggle(): void {
+    this.systemThemeQuery = window.matchMedia?.("(prefers-color-scheme: dark)") ?? null;
+    this.themePreference = this.getInitialThemePreference();
+    this.applyThemePreference(this.themePreference);
+
+    if (this.systemThemeQuery) {
+      const query = this.systemThemeQuery;
+      const handleSystemThemeChange = () => this.applyThemePreference(this.themePreference);
+
+      query.addEventListener("change", handleSystemThemeChange);
+      this.listeners.push(() => query.removeEventListener("change", handleSystemThemeChange));
+    }
+
+    this.on("[data-theme-toggle]", "click", () => {
+      const nextTheme: ThemePreference = this.getResolvedTheme() === "dark" ? "light" : "dark";
+
+      this.setThemePreference(nextTheme);
+    });
+  }
+
+  private getInitialThemePreference(): ThemePreference {
+    return this.readStoredThemePreference() ?? this.readRootThemePreference() ?? "system";
+  }
+
+  private readStoredThemePreference(): ThemePreference | null {
+    try {
+      const storedPreference = window.localStorage?.getItem(THEME_STORAGE_KEY);
+
+      return this.normalizeThemePreference(storedPreference);
+    } catch {
+      return null;
+    }
+  }
+
+  private readRootThemePreference(): ThemePreference | null {
+    return this.normalizeThemePreference(this.root.dataset.theme);
+  }
+
+  private normalizeThemePreference(value: string | null | undefined): ThemePreference | null {
+    return THEME_PREFERENCES.has(value as ThemePreference) ? value as ThemePreference : null;
+  }
+
+  private setThemePreference(preference: ThemePreference): void {
+    this.themePreference = preference;
+    this.applyThemePreference(preference);
+
+    try {
+      window.localStorage?.setItem(THEME_STORAGE_KEY, preference);
+    } catch {
+      // Ignore storage failures; the current session theme still updates.
+    }
+  }
+
+  private applyThemePreference(preference: ThemePreference): void {
+    const resolvedTheme = this.resolveTheme(preference);
+
+    this.root.dataset.theme = preference;
+    this.root.dataset.resolvedTheme = resolvedTheme;
+    document.documentElement.style.setProperty("--wa-page-bg", resolvedTheme === "dark" ? "#10100d" : "#fffff9");
+    document.documentElement.style.colorScheme = resolvedTheme;
+    this.updateThemeToggle(resolvedTheme);
+  }
+
+  private resolveTheme(preference: ThemePreference): "light" | "dark" {
+    if (preference !== "system") return preference;
+
+    return this.systemThemeQuery?.matches ? "dark" : "light";
+  }
+
+  private getResolvedTheme(): "light" | "dark" {
+    return this.resolveTheme(this.themePreference);
+  }
+
+  private updateThemeToggle(resolvedTheme: "light" | "dark"): void {
+    const button = this.themeButton;
+    const dark = resolvedTheme === "dark";
+
+    if (this.themeLabel) this.themeLabel.textContent = dark ? "Dark" : "Light";
+    if (!button) return;
+
+    button.setAttribute("aria-pressed", String(dark));
+    button.setAttribute("aria-label", dark ? "Switch to light mode" : "Switch to dark mode");
+  }
+
+  private createStoryTab(story: StoryDefinition, index: number): HTMLElement {
+    const tab = document.createElement("div");
+    tab.className = "wa-story-tab";
+    tab.dataset.storyTab = story.id;
+    tab.style.setProperty("--wa-tab-progress", "0");
+    tab.setAttribute("role", "button");
+    tab.setAttribute("tabindex", "0");
+    tab.setAttribute("aria-pressed", "false");
     const handleClick = (event: MouseEvent) => {
       const target = event.target instanceof Element ? event.target : null;
+
+      if (target?.closest(".wa-story-tab__link")) return;
 
       if (target?.closest(".wa-story-tab__marker")) {
         event.preventDefault();
@@ -471,8 +583,19 @@ export class StoryController implements ChatbotStoriesInstance {
 
       this.goTo(index);
     };
-    button.addEventListener("click", handleClick);
-    this.storyTabListeners.push(() => button.removeEventListener("click", handleClick));
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const target = event.target instanceof Element ? event.target : null;
+
+      if (target?.closest(".wa-story-tab__link")) return;
+      if (event.key !== "Enter" && event.key !== " ") return;
+
+      event.preventDefault();
+      this.goTo(index);
+    };
+    tab.addEventListener("click", handleClick);
+    tab.addEventListener("keydown", handleKeyDown);
+    this.storyTabListeners.push(() => tab.removeEventListener("click", handleClick));
+    this.storyTabListeners.push(() => tab.removeEventListener("keydown", handleKeyDown));
 
     const marker = document.createElement("span");
     marker.className = "wa-story-tab__marker";
@@ -497,12 +620,37 @@ export class StoryController implements ChatbotStoriesInstance {
     if (story.navDescription) {
       const description = document.createElement("span");
       description.className = "wa-story-tab__description";
-      description.textContent = story.navDescription;
+      this.appendStoryDescriptionContent(description, story);
       body.append(description);
     }
 
-    button.append(marker, body);
-    return button;
+    tab.append(marker, body);
+    return tab;
+  }
+
+  private appendStoryDescriptionContent(description: HTMLElement, story: StoryDefinition): void {
+    const text = story.navDescription ?? "";
+    const link = story.navDescriptionLink;
+    const linkIndex = link ? text.indexOf(link.text) : -1;
+
+    if (!link || linkIndex < 0) {
+      description.textContent = text;
+      return;
+    }
+
+    const anchor = document.createElement("a");
+    anchor.className = "wa-story-tab__link";
+    anchor.href = link.href;
+    anchor.target = "_blank";
+    anchor.rel = "noopener noreferrer";
+    anchor.textContent = link.text;
+    anchor.setAttribute("aria-label", link.ariaLabel ?? link.text);
+
+    description.append(
+      document.createTextNode(text.slice(0, linkIndex)),
+      anchor,
+      document.createTextNode(text.slice(linkIndex + link.text.length)),
+    );
   }
 
   private renderStoryTabs(): void {
@@ -885,6 +1033,11 @@ export class StoryController implements ChatbotStoriesInstance {
     el.addEventListener(eventName, handler);
     this.listeners.push(() => el.removeEventListener(eventName, handler));
   }
+
+  private onRoot(eventName: string, handler: EventListener): void {
+    this.root.addEventListener(eventName, handler);
+    this.listeners.push(() => this.root.removeEventListener(eventName, handler));
+  }
 }
 
 function clamp(value: number, min: number, max: number): number {
@@ -906,7 +1059,17 @@ function didStoryTabsChange(previous: StoryDefinition[], next: StoryDefinition[]
       prior.id !== story.id ||
       prior.label !== story.label ||
       prior.navLabel !== story.navLabel ||
-      prior.navDescription !== story.navDescription
+      prior.navDescription !== story.navDescription ||
+      !areStoryDescriptionLinksEqual(prior.navDescriptionLink, story.navDescriptionLink)
     );
   });
+}
+
+function areStoryDescriptionLinksEqual(
+  previous: StoryDefinition["navDescriptionLink"],
+  next: StoryDefinition["navDescriptionLink"],
+): boolean {
+  return previous?.text === next?.text &&
+    previous?.href === next?.href &&
+    previous?.ariaLabel === next?.ariaLabel;
 }

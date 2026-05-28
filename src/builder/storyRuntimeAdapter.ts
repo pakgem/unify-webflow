@@ -1,5 +1,6 @@
 import type { gsap } from "gsap";
 import type {
+  CursorMoveOptions,
   DataSourceGridConfig,
   DataTableConfig,
   EnrichmentConfig,
@@ -24,6 +25,8 @@ import {
 import { getPreviewSequenceIndexes } from "../core/sequenceSelection";
 import {
   CHAT_INPUT_TARGETS,
+  CURSOR_CLICK_MOVE_BASE,
+  CURSOR_CLICK_MOVE_DURATIONS,
   EXIT_TARGETS,
   INPUT_ENTRY_LEAD_TIME,
   SIGNUP_EMAIL_TARGET,
@@ -51,6 +54,13 @@ import type {
   BuilderThinkingState,
   BuilderUploadedFilesComponent,
 } from "./draftTypes";
+import {
+  getRowsForPaginationRange,
+  inferPageSizeFromRanges,
+  normalizePageSize,
+  normalizePaginationRanges,
+  parsePaginationRange,
+} from "./pagination";
 
 type ComponentStep = BuilderStep & { component: BuilderComponent };
 
@@ -59,6 +69,49 @@ const CONTEXT_FILE_PICKUP_TARGET = {
   tablet: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 360, y: -58 }, humanOffset: false },
   mobile: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 280, y: -42 }, humanOffset: false },
 } satisfies ResponsiveTarget;
+
+const OUTREACH_SEQUENCE_CURSOR_MOVE = {
+  mode: "pointer",
+  intent: "hover",
+  speed: "slow",
+  duration: 1,
+  ease: "sine.inOut",
+  curve: 0.72,
+  overshoot: false,
+  label: "hover-outreach-sequence",
+} satisfies CursorMoveOptions;
+
+const VISITOR_PAGINATION_CLICK_MOVE = {
+  mode: "pointer",
+  intent: "click",
+  speed: "quick",
+  duration: CURSOR_CLICK_MOVE_DURATIONS.paginationClick,
+  curve: 0.1,
+  ...CURSOR_CLICK_MOVE_BASE,
+  label: "open-visitor-page-2",
+} satisfies CursorMoveOptions;
+
+const SEQUENCE_PERSON_PREVIEW_MOVE = {
+  mode: "pointer",
+  intent: "click",
+  speed: "normal",
+  duration: CURSOR_CLICK_MOVE_DURATIONS.previewCard,
+  curve: 0.16,
+  ...CURSOR_CLICK_MOVE_BASE,
+} satisfies CursorMoveOptions;
+
+const SEQUENCE_KICKOFF_MOVE = {
+  mode: "pointer",
+  intent: "click",
+  speed: "slow",
+  duration: CURSOR_CLICK_MOVE_DURATIONS.sequenceEnroll,
+  curve: 0.18,
+  ...CURSOR_CLICK_MOVE_BASE,
+} satisfies CursorMoveOptions;
+
+const VISITOR_TABLE_FOOTER_BOTTOM_CLEARANCE = 96;
+const VISITOR_TABLE_FOOTER_SCROLL_DURATION = 1.05;
+const VISITOR_PAGINATION_PRE_CLICK_HOLD = 0;
 
 const RUNTIME_ENTRY_BY_STORY_ID: Record<string, StoryDefinition["entry"]> = {
   "hit-ground-running": SIGNUP_EMAIL_TARGET,
@@ -82,10 +135,12 @@ const TABLE_COLUMN_WIDTHS = {
   rawName: "110px",
   rawEmail: "250px",
   rawCompany: "minmax(120px,1fr)",
-  cleanName: "245px",
+  cleanName: "175px",
   cleanEmail: "215px",
-  cleanCompany: "minmax(110px,1fr)",
+  cleanCompany: "minmax(150px,1fr)",
 } as const;
+
+const DATA_MARKETPLACE_PROSPECT_COMPANY = "Stripe";
 
 export function createStoriesFromBuilderDraft(
   builderStories: BuilderStory[],
@@ -181,10 +236,18 @@ function buildHitGroundRunningStory(ctx: StoryContext, story: BuilderStory): gsa
     {
       kind: "cursorMove",
       target: SIGNUP_SUBMIT_TARGET,
-      options: { mode: "pointer", intent: "click", speed: "quick", label: "signup-submit" },
+      options: {
+        mode: "pointer",
+        intent: "click",
+        speed: "quick",
+        duration: CURSOR_CLICK_MOVE_DURATIONS.compact,
+        curve: 0.12,
+        ...CURSOR_CLICK_MOVE_BASE,
+        label: "signup-submit",
+      },
       at: "-=0.04",
     },
-    { kind: "cursorClick", nextMode: "default", at: "-=0.03" },
+    { kind: "cursorClick", nextMode: "default", at: "+=0.06" },
     { kind: "custom", build: () => ctx.chat.submitSignup(), at: "<" },
     { kind: "status", text: "Building workspace", at: "-=0.08" },
     { kind: "transitionSignupToChat", at: `+=${STORY_TIMING.beat}` },
@@ -294,32 +357,20 @@ function buildEngagementStory(ctx: StoryContext, story: BuilderStory): gsap.core
 
   if (tableConfig) {
     steps.push(
-      { kind: "dataTable" as const, config: tableConfig, at: "-=0.02" },
-      dataTableFooterPerusalStep("website-visitors-sales", STORY_TIMING.beat + 0.42, "+=0.08", {
+      { kind: "custom" as const, build: () => ctx.chat.dataTable(tableConfig), at: "-=0.02" },
+      dataTableFooterPerusalStep("website-visitors-sales", VISITOR_TABLE_FOOTER_SCROLL_DURATION, "+=0.08", {
         align: "top",
-        offset: -190,
-        settleDelay: 0.32,
+        bottomClearance: VISITOR_TABLE_FOOTER_BOTTOM_CLEARANCE,
       }),
-      {
-        kind: "custom" as const,
-        build: () => ctx.chat.scrollToLiveTimeline(STORY_TIMING.beat + 0.42),
-        at: "+=0.08",
-      },
     );
   }
 
   if (tableConfig?.pagination && tableConfig.pagination.pages.length > 1) {
     const pageTwoTarget = responsiveElementTarget(
-      '[data-data-table="website-visitors-sales"] [data-table-page-button="2"]',
+      '[data-data-table="website-visitors-sales"] [data-page-button-role="next"]',
       "center",
     );
-    const powerDialerTarget = responsiveElementTarget(
-      '[data-data-table="website-visitors-sales"] [data-table-action="power-dialer"]',
-      "center",
-      { desktop: { x: 5, y: 0 }, tablet: { x: 4, y: 0 }, mobile: { x: 3, y: 0 } },
-      false,
-    );
-    const emailSequenceTarget = responsiveElementTarget(
+    const outreachSequenceTarget = responsiveElementTarget(
       '[data-data-table="website-visitors-sales"] [data-table-action="email-sequence"]',
       "center",
       {},
@@ -330,37 +381,32 @@ function buildEngagementStory(ctx: StoryContext, story: BuilderStory): gsap.core
       {
         kind: "cursorMove" as const,
         target: pageTwoTarget,
-        options: { mode: "pointer" as const, intent: "click" as const, speed: "normal" as const, label: "open-visitor-page-2" },
-        at: "+=0.2",
+        options: VISITOR_PAGINATION_CLICK_MOVE,
+        at: `+=${VISITOR_PAGINATION_PRE_CLICK_HOLD}`,
       },
-      { kind: "cursorClick" as const, at: "-=0.02" },
-      { kind: "custom" as const, build: () => ctx.chat.dataTablePage("website-visitors-sales", 2), at: "-=0.03" },
+      { kind: "cursorClick" as const, at: "+=0.08" },
+      { kind: "custom" as const, build: () => ctx.chat.dataTablePage("website-visitors-sales", 2), at: "-=0.02" },
       { kind: "status" as const, text: "ready to engage", at: "+=0.1" },
-      { kind: "custom" as const, build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat + 0.58 }) },
+      { kind: "custom" as const, build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat }) },
       {
         kind: "cursorMove" as const,
-        target: powerDialerTarget,
-        options: {
-          mode: "pointer" as const,
-          intent: "hover" as const,
-          speed: "slow" as const,
-          durationScale: 1.45,
-          label: "hover-power-dialer",
-        },
-        at: "+=0.42",
-      },
-      { kind: "custom" as const, build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat + 2 }), at: "+=0.12" },
-      {
-        kind: "cursorMove" as const,
-        target: emailSequenceTarget,
-        options: { mode: "pointer" as const, intent: "hover" as const, speed: "slow" as const, label: "hover-email-sequence" },
+        target: outreachSequenceTarget,
+        options: OUTREACH_SEQUENCE_CURSOR_MOVE,
+        at: "+=0.12",
       },
       { kind: "cursorClick" as const, at: "+=0.18" },
+      { kind: "custom" as const, build: () => ctx.chat.dataTableActionSelected("website-visitors-sales", "email-sequence"), at: "<" },
       { kind: "status" as const, text: "building outreach sequence", at: "<" },
     );
   }
 
-  if (thinkingStep) steps.push(toThinkingStoryStep(thinkingStep, { hold: STORY_TIMING.thinkingMedium, at: "+=0.06" }));
+  if (thinkingStep) {
+    steps.push(toThinkingStoryStep(thinkingStep, {
+      hold: STORY_TIMING.thinkingMedium,
+      at: "+=0.06",
+      cursorMotion: false,
+    }));
+  }
 
   if (sequenceConfig) {
     const [sequenceSecondPersonIndex, sequenceThirdPersonIndex] = getPreviewSequenceIndexes(sequenceConfig, 2);
@@ -378,32 +424,44 @@ function buildEngagementStory(ctx: StoryContext, story: BuilderStory): gsap.core
     );
 
     steps.push(
-      { kind: "sequenceEngagement" as const, config: sequenceConfig, at: "-=0.02" },
-      { kind: "custom" as const, build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat + 0.24 }), at: "+=0.04" },
+      { kind: "custom" as const, build: () => ctx.chat.sequenceEngagement(sequenceConfig), at: "-=0.02" },
+      { kind: "custom" as const, build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat }), at: "+=0.04" },
+      {
+        kind: "custom" as const,
+        build: () => ctx.chat.sequencePersonCardIntoView("visitor-outreach-sequences", sequenceSecondPersonIndex),
+        at: "+=0.02",
+      },
       {
         kind: "cursorMove" as const,
         target: sequenceSecondPersonTarget,
-        options: { mode: "pointer" as const, intent: "click" as const, speed: "normal" as const, label: "preview-second-sequence" },
+        options: { ...SEQUENCE_PERSON_PREVIEW_MOVE, label: "preview-second-sequence" },
+        at: "+=0.02",
       },
-      { kind: "cursorClick" as const, at: "-=0.02" },
+      { kind: "cursorClick" as const, at: "+=0.08" },
       { kind: "custom" as const, build: () => ctx.chat.sequencePerson("visitor-outreach-sequences", sequenceSecondPersonIndex), at: "-=0.03" },
-      { kind: "custom" as const, build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat + 0.24 }), at: "+=0.04" },
+      { kind: "custom" as const, build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat }), at: "+=0.04" },
+      {
+        kind: "custom" as const,
+        build: () => ctx.chat.sequencePersonCardIntoView("visitor-outreach-sequences", sequenceThirdPersonIndex),
+        at: "+=0.02",
+      },
       {
         kind: "cursorMove" as const,
         target: sequenceThirdPersonTarget,
-        options: { mode: "pointer" as const, intent: "click" as const, speed: "normal" as const, label: "preview-third-sequence" },
+        options: { ...SEQUENCE_PERSON_PREVIEW_MOVE, label: "preview-third-sequence" },
+        at: "+=0.02",
       },
-      { kind: "cursorClick" as const, at: "-=0.02" },
+      { kind: "cursorClick" as const, at: "+=0.08" },
       { kind: "custom" as const, build: () => ctx.chat.sequencePerson("visitor-outreach-sequences", sequenceThirdPersonIndex), at: "-=0.03" },
       { kind: "custom" as const, build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat + 0.28 }), at: "+=0.04" },
       ...sequenceStepClickSteps("visitor-outreach-sequences", [1, 2, 3], "+=0.22"),
       {
         kind: "cursorMove" as const,
         target: sequenceKickoffTarget,
-        options: { mode: "pointer" as const, intent: "click" as const, speed: "normal" as const, label: "kickoff-visitor-sequence" },
+        options: { ...SEQUENCE_KICKOFF_MOVE, label: "kickoff-visitor-sequence" },
       },
-      { kind: "cursorClick" as const, at: "-=0.02" },
-      { kind: "custom" as const, build: () => ctx.chat.sequenceKickoff("visitor-outreach-sequences"), at: "-=0.04" },
+      { kind: "cursorClick" as const, at: "+=0.12" },
+      { kind: "custom" as const, build: () => ctx.chat.sequenceKickoff("visitor-outreach-sequences"), at: "-=0.02" },
       { kind: "custom" as const, build: () => ctx.chat.enrollmentProgress({ total: 50 }), at: "+=0.08" },
     );
   }
@@ -454,10 +512,21 @@ function buildCsvCleanupStory(ctx: StoryContext, story: BuilderStory): gsap.core
     { kind: "custom", build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat }) },
     { kind: "custom", build: () => dropArea.complete() },
     { kind: "custom", build: () => cursorFile.releaseAtDrop(), at: "<" },
-    { kind: "custom", build: () => cursorFile.landAsUploadedFile(fileName, fileDetail), at: "<" },
-    ...(rawTableStep ? [{ kind: "dataTable" as const, config: toDataTable(rawTableStep.component, "raw-webinar-attendees"), at: "+=0.08" }] : []),
+    {
+      kind: "custom",
+      build: () => cursorFile.landAsUploadedFile(fileName, fileDetail, { preserveScroll: true }),
+      at: "<",
+    },
+    ...(rawTableStep ? [{
+      kind: "dataTable" as const,
+      config: { ...toDataTable(rawTableStep.component, "raw-webinar-attendees"), preserveScroll: true },
+      at: `+=${STORY_TIMING.beat}`,
+    }] : []),
     { kind: "status", text: "Cleaning CSV", at: "<" },
-    ...(thinkingStep ? [toThinkingStoryStep(thinkingStep, { hold: 0.34, at: `+=${STORY_TIMING.beat}` })] : []),
+    ...(thinkingStep ? [toThinkingStoryStep(thinkingStep, {
+      hold: 0.34,
+      at: `+=${STORY_TIMING.beat}`,
+    })] : []),
     ...(assistantStep ? [{ kind: "assistant" as const, text: assistantStep.text }] : []),
     ...(cleanTableStep ? [{ kind: "dataTable" as const, config: withCsvCleanTableScroll(toDataTable(cleanTableStep.component, "cleaned-webinar-attendees")), at: "-=0.04" }] : []),
     exitStory(EXIT_TARGETS.bottomRight, "+=0.18"),
@@ -681,12 +750,14 @@ function appendComponentRuntimeStep(
 
 function toThinkingStoryStep(
   step: BuilderStep,
-  options: { hold?: number; at?: string | number } = {},
+  options: { hold?: number; preserveScroll?: boolean; cursorMotion?: boolean; at?: string | number } = {},
 ) {
   return {
     kind: "thinking" as const,
     thinking: toThinkingState(step.thinking, step.text, step.note),
     hold: options.hold,
+    preserveScroll: options.preserveScroll,
+    cursorMotion: options.cursorMotion,
     at: options.at,
   };
 }
@@ -704,6 +775,8 @@ function toThinkingState(
         label: item.label,
         detail: item.detail,
         disclosure: item.disclosure,
+        duration: item.duration,
+        toolCalls: item.toolCalls,
       })),
     };
   }
@@ -748,7 +821,7 @@ const MUTUAL_CONNECTION_COMPANY_BY_NAME: Record<string, { title: string; company
   "owen lee": { title: "Principal @ Sequoia", company: "Sequoia" },
   "priya shah": { title: "VP Sales @ Plaid", company: "Plaid" },
   "rachel cho": { title: "Head of Sales @ Stripe", company: "Stripe" },
-  "sam hollis": { title: "VP Sales @ Ramp", company: "Ramp" },
+  "sam hollis": { title: "VP Sales @ Waterfall", company: "Waterfall" },
 };
 
 function toDataTable(component: BuilderTableComponent, fallbackId: string): DataTableConfig {
@@ -756,12 +829,15 @@ function toDataTable(component: BuilderTableComponent, fallbackId: string): Data
   const rows = component.rows
     .filter((row) => row.some((cell) => cell.trim()))
     .map((row, rowIndex) => toDataTableRow(row, shape, rowIndex));
-  const pageSize = component.pagination?.pageSize ?? inferPageSizeFromRanges(component.pagination?.ranges) ?? Math.min(10, rows.length || 10);
-  const pages = component.pagination?.ranges.map((range, pageIndex) => ({
+  const paginationRanges = getPaginationRanges(component.pagination);
+  const pageSize = normalizePageSize(component.pagination?.pageSize) ??
+    inferPageSizeFromRanges(paginationRanges) ??
+    Math.min(10, rows.length || 10);
+  const pages = paginationRanges.map((range, pageIndex) => ({
     page: pageIndex + 1,
     range,
     rows: getRowsForPaginationRange(rows, range, pageIndex, pageSize),
-  })).filter((page) => page.rows.length) ?? [];
+  })).filter((page) => page.rows.length);
 
   return {
     id: fallbackId === "website-visitors-sales" ? fallbackId : slugId(component.title || fallbackId),
@@ -799,12 +875,12 @@ function normalizeDataMarketplaceProspectTable(config: DataTableConfig): void {
 }
 
 function normalizeDataMarketplaceProspectValues(values: Record<string, string>): void {
-  if (values.name && "company" in values) values.company = "Stripe";
-  if (values.prospectDetail) values.prospectDetail = normalizeProspectDetailToStripe(values.prospectDetail);
+  if (values.name && "company" in values) values.company = DATA_MARKETPLACE_PROSPECT_COMPANY;
+  if (values.prospectDetail) values.prospectDetail = normalizeProspectDetailToDataMarketplaceProspect(values.prospectDetail);
   if (values.connector && !values.connectorDetail) values.connector = normalizeConnectorLabel(values.connector);
 }
 
-function normalizeProspectDetailToStripe(detail: string): string {
+function normalizeProspectDetailToDataMarketplaceProspect(detail: string): string {
   const cleanDetail = detail.trim();
 
   if (!cleanDetail) return "";
@@ -812,18 +888,20 @@ function normalizeProspectDetailToStripe(detail: string): string {
   if (/(?:@|\bat\s+)[A-Z][A-Za-z0-9& .-]+(?:\s*\([^()]*\))?$/i.test(cleanDetail)) {
     return cleanDetail.replace(
       /(?:@|\bat\s+)([A-Z][A-Za-z0-9& .-]+?)(\s*\([^()]*\))?$/i,
-      (_match, _company, suffix = "") => `at Stripe${formatTrailingParenthetical(suffix)}`,
+      (_match, _company, suffix = "") => `at ${DATA_MARKETPLACE_PROSPECT_COMPANY}${formatTrailingParenthetical(suffix)}`,
     );
   }
 
   if (/,\s*[A-Z][A-Za-z0-9& .-]+(?:\s*\([^()]*\))?$/.test(cleanDetail)) {
     return cleanDetail.replace(
       /,\s*([A-Z][A-Za-z0-9& .-]+?)(\s*\([^()]*\))?$/,
-      (_match, _company, suffix = "") => `, Stripe${formatTrailingParenthetical(suffix)}`,
+      (_match, _company, suffix = "") => `, ${DATA_MARKETPLACE_PROSPECT_COMPANY}${formatTrailingParenthetical(suffix)}`,
     );
   }
 
-  return /stripe/i.test(cleanDetail) ? cleanDetail : `${cleanDetail} at Stripe`;
+  return new RegExp(DATA_MARKETPLACE_PROSPECT_COMPANY, "i").test(cleanDetail)
+    ? cleanDetail
+    : `${cleanDetail} at ${DATA_MARKETPLACE_PROSPECT_COMPANY}`;
 }
 
 function formatTrailingParenthetical(value: string): string {
@@ -840,32 +918,8 @@ function normalizeConnectorLabel(value: string): string {
   return `${parsed.name} (${parsed.title})${parsed.context ? ` — ${parsed.context}` : ""}`;
 }
 
-function inferPageSizeFromRanges(ranges: string[] | undefined): number | null {
-  const firstRange = ranges?.[0];
-  const match = firstRange?.match(/^\s*(\d+)\s*[-–]\s*(\d+)/);
-
-  if (!match) return null;
-
-  const start = Number(match[1]);
-  const end = Number(match[2]);
-  const pageSize = end - start + 1;
-
-  return Number.isFinite(pageSize) && pageSize > 0 ? pageSize : null;
-}
-
-function getRowsForPaginationRange<T>(rows: T[], range: string, pageIndex: number, pageSize: number): T[] {
-  const match = range.match(/^\s*(\d+)\s*[-–]\s*(\d+)/);
-
-  if (!match) return rows.slice(pageIndex * pageSize, (pageIndex + 1) * pageSize);
-
-  const start = Number(match[1]);
-  const end = Number(match[2]);
-
-  if (!Number.isFinite(start) || !Number.isFinite(end) || start <= 0 || end < start) {
-    return rows.slice(pageIndex * pageSize, (pageIndex + 1) * pageSize);
-  }
-
-  return rows.slice(start - 1, end);
+function getPaginationRanges(pagination: BuilderTableComponent["pagination"]): string[] {
+  return normalizePaginationRanges(pagination?.ranges);
 }
 
 function shouldEqualInsetRevealTable(
@@ -880,8 +934,11 @@ function shouldEqualInsetRevealTable(
   return (
     step.id === "data-marketplace-step-3" ||
     step.id === "data-marketplace-step-6" ||
+    titleSlug === "best-connections-into-stripe" ||
+    titleSlug === "best-connections-into-vercel" ||
     titleSlug === "new-hires-at-dev-tool-companies" ||
     titleSlug === "raised-in-the-past-three-months" ||
+    titleSlug === "warmest-paths-into-vercel-active-in-past-90-days" ||
     titleSlug === "warmest-paths-into-stripe-active-in-past-90-days"
   );
 }
@@ -1002,7 +1059,7 @@ function getDefaultTableColumnCellType(
 }
 
 function getTableFooterClearance(fallbackId: string): number | undefined {
-  return fallbackId === "website-visitors-sales" ? 88 : undefined;
+  return fallbackId === "website-visitors-sales" ? 28 : undefined;
 }
 
 function isCleanedWebinarTable(fallbackId: string): boolean {
@@ -1023,13 +1080,13 @@ function toDataTableRow(
 
   if (shape.mutualConnectionKey) {
     const parsed = parseMutualConnection(values[shape.mutualConnectionKey] ?? "");
-    const additionalConnections = getAdditionalConnectionsBadge(rowIndex);
+    const relationshipSource = getMutualConnectionSourceBadge(parsed.context);
 
     values[shape.mutualConnectionKey] = parsed.name;
     values.mutualConnectionDetail = parsed.title;
     values.mutualConnectionContext = parsed.context;
     values.mutualConnectionCompany = parsed.company;
-    if (parsed.name && additionalConnections) values.mutualConnectionBadge = additionalConnections;
+    if (parsed.name && relationshipSource) values.mutualConnectionBadge = relationshipSource;
   }
 
   if (shape.connectorPersonKey) {
@@ -1046,11 +1103,10 @@ function toDataTableRow(
   };
 }
 
-function getAdditionalConnectionsBadge(rowIndex: number): string | null {
-  const counts = [2, 3, 7, null, 1, 12, 4, 5, null, 8, 6, 10] as const;
-  const count = counts[rowIndex % counts.length];
+function getMutualConnectionSourceBadge(context: string): string | null {
+  const source = context.trim();
 
-  return count === null ? null : `+${count} more`;
+  return source || null;
 }
 
 function parseMutualConnection(value: string): { name: string; title: string; context: string; company: string } {
@@ -1275,10 +1331,9 @@ function inferTableVariant(component: BuilderTableComponent): DataTableConfig["v
 }
 
 function inferTotalRows(component: BuilderTableComponent, fallback: number): number {
-  const ranges = component.pagination?.ranges ?? [];
+  const ranges = getPaginationRanges(component.pagination);
   const lastRange = ranges[ranges.length - 1];
-  const match = lastRange?.match(/of\s+(\d+)/i);
-  return match ? Number(match[1]) : fallback;
+  return parsePaginationRange(lastRange)?.total ?? fallback;
 }
 
 function slugId(value: string): string {

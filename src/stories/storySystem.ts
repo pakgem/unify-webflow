@@ -30,6 +30,20 @@ export const STORY_TIMING = {
   fileGrab: 0.18,
 };
 
+export const CURSOR_CLICK_MOVE_BASE = {
+  ease: "sine.inOut",
+  overshoot: false,
+  settle: false,
+} satisfies Pick<CursorMoveOptions, "ease" | "overshoot" | "settle">;
+
+export const CURSOR_CLICK_MOVE_DURATIONS = {
+  compact: 0.5,
+  paginationApproach: 0.72,
+  paginationClick: 0.52,
+  previewCard: 0.68,
+  sequenceEnroll: 1.05,
+} as const;
+
 type ResponsiveOffsets = Partial<Record<BreakpointName, Offset | number>>;
 
 function offsetFromValue(value?: Offset | number): Offset | undefined {
@@ -93,6 +107,13 @@ const THINKING_SIDE_PARK_THRESHOLD = 2.8;
 const TEXT_SKIM_MIN_CHARS = 42;
 const TEXT_SKIM_MIN_STEP_GAP = 2;
 const TEXT_SKIM_MAX_PER_STORY = 3;
+const STRATEGY_CARD_CURSOR = {
+  approachDuration: 0.78,
+  betweenCardDuration: 0.92,
+  betweenCardDurationStep: 0.08,
+  curve: 0.2,
+  followBuffer: 0.7,
+} as const;
 const CHAT_THREAD_SCOPE = "[data-chat-shell] [data-chat-thread]";
 const LATEST_ASSISTANT_TEXT_SELECTOR = `${CHAT_THREAD_SCOPE} [data-message-role="assistant"]:not(.wa-message--component) [data-message-body]`;
 const LATEST_THINKING_TEXT_SELECTOR =
@@ -111,6 +132,7 @@ type PromptStep = {
   statusAfter?: string;
   fromEntry?: boolean;
   focusTarget?: ResponsiveTarget;
+  postSendCursorMotion?: boolean;
   at?: TimelinePosition;
 };
 
@@ -123,6 +145,8 @@ type AttentionState = {
 type ThinkingStep = {
   kind: "thinking";
   hold?: number;
+  preserveScroll?: boolean;
+  cursorMotion?: boolean;
   statusBefore?: string;
   at?: TimelinePosition;
 } & (
@@ -214,11 +238,9 @@ export function mailboxConnectionSteps(config: MailboxConnectionConfig): StorySt
         mode: "pointer",
         intent: "click",
         speed: "quick",
-        curve: 0.08,
-        ease: "power1.inOut",
-        durationScale: 0.82,
-        overshoot: false,
-        settle: false,
+        duration: CURSOR_CLICK_MOVE_DURATIONS.compact,
+        curve: 0.1,
+        ...CURSOR_CLICK_MOVE_BASE,
         label: `mailbox-connect-${config.id}`,
       },
       at: "+=0.08",
@@ -300,18 +322,18 @@ export function elementPerusalSteps(items: ElementPerusalItem[]): StoryStep[] {
    Sequence Step Cursor
 
       0ms   cursor leaves the person rail with a slower direct path
-    720ms   cursor settles over the step before clicking
-    800ms   step click updates the copy panel
-   1100ms   cursor moves to the next step with a smaller path
+   1150ms   cursor settles over the step before clicking
+   1270ms   step click updates the copy panel
+   1510ms   cursor moves to the next step with a smaller path
    -------------------------------------------------------------------------- */
 
 const SEQUENCE_STEP_CURSOR_MOTION = {
   firstMoveDelay: "+=0.22",
-  betweenStepDelay: "+=0.24",
-  clickDelay: "+=0.08",
+  betweenStepDelay: "+=0.22",
+  clickDelay: "+=0.12",
   sequenceUpdateAt: "-=0.03",
-  firstDurationScale: 3.2,
-  durationScale: 2.35,
+  firstDuration: 1.15,
+  duration: 0.82,
   firstCurve: 0.2,
   curve: 0.14,
   reviewHold: STORY_TIMING.beat + 0.22,
@@ -337,9 +359,9 @@ export function sequenceStepClickSteps(
           intent: "click" as const,
           speed: "slow" as const,
           ease: "sine.inOut",
-          durationScale: isFirstStepAfterRail
-            ? SEQUENCE_STEP_CURSOR_MOTION.firstDurationScale
-            : SEQUENCE_STEP_CURSOR_MOTION.durationScale,
+          duration: isFirstStepAfterRail
+            ? SEQUENCE_STEP_CURSOR_MOTION.firstDuration
+            : SEQUENCE_STEP_CURSOR_MOTION.duration,
           curve: isFirstStepAfterRail ? SEQUENCE_STEP_CURSOR_MOTION.firstCurve : SEQUENCE_STEP_CURSOR_MOTION.curve,
           overshoot: false,
           settle: false,
@@ -366,7 +388,7 @@ export function dataTableFooterPerusalStep(
   tableId: string,
   duration = STORY_TIMING.beat + 0.18,
   at?: TimelinePosition,
-  scrollOptions: { align?: "top" | "bottom"; offset?: number; settleDelay?: number } = {},
+  scrollOptions: { align?: "top" | "bottom"; offset?: number; bottomClearance?: number; settleDelay?: number } = {},
 ): StoryStep {
   return {
     kind: "custom",
@@ -436,9 +458,24 @@ function addStep(
     case "thinking": {
       const thinkingState = getThinkingState(step);
       const thinkingLabels = thinkingState.items.map((item) => item.label);
+      const estimatedTotalHold = getThinkingCursorHold(thinkingState, step.hold);
       if (step.statusBefore) tl.add(ctx.chat.setStatus(step.statusBefore), step.at);
-      tl.add(ctx.chat.thinkingState(thinkingState, step.hold), step.statusBefore ? undefined : step.at);
-      addThinkingCursorMotion(tl, ctx, attention, step.hold, thinkingLabels.length, thinkingLabels.join("|"), stepIndex);
+      tl.add(
+        ctx.chat.thinkingState(thinkingState, step.hold, { preserveScroll: step.preserveScroll ?? false }),
+        step.statusBefore ? undefined : step.at,
+      );
+      if (step.cursorMotion !== false) {
+        addThinkingCursorMotion(
+          tl,
+          ctx,
+          attention,
+          step.hold,
+          thinkingLabels.length,
+          thinkingLabels.join("|"),
+          stepIndex,
+          estimatedTotalHold,
+        );
+      }
       return;
     }
     case "dataTable":
@@ -522,6 +559,19 @@ function getThinkingState(step: ThinkingStep): ThinkingStateConfig {
 
 function normalizeThinkingItem(item: string | ThinkingItemConfig): ThinkingItemConfig {
   return typeof item === "string" ? { label: item } : item;
+}
+
+function getThinkingCursorHold(thinkingState: ThinkingStateConfig, hold = STORY_TIMING.thinkingShort): number {
+  const itemCount = Math.max(1, thinkingState.items.length);
+  const configuredDurations = thinkingState.items.reduce((total, item) => {
+    const duration = typeof item.duration === "number" && Number.isFinite(item.duration)
+      ? Math.max(0, item.duration)
+      : 0;
+
+    return total + duration;
+  }, 0);
+
+  return hold * itemCount + configuredDurations;
 }
 
 function addComponentWithAttention(
@@ -609,23 +659,48 @@ function strategyPlansAttention(
   const cardSelectors = plans.map(
     (plan) => `${selector} [data-strategy-plan="${escapeAttributeValue(plan.id)}"]`,
   );
-  const skimDuration = 0.94 + Math.max(0, plans.length - 1) * 0.15;
-  const hoverHold = 0.28;
+  const [firstCardSelector, ...remainingCardSelectors] = cardSelectors;
+  const betweenCardDurationTotal = remainingCardSelectors.reduce(
+    (total, _selector, index) => total + getStrategyCardMoveDuration(index),
+    0,
+  );
+  const hoverTrackDuration =
+    STRATEGY_CARD_CURSOR.approachDuration +
+    betweenCardDurationTotal +
+    STRATEGY_CARD_CURSOR.followBuffer;
 
-  tl.add(ctx.cursor.skimThrough(cardSelectors, {
-    duration: skimDuration,
-    label: `strategy-card-skim-${plans.map((plan) => plan.id).join("-")}`,
+  if (!firstCardSelector) return releaseBuildTimeline(tl);
+
+  tl.add(ctx.chat.strategyPlanCursorHover(selector, ctx.cursor, hoverTrackDuration), 0);
+  tl.add(ctx.cursor.moveTo(responsiveElementTarget(firstCardSelector, "center", {}, false), {
+    intent: "hover",
+    speed: "slow",
+    duration: STRATEGY_CARD_CURSOR.approachDuration,
+    curve: STRATEGY_CARD_CURSOR.curve,
+    ease: "sine.inOut",
+    overshoot: false,
+    settle: false,
+    label: `strategy-card-approach-${plans[0]?.id ?? "first"}`,
   }), 0);
 
-  cardSelectors.forEach((cardSelector, index) => {
-    const passAt = plans.length === 1 ? 0.12 : skimDuration * ((index + 0.5) / plans.length);
-    const hoverAt = Math.max(0, passAt - hoverHold * 0.48);
-
-    tl.add(ctx.chat.strategyPlanHover(cardSelector, true), hoverAt);
-    tl.add(ctx.chat.strategyPlanHover(cardSelector, false), hoverAt + hoverHold);
+  remainingCardSelectors.forEach((cardSelector, index) => {
+    tl.add(ctx.cursor.moveTo(responsiveElementTarget(cardSelector, "center", {}, false), {
+      intent: "hover",
+      speed: "slow",
+      duration: getStrategyCardMoveDuration(index),
+      curve: STRATEGY_CARD_CURSOR.curve,
+      ease: "sine.inOut",
+      overshoot: false,
+      settle: false,
+      label: `strategy-card-hover-${plans[index + 1]?.id ?? index + 2}`,
+    }), "+=0.04");
   });
 
   return releaseBuildTimeline(tl);
+}
+
+function getStrategyCardMoveDuration(index: number): number {
+  return STRATEGY_CARD_CURSOR.betweenCardDuration + index * STRATEGY_CARD_CURSOR.betweenCardDurationStep;
 }
 
 function addThinkingCursorMotion(
@@ -636,8 +711,9 @@ function addThinkingCursorMotion(
   itemCount = 1,
   label = "thinking",
   stepIndex = 0,
+  estimatedTotalHold = hold * Math.max(1, itemCount),
 ): void {
-  const totalHold = hold * Math.max(1, itemCount);
+  const totalHold = estimatedTotalHold;
   const shouldSkimThinking =
     itemCount >= 3 &&
     shouldSkimText(ctx, attention, {
@@ -782,13 +858,16 @@ function buildPromptStep(ctx: StoryContext, step: PromptStep): gsap.core.Timelin
         mode: "text",
         intent: "text",
         speed: "normal",
+        duration: CURSOR_CLICK_MOVE_DURATIONS.compact,
+        curve: 0.1,
+        ...CURSOR_CLICK_MOVE_BASE,
         label: `focus-${step.sendLabel}`,
       }),
       "-=0.18",
     );
   }
 
-  tl.add(ctx.cursor.click("text"), "-=0.02")
+  tl.add(ctx.cursor.click("text"), "+=0.04")
     .add(ctx.chat.setComposerFocus(true), "-=0.14")
     .add(ctx.chat.typeComposer(step.text, step.duration ?? STORY_TIMING.typeMedium))
     .add(
@@ -796,6 +875,9 @@ function buildPromptStep(ctx: StoryContext, step: PromptStep): gsap.core.Timelin
         mode: "pointer",
         intent: "click",
         speed: "quick",
+        duration: CURSOR_CLICK_MOVE_DURATIONS.compact,
+        curve: 0.12,
+        ...CURSOR_CLICK_MOVE_BASE,
         label: step.sendLabel,
       }),
       "-=0.16",
@@ -805,8 +887,10 @@ function buildPromptStep(ctx: StoryContext, step: PromptStep): gsap.core.Timelin
     .add(ctx.chat.sendComposerText(), "-=0.06")
     .add(ctx.chat.userMessage(step.text), "-=0.12")
     .add(ctx.chat.hideComposer(), "<")
-    .add(ctx.chat.clearComposer())
-    .add(
+    .add(ctx.chat.clearComposer());
+
+  if (step.postSendCursorMotion !== false) {
+    tl.add(
       ctx.cursor.moveTo(THINKING_IDLE_TARGET, {
         intent: "hover",
         mode: "default",
@@ -817,6 +901,7 @@ function buildPromptStep(ctx: StoryContext, step: PromptStep): gsap.core.Timelin
       }),
       "-=0.12",
     );
+  }
 
   if (step.statusAfter) {
     tl.add(ctx.chat.setStatus(step.statusAfter), "<");

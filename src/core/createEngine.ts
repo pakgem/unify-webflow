@@ -9,7 +9,9 @@ import type { ChatbotStoriesConfig, ChatbotStoriesInstance } from "./types";
 import { renderDefaultMarkup } from "./renderDefaultMarkup";
 
 export function createEngine(root: HTMLElement, config: ChatbotStoriesConfig = {}): ChatbotStoriesInstance {
-  renderDefaultMarkup(root, { showBuilder: config.showBuilder !== false });
+  const shouldShowBuilder = config.showBuilder === true;
+
+  renderDefaultMarkup(root, { showBuilder: shouldShowBuilder });
 
   const runtime = createStoryRuntime(root, config);
   const initialDraftStories =
@@ -21,14 +23,14 @@ export function createEngine(root: HTMLElement, config: ChatbotStoriesConfig = {
   }
 
   const builder =
-    config.showBuilder === false
-      ? null
-      : new StoryBuilder(root, runtime.stories, {
+    shouldShowBuilder
+      ? new StoryBuilder(root, runtime.stories, {
           onStorySelect: (storyId) => runtime.controller.goTo(storyId),
           onStoriesChange: runtime.applyBuilderStories,
           draftEndpoint: runtime.draftEndpoint,
           draftAutoSave: config.builderDraftAutoSave,
-        });
+        })
+      : null;
 
   runtime.controller.mount();
   builder?.mount();

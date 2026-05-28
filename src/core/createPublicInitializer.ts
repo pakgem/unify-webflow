@@ -86,6 +86,7 @@ function readRootDatasetConfig(root: HTMLElement): ChatbotStoriesConfig {
   config.autoplay = parseBooleanDatasetValue(dataset.autoplay);
   config.loop = parseBooleanDatasetValue(dataset.loop);
   config.reducedMotion = parseBooleanDatasetValue(dataset.reducedMotion);
+  config.showBuilder = parseBooleanDatasetValue(dataset.showBuilder);
 
   if (dataset.autoAdvanceDelay) {
     const autoAdvanceDelay = Number(dataset.autoAdvanceDelay);

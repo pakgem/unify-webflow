@@ -6,7 +6,7 @@ type RenderDefaultMarkupOptions = {
 
 export function renderDefaultMarkup(root: HTMLElement, options: RenderDefaultMarkupOptions = {}): void {
   renderPlaybackMarkup(root);
-  if (options.showBuilder === false || root.querySelector("[data-story-builder]")) return;
+  if (options.showBuilder !== true || root.querySelector("[data-story-builder]")) return;
 
   const builderMarkup = `
       <div class="wa-builder" data-story-builder>

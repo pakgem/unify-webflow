@@ -46,6 +46,7 @@ export type CursorMoveOptions = {
   mode?: CursorMode;
   intent?: CursorIntent;
   speed?: CursorSpeed;
+  duration?: number;
   curve?: number;
   ease?: string;
   durationScale?: number;
@@ -241,6 +242,7 @@ export type DataTableConfig = {
   variant?: "default" | "filtered" | "enriched" | "connections";
   scrollAlign?: "equal-inset";
   footerClearance?: number;
+  preserveScroll?: boolean;
   columns: DataTableColumnConfig[];
   rows: DataTableRowConfig[];
   pagination?: {
@@ -278,6 +280,11 @@ export type ThinkingItemConfig = {
   label: string;
   detail?: string;
   disclosure?: string;
+  duration?: number;
+  toolCalls?: Array<{
+    label: string;
+    vendor?: string;
+  }>;
 };
 
 export type ThinkingStateConfig = {
@@ -291,6 +298,11 @@ export type StoryDefinition = {
   label: string;
   navLabel?: string;
   navDescription?: string;
+  navDescriptionLink?: {
+    text: string;
+    href: string;
+    ariaLabel?: string;
+  };
   eyebrow: string;
   summary: string;
   accent?: string;

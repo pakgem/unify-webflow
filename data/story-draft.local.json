@@ -31,6 +31,41 @@
               {
                 "label": "Scraping vercel.com",
                 "detail": "Reviewing the website, employee social profiles, looking at customer testimonials.",
+                "duration": 8,
+                "toolCalls": [
+                  {
+                    "label": "Reading vercel.com/",
+                    "vendor": "Vercel"
+                  },
+                  {
+                    "label": "Reading vercel.com/cdn",
+                    "vendor": "Vercel"
+                  },
+                  {
+                    "label": "Reading v0.app/",
+                    "vendor": "v0"
+                  },
+                  {
+                    "label": "Reading vercel.com/customers",
+                    "vendor": "Vercel"
+                  },
+                  {
+                    "label": "Reading vercel.com/ai",
+                    "vendor": "Vercel"
+                  },
+                  {
+                    "label": "Reading vercel.com/enterprise",
+                    "vendor": "Vercel"
+                  },
+                  {
+                    "label": "Reading vercel.com/blog",
+                    "vendor": "Vercel"
+                  },
+                  {
+                    "label": "Reading vercel.com/press",
+                    "vendor": "Vercel"
+                  }
+                ],
                 "disclosure": "Show more"
               },
               {
@@ -74,17 +109,17 @@
               {
                 "label": "Idea One",
                 "title": "Target DevOps teams outgrowing AWS complexity",
-                "summary": "I'll find mid-market SaaS companies with heavy AWS footprints and hiring DevOps\nI'll run a 3-step email + LinkedIn sequence using the Notion infra efficiency angle"
+                "summary": "I’ll find mid-market SaaS companies with heavy AWS footprints and hiring DevOps\nI’ll run a 3-step email + LinkedIn sequence using the Notion infra efficiency angle"
               },
               {
                 "label": "idea two",
                 "title": "Intercept AI teams burning cycles on LLM infra",
-                "summary": "I'll identify companies building AI products, showing LLM/ML engineering hiring signals\nI'll craft a sequence leading with AI infra complexity pain and Vercel AI SDK as the path"
+                "summary": "I’ll identify companies building AI products, showing LLM/ML engineering hiring signals\nI’ll craft a sequence leading with AI infra complexity pain and Vercel AI SDK as the path"
               },
               {
                 "label": "idea three",
                 "title": "Hit e-commerce teams before peak season",
-                "summary": "I'll find ecom and DTC brands with 50+ engineers and upcoming high-traffic events\nI'll lead with PAIGE's Black Friday results in a short sequence timed to pre-peak urgency"
+                "summary": "I’ll find ecom and DTC brands with 50+ engineers and upcoming high-traffic events\nI’ll lead with PAIGE’s Black Friday results in a short sequence timed to pre-peak urgency"
               }
             ]
           }
@@ -94,7 +129,7 @@
     {
       "id": "data-marketplace",
       "label": "100+ data sources at your fingertips",
-      "summary": "Use natural language search to navigate B2B contacts and companies, e-commerce, local businesses, technographics, product & website intent, and more",
+      "summary": "Use natural language search to navigate B2B contacts and companies, e-commerce, local businesses, technographics, product & website intent, and much more",
       "steps": [
         {
           "id": "data-marketplace-step-1",
@@ -105,20 +140,26 @@
         {
           "id": "step-67504cff-c3ff-4a7b-864a-2449b4e21110",
           "kind": "thinking",
-          "text": "Mapping Stripe's people graph",
+          "text": "Mapping Stripe’s people graph",
           "note": "Surfacing common cap-table connections — investors, advisors, and board members linking your company to Stripe.",
           "thinking": {
             "title": "Finding connections to Stripe",
             "elapsed": "4m 20s",
             "items": [
               {
-                "label": "Mapping Stripe's people graph",
+                "label": "Mapping Stripe’s people graph",
                 "detail": "Surfacing common cap-table connections — investors, advisors, and board members linking your company to Stripe.",
                 "disclosure": "Show more"
               },
               {
                 "label": "Pulling work and education overlaps across your team",
-                "detail": "Checking The Swarm's database for every prior company your colleagues share with someone at Stripe — past coworkers, same teams, overlapping tenures.",
+                "detail": "Cross referencing prior companies your colleagues share with someone at Stripe",
+                "toolCalls": [
+                  {
+                    "label": "Running job history search in The Swarm",
+                    "vendor": "The Swarm"
+                  }
+                ],
                 "disclosure": "Show more"
               },
               {
@@ -132,11 +173,11 @@
         {
           "id": "data-marketplace-step-3",
           "kind": "component",
-          "text": "Table: Your network connections into Stripe",
+          "text": "Table: Best connections into Stripe",
           "note": "No chrome around the table.",
           "component": {
             "kind": "table",
-            "title": "New hires at dev-tool companies",
+            "title": "Best connections into Stripe",
             "eyebrow": "Natural language search",
             "count": "8 records",
             "columns": [
@@ -147,43 +188,43 @@
             "rows": [
               [
                 "Jamie Chen",
-                "VP of Sales at Linear",
-                "Priya Shah (VP Sales @ Unify) — Both at Plaid (3 yrs)"
+                "VP of Sales at Stripe",
+                "Priya Shah (VP Sales @ Vercel) — Teammates at Plaid (3 yrs)"
               ],
               [
                 "Andre Park",
-                "Head of Growth at Vercel",
-                "Marco Liu (Head of Growth @ Unify) — Stanford GSB '19"
+                "Head of Growth at Stripe",
+                "Marco Liu (Head of Growth @ Vercel) — Stanford GSB ’19"
               ],
               [
                 "David Kim",
-                "Head of Revenue at Brex",
-                "Dev Singh (RevOps Lead @ Unify) — Both at Brex (2 yrs)"
+                "Head of Revenue at Stripe",
+                "Dev Singh (RevOps Lead @ Vercel) — Teammates at GitHub (2 yrs)"
               ],
               [
                 "Chandler Bree",
-                "VP of Sales at Square",
-                "Jenna Park (VP Marketing @ Unify) — Both at Square (4 yrs)"
+                "VP of Partnerships at Stripe",
+                "Jenna Park (VP Marketing @ Vercel) — Teammates at Netlify (4 yrs)"
               ],
               [
                 "Ellen Nelle",
-                "Growth Engineer at Square",
-                "Owen Lee (Sales Lead @ Unify) — Shared investor: Sequoia"
+                "Growth Engineer at Stripe",
+                "Owen Lee (Sales Lead @ Vercel) — Shared investor: Sequoia"
               ],
               [
-                "Chadley Dupre",
-                "Head of Revops at Square",
-                "Rachel Cho (Head of Sales @ Unify) — Both at Stripe (5 yrs)"
+                "Natalie Dank",
+                "Director of Platform Partnerships at Stripe",
+                "Rachel Cho (Head of Sales @ Vercel) — Teammates at Square (5 yrs)"
               ],
               [
-                "Patrick Bateman",
-                "COO at Stripe",
-                "Evan Brooks (Head of Growth @ Unify) — Both at PayPal (4 yrs)"
+                "Elena Torres",
+                "Enterprise AE at Stripe",
+                "Evan Brooks (Head of Growth @ Vercel) — Teammates at PayPal (4 yrs)"
               ],
               [
                 "Miles Kibble III",
-                "Head of Chaos at Stripe",
-                "Sam Hollis (VP Sales @ Unify) — Wharton MBA '18"
+                "Head of Platform Operations at Stripe",
+                "Sam Hollis (VP Sales @ Vercel) — Wharton MBA ’18"
               ]
             ]
           }
@@ -198,14 +239,14 @@
           "id": "data-marketplace-step-5",
           "kind": "thinking",
           "text": "Checking LinkedIn for job tenure",
-          "note": "Pulling each contact's current role and start date from LinkedIn to confirm how long they've been in seat at Stripe.",
+          "note": "Pulling each contact’s current role and start date from LinkedIn to confirm how long they’ve been in seat at Stripe.",
           "thinking": {
             "title": "Filtering Stripe POCs",
             "elapsed": "4m 12s",
             "items": [
               {
                 "label": "Checking LinkedIn for job tenure",
-                "detail": "Pulling each contact's current role and start date from LinkedIn to confirm how long they've been in seat at Stripe.",
+                "detail": "Pulling each contact’s current role and start date from LinkedIn to confirm how long they’ve been in seat at Stripe.",
                 "disclosure": "Show more"
               }
             ]
@@ -228,24 +269,24 @@
             ],
             "rows": [
               [
-                "Patrick Bateman",
-                "COO, Stripe (2 mos)",
-                "Evan Brooks (Head of Growth @ Unify) — Both at PayPal (4 yrs)"
+                "Jamie Chen",
+                "VP Sales, Stripe (2 mos)",
+                "Priya Shah (VP Sales @ Vercel) — Teammates at Plaid (3 yrs)"
               ],
               [
-                "Miles Kibble III",
-                "Head of Chaos, Stripe (2 mos)",
-                "Sam Hollis (VP Sales @ Unify) — Wharton MBA '18"
+                "Andre Park",
+                "Head of Growth, Stripe (2 mos)",
+                "Marco Liu (Head of Growth @ Vercel) — Stanford GSB ’19"
               ],
               [
                 "Natalie Dank",
-                "Money Manager, Stripe (1 mo)",
-                "Noah Singh (Head of Sales @ Unify) — Both at Adyen (3 yrs)"
+                "Director of Platform Partnerships, Stripe (1 mo)",
+                "Noah Singh (Head of Sales @ Vercel) — Teammates at Adyen (3 yrs)"
               ],
               [
-                "Priya Shah",
-                "Head of Platform Partnerships, Stripe (3 mos)",
-                "Rachel Cho (Head of Sales @ Unify) — Both at Tesla (5 yrs)"
+                "Elena Torres",
+                "Enterprise AE, Stripe (3 mos)",
+                "Rachel Cho (Head of Sales @ Vercel) — Teammates at Tesla (5 yrs)"
               ]
             ]
           }
@@ -317,214 +358,33 @@
             ],
             "rows": [
               [
-                "Patrick Bateman",
-                "COO",
-                "pbateman@stripe.com",
+                "Jamie Chen",
+                "VP Sales",
+                "jamie.chen@stripe.com",
                 "+1 (415) 555-0142",
-                "Evan Brooks (Unify)"
+                "Priya Shah (VP Sales @ Vercel)"
               ],
               [
-                "Miles Kibble III",
-                "Head of Chaos",
-                "mkibble@stripe.com",
+                "Andre Park",
+                "Head of Growth",
+                "andre.park@stripe.com",
                 "+1 (628) 555-2210",
-                "Sam Hollis (Unify)"
+                "Marco Liu (Head of Growth @ Vercel)"
               ],
               [
                 "Natalie Dank",
-                "Money Manager",
-                "ndank@stripe.com",
+                "Director of Platform Partnerships",
+                "natalie.dank@stripe.com",
                 "+1 (415) 555-7733",
-                "Noah Singh (Unify)"
+                "Noah Singh (Head of Sales @ Vercel)"
               ],
               [
-                "Priya Shah",
-                "Head of Platform Partnerships",
-                "pshah@stripe.com",
+                "Elena Torres",
+                "Enterprise AE",
+                "elena.torres@stripe.com",
                 "+1 (628) 555-9081",
-                "Rachel Cho (Unify)"
+                "Rachel Cho (Head of Sales @ Vercel)"
               ]
-            ]
-          }
-        },
-        {
-          "id": "data-marketplace-step-10",
-          "kind": "component",
-          "text": "One chat, 50+ world class data sources",
-          "note": "Marketing page grid of vendor partners grouped by data area.",
-          "component": {
-            "kind": "dataSources",
-            "title": "One chat, 50+ world class data sources",
-            "subtitle": "Unify intelligently searches the right data sources for the job.",
-            "sources": [
-              {
-                "category": "CRM",
-                "name": "HubSpot",
-                "detail": "CRM, marketing, and sales engagement records.",
-                "logoSrc": "/data-logos/HubSpot.svg"
-              },
-              {
-                "category": "CRM",
-                "name": "Salesforce",
-                "detail": "CRM account, contact, and activity data.",
-                "logoSrc": "/data-logos/Salesforce.svg"
-              },
-              {
-                "category": "Core Data",
-                "name": "5x5",
-                "detail": "On-premise company and contact datasets.",
-                "logoSrc": "/data-logos/5x5.svg"
-              },
-              {
-                "category": "Core Data",
-                "name": "MixRank",
-                "detail": "Company, app, and advertising intelligence.",
-                "logoSrc": "/data-logos/mixrank.svg"
-              },
-              {
-                "category": "Core Data",
-                "name": "People Data Labs",
-                "detail": "People and company records for core B2B coverage.",
-                "logoSrc": "/data-logos/People%20Data%20Labs.svg"
-              },
-              {
-                "category": "Ad Intelligence",
-                "name": "Adyntel",
-                "detail": "Ad spend, messaging, and competitive advertising signals.",
-                "logoSrc": "/data-logos/Adyntel.svg"
-              },
-              {
-                "category": "Ad Intelligence",
-                "name": "Adbeat",
-                "detail": "Digital ad creatives, publishers, and campaign intelligence.",
-                "logoSrc": "/data-logos/Adbeat.svg"
-              },
-              {
-                "category": "Ad Intelligence",
-                "name": "Upriver",
-                "detail": "Ad strategy and competitive demand generation signals.",
-                "logoSrc": "/data-logos/UpRiver.svg"
-              },
-              {
-                "category": "Web Intent",
-                "name": "Snitcher",
-                "detail": "Website visitor identification and account intent.",
-                "logoSrc": "/data-logos/Snitcher.svg"
-              },
-              {
-                "category": "Web Intent",
-                "name": "Demandbase",
-                "detail": "Account identification and intent signals.",
-                "logoSrc": "/data-logos/Demandbase.svg"
-              },
-              {
-                "category": "Product Analytics",
-                "name": "PostHog",
-                "detail": "Product events, usage, and conversion behavior.",
-                "logoSrc": "/data-logos/PostHog.svg"
-              },
-              {
-                "category": "Product Analytics",
-                "name": "Segment",
-                "detail": "Customer event pipelines and audience traits.",
-                "logoSrc": "/data-logos/Segment.svg"
-              },
-              {
-                "category": "SMB Data",
-                "name": "OpenMart",
-                "detail": "Small business discovery and merchant data.",
-                "logoSrc": "/data-logos/OpenMart.svg"
-              },
-              {
-                "category": "Ecommerce",
-                "name": "Store Leads",
-                "detail": "E-commerce stores, platforms, categories, and growth signals.",
-                "logoSrc": "/data-logos/Store%20Leads.svg"
-              },
-              {
-                "category": "Enrichment",
-                "name": "Ramp",
-                "detail": "Financial and business context enrichment.",
-                "logoSrc": "/data-logos/Ramp.svg"
-              },
-              {
-                "category": "Enrichment",
-                "name": "FullEnrich",
-                "detail": "Email and phone enrichment across multiple providers.",
-                "logoSrc": "/data-logos/FullEnrich.svg"
-              },
-              {
-                "category": "Company / Fundraising",
-                "name": "Ocean.io",
-                "detail": "Company lookalikes, segments, and account discovery.",
-                "logoSrc": "/data-logos/Oceanio.svg"
-              },
-              {
-                "category": "Company / Fundraising",
-                "name": "Harmonic",
-                "detail": "Startup company signals, growth, and fundraising data.",
-                "logoSrc": "/data-logos/Harmonic.svg"
-              },
-              {
-                "category": "Tech Stack",
-                "name": "Theirstack",
-                "detail": "Technology install, job-posting, and stack signals.",
-                "logoSrc": "/data-logos/TheirStack.svg"
-              },
-              {
-                "category": "Tech Stack",
-                "name": "PredictLeads",
-                "detail": "Hiring, technology, product, and business event signals.",
-                "logoSrc": "/data-logos/PredictLeads.svg"
-              },
-              {
-                "category": "Tech Stack",
-                "name": "BuiltWith",
-                "detail": "Installed tools, web stack, pixels, and infrastructure data.",
-                "logoSrc": "/data-logos/Built%20With.svg"
-              },
-              {
-                "category": "Web / SEO",
-                "name": "Serpstat",
-                "detail": "SEO, PPC, and content intelligence.",
-                "logoSrc": "/data-logos/Serpstat.svg"
-              },
-              {
-                "category": "Web / SEO",
-                "name": "SE Ranking",
-                "detail": "Search visibility, keyword, and competitor SEO data.",
-                "logoSrc": "/data-logos/SE%20Ranking.svg"
-              },
-              {
-                "category": "Relationships",
-                "name": "LinkedIn",
-                "detail": "Professional relationship and profile context.",
-                "logoSrc": "/data-logos/LinkedIn.png"
-              },
-              {
-                "category": "Relationships",
-                "name": "The Swarm",
-                "detail": "Network, relationship, and warm-introduction context.",
-                "logoSrc": "/data-logos/The%20Swarm.svg"
-              },
-              {
-                "category": "And more",
-                "name": "Trigify",
-                "detail": "Social buying signals and engagement events.",
-                "logoSrc": "/data-logos/Trigify.svg"
-              },
-              {
-                "category": "And more",
-                "name": "ZeroBounce",
-                "detail": "Email validation and deliverability checks.",
-                "logoSrc": "/data-logos/zerobounce.svg"
-              },
-              {
-                "category": "And more",
-                "name": "BuyerCaddy",
-                "detail": "Buyer tracking and sales workflow support.",
-                "logoSrc": "/data-logos/BuyerCaddy.svg"
-              }
             ]
           }
         }
@@ -533,7 +393,7 @@
     {
       "id": "crm-update",
       "label": "Your context is key",
-      "summary": "The assistant learns your market, business context, ICP, and positioning so it can protect fit and generate better GTM ideas.",
+      "summary": "The assistant learns Vercel’s GTM context, ICP, and positioning so it can generate better account strategy.",
       "steps": [
         {
           "id": "crm-update-step-mailbox-connection",
@@ -543,14 +403,14 @@
           "component": {
             "kind": "mailboxConnection",
             "title": "Connect a mailbox",
-            "subtitle": "Unify will recent emails, replies, and meeting context to learn how you actually communicate",
+            "subtitle": "Unify will analyze recent emails and replies to learn how you actually communicate",
             "provider": "Gmail",
             "account": "joel@unifygtm.com",
             "status": "connected",
             "ctaLabel": "Connect Gmail",
             "loadingLabel": "connecting",
             "learningTitle": "Learning your style",
-            "learningDetail": "Analyzing vocabulary...",
+            "learningDetail": "Analyzing tone...",
             "signals": [
               "sent emails",
               "reply patterns",
@@ -564,29 +424,29 @@
           "id": "crm-update-step-1",
           "kind": "component",
           "text": "Uploaded business context files",
-          "note": "Dragged in as a bundle before the agent learns Pylon.",
+          "note": "Dragged in as a bundle before the agent learns Vercel.",
           "component": {
             "kind": "uploadedFiles",
             "title": "Business context files",
             "files": [
               {
-                "name": "battlecards.pdf",
-                "detail": "Competitors, traps, objections, displacement plays",
+                "name": "vercel-positioning.pdf",
+                "detail": "Frontend Cloud narrative, buyer pains, proof points",
                 "type": "PDF"
               },
               {
-                "name": "positioning-memo.docx",
-                "detail": "Category narrative, buyer pains, proof points",
+                "name": "ai-app-playbook.docx",
+                "detail": "AI app workflows, Vercel AI SDK, launch patterns",
                 "type": "DOC"
               },
               {
-                "name": "outbound-playbook.pdf",
-                "detail": "Sequences, objection handling, CTA rules",
+                "name": "enterprise-objections.pdf",
+                "detail": "Security, scale, migration, and platform objections",
                 "type": "PDF"
               },
               {
                 "name": "icp-context.md",
-                "detail": "Best-fit accounts, disqualifiers, buyer pains",
+                "detail": "Best-fit teams, disqualifiers, buying triggers",
                 "type": "MD"
               }
             ]
@@ -595,25 +455,25 @@
         {
           "id": "crm-update-step-2",
           "kind": "thinking",
-          "text": "Reading Pylon battle cards and market notes",
-          "note": "Reading the uploaded business context to identify category language, buyer pains, competitive traps, and GTM opportunities.",
+          "text": "Reading Vercel positioning and launch notes",
+          "note": "Reading the uploaded business context to identify developer pains, AI app workflows, competitive traps, and GTM opportunities.",
           "thinking": {
-            "title": "Reviewing Pylon context",
+            "title": "Reviewing Vercel context",
             "elapsed": "4m 50s",
             "items": [
               {
-                "label": "Reading Pylon battle cards and market notes",
-                "detail": "Reading the uploaded business context to identify category language, buyer pains, competitive traps, and GTM opportunities.",
+                "label": "Reading Vercel positioning and launch notes",
+                "detail": "Reading the uploaded business context to identify developer pains, AI app workflows, competitive traps, and GTM opportunities.",
                 "disclosure": "Show more"
               },
               {
-                "label": "Mapping competitors and positioning",
-                "detail": "Comparing the business context against known market alternatives, displacement angles, objections, and differentiation claims.",
+                "label": "Mapping developer personas and buying committees",
+                "detail": "Mapping engineering leaders, platform teams, founders, and frontend owners to account-fit and urgency signals.",
                 "disclosure": "Show less"
               },
               {
-                "label": "Extracting messaging pillars and proof points",
-                "detail": "Extracting repeatable claims, customer proof, pain language, and credible hooks that can become outbound strategy.",
+                "label": "Extracting AI app and frontend cloud proof points",
+                "detail": "Extracting Next.js, preview deployments, global performance, enterprise controls, and Vercel AI SDK proof points.",
                 "disclosure": "Show less"
               },
               {
@@ -627,53 +487,40 @@
         {
           "id": "crm-update-step-3",
           "kind": "component",
-          "text": "Messaging strategy",
-          "note": "Summarizes the messaging, competitive positioning, and GTM strategy learned from the uploaded context.",
+          "text": "Vercel GTM Context",
+          "note": "Summarizes the messaging, competitive positioning, and GTM strategy learned from the uploaded Vercel context.",
           "component": {
             "kind": "styleProfile",
-            "title": "Messaging strategy",
-            "subtitle": "What Unify learned from the uploaded business context.",
+            "title": "Vercel GTM Context",
             "signals": [
               {
-                "label": "Messaging",
-                "value": "Lead with support-led growth: turn customer conversations into expansion, retention, and renewal signals."
+                "label": "Winning wedge",
+                "value": "Lead with Frontend Cloud: the fastest path from idea to production for teams building web and AI experiences."
               },
               {
-                "label": "Positioning",
-                "value": "Frame Pylon as the customer intelligence layer for modern B2B teams, not another inbox or ticket queue."
+                "label": "Primary motion",
+                "value": "Target engineering leaders, platform teams, and founders with Next.js adoption, high-traffic launches, or active AI app work."
               },
               {
-                "label": "Competitors",
-                "value": "Against Intercom and Zendesk, emphasize account visibility, CRM-native handoffs, and revenue-ready workflows."
+                "label": "Displacement angle",
+                "value": "Against homegrown cloud and generic hosting, show where teams lose time: previews, performance, observability, and release confidence."
               },
               {
                 "label": "Best-fit ICP",
-                "value": "Series A-C B2B SaaS with complex accounts, high-value customers, and support data trapped outside GTM workflows."
+                "value": "Engineering-led companies building customer-facing web apps, AI products, or high-traffic launches with frontend velocity pains."
               }
             ],
             "examples": [
-              "Run expansion plays from support signals: stalled onboarding, repeated feature requests, and renewal risk.",
-              "Position against ticketing systems by showing how customer context becomes sales action, not just case resolution.",
-              "Avoid generic AI-agent language; anchor the pitch in account visibility, handoffs, and revenue moments."
+              "Open with a launch moment: traffic spike, AI feature release, migration project, or frontend team scaling past brittle workflows.",
+              "Package the CTA as a workflow review: local dev to preview to production, including where Vercel removes handoffs.",
+              "Keep the copy specific: Next.js, AI SDK, preview links, edge performance, and enterprise governance beat generic developer-platform language."
             ]
           }
         },
         {
-          "id": "crm-update-step-5",
-          "kind": "user",
-          "text": "Write a sequence for consumer fintech founders.",
-          "note": "This is intentionally outside the learned ICP."
-        },
-        {
-          "id": "crm-update-step-6",
-          "kind": "assistant",
-          "text": "Are you sure? this doesn't fit your ICP",
-          "note": "Guardrail response based on the uploaded context."
-        },
-        {
           "id": "crm-update-step-7",
           "kind": "user",
-          "text": "Okay, generate leads ranked by how personally connected they are to us.",
+          "text": "Generate leads ranked by how personally connected they are to me.",
           "note": ""
         },
         {
@@ -682,7 +529,7 @@
           "text": "Scoring shared schools, fields of study, mutual contacts, and warm signals",
           "note": "Combining account history with public source changes and recent activity to prepare a concise research brief.",
           "thinking": {
-            "title": "Thinking",
+            "title": "Ranking connected leads",
             "elapsed": "4m 12s",
             "items": [
               {
@@ -733,7 +580,7 @@
               {
                 "rank": "04",
                 "name": "Sam Hollis",
-                "company": "Apollo",
+                "company": "Pylon",
                 "title": "Growth Lead",
                 "proximity": "Warm signal",
                 "personalization": "They follow two of your customers and recently posted about data quality.",
@@ -824,7 +671,7 @@
               ],
               [
                 "Sam Hollis",
-                "Apollo",
+                "Pylon",
                 "VP Sales",
                 "1h ago",
                 "Comparison"
@@ -935,8 +782,8 @@
         {
           "id": "research-brief-step-3",
           "kind": "cursor",
-          "text": "Cursor clicks page 2, hovers the dialer icon, then clicks the email icon.",
-          "note": "Power dial shows an inline “Coming soon!” badge."
+          "text": "Cursor clicks the next chevron, then clicks the outreach sequence button.",
+          "note": "Outreach sequence switches into the selected state."
         },
         {
           "id": "research-brief-step-4",
@@ -953,13 +800,19 @@
                 "disclosure": "Show more"
               },
               {
-                "label": "Checking the account in Salesforce",
-                "detail": "Cross-checking the for your team's last 60 days of outreach, plus a quick scan of recent funding, hires, and exec changes for a credible trigger.",
+                "label": "Checking account history",
+                "detail": "Cross-checking your team’s last 60 days of outreach, plus a quick scan of recent funding, hires, and exec changes for a credible trigger.",
+                "toolCalls": [
+                  {
+                    "label": "Checking the account in Salesforce",
+                    "vendor": "Salesforce"
+                  }
+                ],
                 "disclosure": "Show less"
               },
               {
                 "label": "Writing in your voice",
-                "detail": "Invoking your voice — trained on your past sent emails — so the draft reads like something you'd actually send.",
+                "detail": "Invoking your voice — trained on your past sent emails — so the draft reads like something you’d actually send.",
                 "disclosure": "Show less"
               }
             ]
@@ -988,7 +841,7 @@
                   {
                     "channel": "email",
                     "label": "lead with the trigger",
-                    "body": "We built Unify as an AI-native platform for SDRs. Worth me sending over the 3 ideas we'd run for OrbitGrid?",
+                    "body": "We built Unify as an AI-native platform for SDRs. Worth me sending over the 3 ideas we’d run for OrbitGrid?",
                     "waitDays": "2"
                   },
                   {
@@ -1022,7 +875,7 @@
                   {
                     "channel": "email",
                     "label": "anchor to integrations",
-                    "body": "We built Unify as an AI-native platform for SDRs. Worth me sending over the 3 ideas we'd run for Northstar Dev?",
+                    "body": "We built Unify as an AI-native platform for SDRs. Worth me sending over the 3 ideas we’d run for Northstar Dev?",
                     "waitDays": "2"
                   },
                   {
@@ -1040,7 +893,7 @@
                   {
                     "channel": "call",
                     "label": "reference the path",
-                    "body": "Hi Evan, saw the integrations research and Northstar Dev's sales expansion. Are ecosystem-led accounts already a named campaign, or still mostly rep judgment?",
+                    "body": "Hi Evan, saw the integrations research and Northstar Dev’s sales expansion. Are ecosystem-led accounts already a named campaign, or still mostly rep judgment?",
                     "waitDays": ""
                   }
                 ]
@@ -1056,7 +909,7 @@
                   {
                     "channel": "email",
                     "label": "mirror the proof",
-                    "body": "We built Unify as an AI-native platform for SDRs. Worth me sending over the 3 ideas we'd run for BrightLayer?",
+                    "body": "We built Unify as an AI-native platform for SDRs. Worth me sending over the 3 ideas we’d run for BrightLayer?",
                     "waitDays": "2"
                   },
                   {
@@ -1081,11 +934,11 @@
               },
               {
                 "name": "Andre Park",
-                "company": "Ramp",
+                "company": "Waterfall",
                 "title": "Head of Sales",
                 "signal": "Demo page",
-                "subject": "Saw Ramp on demo pages + growth hiring",
-                "personalization": "Saw Ramp pop up across our visitor + intent feeds this week — demo page visits, plus growth hiring. Usually means a team is tightening how it prioritizes accounts.",
+                "subject": "Saw Waterfall on demo pages + growth hiring",
+                "personalization": "Saw Waterfall pop up across our visitor + intent feeds this week — demo page visits, plus growth hiring. Usually means a team is tightening how it prioritizes accounts.",
                 "steps": [
                   {
                     "channel": "email",
@@ -1096,7 +949,7 @@
                   {
                     "channel": "social",
                     "label": "share the angle",
-                    "body": "Andre, saw Ramp checking out the demo while growth hiring is active. I work on turning those signals into researched account clusters without stitching tabs together.",
+                    "body": "Andre, saw Waterfall checking out the demo while growth hiring is active. I work on turning those signals into researched account clusters without stitching tabs together.",
                     "waitDays": "3"
                   },
                   {
@@ -1108,7 +961,7 @@
                   {
                     "channel": "call",
                     "label": "ask about timing",
-                    "body": "Hi Andre, saw Ramp's demo interest and growth hiring. Is this tied to an active expansion push, or are you mainly tightening account prioritization?",
+                    "body": "Hi Andre, saw Waterfall’s demo interest and growth hiring. Is this tied to an active expansion push, or are you mainly tightening account prioritization?",
                     "waitDays": ""
                   }
                 ]
@@ -1136,7 +989,7 @@
                   {
                     "channel": "email",
                     "label": "offer benchmark",
-                    "body": "Offer to compare one existing target segment against Unify's combined intent and company data.",
+                    "body": "Offer to compare one existing target segment against Unify’s combined intent and company data.",
                     "waitDays": "2"
                   },
                   {
@@ -1217,11 +1070,11 @@
               },
               {
                 "name": "Sam Hollis",
-                "company": "Apollo",
+                "company": "Pylon",
                 "title": "VP Sales",
                 "signal": "Comparison",
-                "subject": "Saw Apollo comparing workflows",
-                "personalization": "Saw Apollo view comparison content, so the sequence should contrast Unify's unified workflow against point-tool switching.",
+                "subject": "Saw Pylon comparing workflows",
+                "personalization": "Saw Pylon view comparison content, so the sequence should contrast Unify’s unified workflow against point-tool switching.",
                 "steps": [
                   {
                     "channel": "email",
@@ -1232,7 +1085,7 @@
                   {
                     "channel": "social",
                     "label": "ask what matters",
-                    "body": "Sam, saw Apollo reviewing comparison content. Curious whether the real criteria is coverage, workflow speed, or personalization quality.",
+                    "body": "Sam, saw Pylon reviewing comparison content. Curious whether the real criteria is coverage, workflow speed, or personalization quality.",
                     "waitDays": "3"
                   },
                   {
@@ -1244,7 +1097,7 @@
                   {
                     "channel": "call",
                     "label": "qualify priority",
-                    "body": "Hi Sam, saw Apollo comparing workflows. Which step is pulling reps out of selling most often: data search, enrichment, or writing the sequence?",
+                    "body": "Hi Sam, saw Pylon comparing workflows. Which step is pulling reps out of selling most often: data search, enrichment, or writing the sequence?",
                     "waitDays": ""
                   }
                 ]
@@ -1278,7 +1131,7 @@
                   {
                     "channel": "call",
                     "label": "ask about handoff",
-                    "body": "Hi Rachel, saw Retool's pricing interest alongside sales hiring. How are intent signals getting handed to reps today, and where does that handoff break?",
+                    "body": "Hi Rachel, saw Retool’s pricing interest alongside sales hiring. How are intent signals getting handed to reps today, and where does that handoff break?",
                     "waitDays": ""
                   }
                 ]
@@ -1300,7 +1153,7 @@
                   {
                     "channel": "social",
                     "label": "ask one thing",
-                    "body": "Owen, saw Linear's demo-page research. Curious if the sales team is prioritizing outbound efficiency or better personalization this quarter.",
+                    "body": "Owen, saw Linear’s demo-page research. Curious if the sales team is prioritizing outbound efficiency or better personalization this quarter.",
                     "waitDays": "3"
                   },
                   {
@@ -1312,7 +1165,7 @@
                   {
                     "channel": "call",
                     "label": "connect to timing",
-                    "body": "Hi Owen, saw Linear's demo-page visit. Is this tied to an active evaluation window, or are you mapping what a cleaner outbound workflow could look like?",
+                    "body": "Hi Owen, saw Linear’s demo-page visit. Is this tied to an active evaluation window, or are you mapping what a cleaner outbound workflow could look like?",
                     "waitDays": ""
                   }
                 ]
@@ -1364,7 +1217,7 @@
               [
                 "Ethan Cho",
                 "ethan.cho@gmail.com",
-                "Clearbit Inc."
+                ""
               ],
               [
                 "Priya Shah",
@@ -1373,8 +1226,8 @@
               ],
               [
                 "Lucas",
-                "lucas.meyer@ramp.com",
-                "Ramp"
+                "lucas.meyer@yahoo.com",
+                ""
               ],
               [
                 "N. Kapoor",
@@ -1382,33 +1235,28 @@
                 "Mercury"
               ],
               [
-                "sam hollis",
-                "sam.hollis@apollo.io",
-                "Apollo.io"
-              ],
-              [
                 "Anna Li",
-                "",
-                "Linear"
+                "annali.work@gmail.com",
+                ""
               ],
               [
                 "Devon Park",
-                "devon.park@brex.com",
-                "Brex"
+                "devon.park@outlook.com",
+                ""
               ],
               [
                 "Rachel C.",
-                "rcho@figma.com",
+                "",
                 "Figma"
               ],
               [
                 "Owen Lee",
                 "owen.lee@icloud.com",
-                "Notion"
+                ""
               ],
               [
                 "Clara Wong",
-                "clara.wong@brightlayer.com",
+                "clara.wong@proton.me",
                 "Bright Layer"
               ],
               [
@@ -1418,15 +1266,55 @@
               ],
               [
                 "Ethan Cho",
-                "ethan.cho+events@gmail.com",
+                "",
                 "Clearbit Inc."
+              ],
+              [
+                "Fatima Ali",
+                "fatima.ali@gmail.com",
+                ""
+              ],
+              [
+                "Leo Martin",
+                "leo.martin@hex.tech",
+                "Hex"
+              ],
+              [
+                "Priya Rao",
+                "priya.rao@yahoo.com",
+                ""
+              ],
+              [
+                "Jules Meyer",
+                "jules@notion.so",
+                "Notion"
+              ],
+              [
+                "Marcus Reed",
+                "marcus.reed@icloud.com",
+                ""
+              ],
+              [
+                "Zoe Carter",
+                "zoe.carter@rippling.com",
+                "Rippling"
+              ],
+              [
+                "Liam Price",
+                "liam.price@gmail.com",
+                ""
+              ],
+              [
+                "Sara Nelson",
+                "sara.nelson@airtable.com",
+                "Airtable"
               ]
             ],
             "pagination": {
-              "pageSize": 6,
+              "pageSize": 10,
               "ranges": [
-                "1-6 of 54 records",
-                "7-13 of 54 records"
+                "1-10 of 54 records",
+                "11-20 of 54 records"
               ]
             }
           }
@@ -1452,7 +1340,7 @@
               },
               {
                 "label": "Resolving personal emails to business profiles",
-                "detail": "Taking every gmail, yahoo, and icloud address and matching it to a real person — pulling current company, title, and work email from LinkedIn so a \"jane.doe@gmail.com\" row becomes \"Jane Doe, VP Marketing at Plaid, jdoe@plaid.com.",
+                "detail": "Taking every gmail, yahoo, and icloud address and matching it to a real person — pulling current company, title, and work email from LinkedIn so a “jane.doe@gmail.com” row becomes “Jane Doe, VP Marketing at Plaid, jdoe@plaid.com.”",
                 "disclosure": "Show less"
               },
               {
@@ -1506,8 +1394,8 @@
               ],
               [
                 "Lucas Meyer",
-                "lucas.meyer@ramp.com",
-                "Ramp",
+                "lucas.meyer@waterfall.com",
+                "Waterfall",
                 "Revenue Operations"
               ],
               [
@@ -1518,11 +1406,102 @@
               ],
               [
                 "Sam Hollis",
-                "sam.hollis@apollo.io",
-                "Apollo",
+                "sam.hollis@usepylon.com",
+                "Pylon",
+                "VP Sales"
+              ],
+              [
+                "Anna Li",
+                "anna.li@linear.app",
+                "Linear",
+                "Growth Marketing"
+              ],
+              [
+                "Devon Park",
+                "devon.park@brex.com",
+                "Brex",
+                "RevOps Manager"
+              ],
+              [
+                "Rachel Cho",
+                "rachel.cho@figma.com",
+                "Figma",
+                "Product Marketing"
+              ],
+              [
+                "Owen Lee",
+                "owen.lee@notion.so",
+                "Notion",
+                "Revenue Lead"
+              ],
+              [
+                "Clara Wong",
+                "clara.wong@brightlayer.com",
+                "BrightLayer",
+                "VP Revenue"
+              ],
+              [
+                "Sara Patel",
+                "sara.patel@northstar.ai",
+                "Northstar AI",
+                "Demand Gen"
+              ],
+              [
+                "Ethan Cho",
+                "ethan.cho@clearbit.com",
+                "Clearbit",
+                "Head of Demand Gen"
+              ],
+              [
+                "Fatima Ali",
+                "fatima.ali@vercel.com",
+                "Vercel",
+                "VP Sales"
+              ],
+              [
+                "Leo Martin",
+                "leo.martin@hex.tech",
+                "Hex",
+                "Head of Sales"
+              ],
+              [
+                "Priya Rao",
+                "priya.rao@census.com",
+                "Census",
+                "Sales Director"
+              ],
+              [
+                "Jules Meyer",
+                "jules.meyer@notion.so",
+                "Notion",
+                "VP Sales"
+              ],
+              [
+                "Marcus Reed",
+                "marcus.reed@figma.com",
+                "Figma",
+                "Revenue Lead"
+              ],
+              [
+                "Zoe Carter",
+                "zoe.carter@rippling.com",
+                "Rippling",
+                "Head of Sales"
+              ],
+              [
+                "Liam Price",
+                "liam.price@webflow.com",
+                "Webflow",
                 "VP Sales"
               ]
-            ]
+            ],
+            "pagination": {
+              "pageSize": 10,
+              "ranges": [
+                "1-10 of 54 records",
+                "11-20 of 54 records"
+              ]
+            }
           }
         }
       ]

@@ -21,6 +21,7 @@ type PathOptions = {
   seed: string;
   speed?: CursorSpeed;
   intent?: CursorIntent;
+  duration?: number;
   curve?: number;
   durationScale?: number;
   overshoot?: number | false;
@@ -50,6 +51,9 @@ export function createHumanCursorPath(start: Point, end: Point, options: PathOpt
   const dist = distance(start, end);
   const speed = options.speed ?? "normal";
   const intent = options.intent ?? "hover";
+  const explicitDuration = typeof options.duration === "number" && Number.isFinite(options.duration)
+    ? Math.max(0.01, options.duration)
+    : null;
 
   if (options.reducedMotion || dist < 2) {
     return {
@@ -57,7 +61,7 @@ export function createHumanCursorPath(start: Point, end: Point, options: PathOpt
       c1: start,
       c2: end,
       end,
-      duration: options.reducedMotion ? 0.12 : 0.08,
+      duration: options.reducedMotion ? 0.12 : explicitDuration ?? 0.08,
     };
   }
 
@@ -73,11 +77,12 @@ export function createHumanCursorPath(start: Point, end: Point, options: PathOpt
   const curve =
     clamp(dist * intentCurve, 18, 150) * curveAmount * curveSign * (0.72 + random() * 0.44);
   const baseDuration = dist / SPEED_PIXELS_PER_SECOND[speed] + 0.16;
-  const duration = clamp(
+  const scaledDuration = clamp(
     baseDuration * INTENT_DURATION_MULTIPLIER[intent] * CURSOR_DURATION_SCALE * (options.durationScale ?? 1),
     0.3,
     1.98,
   );
+  const duration = explicitDuration ?? scaledDuration;
   const overshootDistance =
     options.overshoot === false || dist < 120
       ? 0

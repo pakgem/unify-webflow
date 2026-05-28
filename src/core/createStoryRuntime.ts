@@ -24,7 +24,7 @@ type StoryRuntime = {
 
 export function createStoryRuntime(root: HTMLElement, config: ChatbotStoriesConfig = {}): StoryRuntime {
   const stories = config.stories?.length ? config.stories : defaultStories;
-  const draftEndpoint = config.builderDraftEndpoint ?? "/api/story-draft";
+  const draftEndpoint = config.builderDraftEndpoint ?? (config.showBuilder ? "/api/story-draft" : false);
   const resolveAssetUrl = createAssetUrlResolver(config);
   applyRuntimeAssetUrls(root, resolveAssetUrl);
   const reducedMotion =

@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-05-26T17:46:58.253Z",
+  "generatedAt": "2026-05-28T23:33:25.060Z",
   "bundle": {
     "file": "chatbot-stories.js",
-    "bytes": 498132
+    "bytes": 593111
   },
   "assetBasePath": "assets",
   "assets": [
@@ -101,10 +101,6 @@
     {
       "file": "data-logos/PredictLeads.svg",
       "runtimePath": "/data-logos/PredictLeads.svg"
-    },
-    {
-      "file": "data-logos/Ramp.svg",
-      "runtimePath": "/data-logos/Ramp.svg"
     },
     {
       "file": "data-logos/Salesforce.svg",

@@ -1,200 +1,200 @@
-function Be(r) {
+function je(r) {
   if (r === void 0)
     throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
   return r;
 }
-function nr(r, e) {
+function Cr(r, e) {
   r.prototype = Object.create(e.prototype), r.prototype.constructor = r, r.__proto__ = e;
 }
-var be = {
+var xe = {
   autoSleep: 120,
   force3D: "auto",
   nullTargetWarn: 1,
   units: {
     lineHeight: ""
   }
-}, Yt = {
+}, oa = {
   duration: 0.5,
   overwrite: !1,
   delay: 0
-}, Ei, Z, H, Ae = 1e8, B = 1 / Ae, ui = Math.PI * 2, Do = ui / 4, Io = 0, rr = Math.sqrt, qo = Math.cos, Lo = Math.sin, J = function(e) {
+}, Hi, ae, V, Te = 1e8, F = 1 / Te, Si = Math.PI * 2, rs = Si / 4, os = 0, Tr = Math.sqrt, ss = Math.cos, ls = Math.sin, ee = function(e) {
   return typeof e == "string";
-}, Y = function(e) {
+}, W = function(e) {
   return typeof e == "function";
-}, Ge = function(e) {
+}, Ze = function(e) {
   return typeof e == "number";
-}, Mi = function(e) {
+}, Vi = function(e) {
   return typeof e > "u";
-}, Le = function(e) {
+}, Ge = function(e) {
   return typeof e == "object";
-}, se = function(e) {
+}, ue = function(e) {
   return e !== !1;
-}, Pi = function() {
+}, Gi = function() {
   return typeof window < "u";
-}, ra = function(e) {
-  return Y(e) || J(e);
-}, or = typeof ArrayBuffer == "function" && ArrayBuffer.isView || function() {
-}, ae = Array.isArray, No = /random\([^)]+\)/g, Oo = /,\s*/g, Zi = /(?:-?\.?\d|\.)+/gi, sr = /[-+=.]*\d+[.e\-+]*\d*[e\-+]*\d*/g, At = /[-+=.]*\d+[.e-]*\d*[a-z%]*/g, za = /[-+=.]*\d+\.?\d*(?:e-|e\+)?\d*/gi, lr = /[+-]=-?[.\d]+/, Bo = /[^,'"\[\]\s]+/gi, Fo = /^[+\-=e\s\d]*\d+[.\d]*([a-z]*|%)\s*$/i, V, Re, hi, Ri, ye = {}, _a = {}, cr, dr = function(e) {
-  return (_a = Rt(e, ye)) && ue;
-}, Di = function(e, t) {
+}, ba = function(e) {
+  return W(e) || ee(e);
+}, Er = typeof ArrayBuffer == "function" && ArrayBuffer.isView || function() {
+}, oe = Array.isArray, cs = /random\([^)]+\)/g, ds = /,\s*/g, mn = /(?:-?\.?\d|\.)+/gi, Pr = /[-+=.]*\d+[.e\-+]*\d*[e\-+]*\d*/g, Bt = /[-+=.]*\d+[.e-]*\d*[a-z%]*/g, $a = /[-+=.]*\d+\.?\d*(?:e-|e\+)?\d*/gi, Mr = /[+-]=-?[.\d]+/, us = /[^,'"\[\]\s]+/gi, hs = /^[+\-=e\s\d]*\d+[.\d]*([a-z]*|%)\s*$/i, Q, Ue, Ci, Qi, _e = {}, Ba = {}, Dr, Rr = function(e) {
+  return (Ba = zt(e, _e)) && me;
+}, Yi = function(e, t) {
   return console.warn("Invalid property", e, "set to", t, "Missing plugin? gsap.registerPlugin()");
-}, Qt = function(e, t) {
+}, sa = function(e, t) {
   return !t && console.warn(e);
-}, ur = function(e, t) {
-  return e && (ye[e] = t) && _a && (_a[e] = t) || ye;
-}, jt = function() {
+}, Ir = function(e, t) {
+  return e && (_e[e] = t) && Ba && (Ba[e] = t) || _e;
+}, la = function() {
   return 0;
-}, zo = {
+}, ps = {
   suppressEvents: !0,
   isStart: !0,
   kill: !1
-}, fa = {
+}, Ma = {
   suppressEvents: !0,
   kill: !1
-}, Uo = {
+}, gs = {
   suppressEvents: !0
-}, Ii = {}, tt = [], pi = {}, hr, he = {}, Ua = {}, $i = 30, wa = [], qi = "", Li = function(e) {
+}, Wi = {}, ut = [], Ti = {}, qr, we = {}, ei = {}, wn = 30, Da = [], ji = "", Ki = function(e) {
   var t = e[0], a, i;
-  if (Le(t) || Y(t) || (e = [e]), !(a = (t._gsap || {}).harness)) {
-    for (i = wa.length; i-- && !wa[i].targetTest(t); )
+  if (Ge(t) || W(t) || (e = [e]), !(a = (t._gsap || {}).harness)) {
+    for (i = Da.length; i-- && !Da[i].targetTest(t); )
       ;
-    a = wa[i];
+    a = Da[i];
   }
   for (i = e.length; i--; )
-    e[i] && (e[i]._gsap || (e[i]._gsap = new qr(e[i], a))) || e.splice(i, 1);
+    e[i] && (e[i]._gsap || (e[i]._gsap = new ao(e[i], a))) || e.splice(i, 1);
   return e;
-}, ft = function(e) {
-  return e._gsap || Li(Se(e))[0]._gsap;
-}, pr = function(e, t, a) {
-  return (a = e[t]) && Y(a) ? e[t]() : Mi(a) && e.getAttribute && e.getAttribute(t) || a;
-}, le = function(e, t) {
+}, Ct = function(e) {
+  return e._gsap || Ki(Ee(e))[0]._gsap;
+}, Br = function(e, t, a) {
+  return (a = e[t]) && W(a) ? e[t]() : Vi(a) && e.getAttribute && e.getAttribute(t) || a;
+}, he = function(e, t) {
   return (e = e.split(",")).forEach(t) || e;
-}, Q = function(e) {
+}, j = function(e) {
   return Math.round(e * 1e5) / 1e5 || 0;
 }, G = function(e) {
   return Math.round(e * 1e7) / 1e7 || 0;
-}, Ct = function(e, t) {
+}, Nt = function(e, t) {
   var a = t.charAt(0), i = parseFloat(t.substr(2));
   return e = parseFloat(e), a === "+" ? e + i : a === "-" ? e - i : a === "*" ? e * i : e / i;
-}, Ho = function(e, t) {
+}, ms = function(e, t) {
   for (var a = t.length, i = 0; e.indexOf(t[i]) < 0 && ++i < a; )
     ;
   return i < a;
-}, Aa = function() {
-  var e = tt.length, t = tt.slice(0), a, i;
-  for (pi = {}, tt.length = 0, a = 0; a < e; a++)
+}, La = function() {
+  var e = ut.length, t = ut.slice(0), a, i;
+  for (Ti = {}, ut.length = 0, a = 0; a < e; a++)
     i = t[a], i && i._lazy && (i.render(i._lazy[0], i._lazy[1], !0)._lazy = 0);
-}, Ni = function(e) {
+}, Xi = function(e) {
   return !!(e._initted || e._startAt || e.add);
-}, gr = function(e, t, a, i) {
-  tt.length && !Z && Aa(), e.render(t, a, !!(Z && t < 0 && Ni(e))), tt.length && !Z && Aa();
-}, mr = function(e) {
+}, Lr = function(e, t, a, i) {
+  ut.length && !ae && La(), e.render(t, a, !!(ae && t < 0 && Xi(e))), ut.length && !ae && La();
+}, Or = function(e) {
   var t = parseFloat(e);
-  return (t || t === 0) && (e + "").match(Bo).length < 2 ? t : J(e) ? e.trim() : e;
-}, fr = function(e) {
+  return (t || t === 0) && (e + "").match(us).length < 2 ? t : ee(e) ? e.trim() : e;
+}, Nr = function(e) {
   return e;
-}, xe = function(e, t) {
+}, ke = function(e, t) {
   for (var a in t)
     a in e || (e[a] = t[a]);
   return e;
-}, Go = function(e) {
+}, ws = function(e) {
   return function(t, a) {
     for (var i in a)
       i in t || i === "duration" && e || i === "ease" || (t[i] = a[i]);
   };
-}, Rt = function(e, t) {
+}, zt = function(e, t) {
   for (var a in t)
     e[a] = t[a];
   return e;
-}, en = function r(e, t) {
+}, fn = function r(e, t) {
   for (var a in t)
-    a !== "__proto__" && a !== "constructor" && a !== "prototype" && (e[a] = Le(t[a]) ? r(e[a] || (e[a] = {}), t[a]) : t[a]);
+    a !== "__proto__" && a !== "constructor" && a !== "prototype" && (e[a] = Ge(t[a]) ? r(e[a] || (e[a] = {}), t[a]) : t[a]);
   return e;
-}, Sa = function(e, t) {
+}, Oa = function(e, t) {
   var a = {}, i;
   for (i in e)
     i in t || (a[i] = e[i]);
   return a;
-}, Gt = function(e) {
-  var t = e.parent || V, a = e.keyframes ? Go(ae(e.keyframes)) : xe;
-  if (se(e.inherit))
+}, ia = function(e) {
+  var t = e.parent || Q, a = e.keyframes ? ws(oe(e.keyframes)) : ke;
+  if (ue(e.inherit))
     for (; t; )
       a(e, t.vars.defaults), t = t.parent || t._dp;
   return e;
-}, Vo = function(e, t) {
+}, fs = function(e, t) {
   for (var a = e.length, i = a === t.length; i && a-- && e[a] === t[a]; )
     ;
   return a < 0;
-}, wr = function(e, t, a, i, n) {
+}, Fr = function(e, t, a, i, n) {
   var o = e[i], s;
   if (n)
     for (s = t[n]; o && o[n] > s; )
       o = o._prev;
   return o ? (t._next = o._next, o._next = t) : (t._next = e[a], e[a] = t), t._next ? t._next._prev = t : e[i] = t, t._prev = o, t.parent = t._dp = e, t;
-}, Ia = function(e, t, a, i) {
+}, Ya = function(e, t, a, i) {
   a === void 0 && (a = "_first"), i === void 0 && (i = "_last");
   var n = t._prev, o = t._next;
   n ? n._next = o : e[a] === t && (e[a] = o), o ? o._prev = n : e[i] === t && (e[i] = n), t._next = t._prev = t.parent = null;
-}, it = function(e, t) {
+}, pt = function(e, t) {
   e.parent && (!t || e.parent.autoRemoveChildren) && e.parent.remove && e.parent.remove(e), e._act = 0;
-}, wt = function(e, t) {
+}, Tt = function(e, t) {
   if (e && (!t || t._end > e._dur || t._start < 0))
     for (var a = e; a; )
       a._dirty = 1, a = a.parent;
   return e;
-}, Wo = function(e) {
+}, bs = function(e) {
   for (var t = e.parent; t && t.parent; )
     t._dirty = 1, t.totalDuration(), t = t.parent;
   return e;
-}, gi = function(e, t, a, i) {
-  return e._startAt && (Z ? e._startAt.revert(fa) : e.vars.immediateRender && !e.vars.autoRevert || e._startAt.render(t, !0, i));
-}, Yo = function r(e) {
+}, Ei = function(e, t, a, i) {
+  return e._startAt && (ae ? e._startAt.revert(Ma) : e.vars.immediateRender && !e.vars.autoRevert || e._startAt.render(t, !0, i));
+}, As = function r(e) {
   return !e || e._ts && r(e.parent);
-}, tn = function(e) {
-  return e._repeat ? Dt(e._tTime, e = e.duration() + e._rDelay) * e : 0;
-}, Dt = function(e, t) {
+}, bn = function(e) {
+  return e._repeat ? Ht(e._tTime, e = e.duration() + e._rDelay) * e : 0;
+}, Ht = function(e, t) {
   var a = Math.floor(e = G(e / t));
   return e && a === e ? a - 1 : a;
-}, ka = function(e, t) {
+}, Na = function(e, t) {
   return (e - t._start) * t._ts + (t._ts >= 0 ? 0 : t._dirty ? t.totalDuration() : t._tDur);
-}, qa = function(e) {
-  return e._end = G(e._start + (e._tDur / Math.abs(e._ts || e._rts || B) || 0));
-}, La = function(e, t) {
+}, Wa = function(e) {
+  return e._end = G(e._start + (e._tDur / Math.abs(e._ts || e._rts || F) || 0));
+}, ja = function(e, t) {
   var a = e._dp;
-  return a && a.smoothChildTiming && e._ts && (e._start = G(a._time - (e._ts > 0 ? t / e._ts : ((e._dirty ? e.totalDuration() : e._tDur) - t) / -e._ts)), qa(e), a._dirty || wt(a, e)), e;
-}, br = function(e, t) {
+  return a && a.smoothChildTiming && e._ts && (e._start = G(a._time - (e._ts > 0 ? t / e._ts : ((e._dirty ? e.totalDuration() : e._tDur) - t) / -e._ts)), Wa(e), a._dirty || Tt(a, e)), e;
+}, Ur = function(e, t) {
   var a;
-  if ((t._time || !t._dur && t._initted || t._start < e._time && (t._dur || !t.add)) && (a = ka(e.rawTime(), t), (!t._dur || aa(0, t.totalDuration(), a) - t._tTime > B) && t.render(a, !0)), wt(e, t)._dp && e._initted && e._time >= e._dur && e._ts) {
+  if ((t._time || !t._dur && t._initted || t._start < e._time && (t._dur || !t.add)) && (a = Na(e.rawTime(), t), (!t._dur || wa(0, t.totalDuration(), a) - t._tTime > F) && t.render(a, !0)), Tt(e, t)._dp && e._initted && e._time >= e._dur && e._ts) {
     if (e._dur < e.duration())
       for (a = e; a._dp; )
         a.rawTime() >= 0 && a.totalTime(a._tTime), a = a._dp;
-    e._zTime = -B;
+    e._zTime = -F;
   }
-}, De = function(e, t, a, i) {
-  return t.parent && it(t), t._start = G((Ge(a) ? a : a || e !== V ? _e(e, a, t) : e._time) + t._delay), t._end = G(t._start + (t.totalDuration() / Math.abs(t.timeScale()) || 0)), wr(e, t, "_first", "_last", e._sort ? "_start" : 0), mi(t) || (e._recent = t), i || br(e, t), e._ts < 0 && La(e, e._tTime), e;
-}, yr = function(e, t) {
-  return (ye.ScrollTrigger || Di("scrollTrigger", t)) && ye.ScrollTrigger.create(t, e);
-}, xr = function(e, t, a, i, n) {
-  if (Bi(e, t, n), !e._initted)
+}, ze = function(e, t, a, i) {
+  return t.parent && pt(t), t._start = G((Ze(a) ? a : a || e !== Q ? Ce(e, a, t) : e._time) + t._delay), t._end = G(t._start + (t.totalDuration() / Math.abs(t.timeScale()) || 0)), Fr(e, t, "_first", "_last", e._sort ? "_start" : 0), Pi(t) || (e._recent = t), i || Ur(e, t), e._ts < 0 && ja(e, e._tTime), e;
+}, zr = function(e, t) {
+  return (_e.ScrollTrigger || Yi("scrollTrigger", t)) && _e.ScrollTrigger.create(t, e);
+}, Hr = function(e, t, a, i, n) {
+  if (Zi(e, t, n), !e._initted)
     return 1;
-  if (!a && e._pt && !Z && (e._dur && e.vars.lazy !== !1 || !e._dur && e.vars.lazy) && hr !== me.frame)
-    return tt.push(e), e._lazy = [n, i], 1;
-}, Qo = function r(e) {
+  if (!a && e._pt && !ae && (e._dur && e.vars.lazy !== !1 || !e._dur && e.vars.lazy) && qr !== Ae.frame)
+    return ut.push(e), e._lazy = [n, i], 1;
+}, ys = function r(e) {
   var t = e.parent;
   return t && t._ts && t._initted && !t._lock && (t.rawTime() < 0 || r(t));
-}, mi = function(e) {
+}, Pi = function(e) {
   var t = e.data;
   return t === "isFromStart" || t === "isStart";
-}, jo = function(e, t, a, i) {
-  var n = e.ratio, o = t < 0 || !t && (!e._start && Qo(e) && !(!e._initted && mi(e)) || (e._ts < 0 || e._dp._ts < 0) && !mi(e)) ? 0 : 1, s = e._rDelay, l = 0, c, d, u;
-  if (s && e._repeat && (l = aa(0, e._tDur, t), d = Dt(l, s), e._yoyo && d & 1 && (o = 1 - o), d !== Dt(e._tTime, s) && (n = 1 - o, e.vars.repeatRefresh && e._initted && e.invalidate())), o !== n || Z || i || e._zTime === B || !t && e._zTime) {
-    if (!e._initted && xr(e, t, i, a, l))
+}, vs = function(e, t, a, i) {
+  var n = e.ratio, o = t < 0 || !t && (!e._start && ys(e) && !(!e._initted && Pi(e)) || (e._ts < 0 || e._dp._ts < 0) && !Pi(e)) ? 0 : 1, s = e._rDelay, c = 0, l, d, u;
+  if (s && e._repeat && (c = wa(0, e._tDur, t), d = Ht(c, s), e._yoyo && d & 1 && (o = 1 - o), d !== Ht(e._tTime, s) && (n = 1 - o, e.vars.repeatRefresh && e._initted && e.invalidate())), o !== n || ae || i || e._zTime === F || !t && e._zTime) {
+    if (!e._initted && Hr(e, t, i, a, c))
       return;
-    for (u = e._zTime, e._zTime = t || (a ? B : 0), a || (a = t && !u), e.ratio = o, e._from && (o = 1 - o), e._time = 0, e._tTime = l, c = e._pt; c; )
-      c.r(o, c.d), c = c._next;
-    t < 0 && gi(e, t, a, !0), e._onUpdate && !a && fe(e, "onUpdate"), l && e._repeat && !a && e.parent && fe(e, "onRepeat"), (t >= e._tDur || t < 0) && e.ratio === o && (o && it(e, 1), !a && !Z && (fe(e, o ? "onComplete" : "onReverseComplete", !0), e._prom && e._prom()));
+    for (u = e._zTime, e._zTime = t || (a ? F : 0), a || (a = t && !u), e.ratio = o, e._from && (o = 1 - o), e._time = 0, e._tTime = c, l = e._pt; l; )
+      l.r(o, l.d), l = l._next;
+    t < 0 && Ei(e, t, a, !0), e._onUpdate && !a && ye(e, "onUpdate"), c && e._repeat && !a && e.parent && ye(e, "onRepeat"), (t >= e._tDur || t < 0) && e.ratio === o && (o && pt(e, 1), !a && !ae && (ye(e, o ? "onComplete" : "onReverseComplete", !0), e._prom && e._prom()));
   } else e._zTime || (e._zTime = t);
-}, Ko = function(e, t, a) {
+}, xs = function(e, t, a) {
   var i;
   if (a > t)
     for (i = e._first; i && i._start <= a; ) {
@@ -208,98 +208,98 @@ var be = {
         return i;
       i = i._prev;
     }
-}, It = function(e, t, a, i) {
+}, Vt = function(e, t, a, i) {
   var n = e._repeat, o = G(t) || 0, s = e._tTime / e._tDur;
-  return s && !i && (e._time *= o / e._dur), e._dur = o, e._tDur = n ? n < 0 ? 1e10 : G(o * (n + 1) + e._rDelay * n) : o, s > 0 && !i && La(e, e._tTime = e._tDur * s), e.parent && qa(e), a || wt(e.parent, e), e;
-}, an = function(e) {
-  return e instanceof oe ? wt(e) : It(e, e._dur);
-}, Xo = {
+  return s && !i && (e._time *= o / e._dur), e._dur = o, e._tDur = n ? n < 0 ? 1e10 : G(o * (n + 1) + e._rDelay * n) : o, s > 0 && !i && ja(e, e._tTime = e._tDur * s), e.parent && Wa(e), a || Tt(e.parent, e), e;
+}, An = function(e) {
+  return e instanceof de ? Tt(e) : Vt(e, e._dur);
+}, _s = {
   _start: 0,
-  endTime: jt,
-  totalDuration: jt
-}, _e = function r(e, t, a) {
-  var i = e.labels, n = e._recent || Xo, o = e.duration() >= Ae ? n.endTime(!1) : e._dur, s, l, c;
-  return J(t) && (isNaN(t) || t in i) ? (l = t.charAt(0), c = t.substr(-1) === "%", s = t.indexOf("="), l === "<" || l === ">" ? (s >= 0 && (t = t.replace(/=/, "")), (l === "<" ? n._start : n.endTime(n._repeat >= 0)) + (parseFloat(t.substr(1)) || 0) * (c ? (s < 0 ? n : a).totalDuration() / 100 : 1)) : s < 0 ? (t in i || (i[t] = o), i[t]) : (l = parseFloat(t.charAt(s - 1) + t.substr(s + 1)), c && a && (l = l / 100 * (ae(a) ? a[0] : a).totalDuration()), s > 1 ? r(e, t.substr(0, s - 1), a) + l : o + l)) : t == null ? o : +t;
-}, Vt = function(e, t, a) {
-  var i = Ge(t[1]), n = (i ? 2 : 1) + (e < 2 ? 0 : 1), o = t[n], s, l;
+  endTime: la,
+  totalDuration: la
+}, Ce = function r(e, t, a) {
+  var i = e.labels, n = e._recent || _s, o = e.duration() >= Te ? n.endTime(!1) : e._dur, s, c, l;
+  return ee(t) && (isNaN(t) || t in i) ? (c = t.charAt(0), l = t.substr(-1) === "%", s = t.indexOf("="), c === "<" || c === ">" ? (s >= 0 && (t = t.replace(/=/, "")), (c === "<" ? n._start : n.endTime(n._repeat >= 0)) + (parseFloat(t.substr(1)) || 0) * (l ? (s < 0 ? n : a).totalDuration() / 100 : 1)) : s < 0 ? (t in i || (i[t] = o), i[t]) : (c = parseFloat(t.charAt(s - 1) + t.substr(s + 1)), l && a && (c = c / 100 * (oe(a) ? a[0] : a).totalDuration()), s > 1 ? r(e, t.substr(0, s - 1), a) + c : o + c)) : t == null ? o : +t;
+}, na = function(e, t, a) {
+  var i = Ze(t[1]), n = (i ? 2 : 1) + (e < 2 ? 0 : 1), o = t[n], s, c;
   if (i && (o.duration = t[1]), o.parent = a, e) {
-    for (s = o, l = a; l && !("immediateRender" in s); )
-      s = l.vars.defaults || {}, l = se(l.vars.inherit) && l.parent;
-    o.immediateRender = se(s.immediateRender), e < 2 ? o.runBackwards = 1 : o.startAt = t[n - 1];
+    for (s = o, c = a; c && !("immediateRender" in s); )
+      s = c.vars.defaults || {}, c = ue(c.vars.inherit) && c.parent;
+    o.immediateRender = ue(s.immediateRender), e < 2 ? o.runBackwards = 1 : o.startAt = t[n - 1];
   }
-  return new K(t[0], o, t[n + 1]);
-}, ot = function(e, t) {
+  return new J(t[0], o, t[n + 1]);
+}, wt = function(e, t) {
   return e || e === 0 ? t(e) : t;
-}, aa = function(e, t, a) {
+}, wa = function(e, t, a) {
   return a < e ? e : a > t ? t : a;
-}, te = function(e, t) {
-  return !J(e) || !(t = Fo.exec(e)) ? "" : t[1];
-}, Jo = function(e, t, a) {
-  return ot(a, function(i) {
-    return aa(e, t, i);
+}, re = function(e, t) {
+  return !ee(e) || !(t = hs.exec(e)) ? "" : t[1];
+}, ks = function(e, t, a) {
+  return wt(a, function(i) {
+    return wa(e, t, i);
   });
-}, fi = [].slice, vr = function(e, t) {
-  return e && Le(e) && "length" in e && (!t && !e.length || e.length - 1 in e && Le(e[0])) && !e.nodeType && e !== Re;
-}, Zo = function(e, t, a) {
+}, Mi = [].slice, Vr = function(e, t) {
+  return e && Ge(e) && "length" in e && (!t && !e.length || e.length - 1 in e && Ge(e[0])) && !e.nodeType && e !== Ue;
+}, Ss = function(e, t, a) {
   return a === void 0 && (a = []), e.forEach(function(i) {
     var n;
-    return J(i) && !t || vr(i, 1) ? (n = a).push.apply(n, Se(i)) : a.push(i);
+    return ee(i) && !t || Vr(i, 1) ? (n = a).push.apply(n, Ee(i)) : a.push(i);
   }) || a;
-}, Se = function(e, t, a) {
-  return H && !t && H.selector ? H.selector(e) : J(e) && !a && (hi || !qt()) ? fi.call((t || Ri).querySelectorAll(e), 0) : ae(e) ? Zo(e, a) : vr(e) ? fi.call(e, 0) : e ? [e] : [];
-}, wi = function(e) {
-  return e = Se(e)[0] || Qt("Invalid scope") || {}, function(t) {
+}, Ee = function(e, t, a) {
+  return V && !t && V.selector ? V.selector(e) : ee(e) && !a && (Ci || !Gt()) ? Mi.call((t || Qi).querySelectorAll(e), 0) : oe(e) ? Ss(e, a) : Vr(e) ? Mi.call(e, 0) : e ? [e] : [];
+}, Di = function(e) {
+  return e = Ee(e)[0] || sa("Invalid scope") || {}, function(t) {
     var a = e.current || e.nativeElement || e;
-    return Se(t, a.querySelectorAll ? a : a === e ? Qt("Invalid scope") || Ri.createElement("div") : e);
+    return Ee(t, a.querySelectorAll ? a : a === e ? sa("Invalid scope") || Qi.createElement("div") : e);
   };
-}, _r = function(e) {
+}, Gr = function(e) {
   return e.sort(function() {
     return 0.5 - Math.random();
   });
-}, Ar = function(e) {
-  if (Y(e))
+}, Qr = function(e) {
+  if (W(e))
     return e;
-  var t = Le(e) ? e : {
+  var t = Ge(e) ? e : {
     each: e
-  }, a = bt(t.ease), i = t.from || 0, n = parseFloat(t.base) || 0, o = {}, s = i > 0 && i < 1, l = isNaN(i) || s, c = t.axis, d = i, u = i;
-  return J(i) ? d = u = {
+  }, a = Et(t.ease), i = t.from || 0, n = parseFloat(t.base) || 0, o = {}, s = i > 0 && i < 1, c = isNaN(i) || s, l = t.axis, d = i, u = i;
+  return ee(i) ? d = u = {
     center: 0.5,
     edges: 0.5,
     end: 1
-  }[i] || 0 : !s && l && (d = i[0], u = i[1]), function(h, g, m) {
-    var p = (m || t).length, w = o[p], y, b, x, _, v, T, A, C, k;
-    if (!w) {
-      if (k = t.grid === "auto" ? 0 : (t.grid || [1, Ae])[1], !k) {
-        for (A = -Ae; A < (A = m[k++].getBoundingClientRect().left) && k < p; )
+  }[i] || 0 : !s && c && (d = i[0], u = i[1]), function(h, g, w) {
+    var p = (w || t).length, f = o[p], b, A, v, _, y, E, k, C, S;
+    if (!f) {
+      if (S = t.grid === "auto" ? 0 : (t.grid || [1, Te])[1], !S) {
+        for (k = -Te; k < (k = w[S++].getBoundingClientRect().left) && S < p; )
           ;
-        k < p && k--;
+        S < p && S--;
       }
-      for (w = o[p] = [], y = l ? Math.min(k, p) * d - 0.5 : i % k, b = k === Ae ? 0 : l ? p * u / k - 0.5 : i / k | 0, A = 0, C = Ae, T = 0; T < p; T++)
-        x = T % k - y, _ = b - (T / k | 0), w[T] = v = c ? Math.abs(c === "y" ? _ : x) : rr(x * x + _ * _), v > A && (A = v), v < C && (C = v);
-      i === "random" && _r(w), w.max = A - C, w.min = C, w.v = p = (parseFloat(t.amount) || parseFloat(t.each) * (k > p ? p - 1 : c ? c === "y" ? p / k : k : Math.max(k, p / k)) || 0) * (i === "edges" ? -1 : 1), w.b = p < 0 ? n - p : n, w.u = te(t.amount || t.each) || 0, a = a && p < 0 ? us(a) : a;
+      for (f = o[p] = [], b = c ? Math.min(S, p) * d - 0.5 : i % S, A = S === Te ? 0 : c ? p * u / S - 0.5 : i / S | 0, k = 0, C = Te, E = 0; E < p; E++)
+        v = E % S - b, _ = A - (E / S | 0), f[E] = y = l ? Math.abs(l === "y" ? _ : v) : Tr(v * v + _ * _), y > k && (k = y), y < C && (C = y);
+      i === "random" && Gr(f), f.max = k - C, f.min = C, f.v = p = (parseFloat(t.amount) || parseFloat(t.each) * (S > p ? p - 1 : l ? l === "y" ? p / S : S : Math.max(S, p / S)) || 0) * (i === "edges" ? -1 : 1), f.b = p < 0 ? n - p : n, f.u = re(t.amount || t.each) || 0, a = a && p < 0 ? Ns(a) : a;
     }
-    return p = (w[h] - w.min) / w.max || 0, G(w.b + (a ? a(p) : p) * w.v) + w.u;
+    return p = (f[h] - f.min) / f.max || 0, G(f.b + (a ? a(p) : p) * f.v) + f.u;
   };
-}, bi = function(e) {
+}, Ri = function(e) {
   var t = Math.pow(10, ((e + "").split(".")[1] || "").length);
   return function(a) {
     var i = G(Math.round(parseFloat(a) / e) * e * t);
-    return (i - i % 1) / t + (Ge(a) ? 0 : te(a));
+    return (i - i % 1) / t + (Ze(a) ? 0 : re(a));
   };
-}, Sr = function(e, t) {
-  var a = ae(e), i, n;
-  return !a && Le(e) && (i = a = e.radius || Ae, e.values ? (e = Se(e.values), (n = !Ge(e[0])) && (i *= i)) : e = bi(e.increment)), ot(t, a ? Y(e) ? function(o) {
+}, Yr = function(e, t) {
+  var a = oe(e), i, n;
+  return !a && Ge(e) && (i = a = e.radius || Te, e.values ? (e = Ee(e.values), (n = !Ze(e[0])) && (i *= i)) : e = Ri(e.increment)), wt(t, a ? W(e) ? function(o) {
     return n = e(o), Math.abs(n - o) <= i ? n : o;
   } : function(o) {
-    for (var s = parseFloat(n ? o.x : o), l = parseFloat(n ? o.y : 0), c = Ae, d = 0, u = e.length, h, g; u--; )
-      n ? (h = e[u].x - s, g = e[u].y - l, h = h * h + g * g) : h = Math.abs(e[u] - s), h < c && (c = h, d = u);
-    return d = !i || c <= i ? e[d] : o, n || d === o || Ge(o) ? d : d + te(o);
-  } : bi(e));
-}, kr = function(e, t, a, i) {
-  return ot(ae(e) ? !t : a === !0 ? !!(a = 0) : !i, function() {
-    return ae(e) ? e[~~(Math.random() * e.length)] : (a = a || 1e-5) && (i = a < 1 ? Math.pow(10, (a + "").length - 2) : 1) && Math.floor(Math.round((e - a / 2 + Math.random() * (t - e + a * 0.99)) / a) * a * i) / i;
+    for (var s = parseFloat(n ? o.x : o), c = parseFloat(n ? o.y : 0), l = Te, d = 0, u = e.length, h, g; u--; )
+      n ? (h = e[u].x - s, g = e[u].y - c, h = h * h + g * g) : h = Math.abs(e[u] - s), h < l && (l = h, d = u);
+    return d = !i || l <= i ? e[d] : o, n || d === o || Ze(o) ? d : d + re(o);
+  } : Ri(e));
+}, Wr = function(e, t, a, i) {
+  return wt(oe(e) ? !t : a === !0 ? !!(a = 0) : !i, function() {
+    return oe(e) ? e[~~(Math.random() * e.length)] : (a = a || 1e-5) && (i = a < 1 ? Math.pow(10, (a + "").length - 2) : 1) && Math.floor(Math.round((e - a / 2 + Math.random() * (t - e + a * 0.99)) / a) * a * i) / i;
   });
-}, $o = function() {
+}, Cs = function() {
   for (var e = arguments.length, t = new Array(e), a = 0; a < e; a++)
     t[a] = arguments[a];
   return function(i) {
@@ -307,275 +307,275 @@ var be = {
       return o(n);
     }, i);
   };
-}, es = function(e, t) {
+}, Ts = function(e, t) {
   return function(a) {
-    return e(parseFloat(a)) + (t || te(a));
+    return e(parseFloat(a)) + (t || re(a));
   };
-}, ts = function(e, t, a) {
-  return Tr(e, t, 0, 1, a);
-}, Cr = function(e, t, a) {
-  return ot(a, function(i) {
+}, Es = function(e, t, a) {
+  return Kr(e, t, 0, 1, a);
+}, jr = function(e, t, a) {
+  return wt(a, function(i) {
     return e[~~t(i)];
   });
-}, as = function r(e, t, a) {
+}, Ps = function r(e, t, a) {
   var i = t - e;
-  return ae(e) ? Cr(e, r(0, e.length), t) : ot(a, function(n) {
+  return oe(e) ? jr(e, r(0, e.length), t) : wt(a, function(n) {
     return (i + (n - e) % i) % i + e;
   });
-}, is = function r(e, t, a) {
+}, Ms = function r(e, t, a) {
   var i = t - e, n = i * 2;
-  return ae(e) ? Cr(e, r(0, e.length - 1), t) : ot(a, function(o) {
+  return oe(e) ? jr(e, r(0, e.length - 1), t) : wt(a, function(o) {
     return o = (n + (o - e) % n) % n || 0, e + (o > i ? n - o : o);
   });
-}, Kt = function(e) {
-  return e.replace(No, function(t) {
-    var a = t.indexOf("[") + 1, i = t.substring(a || 7, a ? t.indexOf("]") : t.length - 1).split(Oo);
-    return kr(a ? i : +i[0], a ? 0 : +i[1], +i[2] || 1e-5);
+}, ca = function(e) {
+  return e.replace(cs, function(t) {
+    var a = t.indexOf("[") + 1, i = t.substring(a || 7, a ? t.indexOf("]") : t.length - 1).split(ds);
+    return Wr(a ? i : +i[0], a ? 0 : +i[1], +i[2] || 1e-5);
   });
-}, Tr = function(e, t, a, i, n) {
+}, Kr = function(e, t, a, i, n) {
   var o = t - e, s = i - a;
-  return ot(n, function(l) {
-    return a + ((l - e) / o * s || 0);
+  return wt(n, function(c) {
+    return a + ((c - e) / o * s || 0);
   });
-}, ns = function r(e, t, a, i) {
+}, Ds = function r(e, t, a, i) {
   var n = isNaN(e + t) ? 0 : function(g) {
     return (1 - g) * e + g * t;
   };
   if (!n) {
-    var o = J(e), s = {}, l, c, d, u, h;
+    var o = ee(e), s = {}, c, l, d, u, h;
     if (a === !0 && (i = 1) && (a = null), o)
       e = {
         p: e
       }, t = {
         p: t
       };
-    else if (ae(e) && !ae(t)) {
-      for (d = [], u = e.length, h = u - 2, c = 1; c < u; c++)
-        d.push(r(e[c - 1], e[c]));
-      u--, n = function(m) {
-        m *= u;
-        var p = Math.min(h, ~~m);
-        return d[p](m - p);
+    else if (oe(e) && !oe(t)) {
+      for (d = [], u = e.length, h = u - 2, l = 1; l < u; l++)
+        d.push(r(e[l - 1], e[l]));
+      u--, n = function(w) {
+        w *= u;
+        var p = Math.min(h, ~~w);
+        return d[p](w - p);
       }, a = t;
-    } else i || (e = Rt(ae(e) ? [] : {}, e));
+    } else i || (e = zt(oe(e) ? [] : {}, e));
     if (!d) {
-      for (l in t)
-        Oi.call(s, e, l, "get", t[l]);
-      n = function(m) {
-        return Ui(m, s) || (o ? e.p : e);
+      for (c in t)
+        Ji.call(s, e, c, "get", t[c]);
+      n = function(w) {
+        return tn(w, s) || (o ? e.p : e);
       };
     }
   }
-  return ot(a, n);
-}, nn = function(e, t, a) {
-  var i = e.labels, n = Ae, o, s, l;
+  return wt(a, n);
+}, yn = function(e, t, a) {
+  var i = e.labels, n = Te, o, s, c;
   for (o in i)
-    s = i[o] - t, s < 0 == !!a && s && n > (s = Math.abs(s)) && (l = o, n = s);
-  return l;
-}, fe = function(e, t, a) {
-  var i = e.vars, n = i[t], o = H, s = e._ctx, l, c, d;
+    s = i[o] - t, s < 0 == !!a && s && n > (s = Math.abs(s)) && (c = o, n = s);
+  return c;
+}, ye = function(e, t, a) {
+  var i = e.vars, n = i[t], o = V, s = e._ctx, c, l, d;
   if (n)
-    return l = i[t + "Params"], c = i.callbackScope || e, a && tt.length && Aa(), s && (H = s), d = l ? n.apply(c, l) : n.call(c), H = o, d;
-}, zt = function(e) {
-  return it(e), e.scrollTrigger && e.scrollTrigger.kill(!!Z), e.progress() < 1 && fe(e, "onInterrupt"), e;
-}, St, Er = [], Mr = function(e) {
+    return c = i[t + "Params"], l = i.callbackScope || e, a && ut.length && La(), s && (V = s), d = c ? n.apply(l, c) : n.call(l), V = o, d;
+}, $t = function(e) {
+  return pt(e), e.scrollTrigger && e.scrollTrigger.kill(!!ae), e.progress() < 1 && ye(e, "onInterrupt"), e;
+}, Lt, Xr = [], Jr = function(e) {
   if (e)
-    if (e = !e.name && e.default || e, Pi() || e.headless) {
-      var t = e.name, a = Y(e), i = t && !a && e.init ? function() {
+    if (e = !e.name && e.default || e, Gi() || e.headless) {
+      var t = e.name, a = W(e), i = t && !a && e.init ? function() {
         this._props = [];
       } : e, n = {
-        init: jt,
-        render: Ui,
-        add: Oi,
-        kill: vs,
-        modifier: xs,
+        init: la,
+        render: tn,
+        add: Ji,
+        kill: js,
+        modifier: Ws,
         rawVars: 0
       }, o = {
         targetTest: 0,
         get: 0,
-        getSetter: zi,
+        getSetter: en,
         aliases: {},
         register: 0
       };
-      if (qt(), e !== i) {
-        if (he[t])
+      if (Gt(), e !== i) {
+        if (we[t])
           return;
-        xe(i, xe(Sa(e, n), o)), Rt(i.prototype, Rt(n, Sa(e, o))), he[i.prop = t] = i, e.targetTest && (wa.push(i), Ii[t] = 1), t = (t === "css" ? "CSS" : t.charAt(0).toUpperCase() + t.substr(1)) + "Plugin";
+        ke(i, ke(Oa(e, n), o)), zt(i.prototype, zt(n, Oa(e, o))), we[i.prop = t] = i, e.targetTest && (Da.push(i), Wi[t] = 1), t = (t === "css" ? "CSS" : t.charAt(0).toUpperCase() + t.substr(1)) + "Plugin";
       }
-      ur(t, i), e.register && e.register(ue, i, ce);
+      Ir(t, i), e.register && e.register(me, i, pe);
     } else
-      Er.push(e);
-}, O = 255, Ut = {
-  aqua: [0, O, O],
-  lime: [0, O, 0],
+      Xr.push(e);
+}, N = 255, ea = {
+  aqua: [0, N, N],
+  lime: [0, N, 0],
   silver: [192, 192, 192],
   black: [0, 0, 0],
   maroon: [128, 0, 0],
   teal: [0, 128, 128],
-  blue: [0, 0, O],
+  blue: [0, 0, N],
   navy: [0, 0, 128],
-  white: [O, O, O],
+  white: [N, N, N],
   olive: [128, 128, 0],
-  yellow: [O, O, 0],
-  orange: [O, 165, 0],
+  yellow: [N, N, 0],
+  orange: [N, 165, 0],
   gray: [128, 128, 128],
   purple: [128, 0, 128],
   green: [0, 128, 0],
-  red: [O, 0, 0],
-  pink: [O, 192, 203],
-  cyan: [0, O, O],
-  transparent: [O, O, O, 0]
-}, Ha = function(e, t, a) {
-  return e += e < 0 ? 1 : e > 1 ? -1 : 0, (e * 6 < 1 ? t + (a - t) * e * 6 : e < 0.5 ? a : e * 3 < 2 ? t + (a - t) * (2 / 3 - e) * 6 : t) * O + 0.5 | 0;
-}, Pr = function(e, t, a) {
-  var i = e ? Ge(e) ? [e >> 16, e >> 8 & O, e & O] : 0 : Ut.black, n, o, s, l, c, d, u, h, g, m;
+  red: [N, 0, 0],
+  pink: [N, 192, 203],
+  cyan: [0, N, N],
+  transparent: [N, N, N, 0]
+}, ti = function(e, t, a) {
+  return e += e < 0 ? 1 : e > 1 ? -1 : 0, (e * 6 < 1 ? t + (a - t) * e * 6 : e < 0.5 ? a : e * 3 < 2 ? t + (a - t) * (2 / 3 - e) * 6 : t) * N + 0.5 | 0;
+}, Zr = function(e, t, a) {
+  var i = e ? Ze(e) ? [e >> 16, e >> 8 & N, e & N] : 0 : ea.black, n, o, s, c, l, d, u, h, g, w;
   if (!i) {
-    if (e.substr(-1) === "," && (e = e.substr(0, e.length - 1)), Ut[e])
-      i = Ut[e];
+    if (e.substr(-1) === "," && (e = e.substr(0, e.length - 1)), ea[e])
+      i = ea[e];
     else if (e.charAt(0) === "#") {
       if (e.length < 6 && (n = e.charAt(1), o = e.charAt(2), s = e.charAt(3), e = "#" + n + n + o + o + s + s + (e.length === 5 ? e.charAt(4) + e.charAt(4) : "")), e.length === 9)
-        return i = parseInt(e.substr(1, 6), 16), [i >> 16, i >> 8 & O, i & O, parseInt(e.substr(7), 16) / 255];
-      e = parseInt(e.substr(1), 16), i = [e >> 16, e >> 8 & O, e & O];
+        return i = parseInt(e.substr(1, 6), 16), [i >> 16, i >> 8 & N, i & N, parseInt(e.substr(7), 16) / 255];
+      e = parseInt(e.substr(1), 16), i = [e >> 16, e >> 8 & N, e & N];
     } else if (e.substr(0, 3) === "hsl") {
-      if (i = m = e.match(Zi), !t)
-        l = +i[0] % 360 / 360, c = +i[1] / 100, d = +i[2] / 100, o = d <= 0.5 ? d * (c + 1) : d + c - d * c, n = d * 2 - o, i.length > 3 && (i[3] *= 1), i[0] = Ha(l + 1 / 3, n, o), i[1] = Ha(l, n, o), i[2] = Ha(l - 1 / 3, n, o);
+      if (i = w = e.match(mn), !t)
+        c = +i[0] % 360 / 360, l = +i[1] / 100, d = +i[2] / 100, o = d <= 0.5 ? d * (l + 1) : d + l - d * l, n = d * 2 - o, i.length > 3 && (i[3] *= 1), i[0] = ti(c + 1 / 3, n, o), i[1] = ti(c, n, o), i[2] = ti(c - 1 / 3, n, o);
       else if (~e.indexOf("="))
-        return i = e.match(sr), a && i.length < 4 && (i[3] = 1), i;
+        return i = e.match(Pr), a && i.length < 4 && (i[3] = 1), i;
     } else
-      i = e.match(Zi) || Ut.transparent;
+      i = e.match(mn) || ea.transparent;
     i = i.map(Number);
   }
-  return t && !m && (n = i[0] / O, o = i[1] / O, s = i[2] / O, u = Math.max(n, o, s), h = Math.min(n, o, s), d = (u + h) / 2, u === h ? l = c = 0 : (g = u - h, c = d > 0.5 ? g / (2 - u - h) : g / (u + h), l = u === n ? (o - s) / g + (o < s ? 6 : 0) : u === o ? (s - n) / g + 2 : (n - o) / g + 4, l *= 60), i[0] = ~~(l + 0.5), i[1] = ~~(c * 100 + 0.5), i[2] = ~~(d * 100 + 0.5)), a && i.length < 4 && (i[3] = 1), i;
-}, Rr = function(e) {
+  return t && !w && (n = i[0] / N, o = i[1] / N, s = i[2] / N, u = Math.max(n, o, s), h = Math.min(n, o, s), d = (u + h) / 2, u === h ? c = l = 0 : (g = u - h, l = d > 0.5 ? g / (2 - u - h) : g / (u + h), c = u === n ? (o - s) / g + (o < s ? 6 : 0) : u === o ? (s - n) / g + 2 : (n - o) / g + 4, c *= 60), i[0] = ~~(c + 0.5), i[1] = ~~(l * 100 + 0.5), i[2] = ~~(d * 100 + 0.5)), a && i.length < 4 && (i[3] = 1), i;
+}, $r = function(e) {
   var t = [], a = [], i = -1;
-  return e.split(at).forEach(function(n) {
-    var o = n.match(At) || [];
+  return e.split(ht).forEach(function(n) {
+    var o = n.match(Bt) || [];
     t.push.apply(t, o), a.push(i += o.length + 1);
   }), t.c = a, t;
-}, rn = function(e, t, a) {
-  var i = "", n = (e + i).match(at), o = t ? "hsla(" : "rgba(", s = 0, l, c, d, u;
+}, vn = function(e, t, a) {
+  var i = "", n = (e + i).match(ht), o = t ? "hsla(" : "rgba(", s = 0, c, l, d, u;
   if (!n)
     return e;
   if (n = n.map(function(h) {
-    return (h = Pr(h, t, 1)) && o + (t ? h[0] + "," + h[1] + "%," + h[2] + "%," + h[3] : h.join(",")) + ")";
-  }), a && (d = Rr(e), l = a.c, l.join(i) !== d.c.join(i)))
-    for (c = e.replace(at, "1").split(At), u = c.length - 1; s < u; s++)
-      i += c[s] + (~l.indexOf(s) ? n.shift() || o + "0,0,0,0)" : (d.length ? d : n.length ? n : a).shift());
-  if (!c)
-    for (c = e.split(at), u = c.length - 1; s < u; s++)
-      i += c[s] + n[s];
-  return i + c[u];
-}, at = (function() {
+    return (h = Zr(h, t, 1)) && o + (t ? h[0] + "," + h[1] + "%," + h[2] + "%," + h[3] : h.join(",")) + ")";
+  }), a && (d = $r(e), c = a.c, c.join(i) !== d.c.join(i)))
+    for (l = e.replace(ht, "1").split(Bt), u = l.length - 1; s < u; s++)
+      i += l[s] + (~c.indexOf(s) ? n.shift() || o + "0,0,0,0)" : (d.length ? d : n.length ? n : a).shift());
+  if (!l)
+    for (l = e.split(ht), u = l.length - 1; s < u; s++)
+      i += l[s] + n[s];
+  return i + l[u];
+}, ht = (function() {
   var r = "(?:\\b(?:(?:rgb|rgba|hsl|hsla)\\(.+?\\))|\\B#(?:[0-9a-f]{3,4}){1,2}\\b", e;
-  for (e in Ut)
+  for (e in ea)
     r += "|" + e + "\\b";
   return new RegExp(r + ")", "gi");
-})(), rs = /hsl[a]?\(/, Dr = function(e) {
+})(), Rs = /hsl[a]?\(/, eo = function(e) {
   var t = e.join(" "), a;
-  if (at.lastIndex = 0, at.test(t))
-    return a = rs.test(t), e[1] = rn(e[1], a), e[0] = rn(e[0], a, Rr(e[1])), !0;
-}, Xt, me = (function() {
-  var r = Date.now, e = 500, t = 33, a = r(), i = a, n = 1e3 / 240, o = n, s = [], l, c, d, u, h, g, m = function p(w) {
-    var y = r() - i, b = w === !0, x, _, v, T;
-    if ((y > e || y < 0) && (a += y - t), i += y, v = i - a, x = v - o, (x > 0 || b) && (T = ++u.frame, h = v - u.time * 1e3, u.time = v = v / 1e3, o += x + (x >= n ? 4 : n - x), _ = 1), b || (l = c(p)), _)
+  if (ht.lastIndex = 0, ht.test(t))
+    return a = Rs.test(t), e[1] = vn(e[1], a), e[0] = vn(e[0], a, $r(e[1])), !0;
+}, da, Ae = (function() {
+  var r = Date.now, e = 500, t = 33, a = r(), i = a, n = 1e3 / 240, o = n, s = [], c, l, d, u, h, g, w = function p(f) {
+    var b = r() - i, A = f === !0, v, _, y, E;
+    if ((b > e || b < 0) && (a += b - t), i += b, y = i - a, v = y - o, (v > 0 || A) && (E = ++u.frame, h = y - u.time * 1e3, u.time = y = y / 1e3, o += v + (v >= n ? 4 : n - v), _ = 1), A || (c = l(p)), _)
       for (g = 0; g < s.length; g++)
-        s[g](v, h, T, w);
+        s[g](y, h, E, f);
   };
   return u = {
     time: 0,
     frame: 0,
     tick: function() {
-      m(!0);
+      w(!0);
     },
-    deltaRatio: function(w) {
-      return h / (1e3 / (w || 60));
+    deltaRatio: function(f) {
+      return h / (1e3 / (f || 60));
     },
     wake: function() {
-      cr && (!hi && Pi() && (Re = hi = window, Ri = Re.document || {}, ye.gsap = ue, (Re.gsapVersions || (Re.gsapVersions = [])).push(ue.version), dr(_a || Re.GreenSockGlobals || !Re.gsap && Re || {}), Er.forEach(Mr)), d = typeof requestAnimationFrame < "u" && requestAnimationFrame, l && u.sleep(), c = d || function(w) {
-        return setTimeout(w, o - u.time * 1e3 + 1 | 0);
-      }, Xt = 1, m(2));
+      Dr && (!Ci && Gi() && (Ue = Ci = window, Qi = Ue.document || {}, _e.gsap = me, (Ue.gsapVersions || (Ue.gsapVersions = [])).push(me.version), Rr(Ba || Ue.GreenSockGlobals || !Ue.gsap && Ue || {}), Xr.forEach(Jr)), d = typeof requestAnimationFrame < "u" && requestAnimationFrame, c && u.sleep(), l = d || function(f) {
+        return setTimeout(f, o - u.time * 1e3 + 1 | 0);
+      }, da = 1, w(2));
     },
     sleep: function() {
-      (d ? cancelAnimationFrame : clearTimeout)(l), Xt = 0, c = jt;
+      (d ? cancelAnimationFrame : clearTimeout)(c), da = 0, l = la;
     },
-    lagSmoothing: function(w, y) {
-      e = w || 1 / 0, t = Math.min(y || 33, e);
+    lagSmoothing: function(f, b) {
+      e = f || 1 / 0, t = Math.min(b || 33, e);
     },
-    fps: function(w) {
-      n = 1e3 / (w || 240), o = u.time * 1e3 + n;
+    fps: function(f) {
+      n = 1e3 / (f || 240), o = u.time * 1e3 + n;
     },
-    add: function(w, y, b) {
-      var x = y ? function(_, v, T, A) {
-        w(_, v, T, A), u.remove(x);
-      } : w;
-      return u.remove(w), s[b ? "unshift" : "push"](x), qt(), x;
+    add: function(f, b, A) {
+      var v = b ? function(_, y, E, k) {
+        f(_, y, E, k), u.remove(v);
+      } : f;
+      return u.remove(f), s[A ? "unshift" : "push"](v), Gt(), v;
     },
-    remove: function(w, y) {
-      ~(y = s.indexOf(w)) && s.splice(y, 1) && g >= y && g--;
+    remove: function(f, b) {
+      ~(b = s.indexOf(f)) && s.splice(b, 1) && g >= b && g--;
     },
     _listeners: s
   }, u;
-})(), qt = function() {
-  return !Xt && me.wake();
-}, R = {}, os = /^[\d.\-M][\d.\-,\s]/, ss = /["']/g, ls = function(e) {
-  for (var t = {}, a = e.substr(1, e.length - 3).split(":"), i = a[0], n = 1, o = a.length, s, l, c; n < o; n++)
-    l = a[n], s = n !== o - 1 ? l.lastIndexOf(",") : l.length, c = l.substr(0, s), t[i] = isNaN(c) ? c.replace(ss, "").trim() : +c, i = l.substr(s + 1).trim();
+})(), Gt = function() {
+  return !da && Ae.wake();
+}, R = {}, Is = /^[\d.\-M][\d.\-,\s]/, qs = /["']/g, Bs = function(e) {
+  for (var t = {}, a = e.substr(1, e.length - 3).split(":"), i = a[0], n = 1, o = a.length, s, c, l; n < o; n++)
+    c = a[n], s = n !== o - 1 ? c.lastIndexOf(",") : c.length, l = c.substr(0, s), t[i] = isNaN(l) ? l.replace(qs, "").trim() : +l, i = c.substr(s + 1).trim();
   return t;
-}, cs = function(e) {
+}, Ls = function(e) {
   var t = e.indexOf("(") + 1, a = e.indexOf(")"), i = e.indexOf("(", t);
   return e.substring(t, ~i && i < a ? e.indexOf(")", a + 1) : a);
-}, ds = function(e) {
+}, Os = function(e) {
   var t = (e + "").split("("), a = R[t[0]];
-  return a && t.length > 1 && a.config ? a.config.apply(null, ~e.indexOf("{") ? [ls(t[1])] : cs(e).split(",").map(mr)) : R._CE && os.test(e) ? R._CE("", e) : a;
-}, us = function(e) {
+  return a && t.length > 1 && a.config ? a.config.apply(null, ~e.indexOf("{") ? [Bs(t[1])] : Ls(e).split(",").map(Or)) : R._CE && Is.test(e) ? R._CE("", e) : a;
+}, Ns = function(e) {
   return function(t) {
     return 1 - e(1 - t);
   };
-}, bt = function(e, t) {
-  return e && (Y(e) ? e : R[e] || ds(e)) || t;
-}, xt = function(e, t, a, i) {
-  a === void 0 && (a = function(l) {
-    return 1 - t(1 - l);
-  }), i === void 0 && (i = function(l) {
-    return l < 0.5 ? t(l * 2) / 2 : 1 - t((1 - l) * 2) / 2;
+}, Et = function(e, t) {
+  return e && (W(e) ? e : R[e] || Os(e)) || t;
+}, Mt = function(e, t, a, i) {
+  a === void 0 && (a = function(c) {
+    return 1 - t(1 - c);
+  }), i === void 0 && (i = function(c) {
+    return c < 0.5 ? t(c * 2) / 2 : 1 - t((1 - c) * 2) / 2;
   });
   var n = {
     easeIn: t,
     easeOut: a,
     easeInOut: i
   }, o;
-  return le(e, function(s) {
-    R[s] = ye[s] = n, R[o = s.toLowerCase()] = a;
-    for (var l in n)
-      R[o + (l === "easeIn" ? ".in" : l === "easeOut" ? ".out" : ".inOut")] = R[s + "." + l] = n[l];
+  return he(e, function(s) {
+    R[s] = _e[s] = n, R[o = s.toLowerCase()] = a;
+    for (var c in n)
+      R[o + (c === "easeIn" ? ".in" : c === "easeOut" ? ".out" : ".inOut")] = R[s + "." + c] = n[c];
   }), n;
-}, Ir = function(e) {
+}, to = function(e) {
   return function(t) {
     return t < 0.5 ? (1 - e(1 - t * 2)) / 2 : 0.5 + e((t - 0.5) * 2) / 2;
   };
-}, Ga = function r(e, t, a) {
-  var i = t >= 1 ? t : 1, n = (a || (e ? 0.3 : 0.45)) / (t < 1 ? t : 1), o = n / ui * (Math.asin(1 / i) || 0), s = function(d) {
-    return d === 1 ? 1 : i * Math.pow(2, -10 * d) * Lo((d - o) * n) + 1;
-  }, l = e === "out" ? s : e === "in" ? function(c) {
-    return 1 - s(1 - c);
-  } : Ir(s);
-  return n = ui / n, l.config = function(c, d) {
-    return r(e, c, d);
-  }, l;
-}, Va = function r(e, t) {
+}, ai = function r(e, t, a) {
+  var i = t >= 1 ? t : 1, n = (a || (e ? 0.3 : 0.45)) / (t < 1 ? t : 1), o = n / Si * (Math.asin(1 / i) || 0), s = function(d) {
+    return d === 1 ? 1 : i * Math.pow(2, -10 * d) * ls((d - o) * n) + 1;
+  }, c = e === "out" ? s : e === "in" ? function(l) {
+    return 1 - s(1 - l);
+  } : to(s);
+  return n = Si / n, c.config = function(l, d) {
+    return r(e, l, d);
+  }, c;
+}, ii = function r(e, t) {
   t === void 0 && (t = 1.70158);
   var a = function(o) {
     return o ? --o * o * ((t + 1) * o + t) + 1 : 0;
   }, i = e === "out" ? a : e === "in" ? function(n) {
     return 1 - a(1 - n);
-  } : Ir(a);
+  } : to(a);
   return i.config = function(n) {
     return r(e, n);
   }, i;
 };
-le("Linear,Quad,Cubic,Quart,Quint,Strong", function(r, e) {
+he("Linear,Quad,Cubic,Quart,Quint,Strong", function(r, e) {
   var t = e < 5 ? e + 1 : e;
-  xt(r + ",Power" + (t - 1), e ? function(a) {
+  Mt(r + ",Power" + (t - 1), e ? function(a) {
     return Math.pow(a, t);
   } : function(a) {
     return a;
@@ -586,43 +586,43 @@ le("Linear,Quad,Cubic,Quart,Quint,Strong", function(r, e) {
   });
 });
 R.Linear.easeNone = R.none = R.Linear.easeIn;
-xt("Elastic", Ga("in"), Ga("out"), Ga());
+Mt("Elastic", ai("in"), ai("out"), ai());
 (function(r, e) {
   var t = 1 / e, a = 2 * t, i = 2.5 * t, n = function(s) {
     return s < t ? r * s * s : s < a ? r * Math.pow(s - 1.5 / e, 2) + 0.75 : s < i ? r * (s -= 2.25 / e) * s + 0.9375 : r * Math.pow(s - 2.625 / e, 2) + 0.984375;
   };
-  xt("Bounce", function(o) {
+  Mt("Bounce", function(o) {
     return 1 - n(1 - o);
   }, n);
 })(7.5625, 2.75);
-xt("Expo", function(r) {
+Mt("Expo", function(r) {
   return Math.pow(2, 10 * (r - 1)) * r + r * r * r * r * r * r * (1 - r);
 });
-xt("Circ", function(r) {
-  return -(rr(1 - r * r) - 1);
+Mt("Circ", function(r) {
+  return -(Tr(1 - r * r) - 1);
 });
-xt("Sine", function(r) {
-  return r === 1 ? 1 : -qo(r * Do) + 1;
+Mt("Sine", function(r) {
+  return r === 1 ? 1 : -ss(r * rs) + 1;
 });
-xt("Back", Va("in"), Va("out"), Va());
-R.SteppedEase = R.steps = ye.SteppedEase = {
+Mt("Back", ii("in"), ii("out"), ii());
+R.SteppedEase = R.steps = _e.SteppedEase = {
   config: function(e, t) {
     e === void 0 && (e = 1);
-    var a = 1 / e, i = e + (t ? 0 : 1), n = t ? 1 : 0, o = 1 - B;
+    var a = 1 / e, i = e + (t ? 0 : 1), n = t ? 1 : 0, o = 1 - F;
     return function(s) {
-      return ((i * aa(0, o, s) | 0) + n) * a;
+      return ((i * wa(0, o, s) | 0) + n) * a;
     };
   }
 };
-Yt.ease = R["quad.out"];
-le("onComplete,onUpdate,onStart,onRepeat,onReverseComplete,onInterrupt", function(r) {
-  return qi += r + "," + r + "Params,";
+oa.ease = R["quad.out"];
+he("onComplete,onUpdate,onStart,onRepeat,onReverseComplete,onInterrupt", function(r) {
+  return ji += r + "," + r + "Params,";
 });
-var qr = function(e, t) {
-  this.id = Io++, e._gsap = this, this.target = e, this.harness = t, this.get = t ? t.get : pr, this.set = t ? t.getSetter : zi;
-}, Jt = /* @__PURE__ */ (function() {
+var ao = function(e, t) {
+  this.id = os++, e._gsap = this, this.target = e, this.harness = t, this.get = t ? t.get : Br, this.set = t ? t.getSetter : en;
+}, ua = /* @__PURE__ */ (function() {
   function r(t) {
-    this.vars = t, this._delay = +t.delay || 0, (this._repeat = t.repeat === 1 / 0 ? -2 : t.repeat || 0) && (this._rDelay = t.repeatDelay || 0, this._yoyo = !!t.yoyo || !!t.yoyoEase), this._ts = 1, It(this, +t.duration, 1, 1), this.data = t.data, H && (this._ctx = H, H.data.push(this)), Xt || me.wake();
+    this.vars = t, this._delay = +t.delay || 0, (this._repeat = t.repeat === 1 / 0 ? -2 : t.repeat || 0) && (this._rDelay = t.repeatDelay || 0, this._yoyo = !!t.yoyo || !!t.yoyoEase), this._ts = 1, Vt(this, +t.duration, 1, 1), this.data = t.data, V && (this._ctx = V, V.data.push(this)), da || Ae.wake();
   }
   var e = r.prototype;
   return e.delay = function(a) {
@@ -630,69 +630,69 @@ var qr = function(e, t) {
   }, e.duration = function(a) {
     return arguments.length ? this.totalDuration(this._repeat > 0 ? a + (a + this._rDelay) * this._repeat : a) : this.totalDuration() && this._dur;
   }, e.totalDuration = function(a) {
-    return arguments.length ? (this._dirty = 0, It(this, this._repeat < 0 ? a : (a - this._repeat * this._rDelay) / (this._repeat + 1))) : this._tDur;
+    return arguments.length ? (this._dirty = 0, Vt(this, this._repeat < 0 ? a : (a - this._repeat * this._rDelay) / (this._repeat + 1))) : this._tDur;
   }, e.totalTime = function(a, i) {
-    if (qt(), !arguments.length)
+    if (Gt(), !arguments.length)
       return this._tTime;
     var n = this._dp;
     if (n && n.smoothChildTiming && this._ts) {
-      for (La(this, a), !n._dp || n.parent || br(n, this); n && n.parent; )
+      for (ja(this, a), !n._dp || n.parent || Ur(n, this); n && n.parent; )
         n.parent._time !== n._start + (n._ts >= 0 ? n._tTime / n._ts : (n.totalDuration() - n._tTime) / -n._ts) && n.totalTime(n._tTime, !0), n = n.parent;
-      !this.parent && this._dp.autoRemoveChildren && (this._ts > 0 && a < this._tDur || this._ts < 0 && a > 0 || !this._tDur && !a) && De(this._dp, this, this._start - this._delay);
+      !this.parent && this._dp.autoRemoveChildren && (this._ts > 0 && a < this._tDur || this._ts < 0 && a > 0 || !this._tDur && !a) && ze(this._dp, this, this._start - this._delay);
     }
-    return (this._tTime !== a || !this._dur && !i || this._initted && Math.abs(this._zTime) === B || !this._initted && this._dur && a || !a && !this._initted && (this.add || this._ptLookup)) && (this._ts || (this._pTime = a), gr(this, a, i)), this;
+    return (this._tTime !== a || !this._dur && !i || this._initted && Math.abs(this._zTime) === F || !this._initted && this._dur && a || !a && !this._initted && (this.add || this._ptLookup)) && (this._ts || (this._pTime = a), Lr(this, a, i)), this;
   }, e.time = function(a, i) {
-    return arguments.length ? this.totalTime(Math.min(this.totalDuration(), a + tn(this)) % (this._dur + this._rDelay) || (a ? this._dur : 0), i) : this._time;
+    return arguments.length ? this.totalTime(Math.min(this.totalDuration(), a + bn(this)) % (this._dur + this._rDelay) || (a ? this._dur : 0), i) : this._time;
   }, e.totalProgress = function(a, i) {
     return arguments.length ? this.totalTime(this.totalDuration() * a, i) : this.totalDuration() ? Math.min(1, this._tTime / this._tDur) : this.rawTime() >= 0 && this._initted ? 1 : 0;
   }, e.progress = function(a, i) {
-    return arguments.length ? this.totalTime(this.duration() * (this._yoyo && !(this.iteration() & 1) ? 1 - a : a) + tn(this), i) : this.duration() ? Math.min(1, this._time / this._dur) : this.rawTime() > 0 ? 1 : 0;
+    return arguments.length ? this.totalTime(this.duration() * (this._yoyo && !(this.iteration() & 1) ? 1 - a : a) + bn(this), i) : this.duration() ? Math.min(1, this._time / this._dur) : this.rawTime() > 0 ? 1 : 0;
   }, e.iteration = function(a, i) {
     var n = this.duration() + this._rDelay;
-    return arguments.length ? this.totalTime(this._time + (a - 1) * n, i) : this._repeat ? Dt(this._tTime, n) + 1 : 1;
+    return arguments.length ? this.totalTime(this._time + (a - 1) * n, i) : this._repeat ? Ht(this._tTime, n) + 1 : 1;
   }, e.timeScale = function(a, i) {
     if (!arguments.length)
-      return this._rts === -B ? 0 : this._rts;
+      return this._rts === -F ? 0 : this._rts;
     if (this._rts === a)
       return this;
-    var n = this.parent && this._ts ? ka(this.parent._time, this) : this._tTime;
-    return this._rts = +a || 0, this._ts = this._ps || a === -B ? 0 : this._rts, this.totalTime(aa(-Math.abs(this._delay), this.totalDuration(), n), i !== !1), qa(this), Wo(this);
+    var n = this.parent && this._ts ? Na(this.parent._time, this) : this._tTime;
+    return this._rts = +a || 0, this._ts = this._ps || a === -F ? 0 : this._rts, this.totalTime(wa(-Math.abs(this._delay), this.totalDuration(), n), i !== !1), Wa(this), bs(this);
   }, e.paused = function(a) {
-    return arguments.length ? (this._ps !== a && (this._ps = a, a ? (this._pTime = this._tTime || Math.max(-this._delay, this.rawTime()), this._ts = this._act = 0) : (qt(), this._ts = this._rts, this.totalTime(this.parent && !this.parent.smoothChildTiming ? this.rawTime() : this._tTime || this._pTime, this.progress() === 1 && Math.abs(this._zTime) !== B && (this._tTime -= B)))), this) : this._ps;
+    return arguments.length ? (this._ps !== a && (this._ps = a, a ? (this._pTime = this._tTime || Math.max(-this._delay, this.rawTime()), this._ts = this._act = 0) : (Gt(), this._ts = this._rts, this.totalTime(this.parent && !this.parent.smoothChildTiming ? this.rawTime() : this._tTime || this._pTime, this.progress() === 1 && Math.abs(this._zTime) !== F && (this._tTime -= F)))), this) : this._ps;
   }, e.startTime = function(a) {
     if (arguments.length) {
       this._start = G(a);
       var i = this.parent || this._dp;
-      return i && (i._sort || !this.parent) && De(i, this, this._start - this._delay), this;
+      return i && (i._sort || !this.parent) && ze(i, this, this._start - this._delay), this;
     }
     return this._start;
   }, e.endTime = function(a) {
-    return this._start + (se(a) ? this.totalDuration() : this.duration()) / Math.abs(this._ts || 1);
+    return this._start + (ue(a) ? this.totalDuration() : this.duration()) / Math.abs(this._ts || 1);
   }, e.rawTime = function(a) {
     var i = this.parent || this._dp;
-    return i ? a && (!this._ts || this._repeat && this._time && this.totalProgress() < 1) ? this._tTime % (this._dur + this._rDelay) : this._ts ? ka(i.rawTime(a), this) : this._tTime : this._tTime;
+    return i ? a && (!this._ts || this._repeat && this._time && this.totalProgress() < 1) ? this._tTime % (this._dur + this._rDelay) : this._ts ? Na(i.rawTime(a), this) : this._tTime : this._tTime;
   }, e.revert = function(a) {
-    a === void 0 && (a = Uo);
-    var i = Z;
-    return Z = a, Ni(this) && (this.timeline && this.timeline.revert(a), this.totalTime(-0.01, a.suppressEvents)), this.data !== "nested" && a.kill !== !1 && this.kill(), Z = i, this;
+    a === void 0 && (a = gs);
+    var i = ae;
+    return ae = a, Xi(this) && (this.timeline && this.timeline.revert(a), this.totalTime(-0.01, a.suppressEvents)), this.data !== "nested" && a.kill !== !1 && this.kill(), ae = i, this;
   }, e.globalTime = function(a) {
     for (var i = this, n = arguments.length ? a : i.rawTime(); i; )
       n = i._start + n / (Math.abs(i._ts) || 1), i = i._dp;
     return !this.parent && this._sat ? this._sat.globalTime(a) : n;
   }, e.repeat = function(a) {
-    return arguments.length ? (this._repeat = a === 1 / 0 ? -2 : a, an(this)) : this._repeat === -2 ? 1 / 0 : this._repeat;
+    return arguments.length ? (this._repeat = a === 1 / 0 ? -2 : a, An(this)) : this._repeat === -2 ? 1 / 0 : this._repeat;
   }, e.repeatDelay = function(a) {
     if (arguments.length) {
       var i = this._time;
-      return this._rDelay = a, an(this), i ? this.time(i) : this;
+      return this._rDelay = a, An(this), i ? this.time(i) : this;
     }
     return this._rDelay;
   }, e.yoyo = function(a) {
     return arguments.length ? (this._yoyo = a, this) : this._yoyo;
   }, e.seek = function(a, i) {
-    return this.totalTime(_e(this, a), se(i));
+    return this.totalTime(Ce(this, a), ue(i));
   }, e.restart = function(a, i) {
-    return this.play().totalTime(a ? -this._delay : 0, se(i)), this._dur || (this._zTime = -B), this;
+    return this.play().totalTime(a ? -this._delay : 0, ue(i)), this._dur || (this._zTime = -F), this;
   }, e.play = function(a, i) {
     return a != null && this.seek(a, i), this.reversed(!1).paused(!1);
   }, e.reverse = function(a, i) {
@@ -702,29 +702,29 @@ var qr = function(e, t) {
   }, e.resume = function() {
     return this.paused(!1);
   }, e.reversed = function(a) {
-    return arguments.length ? (!!a !== this.reversed() && this.timeScale(-this._rts || (a ? -B : 0)), this) : this._rts < 0;
+    return arguments.length ? (!!a !== this.reversed() && this.timeScale(-this._rts || (a ? -F : 0)), this) : this._rts < 0;
   }, e.invalidate = function() {
-    return this._initted = this._act = 0, this._zTime = -B, this;
+    return this._initted = this._act = 0, this._zTime = -F, this;
   }, e.isActive = function() {
     var a = this.parent || this._dp, i = this._start, n;
-    return !!(!a || this._ts && this._initted && a.isActive() && (n = a.rawTime(!0)) >= i && n < this.endTime(!0) - B);
+    return !!(!a || this._ts && this._initted && a.isActive() && (n = a.rawTime(!0)) >= i && n < this.endTime(!0) - F);
   }, e.eventCallback = function(a, i, n) {
     var o = this.vars;
     return arguments.length > 1 ? (i ? (o[a] = i, n && (o[a + "Params"] = n), a === "onUpdate" && (this._onUpdate = i)) : delete o[a], this) : o[a];
   }, e.then = function(a) {
     var i = this, n = i._prom;
     return new Promise(function(o) {
-      var s = Y(a) ? a : fr, l = function() {
+      var s = W(a) ? a : Nr, c = function() {
         var d = i.then;
-        i.then = null, n && n(), Y(s) && (s = s(i)) && (s.then || s === i) && (i.then = d), o(s), i.then = d;
+        i.then = null, n && n(), W(s) && (s = s(i)) && (s.then || s === i) && (i.then = d), o(s), i.then = d;
       };
-      i._initted && i.totalProgress() === 1 && i._ts >= 0 || !i._tTime && i._ts < 0 ? l() : i._prom = l;
+      i._initted && i.totalProgress() === 1 && i._ts >= 0 || !i._tTime && i._ts < 0 ? c() : i._prom = c;
     });
   }, e.kill = function() {
-    zt(this);
+    $t(this);
   }, r;
 })();
-xe(Jt.prototype, {
+ke(ua.prototype, {
   _time: 0,
   _start: 0,
   _end: 0,
@@ -739,169 +739,169 @@ xe(Jt.prototype, {
   _ts: 1,
   _dp: 0,
   ratio: 0,
-  _zTime: -B,
+  _zTime: -F,
   _prom: 0,
   _ps: !1,
   _rts: 1
 });
-var oe = /* @__PURE__ */ (function(r) {
-  nr(e, r);
+var de = /* @__PURE__ */ (function(r) {
+  Cr(e, r);
   function e(a, i) {
     var n;
-    return a === void 0 && (a = {}), n = r.call(this, a) || this, n.labels = {}, n.smoothChildTiming = !!a.smoothChildTiming, n.autoRemoveChildren = !!a.autoRemoveChildren, n._sort = se(a.sortChildren), V && De(a.parent || V, Be(n), i), a.reversed && n.reverse(), a.paused && n.paused(!0), a.scrollTrigger && yr(Be(n), a.scrollTrigger), n;
+    return a === void 0 && (a = {}), n = r.call(this, a) || this, n.labels = {}, n.smoothChildTiming = !!a.smoothChildTiming, n.autoRemoveChildren = !!a.autoRemoveChildren, n._sort = ue(a.sortChildren), Q && ze(a.parent || Q, je(n), i), a.reversed && n.reverse(), a.paused && n.paused(!0), a.scrollTrigger && zr(je(n), a.scrollTrigger), n;
   }
   var t = e.prototype;
   return t.to = function(i, n, o) {
-    return Vt(0, arguments, this), this;
+    return na(0, arguments, this), this;
   }, t.from = function(i, n, o) {
-    return Vt(1, arguments, this), this;
+    return na(1, arguments, this), this;
   }, t.fromTo = function(i, n, o, s) {
-    return Vt(2, arguments, this), this;
+    return na(2, arguments, this), this;
   }, t.set = function(i, n, o) {
-    return n.duration = 0, n.parent = this, Gt(n).repeatDelay || (n.repeat = 0), n.immediateRender = !!n.immediateRender, new K(i, n, _e(this, o), 1), this;
+    return n.duration = 0, n.parent = this, ia(n).repeatDelay || (n.repeat = 0), n.immediateRender = !!n.immediateRender, new J(i, n, Ce(this, o), 1), this;
   }, t.call = function(i, n, o) {
-    return De(this, K.delayedCall(0, i, n), o);
-  }, t.staggerTo = function(i, n, o, s, l, c, d) {
-    return o.duration = n, o.stagger = o.stagger || s, o.onComplete = c, o.onCompleteParams = d, o.parent = this, new K(i, o, _e(this, l)), this;
-  }, t.staggerFrom = function(i, n, o, s, l, c, d) {
-    return o.runBackwards = 1, Gt(o).immediateRender = se(o.immediateRender), this.staggerTo(i, n, o, s, l, c, d);
-  }, t.staggerFromTo = function(i, n, o, s, l, c, d, u) {
-    return s.startAt = o, Gt(s).immediateRender = se(s.immediateRender), this.staggerTo(i, n, s, l, c, d, u);
+    return ze(this, J.delayedCall(0, i, n), o);
+  }, t.staggerTo = function(i, n, o, s, c, l, d) {
+    return o.duration = n, o.stagger = o.stagger || s, o.onComplete = l, o.onCompleteParams = d, o.parent = this, new J(i, o, Ce(this, c)), this;
+  }, t.staggerFrom = function(i, n, o, s, c, l, d) {
+    return o.runBackwards = 1, ia(o).immediateRender = ue(o.immediateRender), this.staggerTo(i, n, o, s, c, l, d);
+  }, t.staggerFromTo = function(i, n, o, s, c, l, d, u) {
+    return s.startAt = o, ia(s).immediateRender = ue(s.immediateRender), this.staggerTo(i, n, s, c, l, d, u);
   }, t.render = function(i, n, o) {
-    var s = this._time, l = this._dirty ? this.totalDuration() : this._tDur, c = this._dur, d = i <= 0 ? 0 : G(i), u = this._zTime < 0 != i < 0 && (this._initted || !c), h, g, m, p, w, y, b, x, _, v, T, A;
-    if (this !== V && d > l && i >= 0 && (d = l), d !== this._tTime || o || u) {
-      if (s !== this._time && c && (d += this._time - s, i += this._time - s), h = d, _ = this._start, x = this._ts, y = !x, u && (c || (s = this._zTime), (i || !n) && (this._zTime = i)), this._repeat) {
-        if (T = this._yoyo, w = c + this._rDelay, this._repeat < -1 && i < 0)
-          return this.totalTime(w * 100 + i, n, o);
-        if (h = G(d % w), d === l ? (p = this._repeat, h = c) : (v = G(d / w), p = ~~v, p && p === v && (h = c, p--), h > c && (h = c)), v = Dt(this._tTime, w), !s && this._tTime && v !== p && this._tTime - v * w - this._dur <= 0 && (v = p), T && p & 1 && (h = c - h, A = 1), p !== v && !this._lock) {
-          var C = T && v & 1, k = C === (T && p & 1);
-          if (p < v && (C = !C), s = C ? 0 : d % c ? c : d, this._lock = 1, this.render(s || (A ? 0 : G(p * w)), n, !c)._lock = 0, this._tTime = d, !n && this.parent && fe(this, "onRepeat"), this.vars.repeatRefresh && !A && (this.invalidate()._lock = 1, v = p), s && s !== this._time || y !== !this._ts || this.vars.onRepeat && !this.parent && !this._act)
+    var s = this._time, c = this._dirty ? this.totalDuration() : this._tDur, l = this._dur, d = i <= 0 ? 0 : G(i), u = this._zTime < 0 != i < 0 && (this._initted || !l), h, g, w, p, f, b, A, v, _, y, E, k;
+    if (this !== Q && d > c && i >= 0 && (d = c), d !== this._tTime || o || u) {
+      if (s !== this._time && l && (d += this._time - s, i += this._time - s), h = d, _ = this._start, v = this._ts, b = !v, u && (l || (s = this._zTime), (i || !n) && (this._zTime = i)), this._repeat) {
+        if (E = this._yoyo, f = l + this._rDelay, this._repeat < -1 && i < 0)
+          return this.totalTime(f * 100 + i, n, o);
+        if (h = G(d % f), d === c ? (p = this._repeat, h = l) : (y = G(d / f), p = ~~y, p && p === y && (h = l, p--), h > l && (h = l)), y = Ht(this._tTime, f), !s && this._tTime && y !== p && this._tTime - y * f - this._dur <= 0 && (y = p), E && p & 1 && (h = l - h, k = 1), p !== y && !this._lock) {
+          var C = E && y & 1, S = C === (E && p & 1);
+          if (p < y && (C = !C), s = C ? 0 : d % l ? l : d, this._lock = 1, this.render(s || (k ? 0 : G(p * f)), n, !l)._lock = 0, this._tTime = d, !n && this.parent && ye(this, "onRepeat"), this.vars.repeatRefresh && !k && (this.invalidate()._lock = 1, y = p), s && s !== this._time || b !== !this._ts || this.vars.onRepeat && !this.parent && !this._act)
             return this;
-          if (c = this._dur, l = this._tDur, k && (this._lock = 2, s = C ? c : -1e-4, this.render(s, !0), this.vars.repeatRefresh && !A && this.invalidate()), this._lock = 0, !this._ts && !y)
+          if (l = this._dur, c = this._tDur, S && (this._lock = 2, s = C ? l : -1e-4, this.render(s, !0), this.vars.repeatRefresh && !k && this.invalidate()), this._lock = 0, !this._ts && !b)
             return this;
         }
       }
-      if (this._hasPause && !this._forcing && this._lock < 2 && (b = Ko(this, G(s), G(h)), b && (d -= h - (h = b._start))), this._tTime = d, this._time = h, this._act = !!x, this._initted || (this._onUpdate = this.vars.onUpdate, this._initted = 1, this._zTime = i, s = 0), !s && d && c && !n && !v && (fe(this, "onStart"), this._tTime !== d))
+      if (this._hasPause && !this._forcing && this._lock < 2 && (A = xs(this, G(s), G(h)), A && (d -= h - (h = A._start))), this._tTime = d, this._time = h, this._act = !!v, this._initted || (this._onUpdate = this.vars.onUpdate, this._initted = 1, this._zTime = i, s = 0), !s && d && l && !n && !y && (ye(this, "onStart"), this._tTime !== d))
         return this;
       if (h >= s && i >= 0)
         for (g = this._first; g; ) {
-          if (m = g._next, (g._act || h >= g._start) && g._ts && b !== g) {
+          if (w = g._next, (g._act || h >= g._start) && g._ts && A !== g) {
             if (g.parent !== this)
               return this.render(i, n, o);
-            if (g.render(g._ts > 0 ? (h - g._start) * g._ts : (g._dirty ? g.totalDuration() : g._tDur) + (h - g._start) * g._ts, n, o), h !== this._time || !this._ts && !y) {
-              b = 0, m && (d += this._zTime = -B);
+            if (g.render(g._ts > 0 ? (h - g._start) * g._ts : (g._dirty ? g.totalDuration() : g._tDur) + (h - g._start) * g._ts, n, o), h !== this._time || !this._ts && !b) {
+              A = 0, w && (d += this._zTime = -F);
               break;
             }
           }
-          g = m;
+          g = w;
         }
       else {
         g = this._last;
-        for (var M = i < 0 ? i : h; g; ) {
-          if (m = g._prev, (g._act || M <= g._end) && g._ts && b !== g) {
+        for (var P = i < 0 ? i : h; g; ) {
+          if (w = g._prev, (g._act || P <= g._end) && g._ts && A !== g) {
             if (g.parent !== this)
               return this.render(i, n, o);
-            if (g.render(g._ts > 0 ? (M - g._start) * g._ts : (g._dirty ? g.totalDuration() : g._tDur) + (M - g._start) * g._ts, n, o || Z && Ni(g)), h !== this._time || !this._ts && !y) {
-              b = 0, m && (d += this._zTime = M ? -B : B);
+            if (g.render(g._ts > 0 ? (P - g._start) * g._ts : (g._dirty ? g.totalDuration() : g._tDur) + (P - g._start) * g._ts, n, o || ae && Xi(g)), h !== this._time || !this._ts && !b) {
+              A = 0, w && (d += this._zTime = P ? -F : F);
               break;
             }
           }
-          g = m;
+          g = w;
         }
       }
-      if (b && !n && (this.pause(), b.render(h >= s ? 0 : -B)._zTime = h >= s ? 1 : -1, this._ts))
-        return this._start = _, qa(this), this.render(i, n, o);
-      this._onUpdate && !n && fe(this, "onUpdate", !0), (d === l && this._tTime >= this.totalDuration() || !d && s) && (_ === this._start || Math.abs(x) !== Math.abs(this._ts)) && (this._lock || ((i || !c) && (d === l && this._ts > 0 || !d && this._ts < 0) && it(this, 1), !n && !(i < 0 && !s) && (d || s || !l) && (fe(this, d === l && i >= 0 ? "onComplete" : "onReverseComplete", !0), this._prom && !(d < l && this.timeScale() > 0) && this._prom())));
+      if (A && !n && (this.pause(), A.render(h >= s ? 0 : -F)._zTime = h >= s ? 1 : -1, this._ts))
+        return this._start = _, Wa(this), this.render(i, n, o);
+      this._onUpdate && !n && ye(this, "onUpdate", !0), (d === c && this._tTime >= this.totalDuration() || !d && s) && (_ === this._start || Math.abs(v) !== Math.abs(this._ts)) && (this._lock || ((i || !l) && (d === c && this._ts > 0 || !d && this._ts < 0) && pt(this, 1), !n && !(i < 0 && !s) && (d || s || !c) && (ye(this, d === c && i >= 0 ? "onComplete" : "onReverseComplete", !0), this._prom && !(d < c && this.timeScale() > 0) && this._prom())));
     }
     return this;
   }, t.add = function(i, n) {
     var o = this;
-    if (Ge(n) || (n = _e(this, n, i)), !(i instanceof Jt)) {
-      if (ae(i))
+    if (Ze(n) || (n = Ce(this, n, i)), !(i instanceof ua)) {
+      if (oe(i))
         return i.forEach(function(s) {
           return o.add(s, n);
         }), this;
-      if (J(i))
+      if (ee(i))
         return this.addLabel(i, n);
-      if (Y(i))
-        i = K.delayedCall(0, i);
+      if (W(i))
+        i = J.delayedCall(0, i);
       else
         return this;
     }
-    return this !== i ? De(this, i, n) : this;
+    return this !== i ? ze(this, i, n) : this;
   }, t.getChildren = function(i, n, o, s) {
-    i === void 0 && (i = !0), n === void 0 && (n = !0), o === void 0 && (o = !0), s === void 0 && (s = -Ae);
-    for (var l = [], c = this._first; c; )
-      c._start >= s && (c instanceof K ? n && l.push(c) : (o && l.push(c), i && l.push.apply(l, c.getChildren(!0, n, o)))), c = c._next;
-    return l;
+    i === void 0 && (i = !0), n === void 0 && (n = !0), o === void 0 && (o = !0), s === void 0 && (s = -Te);
+    for (var c = [], l = this._first; l; )
+      l._start >= s && (l instanceof J ? n && c.push(l) : (o && c.push(l), i && c.push.apply(c, l.getChildren(!0, n, o)))), l = l._next;
+    return c;
   }, t.getById = function(i) {
     for (var n = this.getChildren(1, 1, 1), o = n.length; o--; )
       if (n[o].vars.id === i)
         return n[o];
   }, t.remove = function(i) {
-    return J(i) ? this.removeLabel(i) : Y(i) ? this.killTweensOf(i) : (i.parent === this && Ia(this, i), i === this._recent && (this._recent = this._last), wt(this));
+    return ee(i) ? this.removeLabel(i) : W(i) ? this.killTweensOf(i) : (i.parent === this && Ya(this, i), i === this._recent && (this._recent = this._last), Tt(this));
   }, t.totalTime = function(i, n) {
-    return arguments.length ? (this._forcing = 1, !this._dp && this._ts && (this._start = G(me.time - (this._ts > 0 ? i / this._ts : (this.totalDuration() - i) / -this._ts))), r.prototype.totalTime.call(this, i, n), this._forcing = 0, this) : this._tTime;
+    return arguments.length ? (this._forcing = 1, !this._dp && this._ts && (this._start = G(Ae.time - (this._ts > 0 ? i / this._ts : (this.totalDuration() - i) / -this._ts))), r.prototype.totalTime.call(this, i, n), this._forcing = 0, this) : this._tTime;
   }, t.addLabel = function(i, n) {
-    return this.labels[i] = _e(this, n), this;
+    return this.labels[i] = Ce(this, n), this;
   }, t.removeLabel = function(i) {
     return delete this.labels[i], this;
   }, t.addPause = function(i, n, o) {
-    var s = K.delayedCall(0, n || jt, o);
-    return s.data = "isPause", this._hasPause = 1, De(this, s, _e(this, i));
+    var s = J.delayedCall(0, n || la, o);
+    return s.data = "isPause", this._hasPause = 1, ze(this, s, Ce(this, i));
   }, t.removePause = function(i) {
     var n = this._first;
-    for (i = _e(this, i); n; )
-      n._start === i && n.data === "isPause" && it(n), n = n._next;
+    for (i = Ce(this, i); n; )
+      n._start === i && n.data === "isPause" && pt(n), n = n._next;
   }, t.killTweensOf = function(i, n, o) {
-    for (var s = this.getTweensOf(i, o), l = s.length; l--; )
-      Xe !== s[l] && s[l].kill(i, n);
+    for (var s = this.getTweensOf(i, o), c = s.length; c--; )
+      ot !== s[c] && s[c].kill(i, n);
     return this;
   }, t.getTweensOf = function(i, n) {
-    for (var o = [], s = Se(i), l = this._first, c = Ge(n), d; l; )
-      l instanceof K ? Ho(l._targets, s) && (c ? (!Xe || l._initted && l._ts) && l.globalTime(0) <= n && l.globalTime(l.totalDuration()) > n : !n || l.isActive()) && o.push(l) : (d = l.getTweensOf(s, n)).length && o.push.apply(o, d), l = l._next;
+    for (var o = [], s = Ee(i), c = this._first, l = Ze(n), d; c; )
+      c instanceof J ? ms(c._targets, s) && (l ? (!ot || c._initted && c._ts) && c.globalTime(0) <= n && c.globalTime(c.totalDuration()) > n : !n || c.isActive()) && o.push(c) : (d = c.getTweensOf(s, n)).length && o.push.apply(o, d), c = c._next;
     return o;
   }, t.tweenTo = function(i, n) {
     n = n || {};
-    var o = this, s = _e(o, i), l = n, c = l.startAt, d = l.onStart, u = l.onStartParams, h = l.immediateRender, g, m = K.to(o, xe({
+    var o = this, s = Ce(o, i), c = n, l = c.startAt, d = c.onStart, u = c.onStartParams, h = c.immediateRender, g, w = J.to(o, ke({
       ease: n.ease || "none",
       lazy: !1,
       immediateRender: !1,
       time: s,
       overwrite: "auto",
-      duration: n.duration || Math.abs((s - (c && "time" in c ? c.time : o._time)) / o.timeScale()) || B,
+      duration: n.duration || Math.abs((s - (l && "time" in l ? l.time : o._time)) / o.timeScale()) || F,
       onStart: function() {
         if (o.pause(), !g) {
-          var w = n.duration || Math.abs((s - (c && "time" in c ? c.time : o._time)) / o.timeScale());
-          m._dur !== w && It(m, w, 0, 1).render(m._time, !0, !0), g = 1;
+          var f = n.duration || Math.abs((s - (l && "time" in l ? l.time : o._time)) / o.timeScale());
+          w._dur !== f && Vt(w, f, 0, 1).render(w._time, !0, !0), g = 1;
         }
-        d && d.apply(m, u || []);
+        d && d.apply(w, u || []);
       }
     }, n));
-    return h ? m.render(0) : m;
+    return h ? w.render(0) : w;
   }, t.tweenFromTo = function(i, n, o) {
-    return this.tweenTo(n, xe({
+    return this.tweenTo(n, ke({
       startAt: {
-        time: _e(this, i)
+        time: Ce(this, i)
       }
     }, o));
   }, t.recent = function() {
     return this._recent;
   }, t.nextLabel = function(i) {
-    return i === void 0 && (i = this._time), nn(this, _e(this, i));
+    return i === void 0 && (i = this._time), yn(this, Ce(this, i));
   }, t.previousLabel = function(i) {
-    return i === void 0 && (i = this._time), nn(this, _e(this, i), 1);
+    return i === void 0 && (i = this._time), yn(this, Ce(this, i), 1);
   }, t.currentLabel = function(i) {
-    return arguments.length ? this.seek(i, !0) : this.previousLabel(this._time + B);
+    return arguments.length ? this.seek(i, !0) : this.previousLabel(this._time + F);
   }, t.shiftChildren = function(i, n, o) {
     o === void 0 && (o = 0);
-    var s = this._first, l = this.labels, c;
+    var s = this._first, c = this.labels, l;
     for (i = G(i); s; )
       s._start >= o && (s._start += i, s._end += i), s = s._next;
     if (n)
-      for (c in l)
-        l[c] >= o && (l[c] += i);
-    return wt(this);
+      for (l in c)
+        c[l] >= o && (c[l] += i);
+    return Tt(this);
   }, t.invalidate = function(i) {
     var n = this._first;
     for (this._lock = 0; n; )
@@ -911,141 +911,141 @@ var oe = /* @__PURE__ */ (function(r) {
     i === void 0 && (i = !0);
     for (var n = this._first, o; n; )
       o = n._next, this.remove(n), n = o;
-    return this._dp && (this._time = this._tTime = this._pTime = 0), i && (this.labels = {}), wt(this);
+    return this._dp && (this._time = this._tTime = this._pTime = 0), i && (this.labels = {}), Tt(this);
   }, t.totalDuration = function(i) {
-    var n = 0, o = this, s = o._last, l = Ae, c, d, u;
+    var n = 0, o = this, s = o._last, c = Te, l, d, u;
     if (arguments.length)
       return o.timeScale((o._repeat < 0 ? o.duration() : o.totalDuration()) / (o.reversed() ? -i : i));
     if (o._dirty) {
       for (u = o.parent; s; )
-        c = s._prev, s._dirty && s.totalDuration(), d = s._start, d > l && o._sort && s._ts && !o._lock ? (o._lock = 1, De(o, s, d - s._delay, 1)._lock = 0) : l = d, d < 0 && s._ts && (n -= d, (!u && !o._dp || u && u.smoothChildTiming) && (o._start += G(d / o._ts), o._time -= d, o._tTime -= d), o.shiftChildren(-d, !1, -1 / 0), l = 0), s._end > n && s._ts && (n = s._end), s = c;
-      It(o, o === V && o._time > n ? o._time : n, 1, 1), o._dirty = 0;
+        l = s._prev, s._dirty && s.totalDuration(), d = s._start, d > c && o._sort && s._ts && !o._lock ? (o._lock = 1, ze(o, s, d - s._delay, 1)._lock = 0) : c = d, d < 0 && s._ts && (n -= d, (!u && !o._dp || u && u.smoothChildTiming) && (o._start += G(d / o._ts), o._time -= d, o._tTime -= d), o.shiftChildren(-d, !1, -1 / 0), c = 0), s._end > n && s._ts && (n = s._end), s = l;
+      Vt(o, o === Q && o._time > n ? o._time : n, 1, 1), o._dirty = 0;
     }
     return o._tDur;
   }, e.updateRoot = function(i) {
-    if (V._ts && (gr(V, ka(i, V)), hr = me.frame), me.frame >= $i) {
-      $i += be.autoSleep || 120;
-      var n = V._first;
-      if ((!n || !n._ts) && be.autoSleep && me._listeners.length < 2) {
+    if (Q._ts && (Lr(Q, Na(i, Q)), qr = Ae.frame), Ae.frame >= wn) {
+      wn += xe.autoSleep || 120;
+      var n = Q._first;
+      if ((!n || !n._ts) && xe.autoSleep && Ae._listeners.length < 2) {
         for (; n && !n._ts; )
           n = n._next;
-        n || me.sleep();
+        n || Ae.sleep();
       }
     }
   }, e;
-})(Jt);
-xe(oe.prototype, {
+})(ua);
+ke(de.prototype, {
   _lock: 0,
   _hasPause: 0,
   _forcing: 0
 });
-var hs = function(e, t, a, i, n, o, s) {
-  var l = new ce(this._pt, e, t, 0, 1, zr, null, n), c = 0, d = 0, u, h, g, m, p, w, y, b;
-  for (l.b = a, l.e = i, a += "", i += "", (y = ~i.indexOf("random(")) && (i = Kt(i)), o && (b = [a, i], o(b, e, t), a = b[0], i = b[1]), h = a.match(za) || []; u = za.exec(i); )
-    m = u[0], p = i.substring(c, u.index), g ? g = (g + 1) % 5 : p.substr(-5) === "rgba(" && (g = 1), m !== h[d++] && (w = parseFloat(h[d - 1]) || 0, l._pt = {
-      _next: l._pt,
+var Fs = function(e, t, a, i, n, o, s) {
+  var c = new pe(this._pt, e, t, 0, 1, lo, null, n), l = 0, d = 0, u, h, g, w, p, f, b, A;
+  for (c.b = a, c.e = i, a += "", i += "", (b = ~i.indexOf("random(")) && (i = ca(i)), o && (A = [a, i], o(A, e, t), a = A[0], i = A[1]), h = a.match($a) || []; u = $a.exec(i); )
+    w = u[0], p = i.substring(l, u.index), g ? g = (g + 1) % 5 : p.substr(-5) === "rgba(" && (g = 1), w !== h[d++] && (f = parseFloat(h[d - 1]) || 0, c._pt = {
+      _next: c._pt,
       p: p || d === 1 ? p : ",",
       //note: SVG spec allows omission of comma/space when a negative sign is wedged between two numbers, like 2.5-5.3 instead of 2.5,-5.3 but when tweening, the negative value may switch to positive, so we insert the comma just in case.
-      s: w,
-      c: m.charAt(1) === "=" ? Ct(w, m) - w : parseFloat(m) - w,
+      s: f,
+      c: w.charAt(1) === "=" ? Nt(f, w) - f : parseFloat(w) - f,
       m: g && g < 4 ? Math.round : 0
-    }, c = za.lastIndex);
-  return l.c = c < i.length ? i.substring(c, i.length) : "", l.fp = s, (lr.test(i) || y) && (l.e = 0), this._pt = l, l;
-}, Oi = function(e, t, a, i, n, o, s, l, c, d) {
-  Y(i) && (i = i(n || 0, e, o));
-  var u = e[t], h = a !== "get" ? a : Y(u) ? c ? e[t.indexOf("set") || !Y(e["get" + t.substr(3)]) ? t : "get" + t.substr(3)](c) : e[t]() : u, g = Y(u) ? c ? ws : Br : Fi, m;
-  if (J(i) && (~i.indexOf("random(") && (i = Kt(i)), i.charAt(1) === "=" && (m = Ct(h, i) + (te(h) || 0), (m || m === 0) && (i = m))), !d || h !== i || yi)
-    return !isNaN(h * i) && i !== "" ? (m = new ce(this._pt, e, t, +h || 0, i - (h || 0), typeof u == "boolean" ? ys : Fr, 0, g), c && (m.fp = c), s && m.modifier(s, this, e), this._pt = m) : (!u && !(t in e) && Di(t, i), hs.call(this, e, t, h, i, g, l || be.stringFilter, c));
-}, ps = function(e, t, a, i, n) {
-  if (Y(e) && (e = Wt(e, n, t, a, i)), !Le(e) || e.style && e.nodeType || ae(e) || or(e))
-    return J(e) ? Wt(e, n, t, a, i) : e;
+    }, l = $a.lastIndex);
+  return c.c = l < i.length ? i.substring(l, i.length) : "", c.fp = s, (Mr.test(i) || b) && (c.e = 0), this._pt = c, c;
+}, Ji = function(e, t, a, i, n, o, s, c, l, d) {
+  W(i) && (i = i(n || 0, e, o));
+  var u = e[t], h = a !== "get" ? a : W(u) ? l ? e[t.indexOf("set") || !W(e["get" + t.substr(3)]) ? t : "get" + t.substr(3)](l) : e[t]() : u, g = W(u) ? l ? Gs : oo : $i, w;
+  if (ee(i) && (~i.indexOf("random(") && (i = ca(i)), i.charAt(1) === "=" && (w = Nt(h, i) + (re(h) || 0), (w || w === 0) && (i = w))), !d || h !== i || Ii)
+    return !isNaN(h * i) && i !== "" ? (w = new pe(this._pt, e, t, +h || 0, i - (h || 0), typeof u == "boolean" ? Ys : so, 0, g), l && (w.fp = l), s && w.modifier(s, this, e), this._pt = w) : (!u && !(t in e) && Yi(t, i), Fs.call(this, e, t, h, i, g, c || xe.stringFilter, l));
+}, Us = function(e, t, a, i, n) {
+  if (W(e) && (e = ra(e, n, t, a, i)), !Ge(e) || e.style && e.nodeType || oe(e) || Er(e))
+    return ee(e) ? ra(e, n, t, a, i) : e;
   var o = {}, s;
   for (s in e)
-    o[s] = Wt(e[s], n, t, a, i);
+    o[s] = ra(e[s], n, t, a, i);
   return o;
-}, Lr = function(e, t, a, i, n, o) {
-  var s, l, c, d;
-  if (he[e] && (s = new he[e]()).init(n, s.rawVars ? t[e] : ps(t[e], i, n, o, a), a, i, o) !== !1 && (a._pt = l = new ce(a._pt, n, e, 0, 1, s.render, s, 0, s.priority), a !== St))
-    for (c = a._ptLookup[a._targets.indexOf(n)], d = s._props.length; d--; )
-      c[s._props[d]] = l;
+}, io = function(e, t, a, i, n, o) {
+  var s, c, l, d;
+  if (we[e] && (s = new we[e]()).init(n, s.rawVars ? t[e] : Us(t[e], i, n, o, a), a, i, o) !== !1 && (a._pt = c = new pe(a._pt, n, e, 0, 1, s.render, s, 0, s.priority), a !== Lt))
+    for (l = a._ptLookup[a._targets.indexOf(n)], d = s._props.length; d--; )
+      l[s._props[d]] = c;
   return s;
-}, Xe, yi, Bi = function r(e, t, a) {
-  var i = e.vars, n = i.ease, o = i.startAt, s = i.immediateRender, l = i.lazy, c = i.onUpdate, d = i.runBackwards, u = i.yoyoEase, h = i.keyframes, g = i.autoRevert, m = e._dur, p = e._startAt, w = e._targets, y = e.parent, b = y && y.data === "nested" ? y.vars.targets : w, x = e._overwrite === "auto" && !Ei, _ = e.timeline, v = i.easeReverse || u, T, A, C, k, M, F, z, L, U, D, I, P, $;
-  if (_ && (!h || !n) && (n = "none"), e._ease = bt(n, Yt.ease), e._rEase = v && (bt(v) || e._ease), e._from = !_ && !!i.runBackwards, e._from && (e.ratio = 1), !_ || h && !i.stagger) {
-    if (L = w[0] ? ft(w[0]).harness : 0, P = L && i[L.prop], T = Sa(i, Ii), p && (p._zTime < 0 && p.progress(1), t < 0 && d && s && !g ? p.render(-1, !0) : p.revert(d && m ? fa : zo), p._lazy = 0), o) {
-      if (it(e._startAt = K.set(w, xe({
+}, ot, Ii, Zi = function r(e, t, a) {
+  var i = e.vars, n = i.ease, o = i.startAt, s = i.immediateRender, c = i.lazy, l = i.onUpdate, d = i.runBackwards, u = i.yoyoEase, h = i.keyframes, g = i.autoRevert, w = e._dur, p = e._startAt, f = e._targets, b = e.parent, A = b && b.data === "nested" ? b.vars.targets : f, v = e._overwrite === "auto" && !Hi, _ = e.timeline, y = i.easeReverse || u, E, k, C, S, P, U, z, L, H, I, q, D, ie;
+  if (_ && (!h || !n) && (n = "none"), e._ease = Et(n, oa.ease), e._rEase = y && (Et(y) || e._ease), e._from = !_ && !!i.runBackwards, e._from && (e.ratio = 1), !_ || h && !i.stagger) {
+    if (L = f[0] ? Ct(f[0]).harness : 0, D = L && i[L.prop], E = Oa(i, Wi), p && (p._zTime < 0 && p.progress(1), t < 0 && d && s && !g ? p.render(-1, !0) : p.revert(d && w ? Ma : ps), p._lazy = 0), o) {
+      if (pt(e._startAt = J.set(f, ke({
         data: "isStart",
         overwrite: !1,
-        parent: y,
+        parent: b,
         immediateRender: !0,
-        lazy: !p && se(l),
+        lazy: !p && ue(c),
         startAt: null,
         delay: 0,
-        onUpdate: c && function() {
-          return fe(e, "onUpdate");
+        onUpdate: l && function() {
+          return ye(e, "onUpdate");
         },
         stagger: 0
-      }, o))), e._startAt._dp = 0, e._startAt._sat = e, t < 0 && (Z || !s && !g) && e._startAt.revert(fa), s && m && t <= 0 && a <= 0) {
+      }, o))), e._startAt._dp = 0, e._startAt._sat = e, t < 0 && (ae || !s && !g) && e._startAt.revert(Ma), s && w && t <= 0 && a <= 0) {
         t && (e._zTime = t);
         return;
       }
-    } else if (d && m && !p) {
-      if (t && (s = !1), C = xe({
+    } else if (d && w && !p) {
+      if (t && (s = !1), C = ke({
         overwrite: !1,
         data: "isFromStart",
         //we tag the tween with as "isFromStart" so that if [inside a plugin] we need to only do something at the very END of a tween, we have a way of identifying this tween as merely the one that's setting the beginning values for a "from()" tween. For example, clearProps in CSSPlugin should only get applied at the very END of a tween and without this tag, from(...{height:100, clearProps:"height", delay:1}) would wipe the height at the beginning of the tween and after 1 second, it'd kick back in.
-        lazy: s && !p && se(l),
+        lazy: s && !p && ue(c),
         immediateRender: s,
         //zero-duration tweens render immediately by default, but if we're not specifically instructed to render this tween immediately, we should skip this and merely _init() to record the starting values (rendering them immediately would push them to completion which is wasteful in that case - we'd have to render(-1) immediately after)
         stagger: 0,
-        parent: y
+        parent: b
         //ensures that nested tweens that had a stagger are handled properly, like gsap.from(".class", {y: gsap.utils.wrap([-100,100]), stagger: 0.5})
-      }, T), P && (C[L.prop] = P), it(e._startAt = K.set(w, C)), e._startAt._dp = 0, e._startAt._sat = e, t < 0 && (Z ? e._startAt.revert(fa) : e._startAt.render(-1, !0)), e._zTime = t, !s)
-        r(e._startAt, B, B);
+      }, E), D && (C[L.prop] = D), pt(e._startAt = J.set(f, C)), e._startAt._dp = 0, e._startAt._sat = e, t < 0 && (ae ? e._startAt.revert(Ma) : e._startAt.render(-1, !0)), e._zTime = t, !s)
+        r(e._startAt, F, F);
       else if (!t)
         return;
     }
-    for (e._pt = e._ptCache = 0, l = m && se(l) || l && !m, A = 0; A < w.length; A++) {
-      if (M = w[A], z = M._gsap || Li(w)[A]._gsap, e._ptLookup[A] = D = {}, pi[z.id] && tt.length && Aa(), I = b === w ? A : b.indexOf(M), L && (U = new L()).init(M, P || T, e, I, b) !== !1 && (e._pt = k = new ce(e._pt, M, U.name, 0, 1, U.render, U, 0, U.priority), U._props.forEach(function(Te) {
-        D[Te] = k;
-      }), U.priority && (F = 1)), !L || P)
-        for (C in T)
-          he[C] && (U = Lr(C, T, e, I, M, b)) ? U.priority && (F = 1) : D[C] = k = Oi.call(e, M, C, "get", T[C], I, b, 0, i.stringFilter);
-      e._op && e._op[A] && e.kill(M, e._op[A]), x && e._pt && (Xe = e, V.killTweensOf(M, D, e.globalTime(t)), $ = !e.parent, Xe = 0), e._pt && l && (pi[z.id] = 1);
+    for (e._pt = e._ptCache = 0, c = w && ue(c) || c && !w, k = 0; k < f.length; k++) {
+      if (P = f[k], z = P._gsap || Ki(f)[k]._gsap, e._ptLookup[k] = I = {}, Ti[z.id] && ut.length && La(), q = A === f ? k : A.indexOf(P), L && (H = new L()).init(P, D || E, e, q, A) !== !1 && (e._pt = S = new pe(e._pt, P, H.name, 0, 1, H.render, H, 0, H.priority), H._props.forEach(function(Be) {
+        I[Be] = S;
+      }), H.priority && (U = 1)), !L || D)
+        for (C in E)
+          we[C] && (H = io(C, E, e, q, P, A)) ? H.priority && (U = 1) : I[C] = S = Ji.call(e, P, C, "get", E[C], q, A, 0, i.stringFilter);
+      e._op && e._op[k] && e.kill(P, e._op[k]), v && e._pt && (ot = e, Q.killTweensOf(P, I, e.globalTime(t)), ie = !e.parent, ot = 0), e._pt && c && (Ti[z.id] = 1);
     }
-    F && Ur(e), e._onInit && e._onInit(e);
+    U && co(e), e._onInit && e._onInit(e);
   }
-  e._onUpdate = c, e._initted = (!e._op || e._pt) && !$, h && t <= 0 && _.render(Ae, !0, !0);
-}, gs = function(e, t, a, i, n, o, s, l) {
-  var c = (e._pt && e._ptCache || (e._ptCache = {}))[t], d, u, h, g;
-  if (!c)
-    for (c = e._ptCache[t] = [], h = e._ptLookup, g = e._targets.length; g--; ) {
+  e._onUpdate = l, e._initted = (!e._op || e._pt) && !ie, h && t <= 0 && _.render(Te, !0, !0);
+}, zs = function(e, t, a, i, n, o, s, c) {
+  var l = (e._pt && e._ptCache || (e._ptCache = {}))[t], d, u, h, g;
+  if (!l)
+    for (l = e._ptCache[t] = [], h = e._ptLookup, g = e._targets.length; g--; ) {
       if (d = h[g][t], d && d.d && d.d._pt)
         for (d = d.d._pt; d && d.p !== t && d.fp !== t; )
           d = d._next;
       if (!d)
-        return yi = 1, e.vars[t] = "+=0", Bi(e, s), yi = 0, l ? Qt(t + " not eligible for reset. Try splitting into individual properties") : 1;
-      c.push(d);
+        return Ii = 1, e.vars[t] = "+=0", Zi(e, s), Ii = 0, c ? sa(t + " not eligible for reset. Try splitting into individual properties") : 1;
+      l.push(d);
     }
-  for (g = c.length; g--; )
-    u = c[g], d = u._pt || u, d.s = (i || i === 0) && !n ? i : d.s + (i || 0) + o * d.c, d.c = a - d.s, u.e && (u.e = Q(a) + te(u.e)), u.b && (u.b = d.s + te(u.b));
-}, ms = function(e, t) {
-  var a = e[0] ? ft(e[0]).harness : 0, i = a && a.aliases, n, o, s, l;
+  for (g = l.length; g--; )
+    u = l[g], d = u._pt || u, d.s = (i || i === 0) && !n ? i : d.s + (i || 0) + o * d.c, d.c = a - d.s, u.e && (u.e = j(a) + re(u.e)), u.b && (u.b = d.s + re(u.b));
+}, Hs = function(e, t) {
+  var a = e[0] ? Ct(e[0]).harness : 0, i = a && a.aliases, n, o, s, c;
   if (!i)
     return t;
-  n = Rt({}, t);
+  n = zt({}, t);
   for (o in i)
     if (o in n)
-      for (l = i[o].split(","), s = l.length; s--; )
-        n[l[s]] = n[o];
+      for (c = i[o].split(","), s = c.length; s--; )
+        n[c[s]] = n[o];
   return n;
-}, fs = function(e, t, a, i) {
+}, Vs = function(e, t, a, i) {
   var n = t.ease || i || "power1.inOut", o, s;
-  if (ae(t))
-    s = a[e] || (a[e] = []), t.forEach(function(l, c) {
+  if (oe(t))
+    s = a[e] || (a[e] = []), t.forEach(function(c, l) {
       return s.push({
-        t: c / (t.length - 1) * 100,
-        v: l,
+        t: l / (t.length - 1) * 100,
+        v: c,
         e: n
       });
     });
@@ -1056,131 +1056,131 @@ var hs = function(e, t, a, i, n, o, s) {
         v: t[o],
         e: n
       });
-}, Wt = function(e, t, a, i, n) {
-  return Y(e) ? e.call(t, a, i, n) : J(e) && ~e.indexOf("random(") ? Kt(e) : e;
-}, Nr = qi + "repeat,repeatDelay,yoyo,repeatRefresh,yoyoEase,easeReverse,autoRevert", Or = {};
-le(Nr + ",id,stagger,delay,duration,paused,scrollTrigger", function(r) {
-  return Or[r] = 1;
+}, ra = function(e, t, a, i, n) {
+  return W(e) ? e.call(t, a, i, n) : ee(e) && ~e.indexOf("random(") ? ca(e) : e;
+}, no = ji + "repeat,repeatDelay,yoyo,repeatRefresh,yoyoEase,easeReverse,autoRevert", ro = {};
+he(no + ",id,stagger,delay,duration,paused,scrollTrigger", function(r) {
+  return ro[r] = 1;
 });
-var K = /* @__PURE__ */ (function(r) {
-  nr(e, r);
+var J = /* @__PURE__ */ (function(r) {
+  Cr(e, r);
   function e(a, i, n, o) {
     var s;
-    typeof i == "number" && (n.duration = i, i = n, n = null), s = r.call(this, o ? i : Gt(i)) || this;
-    var l = s.vars, c = l.duration, d = l.delay, u = l.immediateRender, h = l.stagger, g = l.overwrite, m = l.keyframes, p = l.defaults, w = l.scrollTrigger, y = i.parent || V, b = (ae(a) || or(a) ? Ge(a[0]) : "length" in i) ? [a] : Se(a), x, _, v, T, A, C, k, M;
-    if (s._targets = b.length ? Li(b) : Qt("GSAP target " + a + " not found. https://gsap.com", !be.nullTargetWarn) || [], s._ptLookup = [], s._overwrite = g, m || h || ra(c) || ra(d)) {
+    typeof i == "number" && (n.duration = i, i = n, n = null), s = r.call(this, o ? i : ia(i)) || this;
+    var c = s.vars, l = c.duration, d = c.delay, u = c.immediateRender, h = c.stagger, g = c.overwrite, w = c.keyframes, p = c.defaults, f = c.scrollTrigger, b = i.parent || Q, A = (oe(a) || Er(a) ? Ze(a[0]) : "length" in i) ? [a] : Ee(a), v, _, y, E, k, C, S, P;
+    if (s._targets = A.length ? Ki(A) : sa("GSAP target " + a + " not found. https://gsap.com", !xe.nullTargetWarn) || [], s._ptLookup = [], s._overwrite = g, w || h || ba(l) || ba(d)) {
       i = s.vars;
-      var F = i.easeReverse || i.yoyoEase;
-      if (x = s.timeline = new oe({
+      var U = i.easeReverse || i.yoyoEase;
+      if (v = s.timeline = new de({
         data: "nested",
         defaults: p || {},
-        targets: y && y.data === "nested" ? y.vars.targets : b
-      }), x.kill(), x.parent = x._dp = Be(s), x._start = 0, h || ra(c) || ra(d)) {
-        if (T = b.length, k = h && Ar(h), Le(h))
-          for (A in h)
-            ~Nr.indexOf(A) && (M || (M = {}), M[A] = h[A]);
-        for (_ = 0; _ < T; _++)
-          v = Sa(i, Or), v.stagger = 0, F && (v.easeReverse = F), M && Rt(v, M), C = b[_], v.duration = +Wt(c, Be(s), _, C, b), v.delay = (+Wt(d, Be(s), _, C, b) || 0) - s._delay, !h && T === 1 && v.delay && (s._delay = d = v.delay, s._start += d, v.delay = 0), x.to(C, v, k ? k(_, C, b) : 0), x._ease = R.none;
-        x.duration() ? c = d = 0 : s.timeline = 0;
-      } else if (m) {
-        Gt(xe(x.vars.defaults, {
+        targets: b && b.data === "nested" ? b.vars.targets : A
+      }), v.kill(), v.parent = v._dp = je(s), v._start = 0, h || ba(l) || ba(d)) {
+        if (E = A.length, S = h && Qr(h), Ge(h))
+          for (k in h)
+            ~no.indexOf(k) && (P || (P = {}), P[k] = h[k]);
+        for (_ = 0; _ < E; _++)
+          y = Oa(i, ro), y.stagger = 0, U && (y.easeReverse = U), P && zt(y, P), C = A[_], y.duration = +ra(l, je(s), _, C, A), y.delay = (+ra(d, je(s), _, C, A) || 0) - s._delay, !h && E === 1 && y.delay && (s._delay = d = y.delay, s._start += d, y.delay = 0), v.to(C, y, S ? S(_, C, A) : 0), v._ease = R.none;
+        v.duration() ? l = d = 0 : s.timeline = 0;
+      } else if (w) {
+        ia(ke(v.vars.defaults, {
           ease: "none"
-        })), x._ease = bt(m.ease || i.ease || "none");
-        var z = 0, L, U, D;
-        if (ae(m))
-          m.forEach(function(I) {
-            return x.to(b, I, ">");
-          }), x.duration();
+        })), v._ease = Et(w.ease || i.ease || "none");
+        var z = 0, L, H, I;
+        if (oe(w))
+          w.forEach(function(q) {
+            return v.to(A, q, ">");
+          }), v.duration();
         else {
-          v = {};
-          for (A in m)
-            A === "ease" || A === "easeEach" || fs(A, m[A], v, m.easeEach);
-          for (A in v)
-            for (L = v[A].sort(function(I, P) {
-              return I.t - P.t;
+          y = {};
+          for (k in w)
+            k === "ease" || k === "easeEach" || Vs(k, w[k], y, w.easeEach);
+          for (k in y)
+            for (L = y[k].sort(function(q, D) {
+              return q.t - D.t;
             }), z = 0, _ = 0; _ < L.length; _++)
-              U = L[_], D = {
-                ease: U.e,
-                duration: (U.t - (_ ? L[_ - 1].t : 0)) / 100 * c
-              }, D[A] = U.v, x.to(b, D, z), z += D.duration;
-          x.duration() < c && x.to({}, {
-            duration: c - x.duration()
+              H = L[_], I = {
+                ease: H.e,
+                duration: (H.t - (_ ? L[_ - 1].t : 0)) / 100 * l
+              }, I[k] = H.v, v.to(A, I, z), z += I.duration;
+          v.duration() < l && v.to({}, {
+            duration: l - v.duration()
           });
         }
       }
-      c || s.duration(c = x.duration());
+      l || s.duration(l = v.duration());
     } else
       s.timeline = 0;
-    return g === !0 && !Ei && (Xe = Be(s), V.killTweensOf(b), Xe = 0), De(y, Be(s), n), i.reversed && s.reverse(), i.paused && s.paused(!0), (u || !c && !m && s._start === G(y._time) && se(u) && Yo(Be(s)) && y.data !== "nested") && (s._tTime = -B, s.render(Math.max(0, -d) || 0)), w && yr(Be(s), w), s;
+    return g === !0 && !Hi && (ot = je(s), Q.killTweensOf(A), ot = 0), ze(b, je(s), n), i.reversed && s.reverse(), i.paused && s.paused(!0), (u || !l && !w && s._start === G(b._time) && ue(u) && As(je(s)) && b.data !== "nested") && (s._tTime = -F, s.render(Math.max(0, -d) || 0)), f && zr(je(s), f), s;
   }
   var t = e.prototype;
   return t.render = function(i, n, o) {
-    var s = this._time, l = this._tDur, c = this._dur, d = i < 0, u = i > l - B && !d ? l : i < B ? 0 : i, h, g, m, p, w, y, b, x;
-    if (!c)
-      jo(this, i, n, o);
+    var s = this._time, c = this._tDur, l = this._dur, d = i < 0, u = i > c - F && !d ? c : i < F ? 0 : i, h, g, w, p, f, b, A, v;
+    if (!l)
+      vs(this, i, n, o);
     else if (u !== this._tTime || !i || o || !this._initted && this._tTime || this._startAt && this._zTime < 0 !== d || this._lazy) {
-      if (h = u, x = this.timeline, this._repeat) {
-        if (p = c + this._rDelay, this._repeat < -1 && d)
+      if (h = u, v = this.timeline, this._repeat) {
+        if (p = l + this._rDelay, this._repeat < -1 && d)
           return this.totalTime(p * 100 + i, n, o);
-        if (h = G(u % p), u === l ? (m = this._repeat, h = c) : (w = G(u / p), m = ~~w, m && m === w ? (h = c, m--) : h > c && (h = c)), y = this._yoyo && m & 1, y && (h = c - h), w = Dt(this._tTime, p), h === s && !o && this._initted && m === w)
+        if (h = G(u % p), u === c ? (w = this._repeat, h = l) : (f = G(u / p), w = ~~f, w && w === f ? (h = l, w--) : h > l && (h = l)), b = this._yoyo && w & 1, b && (h = l - h), f = Ht(this._tTime, p), h === s && !o && this._initted && w === f)
           return this._tTime = u, this;
-        m !== w && this.vars.repeatRefresh && !y && !this._lock && h !== p && this._initted && (this._lock = o = 1, this.render(G(p * m), !0).invalidate()._lock = 0);
+        w !== f && this.vars.repeatRefresh && !b && !this._lock && h !== p && this._initted && (this._lock = o = 1, this.render(G(p * w), !0).invalidate()._lock = 0);
       }
       if (!this._initted) {
-        if (xr(this, d ? i : h, o, n, u))
+        if (Hr(this, d ? i : h, o, n, u))
           return this._tTime = 0, this;
-        if (s !== this._time && !(o && this.vars.repeatRefresh && m !== w))
+        if (s !== this._time && !(o && this.vars.repeatRefresh && w !== f))
           return this;
-        if (c !== this._dur)
+        if (l !== this._dur)
           return this.render(i, n, o);
       }
       if (this._rEase) {
         var _ = h < s;
         if (_ !== this._inv) {
-          var v = _ ? s : c - s;
-          this._inv = _, this._from && (this.ratio = 1 - this.ratio), this._invRatio = this.ratio, this._invTime = s, this._invRecip = v ? (_ ? -1 : 1) / v : 0, this._invScale = _ ? -this.ratio : 1 - this.ratio, this._invEase = _ ? this._rEase : this._ease;
+          var y = _ ? s : l - s;
+          this._inv = _, this._from && (this.ratio = 1 - this.ratio), this._invRatio = this.ratio, this._invTime = s, this._invRecip = y ? (_ ? -1 : 1) / y : 0, this._invScale = _ ? -this.ratio : 1 - this.ratio, this._invEase = _ ? this._rEase : this._ease;
         }
-        this.ratio = b = this._invRatio + this._invScale * this._invEase((h - this._invTime) * this._invRecip);
+        this.ratio = A = this._invRatio + this._invScale * this._invEase((h - this._invTime) * this._invRecip);
       } else
-        this.ratio = b = this._ease(h / c);
-      if (this._from && (this.ratio = b = 1 - b), this._tTime = u, this._time = h, !this._act && this._ts && (this._act = 1, this._lazy = 0), !s && u && !n && !w && (fe(this, "onStart"), this._tTime !== u))
+        this.ratio = A = this._ease(h / l);
+      if (this._from && (this.ratio = A = 1 - A), this._tTime = u, this._time = h, !this._act && this._ts && (this._act = 1, this._lazy = 0), !s && u && !n && !f && (ye(this, "onStart"), this._tTime !== u))
         return this;
       for (g = this._pt; g; )
-        g.r(b, g.d), g = g._next;
-      x && x.render(i < 0 ? i : x._dur * x._ease(h / this._dur), n, o) || this._startAt && (this._zTime = i), this._onUpdate && !n && (d && gi(this, i, n, o), fe(this, "onUpdate")), this._repeat && m !== w && this.vars.onRepeat && !n && this.parent && fe(this, "onRepeat"), (u === this._tDur || !u) && this._tTime === u && (d && !this._onUpdate && gi(this, i, !0, !0), (i || !c) && (u === this._tDur && this._ts > 0 || !u && this._ts < 0) && it(this, 1), !n && !(d && !s) && (u || s || y) && (fe(this, u === l ? "onComplete" : "onReverseComplete", !0), this._prom && !(u < l && this.timeScale() > 0) && this._prom()));
+        g.r(A, g.d), g = g._next;
+      v && v.render(i < 0 ? i : v._dur * v._ease(h / this._dur), n, o) || this._startAt && (this._zTime = i), this._onUpdate && !n && (d && Ei(this, i, n, o), ye(this, "onUpdate")), this._repeat && w !== f && this.vars.onRepeat && !n && this.parent && ye(this, "onRepeat"), (u === this._tDur || !u) && this._tTime === u && (d && !this._onUpdate && Ei(this, i, !0, !0), (i || !l) && (u === this._tDur && this._ts > 0 || !u && this._ts < 0) && pt(this, 1), !n && !(d && !s) && (u || s || b) && (ye(this, u === c ? "onComplete" : "onReverseComplete", !0), this._prom && !(u < c && this.timeScale() > 0) && this._prom()));
     }
     return this;
   }, t.targets = function() {
     return this._targets;
   }, t.invalidate = function(i) {
     return (!i || !this.vars.runBackwards) && (this._startAt = 0), this._pt = this._op = this._onUpdate = this._lazy = this.ratio = 0, this._ptLookup = [], this.timeline && this.timeline.invalidate(i), r.prototype.invalidate.call(this, i);
-  }, t.resetTo = function(i, n, o, s, l) {
-    Xt || me.wake(), this._ts || this.play();
-    var c = Math.min(this._dur, (this._dp._time - this._start) * this._ts), d;
-    return this._initted || Bi(this, c), d = this._ease(c / this._dur), gs(this, i, n, o, s, d, c, l) ? this.resetTo(i, n, o, s, 1) : (La(this, 0), this.parent || wr(this._dp, this, "_first", "_last", this._dp._sort ? "_start" : 0), this.render(0));
+  }, t.resetTo = function(i, n, o, s, c) {
+    da || Ae.wake(), this._ts || this.play();
+    var l = Math.min(this._dur, (this._dp._time - this._start) * this._ts), d;
+    return this._initted || Zi(this, l), d = this._ease(l / this._dur), zs(this, i, n, o, s, d, l, c) ? this.resetTo(i, n, o, s, 1) : (ja(this, 0), this.parent || Fr(this._dp, this, "_first", "_last", this._dp._sort ? "_start" : 0), this.render(0));
   }, t.kill = function(i, n) {
     if (n === void 0 && (n = "all"), !i && (!n || n === "all"))
-      return this._lazy = this._pt = 0, this.parent ? zt(this) : this.scrollTrigger && this.scrollTrigger.kill(!!Z), this;
+      return this._lazy = this._pt = 0, this.parent ? $t(this) : this.scrollTrigger && this.scrollTrigger.kill(!!ae), this;
     if (this.timeline) {
       var o = this.timeline.totalDuration();
-      return this.timeline.killTweensOf(i, n, Xe && Xe.vars.overwrite !== !0)._first || zt(this), this.parent && o !== this.timeline.totalDuration() && It(this, this._dur * this.timeline._tDur / o, 0, 1), this;
+      return this.timeline.killTweensOf(i, n, ot && ot.vars.overwrite !== !0)._first || $t(this), this.parent && o !== this.timeline.totalDuration() && Vt(this, this._dur * this.timeline._tDur / o, 0, 1), this;
     }
-    var s = this._targets, l = i ? Se(i) : s, c = this._ptLookup, d = this._pt, u, h, g, m, p, w, y;
-    if ((!n || n === "all") && Vo(s, l))
-      return n === "all" && (this._pt = 0), zt(this);
-    for (u = this._op = this._op || [], n !== "all" && (J(n) && (p = {}, le(n, function(b) {
-      return p[b] = 1;
-    }), n = p), n = ms(s, n)), y = s.length; y--; )
-      if (~l.indexOf(s[y])) {
-        h = c[y], n === "all" ? (u[y] = n, m = h, g = {}) : (g = u[y] = u[y] || {}, m = n);
-        for (p in m)
-          w = h && h[p], w && ((!("kill" in w.d) || w.d.kill(p) === !0) && Ia(this, w, "_pt"), delete h[p]), g !== "all" && (g[p] = 1);
+    var s = this._targets, c = i ? Ee(i) : s, l = this._ptLookup, d = this._pt, u, h, g, w, p, f, b;
+    if ((!n || n === "all") && fs(s, c))
+      return n === "all" && (this._pt = 0), $t(this);
+    for (u = this._op = this._op || [], n !== "all" && (ee(n) && (p = {}, he(n, function(A) {
+      return p[A] = 1;
+    }), n = p), n = Hs(s, n)), b = s.length; b--; )
+      if (~c.indexOf(s[b])) {
+        h = l[b], n === "all" ? (u[b] = n, w = h, g = {}) : (g = u[b] = u[b] || {}, w = n);
+        for (p in w)
+          f = h && h[p], f && ((!("kill" in f.d) || f.d.kill(p) === !0) && Ya(this, f, "_pt"), delete h[p]), g !== "all" && (g[p] = 1);
       }
-    return this._initted && !this._pt && d && zt(this), this;
+    return this._initted && !this._pt && d && $t(this), this;
   }, e.to = function(i, n) {
     return new e(i, n, arguments[2]);
   }, e.from = function(i, n) {
-    return Vt(1, arguments);
+    return na(1, arguments);
   }, e.delayedCall = function(i, n, o, s) {
     return new e(n, 0, {
       immediateRender: !1,
@@ -1194,41 +1194,41 @@ var K = /* @__PURE__ */ (function(r) {
       callbackScope: s
     });
   }, e.fromTo = function(i, n, o) {
-    return Vt(2, arguments);
+    return na(2, arguments);
   }, e.set = function(i, n) {
     return n.duration = 0, n.repeatDelay || (n.repeat = 0), new e(i, n);
   }, e.killTweensOf = function(i, n, o) {
-    return V.killTweensOf(i, n, o);
+    return Q.killTweensOf(i, n, o);
   }, e;
-})(Jt);
-xe(K.prototype, {
+})(ua);
+ke(J.prototype, {
   _targets: [],
   _lazy: 0,
   _startAt: 0,
   _op: 0,
   _onInit: 0
 });
-le("staggerTo,staggerFrom,staggerFromTo", function(r) {
-  K[r] = function() {
-    var e = new oe(), t = fi.call(arguments, 0);
+he("staggerTo,staggerFrom,staggerFromTo", function(r) {
+  J[r] = function() {
+    var e = new de(), t = Mi.call(arguments, 0);
     return t.splice(r === "staggerFromTo" ? 5 : 4, 0, 0), e[r].apply(e, t);
   };
 });
-var Fi = function(e, t, a) {
+var $i = function(e, t, a) {
   return e[t] = a;
-}, Br = function(e, t, a) {
+}, oo = function(e, t, a) {
   return e[t](a);
-}, ws = function(e, t, a, i) {
+}, Gs = function(e, t, a, i) {
   return e[t](i.fp, a);
-}, bs = function(e, t, a) {
+}, Qs = function(e, t, a) {
   return e.setAttribute(t, a);
-}, zi = function(e, t) {
-  return Y(e[t]) ? Br : Mi(e[t]) && e.setAttribute ? bs : Fi;
-}, Fr = function(e, t) {
+}, en = function(e, t) {
+  return W(e[t]) ? oo : Vi(e[t]) && e.setAttribute ? Qs : $i;
+}, so = function(e, t) {
   return t.set(t.t, t.p, Math.round((t.s + t.c * e) * 1e6) / 1e6, t);
-}, ys = function(e, t) {
+}, Ys = function(e, t) {
   return t.set(t.t, t.p, !!(t.s + t.c * e), t);
-}, zr = function(e, t) {
+}, lo = function(e, t) {
   var a = t._pt, i = "";
   if (!e && t.b)
     i = t.b;
@@ -1240,92 +1240,92 @@ var Fi = function(e, t, a) {
     i += t.c;
   }
   t.set(t.t, t.p, i, t);
-}, Ui = function(e, t) {
+}, tn = function(e, t) {
   for (var a = t._pt; a; )
     a.r(e, a.d), a = a._next;
-}, xs = function(e, t, a, i) {
+}, Ws = function(e, t, a, i) {
   for (var n = this._pt, o; n; )
     o = n._next, n.p === i && n.modifier(e, t, a), n = o;
-}, vs = function(e) {
+}, js = function(e) {
   for (var t = this._pt, a, i; t; )
-    i = t._next, t.p === e && !t.op || t.op === e ? Ia(this, t, "_pt") : t.dep || (a = 1), t = i;
+    i = t._next, t.p === e && !t.op || t.op === e ? Ya(this, t, "_pt") : t.dep || (a = 1), t = i;
   return !a;
-}, _s = function(e, t, a, i) {
+}, Ks = function(e, t, a, i) {
   i.mSet(e, t, i.m.call(i.tween, a, i.mt), i);
-}, Ur = function(e) {
+}, co = function(e) {
   for (var t = e._pt, a, i, n, o; t; ) {
     for (a = t._next, i = n; i && i.pr > t.pr; )
       i = i._next;
     (t._prev = i ? i._prev : o) ? t._prev._next = t : n = t, (t._next = i) ? i._prev = t : o = t, t = a;
   }
   e._pt = n;
-}, ce = /* @__PURE__ */ (function() {
-  function r(t, a, i, n, o, s, l, c, d) {
-    this.t = a, this.s = n, this.c = o, this.p = i, this.r = s || Fr, this.d = l || this, this.set = c || Fi, this.pr = d || 0, this._next = t, t && (t._prev = this);
+}, pe = /* @__PURE__ */ (function() {
+  function r(t, a, i, n, o, s, c, l, d) {
+    this.t = a, this.s = n, this.c = o, this.p = i, this.r = s || so, this.d = c || this, this.set = l || $i, this.pr = d || 0, this._next = t, t && (t._prev = this);
   }
   var e = r.prototype;
   return e.modifier = function(a, i, n) {
-    this.mSet = this.mSet || this.set, this.set = _s, this.m = a, this.mt = n, this.tween = i;
+    this.mSet = this.mSet || this.set, this.set = Ks, this.m = a, this.mt = n, this.tween = i;
   }, r;
 })();
-le(qi + "parent,duration,ease,delay,overwrite,runBackwards,startAt,yoyo,immediateRender,repeat,repeatDelay,data,paused,reversed,lazy,callbackScope,stringFilter,id,yoyoEase,stagger,inherit,repeatRefresh,keyframes,autoRevert,scrollTrigger,easeReverse", function(r) {
-  return Ii[r] = 1;
+he(ji + "parent,duration,ease,delay,overwrite,runBackwards,startAt,yoyo,immediateRender,repeat,repeatDelay,data,paused,reversed,lazy,callbackScope,stringFilter,id,yoyoEase,stagger,inherit,repeatRefresh,keyframes,autoRevert,scrollTrigger,easeReverse", function(r) {
+  return Wi[r] = 1;
 });
-ye.TweenMax = ye.TweenLite = K;
-ye.TimelineLite = ye.TimelineMax = oe;
-V = new oe({
+_e.TweenMax = _e.TweenLite = J;
+_e.TimelineLite = _e.TimelineMax = de;
+Q = new de({
   sortChildren: !1,
-  defaults: Yt,
+  defaults: oa,
   autoRemoveChildren: !0,
   id: "root",
   smoothChildTiming: !0
 });
-be.stringFilter = Dr;
-var yt = [], ba = {}, As = [], on = 0, Ss = 0, Wa = function(e) {
-  return (ba[e] || As).map(function(t) {
+xe.stringFilter = eo;
+var Pt = [], Ra = {}, Xs = [], xn = 0, Js = 0, ni = function(e) {
+  return (Ra[e] || Xs).map(function(t) {
     return t();
   });
-}, xi = function() {
+}, qi = function() {
   var e = Date.now(), t = [];
-  e - on > 2 && (Wa("matchMediaInit"), yt.forEach(function(a) {
-    var i = a.queries, n = a.conditions, o, s, l, c;
+  e - xn > 2 && (ni("matchMediaInit"), Pt.forEach(function(a) {
+    var i = a.queries, n = a.conditions, o, s, c, l;
     for (s in i)
-      o = Re.matchMedia(i[s]).matches, o && (l = 1), o !== n[s] && (n[s] = o, c = 1);
-    c && (a.revert(), l && t.push(a));
-  }), Wa("matchMediaRevert"), t.forEach(function(a) {
+      o = Ue.matchMedia(i[s]).matches, o && (c = 1), o !== n[s] && (n[s] = o, l = 1);
+    l && (a.revert(), c && t.push(a));
+  }), ni("matchMediaRevert"), t.forEach(function(a) {
     return a.onMatch(a, function(i) {
       return a.add(null, i);
     });
-  }), on = e, Wa("matchMedia"));
-}, Hr = /* @__PURE__ */ (function() {
+  }), xn = e, ni("matchMedia"));
+}, uo = /* @__PURE__ */ (function() {
   function r(t, a) {
-    this.selector = a && wi(a), this.data = [], this._r = [], this.isReverted = !1, this.id = Ss++, t && this.add(t);
+    this.selector = a && Di(a), this.data = [], this._r = [], this.isReverted = !1, this.id = Js++, t && this.add(t);
   }
   var e = r.prototype;
   return e.add = function(a, i, n) {
-    Y(a) && (n = i, i = a, a = Y);
+    W(a) && (n = i, i = a, a = W);
     var o = this, s = function() {
-      var c = H, d = o.selector, u;
-      return c && c !== o && c.data.push(o), n && (o.selector = wi(n)), H = o, u = i.apply(o, arguments), Y(u) && o._r.push(u), H = c, o.selector = d, o.isReverted = !1, u;
+      var l = V, d = o.selector, u;
+      return l && l !== o && l.data.push(o), n && (o.selector = Di(n)), V = o, u = i.apply(o, arguments), W(u) && o._r.push(u), V = l, o.selector = d, o.isReverted = !1, u;
     };
-    return o.last = s, a === Y ? s(o, function(l) {
-      return o.add(null, l);
+    return o.last = s, a === W ? s(o, function(c) {
+      return o.add(null, c);
     }) : a ? o[a] = s : s;
   }, e.ignore = function(a) {
-    var i = H;
-    H = null, a(this), H = i;
+    var i = V;
+    V = null, a(this), V = i;
   }, e.getTweens = function() {
     var a = [];
     return this.data.forEach(function(i) {
-      return i instanceof r ? a.push.apply(a, i.getTweens()) : i instanceof K && !(i.parent && i.parent.data === "nested") && a.push(i);
+      return i instanceof r ? a.push.apply(a, i.getTweens()) : i instanceof J && !(i.parent && i.parent.data === "nested") && a.push(i);
     }), a;
   }, e.clear = function() {
     this._r.length = this.data.length = 0;
   }, e.kill = function(a, i) {
     var n = this;
     if (a ? (function() {
-      for (var s = n.getTweens(), l = n.data.length, c; l--; )
-        c = n.data[l], c.data === "isFlip" && (c.revert(), c.getChildren(!0, !0, !1).forEach(function(d) {
+      for (var s = n.getTweens(), c = n.data.length, l; c--; )
+        l = n.data[c], l.data === "isFlip" && (l.revert(), l.getChildren(!0, !0, !1).forEach(function(d) {
           return s.splice(s.indexOf(d), 1);
         }));
       for (s.map(function(d) {
@@ -1337,32 +1337,32 @@ var yt = [], ba = {}, As = [], on = 0, Ss = 0, Wa = function(e) {
         return u.g - d.g || -1 / 0;
       }).forEach(function(d) {
         return d.t.revert(a);
-      }), l = n.data.length; l--; )
-        c = n.data[l], c instanceof oe ? c.data !== "nested" && (c.scrollTrigger && c.scrollTrigger.revert(), c.kill()) : !(c instanceof K) && c.revert && c.revert(a);
+      }), c = n.data.length; c--; )
+        l = n.data[c], l instanceof de ? l.data !== "nested" && (l.scrollTrigger && l.scrollTrigger.revert(), l.kill()) : !(l instanceof J) && l.revert && l.revert(a);
       n._r.forEach(function(d) {
         return d(a, n);
       }), n.isReverted = !0;
     })() : this.data.forEach(function(s) {
       return s.kill && s.kill();
     }), this.clear(), i)
-      for (var o = yt.length; o--; )
-        yt[o].id === this.id && yt.splice(o, 1);
+      for (var o = Pt.length; o--; )
+        Pt[o].id === this.id && Pt.splice(o, 1);
   }, e.revert = function(a) {
     this.kill(a || {});
   }, r;
-})(), ks = /* @__PURE__ */ (function() {
+})(), Zs = /* @__PURE__ */ (function() {
   function r(t) {
-    this.contexts = [], this.scope = t, H && H.data.push(this);
+    this.contexts = [], this.scope = t, V && V.data.push(this);
   }
   var e = r.prototype;
   return e.add = function(a, i, n) {
-    Le(a) || (a = {
+    Ge(a) || (a = {
       matches: a
     });
-    var o = new Hr(0, n || this.scope), s = o.conditions = {}, l, c, d;
-    H && !o.selector && (o.selector = H.selector), this.contexts.push(o), i = o.add("onMatch", i), o.queries = a;
-    for (c in a)
-      c === "all" ? d = 1 : (l = Re.matchMedia(a[c]), l && (yt.indexOf(o) < 0 && yt.push(o), (s[c] = l.matches) && (d = 1), l.addListener ? l.addListener(xi) : l.addEventListener("change", xi)));
+    var o = new uo(0, n || this.scope), s = o.conditions = {}, c, l, d;
+    V && !o.selector && (o.selector = V.selector), this.contexts.push(o), i = o.add("onMatch", i), o.queries = a;
+    for (l in a)
+      l === "all" ? d = 1 : (c = Ue.matchMedia(a[l]), c && (Pt.indexOf(o) < 0 && Pt.push(o), (s[l] = c.matches) && (d = 1), c.addListener ? c.addListener(qi) : c.addEventListener("change", qi)));
     return d && i(o, function(u) {
       return o.add(null, u);
     }), this;
@@ -1373,31 +1373,31 @@ var yt = [], ba = {}, As = [], on = 0, Ss = 0, Wa = function(e) {
       return i.kill(a, !0);
     });
   }, r;
-})(), Ca = {
+})(), Fa = {
   registerPlugin: function() {
     for (var e = arguments.length, t = new Array(e), a = 0; a < e; a++)
       t[a] = arguments[a];
     t.forEach(function(i) {
-      return Mr(i);
+      return Jr(i);
     });
   },
   timeline: function(e) {
-    return new oe(e);
+    return new de(e);
   },
   getTweensOf: function(e, t) {
-    return V.getTweensOf(e, t);
+    return Q.getTweensOf(e, t);
   },
   getProperty: function(e, t, a, i) {
-    J(e) && (e = Se(e)[0]);
-    var n = ft(e || {}).get, o = a ? fr : mr;
-    return a === "native" && (a = ""), e && (t ? o((he[t] && he[t].get || n)(e, t, a, i)) : function(s, l, c) {
-      return o((he[s] && he[s].get || n)(e, s, l, c));
+    ee(e) && (e = Ee(e)[0]);
+    var n = Ct(e || {}).get, o = a ? Nr : Or;
+    return a === "native" && (a = ""), e && (t ? o((we[t] && we[t].get || n)(e, t, a, i)) : function(s, c, l) {
+      return o((we[s] && we[s].get || n)(e, s, c, l));
     });
   },
   quickSetter: function(e, t, a) {
-    if (e = Se(e), e.length > 1) {
+    if (e = Ee(e), e.length > 1) {
       var i = e.map(function(d) {
-        return ue.quickSetter(d, t, a);
+        return me.quickSetter(d, t, a);
       }), n = i.length;
       return function(d) {
         for (var u = n; u--; )
@@ -1405,137 +1405,137 @@ var yt = [], ba = {}, As = [], on = 0, Ss = 0, Wa = function(e) {
       };
     }
     e = e[0] || {};
-    var o = he[t], s = ft(e), l = s.harness && (s.harness.aliases || {})[t] || t, c = o ? function(d) {
+    var o = we[t], s = Ct(e), c = s.harness && (s.harness.aliases || {})[t] || t, l = o ? function(d) {
       var u = new o();
-      St._pt = 0, u.init(e, a ? d + a : d, St, 0, [e]), u.render(1, u), St._pt && Ui(1, St);
-    } : s.set(e, l);
-    return o ? c : function(d) {
-      return c(e, l, a ? d + a : d, s, 1);
+      Lt._pt = 0, u.init(e, a ? d + a : d, Lt, 0, [e]), u.render(1, u), Lt._pt && tn(1, Lt);
+    } : s.set(e, c);
+    return o ? l : function(d) {
+      return l(e, c, a ? d + a : d, s, 1);
     };
   },
   quickTo: function(e, t, a) {
-    var i, n = ue.to(e, xe((i = {}, i[t] = "+=0.1", i.paused = !0, i.stagger = 0, i), a || {})), o = function(l, c, d) {
-      return n.resetTo(t, l, c, d);
+    var i, n = me.to(e, ke((i = {}, i[t] = "+=0.1", i.paused = !0, i.stagger = 0, i), a || {})), o = function(c, l, d) {
+      return n.resetTo(t, c, l, d);
     };
     return o.tween = n, o;
   },
   isTweening: function(e) {
-    return V.getTweensOf(e, !0).length > 0;
+    return Q.getTweensOf(e, !0).length > 0;
   },
   defaults: function(e) {
-    return e && e.ease && (e.ease = bt(e.ease, Yt.ease)), en(Yt, e || {});
+    return e && e.ease && (e.ease = Et(e.ease, oa.ease)), fn(oa, e || {});
   },
   config: function(e) {
-    return en(be, e || {});
+    return fn(xe, e || {});
   },
   registerEffect: function(e) {
     var t = e.name, a = e.effect, i = e.plugins, n = e.defaults, o = e.extendTimeline;
     (i || "").split(",").forEach(function(s) {
-      return s && !he[s] && !ye[s] && Qt(t + " effect requires " + s + " plugin.");
-    }), Ua[t] = function(s, l, c) {
-      return a(Se(s), xe(l || {}, n), c);
-    }, o && (oe.prototype[t] = function(s, l, c) {
-      return this.add(Ua[t](s, Le(l) ? l : (c = l) && {}, this), c);
+      return s && !we[s] && !_e[s] && sa(t + " effect requires " + s + " plugin.");
+    }), ei[t] = function(s, c, l) {
+      return a(Ee(s), ke(c || {}, n), l);
+    }, o && (de.prototype[t] = function(s, c, l) {
+      return this.add(ei[t](s, Ge(c) ? c : (l = c) && {}, this), l);
     });
   },
   registerEase: function(e, t) {
-    R[e] = bt(t);
+    R[e] = Et(t);
   },
   parseEase: function(e, t) {
-    return arguments.length ? bt(e, t) : R;
+    return arguments.length ? Et(e, t) : R;
   },
   getById: function(e) {
-    return V.getById(e);
+    return Q.getById(e);
   },
   exportRoot: function(e, t) {
     e === void 0 && (e = {});
-    var a = new oe(e), i, n;
-    for (a.smoothChildTiming = se(e.smoothChildTiming), V.remove(a), a._dp = 0, a._time = a._tTime = V._time, i = V._first; i; )
-      n = i._next, (t || !(!i._dur && i instanceof K && i.vars.onComplete === i._targets[0])) && De(a, i, i._start - i._delay), i = n;
-    return De(V, a, 0), a;
+    var a = new de(e), i, n;
+    for (a.smoothChildTiming = ue(e.smoothChildTiming), Q.remove(a), a._dp = 0, a._time = a._tTime = Q._time, i = Q._first; i; )
+      n = i._next, (t || !(!i._dur && i instanceof J && i.vars.onComplete === i._targets[0])) && ze(a, i, i._start - i._delay), i = n;
+    return ze(Q, a, 0), a;
   },
   context: function(e, t) {
-    return e ? new Hr(e, t) : H;
+    return e ? new uo(e, t) : V;
   },
   matchMedia: function(e) {
-    return new ks(e);
+    return new Zs(e);
   },
   matchMediaRefresh: function() {
-    return yt.forEach(function(e) {
+    return Pt.forEach(function(e) {
       var t = e.conditions, a, i;
       for (i in t)
         t[i] && (t[i] = !1, a = 1);
       a && e.revert();
-    }) || xi();
+    }) || qi();
   },
   addEventListener: function(e, t) {
-    var a = ba[e] || (ba[e] = []);
+    var a = Ra[e] || (Ra[e] = []);
     ~a.indexOf(t) || a.push(t);
   },
   removeEventListener: function(e, t) {
-    var a = ba[e], i = a && a.indexOf(t);
+    var a = Ra[e], i = a && a.indexOf(t);
     i >= 0 && a.splice(i, 1);
   },
   utils: {
-    wrap: as,
-    wrapYoyo: is,
-    distribute: Ar,
-    random: kr,
-    snap: Sr,
-    normalize: ts,
-    getUnit: te,
-    clamp: Jo,
-    splitColor: Pr,
-    toArray: Se,
-    selector: wi,
-    mapRange: Tr,
-    pipe: $o,
-    unitize: es,
-    interpolate: ns,
-    shuffle: _r
+    wrap: Ps,
+    wrapYoyo: Ms,
+    distribute: Qr,
+    random: Wr,
+    snap: Yr,
+    normalize: Es,
+    getUnit: re,
+    clamp: ks,
+    splitColor: Zr,
+    toArray: Ee,
+    selector: Di,
+    mapRange: Kr,
+    pipe: Cs,
+    unitize: Ts,
+    interpolate: Ds,
+    shuffle: Gr
   },
-  install: dr,
-  effects: Ua,
-  ticker: me,
-  updateRoot: oe.updateRoot,
-  plugins: he,
-  globalTimeline: V,
+  install: Rr,
+  effects: ei,
+  ticker: Ae,
+  updateRoot: de.updateRoot,
+  plugins: we,
+  globalTimeline: Q,
   core: {
-    PropTween: ce,
-    globals: ur,
-    Tween: K,
-    Timeline: oe,
-    Animation: Jt,
-    getCache: ft,
-    _removeLinkedListItem: Ia,
+    PropTween: pe,
+    globals: Ir,
+    Tween: J,
+    Timeline: de,
+    Animation: ua,
+    getCache: Ct,
+    _removeLinkedListItem: Ya,
     reverting: function() {
-      return Z;
+      return ae;
     },
     context: function(e) {
-      return e && H && (H.data.push(e), e._ctx = H), H;
+      return e && V && (V.data.push(e), e._ctx = V), V;
     },
     suppressOverwrites: function(e) {
-      return Ei = e;
+      return Hi = e;
     }
   }
 };
-le("to,from,fromTo,delayedCall,set,killTweensOf", function(r) {
-  return Ca[r] = K[r];
+he("to,from,fromTo,delayedCall,set,killTweensOf", function(r) {
+  return Fa[r] = J[r];
 });
-me.add(oe.updateRoot);
-St = Ca.to({}, {
+Ae.add(de.updateRoot);
+Lt = Fa.to({}, {
   duration: 0
 });
-var Cs = function(e, t) {
+var $s = function(e, t) {
   for (var a = e._pt; a && a.p !== t && a.op !== t && a.fp !== t; )
     a = a._next;
   return a;
-}, Ts = function(e, t) {
+}, el = function(e, t) {
   var a = e._targets, i, n, o;
   for (i in t)
     for (n = a.length; n--; )
-      o = e._ptLookup[n][i], o && (o = o.d) && (o._pt && (o = Cs(o, i)), o && o.modifier && o.modifier(t[i], e, a[n], i));
-}, Ya = function(e, t) {
+      o = e._ptLookup[n][i], o && (o = o.d) && (o._pt && (o = $s(o, i)), o && o.modifier && o.modifier(t[i], e, a[n], i));
+}, ri = function(e, t) {
   return {
     name: e,
     headless: 1,
@@ -1543,30 +1543,30 @@ var Cs = function(e, t) {
     //don't pre-process function-based values or "random()" strings.
     init: function(i, n, o) {
       o._onInit = function(s) {
-        var l, c;
-        if (J(n) && (l = {}, le(n, function(d) {
-          return l[d] = 1;
-        }), n = l), t) {
-          l = {};
-          for (c in n)
-            l[c] = t(n[c]);
-          n = l;
+        var c, l;
+        if (ee(n) && (c = {}, he(n, function(d) {
+          return c[d] = 1;
+        }), n = c), t) {
+          c = {};
+          for (l in n)
+            c[l] = t(n[l]);
+          n = c;
         }
-        Ts(s, n);
+        el(s, n);
       };
     }
   };
-}, ue = Ca.registerPlugin({
+}, me = Fa.registerPlugin({
   name: "attr",
   init: function(e, t, a, i, n) {
-    var o, s, l;
+    var o, s, c;
     this.tween = a;
     for (o in t)
-      l = e.getAttribute(o) || "", s = this.add(e, "setAttribute", (l || 0) + "", t[o], i, n, 0, 0, o), s.op = o, s.b = l, this._props.push(o);
+      c = e.getAttribute(o) || "", s = this.add(e, "setAttribute", (c || 0) + "", t[o], i, n, 0, 0, o), s.op = o, s.b = c, this._props.push(o);
   },
   render: function(e, t) {
     for (var a = t._pt; a; )
-      Z ? a.set(a.t, a.p, a.b, a) : a.r(e, a.d), a = a._next;
+      ae ? a.set(a.t, a.p, a.b, a) : a.r(e, a.d), a = a._next;
   }
 }, {
   name: "endArray",
@@ -1575,10 +1575,10 @@ var Cs = function(e, t) {
     for (var a = t.length; a--; )
       this.add(e, a, e[a] || 0, t[a], 0, 0, 0, 0, 0, 1);
   }
-}, Ya("roundProps", bi), Ya("modifiers"), Ya("snap", Sr)) || Ca;
-K.version = oe.version = ue.version = "3.15.0";
-cr = 1;
-Pi() && qt();
+}, ri("roundProps", Ri), ri("modifiers"), ri("snap", Yr)) || Fa;
+J.version = de.version = me.version = "3.15.0";
+Dr = 1;
+Gi() && Gt();
 R.Power0;
 R.Power1;
 R.Power2;
@@ -1597,197 +1597,197 @@ R.Bounce;
 R.Sine;
 R.Expo;
 R.Circ;
-var sn, Je, Tt, Hi, mt, ln, Gi, Es = function() {
+var _n, st, Ft, an, St, kn, nn, tl = function() {
   return typeof window < "u";
-}, Ve = {}, gt = 180 / Math.PI, Et = Math.PI / 180, vt = Math.atan2, cn = 1e8, Vi = /([A-Z])/g, Ms = /(left|right|width|margin|padding|x)/i, Ps = /[\s,\(]\S/, qe = {
+}, $e = {}, _t = 180 / Math.PI, Ut = Math.PI / 180, Dt = Math.atan2, Sn = 1e8, rn = /([A-Z])/g, al = /(left|right|width|margin|padding|x)/i, il = /[\s,\(]\S/, Ve = {
   autoAlpha: "opacity,visibility",
   scale: "scaleX,scaleY",
   alpha: "opacity"
-}, vi = function(e, t) {
+}, Bi = function(e, t) {
   return t.set(t.t, t.p, Math.round((t.s + t.c * e) * 1e4) / 1e4 + t.u, t);
-}, Rs = function(e, t) {
+}, nl = function(e, t) {
   return t.set(t.t, t.p, e === 1 ? t.e : Math.round((t.s + t.c * e) * 1e4) / 1e4 + t.u, t);
-}, Ds = function(e, t) {
+}, rl = function(e, t) {
   return t.set(t.t, t.p, e ? Math.round((t.s + t.c * e) * 1e4) / 1e4 + t.u : t.b, t);
-}, Is = function(e, t) {
+}, ol = function(e, t) {
   return t.set(t.t, t.p, e === 1 ? t.e : e ? Math.round((t.s + t.c * e) * 1e4) / 1e4 + t.u : t.b, t);
-}, qs = function(e, t) {
+}, sl = function(e, t) {
   var a = t.s + t.c * e;
   t.set(t.t, t.p, ~~(a + (a < 0 ? -0.5 : 0.5)) + t.u, t);
-}, Gr = function(e, t) {
+}, ho = function(e, t) {
   return t.set(t.t, t.p, e ? t.e : t.b, t);
-}, Vr = function(e, t) {
+}, po = function(e, t) {
   return t.set(t.t, t.p, e !== 1 ? t.b : t.e, t);
-}, Ls = function(e, t, a) {
+}, ll = function(e, t, a) {
   return e.style[t] = a;
-}, Ns = function(e, t, a) {
+}, cl = function(e, t, a) {
   return e.style.setProperty(t, a);
-}, Os = function(e, t, a) {
+}, dl = function(e, t, a) {
   return e._gsap[t] = a;
-}, Bs = function(e, t, a) {
+}, ul = function(e, t, a) {
   return e._gsap.scaleX = e._gsap.scaleY = a;
-}, Fs = function(e, t, a, i, n) {
+}, hl = function(e, t, a, i, n) {
   var o = e._gsap;
   o.scaleX = o.scaleY = a, o.renderTransform(n, o);
-}, zs = function(e, t, a, i, n) {
+}, pl = function(e, t, a, i, n) {
   var o = e._gsap;
   o[t] = a, o.renderTransform(n, o);
-}, W = "transform", de = W + "Origin", Us = function r(e, t) {
+}, Y = "transform", ge = Y + "Origin", gl = function r(e, t) {
   var a = this, i = this.target, n = i.style, o = i._gsap;
-  if (e in Ve && n) {
+  if (e in $e && n) {
     if (this.tfm = this.tfm || {}, e !== "transform")
-      e = qe[e] || e, ~e.indexOf(",") ? e.split(",").forEach(function(s) {
-        return a.tfm[s] = ze(i, s);
-      }) : this.tfm[e] = o.x ? o[e] : ze(i, e), e === de && (this.tfm.zOrigin = o.zOrigin);
+      e = Ve[e] || e, ~e.indexOf(",") ? e.split(",").forEach(function(s) {
+        return a.tfm[s] = Ke(i, s);
+      }) : this.tfm[e] = o.x ? o[e] : Ke(i, e), e === ge && (this.tfm.zOrigin = o.zOrigin);
     else
-      return qe.transform.split(",").forEach(function(s) {
+      return Ve.transform.split(",").forEach(function(s) {
         return r.call(a, s, t);
       });
-    if (this.props.indexOf(W) >= 0)
+    if (this.props.indexOf(Y) >= 0)
       return;
-    o.svg && (this.svgo = i.getAttribute("data-svg-origin"), this.props.push(de, t, "")), e = W;
+    o.svg && (this.svgo = i.getAttribute("data-svg-origin"), this.props.push(ge, t, "")), e = Y;
   }
   (n || t) && this.props.push(e, t, n[e]);
-}, Wr = function(e) {
+}, go = function(e) {
   e.translate && (e.removeProperty("translate"), e.removeProperty("scale"), e.removeProperty("rotate"));
-}, Hs = function() {
+}, ml = function() {
   var e = this.props, t = this.target, a = t.style, i = t._gsap, n, o;
   for (n = 0; n < e.length; n += 3)
-    e[n + 1] ? e[n + 1] === 2 ? t[e[n]](e[n + 2]) : t[e[n]] = e[n + 2] : e[n + 2] ? a[e[n]] = e[n + 2] : a.removeProperty(e[n].substr(0, 2) === "--" ? e[n] : e[n].replace(Vi, "-$1").toLowerCase());
+    e[n + 1] ? e[n + 1] === 2 ? t[e[n]](e[n + 2]) : t[e[n]] = e[n + 2] : e[n + 2] ? a[e[n]] = e[n + 2] : a.removeProperty(e[n].substr(0, 2) === "--" ? e[n] : e[n].replace(rn, "-$1").toLowerCase());
   if (this.tfm) {
     for (o in this.tfm)
       i[o] = this.tfm[o];
-    i.svg && (i.renderTransform(), t.setAttribute("data-svg-origin", this.svgo || "")), n = Gi(), (!n || !n.isStart) && !a[W] && (Wr(a), i.zOrigin && a[de] && (a[de] += " " + i.zOrigin + "px", i.zOrigin = 0, i.renderTransform()), i.uncache = 1);
+    i.svg && (i.renderTransform(), t.setAttribute("data-svg-origin", this.svgo || "")), n = nn(), (!n || !n.isStart) && !a[Y] && (go(a), i.zOrigin && a[ge] && (a[ge] += " " + i.zOrigin + "px", i.zOrigin = 0, i.renderTransform()), i.uncache = 1);
   }
-}, Yr = function(e, t) {
+}, mo = function(e, t) {
   var a = {
     target: e,
     props: [],
-    revert: Hs,
-    save: Us
+    revert: ml,
+    save: gl
   };
-  return e._gsap || ue.core.getCache(e), t && e.style && e.nodeType && t.split(",").forEach(function(i) {
+  return e._gsap || me.core.getCache(e), t && e.style && e.nodeType && t.split(",").forEach(function(i) {
     return a.save(i);
   }), a;
-}, Qr, _i = function(e, t) {
-  var a = Je.createElementNS ? Je.createElementNS((t || "http://www.w3.org/1999/xhtml").replace(/^https/, "http"), e) : Je.createElement(e);
-  return a && a.style ? a : Je.createElement(e);
-}, we = function r(e, t, a) {
+}, wo, Li = function(e, t) {
+  var a = st.createElementNS ? st.createElementNS((t || "http://www.w3.org/1999/xhtml").replace(/^https/, "http"), e) : st.createElement(e);
+  return a && a.style ? a : st.createElement(e);
+}, ve = function r(e, t, a) {
   var i = getComputedStyle(e);
-  return i[t] || i.getPropertyValue(t.replace(Vi, "-$1").toLowerCase()) || i.getPropertyValue(t) || !a && r(e, Lt(t) || t, 1) || "";
-}, dn = "O,Moz,ms,Ms,Webkit".split(","), Lt = function(e, t, a) {
-  var i = t || mt, n = i.style, o = 5;
+  return i[t] || i.getPropertyValue(t.replace(rn, "-$1").toLowerCase()) || i.getPropertyValue(t) || !a && r(e, Qt(t) || t, 1) || "";
+}, Cn = "O,Moz,ms,Ms,Webkit".split(","), Qt = function(e, t, a) {
+  var i = t || St, n = i.style, o = 5;
   if (e in n && !a)
     return e;
-  for (e = e.charAt(0).toUpperCase() + e.substr(1); o-- && !(dn[o] + e in n); )
+  for (e = e.charAt(0).toUpperCase() + e.substr(1); o-- && !(Cn[o] + e in n); )
     ;
-  return o < 0 ? null : (o === 3 ? "ms" : o >= 0 ? dn[o] : "") + e;
-}, Ai = function() {
-  Es() && window.document && (sn = window, Je = sn.document, Tt = Je.documentElement, mt = _i("div") || {
+  return o < 0 ? null : (o === 3 ? "ms" : o >= 0 ? Cn[o] : "") + e;
+}, Oi = function() {
+  tl() && window.document && (_n = window, st = _n.document, Ft = st.documentElement, St = Li("div") || {
     style: {}
-  }, _i("div"), W = Lt(W), de = W + "Origin", mt.style.cssText = "border-width:0;line-height:0;position:absolute;padding:0", Qr = !!Lt("perspective"), Gi = ue.core.reverting, Hi = 1);
-}, un = function(e) {
-  var t = e.ownerSVGElement, a = _i("svg", t && t.getAttribute("xmlns") || "http://www.w3.org/2000/svg"), i = e.cloneNode(!0), n;
-  i.style.display = "block", a.appendChild(i), Tt.appendChild(a);
+  }, Li("div"), Y = Qt(Y), ge = Y + "Origin", St.style.cssText = "border-width:0;line-height:0;position:absolute;padding:0", wo = !!Qt("perspective"), nn = me.core.reverting, an = 1);
+}, Tn = function(e) {
+  var t = e.ownerSVGElement, a = Li("svg", t && t.getAttribute("xmlns") || "http://www.w3.org/2000/svg"), i = e.cloneNode(!0), n;
+  i.style.display = "block", a.appendChild(i), Ft.appendChild(a);
   try {
     n = i.getBBox();
   } catch {
   }
-  return a.removeChild(i), Tt.removeChild(a), n;
-}, hn = function(e, t) {
+  return a.removeChild(i), Ft.removeChild(a), n;
+}, En = function(e, t) {
   for (var a = t.length; a--; )
     if (e.hasAttribute(t[a]))
       return e.getAttribute(t[a]);
-}, jr = function(e) {
+}, fo = function(e) {
   var t, a;
   try {
     t = e.getBBox();
   } catch {
-    t = un(e), a = 1;
+    t = Tn(e), a = 1;
   }
-  return t && (t.width || t.height) || a || (t = un(e)), t && !t.width && !t.x && !t.y ? {
-    x: +hn(e, ["x", "cx", "x1"]) || 0,
-    y: +hn(e, ["y", "cy", "y1"]) || 0,
+  return t && (t.width || t.height) || a || (t = Tn(e)), t && !t.width && !t.x && !t.y ? {
+    x: +En(e, ["x", "cx", "x1"]) || 0,
+    y: +En(e, ["y", "cy", "y1"]) || 0,
     width: 0,
     height: 0
   } : t;
-}, Kr = function(e) {
-  return !!(e.getCTM && (!e.parentNode || e.ownerSVGElement) && jr(e));
-}, nt = function(e, t) {
+}, bo = function(e) {
+  return !!(e.getCTM && (!e.parentNode || e.ownerSVGElement) && fo(e));
+}, gt = function(e, t) {
   if (t) {
     var a = e.style, i;
-    t in Ve && t !== de && (t = W), a.removeProperty ? (i = t.substr(0, 2), (i === "ms" || t.substr(0, 6) === "webkit") && (t = "-" + t), a.removeProperty(i === "--" ? t : t.replace(Vi, "-$1").toLowerCase())) : a.removeAttribute(t);
+    t in $e && t !== ge && (t = Y), a.removeProperty ? (i = t.substr(0, 2), (i === "ms" || t.substr(0, 6) === "webkit") && (t = "-" + t), a.removeProperty(i === "--" ? t : t.replace(rn, "-$1").toLowerCase())) : a.removeAttribute(t);
   }
-}, Ze = function(e, t, a, i, n, o) {
-  var s = new ce(e._pt, t, a, 0, 1, o ? Vr : Gr);
+}, lt = function(e, t, a, i, n, o) {
+  var s = new pe(e._pt, t, a, 0, 1, o ? po : ho);
   return e._pt = s, s.b = i, s.e = n, e._props.push(a), s;
-}, pn = {
+}, Pn = {
   deg: 1,
   rad: 1,
   turn: 1
-}, Gs = {
+}, wl = {
   grid: 1,
   flex: 1
-}, rt = function r(e, t, a, i) {
-  var n = parseFloat(a) || 0, o = (a + "").trim().substr((n + "").length) || "px", s = mt.style, l = Ms.test(t), c = e.tagName.toLowerCase() === "svg", d = (c ? "client" : "offset") + (l ? "Width" : "Height"), u = 100, h = i === "px", g = i === "%", m, p, w, y;
-  if (i === o || !n || pn[i] || pn[o])
+}, mt = function r(e, t, a, i) {
+  var n = parseFloat(a) || 0, o = (a + "").trim().substr((n + "").length) || "px", s = St.style, c = al.test(t), l = e.tagName.toLowerCase() === "svg", d = (l ? "client" : "offset") + (c ? "Width" : "Height"), u = 100, h = i === "px", g = i === "%", w, p, f, b;
+  if (i === o || !n || Pn[i] || Pn[o])
     return n;
-  if (o !== "px" && !h && (n = r(e, t, a, "px")), y = e.getCTM && Kr(e), (g || o === "%") && (Ve[t] || ~t.indexOf("adius")))
-    return m = y ? e.getBBox()[l ? "width" : "height"] : e[d], Q(g ? n / m * u : n / 100 * m);
-  if (s[l ? "width" : "height"] = u + (h ? o : i), p = i !== "rem" && ~t.indexOf("adius") || i === "em" && e.appendChild && !c ? e : e.parentNode, y && (p = (e.ownerSVGElement || {}).parentNode), (!p || p === Je || !p.appendChild) && (p = Je.body), w = p._gsap, w && g && w.width && l && w.time === me.time && !w.uncache)
-    return Q(n / w.width * u);
+  if (o !== "px" && !h && (n = r(e, t, a, "px")), b = e.getCTM && bo(e), (g || o === "%") && ($e[t] || ~t.indexOf("adius")))
+    return w = b ? e.getBBox()[c ? "width" : "height"] : e[d], j(g ? n / w * u : n / 100 * w);
+  if (s[c ? "width" : "height"] = u + (h ? o : i), p = i !== "rem" && ~t.indexOf("adius") || i === "em" && e.appendChild && !l ? e : e.parentNode, b && (p = (e.ownerSVGElement || {}).parentNode), (!p || p === st || !p.appendChild) && (p = st.body), f = p._gsap, f && g && f.width && c && f.time === Ae.time && !f.uncache)
+    return j(n / f.width * u);
   if (g && (t === "height" || t === "width")) {
-    var b = e.style[t];
-    e.style[t] = u + i, m = e[d], b ? e.style[t] = b : nt(e, t);
+    var A = e.style[t];
+    e.style[t] = u + i, w = e[d], A ? e.style[t] = A : gt(e, t);
   } else
-    (g || o === "%") && !Gs[we(p, "display")] && (s.position = we(e, "position")), p === e && (s.position = "static"), p.appendChild(mt), m = mt[d], p.removeChild(mt), s.position = "absolute";
-  return l && g && (w = ft(p), w.time = me.time, w.width = p[d]), Q(h ? m * n / u : m && n ? u / m * n : 0);
-}, ze = function(e, t, a, i) {
+    (g || o === "%") && !wl[ve(p, "display")] && (s.position = ve(e, "position")), p === e && (s.position = "static"), p.appendChild(St), w = St[d], p.removeChild(St), s.position = "absolute";
+  return c && g && (f = Ct(p), f.time = Ae.time, f.width = p[d]), j(h ? w * n / u : w && n ? u / w * n : 0);
+}, Ke = function(e, t, a, i) {
   var n;
-  return Hi || Ai(), t in qe && t !== "transform" && (t = qe[t], ~t.indexOf(",") && (t = t.split(",")[0])), Ve[t] && t !== "transform" ? (n = $t(e, i), n = t !== "transformOrigin" ? n[t] : n.svg ? n.origin : Ea(we(e, de)) + " " + n.zOrigin + "px") : (n = e.style[t], (!n || n === "auto" || i || ~(n + "").indexOf("calc(")) && (n = Ta[t] && Ta[t](e, t, a) || we(e, t) || pr(e, t) || (t === "opacity" ? 1 : 0))), a && !~(n + "").trim().indexOf(" ") ? rt(e, t, n, a) + a : n;
-}, Vs = function(e, t, a, i) {
+  return an || Oi(), t in Ve && t !== "transform" && (t = Ve[t], ~t.indexOf(",") && (t = t.split(",")[0])), $e[t] && t !== "transform" ? (n = pa(e, i), n = t !== "transformOrigin" ? n[t] : n.svg ? n.origin : za(ve(e, ge)) + " " + n.zOrigin + "px") : (n = e.style[t], (!n || n === "auto" || i || ~(n + "").indexOf("calc(")) && (n = Ua[t] && Ua[t](e, t, a) || ve(e, t) || Br(e, t) || (t === "opacity" ? 1 : 0))), a && !~(n + "").trim().indexOf(" ") ? mt(e, t, n, a) + a : n;
+}, fl = function(e, t, a, i) {
   if (!a || a === "none") {
-    var n = Lt(t, e, 1), o = n && we(e, n, 1);
-    o && o !== a ? (t = n, a = o) : t === "borderColor" && (a = we(e, "borderTopColor"));
+    var n = Qt(t, e, 1), o = n && ve(e, n, 1);
+    o && o !== a ? (t = n, a = o) : t === "borderColor" && (a = ve(e, "borderTopColor"));
   }
-  var s = new ce(this._pt, e.style, t, 0, 1, zr), l = 0, c = 0, d, u, h, g, m, p, w, y, b, x, _, v;
-  if (s.b = a, s.e = i, a += "", i += "", i.substring(0, 6) === "var(--" && (i = we(e, i.substring(4, i.indexOf(")")))), i === "auto" && (p = e.style[t], e.style[t] = i, i = we(e, t) || i, p ? e.style[t] = p : nt(e, t)), d = [a, i], Dr(d), a = d[0], i = d[1], h = a.match(At) || [], v = i.match(At) || [], v.length) {
-    for (; u = At.exec(i); )
-      w = u[0], b = i.substring(l, u.index), m ? m = (m + 1) % 5 : (b.substr(-5) === "rgba(" || b.substr(-5) === "hsla(") && (m = 1), w !== (p = h[c++] || "") && (g = parseFloat(p) || 0, _ = p.substr((g + "").length), w.charAt(1) === "=" && (w = Ct(g, w) + _), y = parseFloat(w), x = w.substr((y + "").length), l = At.lastIndex - x.length, x || (x = x || be.units[t] || _, l === i.length && (i += x, s.e += x)), _ !== x && (g = rt(e, t, p, x) || 0), s._pt = {
+  var s = new pe(this._pt, e.style, t, 0, 1, lo), c = 0, l = 0, d, u, h, g, w, p, f, b, A, v, _, y;
+  if (s.b = a, s.e = i, a += "", i += "", i.substring(0, 6) === "var(--" && (i = ve(e, i.substring(4, i.indexOf(")")))), i === "auto" && (p = e.style[t], e.style[t] = i, i = ve(e, t) || i, p ? e.style[t] = p : gt(e, t)), d = [a, i], eo(d), a = d[0], i = d[1], h = a.match(Bt) || [], y = i.match(Bt) || [], y.length) {
+    for (; u = Bt.exec(i); )
+      f = u[0], A = i.substring(c, u.index), w ? w = (w + 1) % 5 : (A.substr(-5) === "rgba(" || A.substr(-5) === "hsla(") && (w = 1), f !== (p = h[l++] || "") && (g = parseFloat(p) || 0, _ = p.substr((g + "").length), f.charAt(1) === "=" && (f = Nt(g, f) + _), b = parseFloat(f), v = f.substr((b + "").length), c = Bt.lastIndex - v.length, v || (v = v || xe.units[t] || _, c === i.length && (i += v, s.e += v)), _ !== v && (g = mt(e, t, p, v) || 0), s._pt = {
         _next: s._pt,
-        p: b || c === 1 ? b : ",",
+        p: A || l === 1 ? A : ",",
         //note: SVG spec allows omission of comma/space when a negative sign is wedged between two numbers, like 2.5-5.3 instead of 2.5,-5.3 but when tweening, the negative value may switch to positive, so we insert the comma just in case.
         s: g,
-        c: y - g,
-        m: m && m < 4 || t === "zIndex" ? Math.round : 0
+        c: b - g,
+        m: w && w < 4 || t === "zIndex" ? Math.round : 0
       });
-    s.c = l < i.length ? i.substring(l, i.length) : "";
+    s.c = c < i.length ? i.substring(c, i.length) : "";
   } else
-    s.r = t === "display" && i === "none" ? Vr : Gr;
-  return lr.test(i) && (s.e = 0), this._pt = s, s;
-}, gn = {
+    s.r = t === "display" && i === "none" ? po : ho;
+  return Mr.test(i) && (s.e = 0), this._pt = s, s;
+}, Mn = {
   top: "0%",
   bottom: "100%",
   left: "0%",
   right: "100%",
   center: "50%"
-}, Ws = function(e) {
+}, bl = function(e) {
   var t = e.split(" "), a = t[0], i = t[1] || "50%";
-  return (a === "top" || a === "bottom" || i === "left" || i === "right") && (e = a, a = i, i = e), t[0] = gn[a] || a, t[1] = gn[i] || i, t.join(" ");
-}, Ys = function(e, t) {
+  return (a === "top" || a === "bottom" || i === "left" || i === "right") && (e = a, a = i, i = e), t[0] = Mn[a] || a, t[1] = Mn[i] || i, t.join(" ");
+}, Al = function(e, t) {
   if (t.tween && t.tween._time === t.tween._dur) {
-    var a = t.t, i = a.style, n = t.u, o = a._gsap, s, l, c;
+    var a = t.t, i = a.style, n = t.u, o = a._gsap, s, c, l;
     if (n === "all" || n === !0)
-      i.cssText = "", l = 1;
+      i.cssText = "", c = 1;
     else
-      for (n = n.split(","), c = n.length; --c > -1; )
-        s = n[c], Ve[s] && (l = 1, s = s === "transformOrigin" ? de : W), nt(a, s);
-    l && (nt(a, W), o && (o.svg && a.removeAttribute("transform"), i.scale = i.rotate = i.translate = "none", $t(a, 1), o.uncache = 1, Wr(i)));
+      for (n = n.split(","), l = n.length; --l > -1; )
+        s = n[l], $e[s] && (c = 1, s = s === "transformOrigin" ? ge : Y), gt(a, s);
+    c && (gt(a, Y), o && (o.svg && a.removeAttribute("transform"), i.scale = i.rotate = i.translate = "none", pa(a, 1), o.uncache = 1, go(i)));
   }
-}, Ta = {
+}, Ua = {
   clearProps: function(e, t, a, i, n) {
     if (n.data !== "isFromStart") {
-      var o = e._pt = new ce(e._pt, t, a, 0, 0, Ys);
+      var o = e._pt = new pe(e._pt, t, a, 0, 0, Al);
       return o.u = i, o.pr = -10, o.tween = n, e._props.push(a), 1;
     }
   }
@@ -1854,367 +1854,372 @@ var sn, Je, Tt, Hi, mt, ln, Gi, Es = function() {
   	return 1;
   }
   */
-}, Zt = [1, 0, 0, 1, 0, 0], Xr = {}, Jr = function(e) {
+}, ha = [1, 0, 0, 1, 0, 0], Ao = {}, yo = function(e) {
   return e === "matrix(1, 0, 0, 1, 0, 0)" || e === "none" || !e;
-}, mn = function(e) {
-  var t = we(e, W);
-  return Jr(t) ? Zt : t.substr(7).match(sr).map(Q);
-}, Wi = function(e, t) {
-  var a = e._gsap || ft(e), i = e.style, n = mn(e), o, s, l, c;
-  return a.svg && e.getAttribute("transform") ? (l = e.transform.baseVal.consolidate().matrix, n = [l.a, l.b, l.c, l.d, l.e, l.f], n.join(",") === "1,0,0,1,0,0" ? Zt : n) : (n === Zt && !e.offsetParent && e !== Tt && !a.svg && (l = i.display, i.display = "block", o = e.parentNode, (!o || !e.offsetParent && !e.getBoundingClientRect().width) && (c = 1, s = e.nextElementSibling, Tt.appendChild(e)), n = mn(e), l ? i.display = l : nt(e, "display"), c && (s ? o.insertBefore(e, s) : o ? o.appendChild(e) : Tt.removeChild(e))), t && n.length > 6 ? [n[0], n[1], n[4], n[5], n[12], n[13]] : n);
-}, Si = function(e, t, a, i, n, o) {
-  var s = e._gsap, l = n || Wi(e, !0), c = s.xOrigin || 0, d = s.yOrigin || 0, u = s.xOffset || 0, h = s.yOffset || 0, g = l[0], m = l[1], p = l[2], w = l[3], y = l[4], b = l[5], x = t.split(" "), _ = parseFloat(x[0]) || 0, v = parseFloat(x[1]) || 0, T, A, C, k;
-  a ? l !== Zt && (A = g * w - m * p) && (C = _ * (w / A) + v * (-p / A) + (p * b - w * y) / A, k = _ * (-m / A) + v * (g / A) - (g * b - m * y) / A, _ = C, v = k) : (T = jr(e), _ = T.x + (~x[0].indexOf("%") ? _ / 100 * T.width : _), v = T.y + (~(x[1] || x[0]).indexOf("%") ? v / 100 * T.height : v)), i || i !== !1 && s.smooth ? (y = _ - c, b = v - d, s.xOffset = u + (y * g + b * p) - y, s.yOffset = h + (y * m + b * w) - b) : s.xOffset = s.yOffset = 0, s.xOrigin = _, s.yOrigin = v, s.smooth = !!i, s.origin = t, s.originIsAbsolute = !!a, e.style[de] = "0px 0px", o && (Ze(o, s, "xOrigin", c, _), Ze(o, s, "yOrigin", d, v), Ze(o, s, "xOffset", u, s.xOffset), Ze(o, s, "yOffset", h, s.yOffset)), e.setAttribute("data-svg-origin", _ + " " + v);
-}, $t = function(e, t) {
-  var a = e._gsap || new qr(e);
+}, Dn = function(e) {
+  var t = ve(e, Y);
+  return yo(t) ? ha : t.substr(7).match(Pr).map(j);
+}, on = function(e, t) {
+  var a = e._gsap || Ct(e), i = e.style, n = Dn(e), o, s, c, l;
+  return a.svg && e.getAttribute("transform") ? (c = e.transform.baseVal.consolidate().matrix, n = [c.a, c.b, c.c, c.d, c.e, c.f], n.join(",") === "1,0,0,1,0,0" ? ha : n) : (n === ha && !e.offsetParent && e !== Ft && !a.svg && (c = i.display, i.display = "block", o = e.parentNode, (!o || !e.offsetParent && !e.getBoundingClientRect().width) && (l = 1, s = e.nextElementSibling, Ft.appendChild(e)), n = Dn(e), c ? i.display = c : gt(e, "display"), l && (s ? o.insertBefore(e, s) : o ? o.appendChild(e) : Ft.removeChild(e))), t && n.length > 6 ? [n[0], n[1], n[4], n[5], n[12], n[13]] : n);
+}, Ni = function(e, t, a, i, n, o) {
+  var s = e._gsap, c = n || on(e, !0), l = s.xOrigin || 0, d = s.yOrigin || 0, u = s.xOffset || 0, h = s.yOffset || 0, g = c[0], w = c[1], p = c[2], f = c[3], b = c[4], A = c[5], v = t.split(" "), _ = parseFloat(v[0]) || 0, y = parseFloat(v[1]) || 0, E, k, C, S;
+  a ? c !== ha && (k = g * f - w * p) && (C = _ * (f / k) + y * (-p / k) + (p * A - f * b) / k, S = _ * (-w / k) + y * (g / k) - (g * A - w * b) / k, _ = C, y = S) : (E = fo(e), _ = E.x + (~v[0].indexOf("%") ? _ / 100 * E.width : _), y = E.y + (~(v[1] || v[0]).indexOf("%") ? y / 100 * E.height : y)), i || i !== !1 && s.smooth ? (b = _ - l, A = y - d, s.xOffset = u + (b * g + A * p) - b, s.yOffset = h + (b * w + A * f) - A) : s.xOffset = s.yOffset = 0, s.xOrigin = _, s.yOrigin = y, s.smooth = !!i, s.origin = t, s.originIsAbsolute = !!a, e.style[ge] = "0px 0px", o && (lt(o, s, "xOrigin", l, _), lt(o, s, "yOrigin", d, y), lt(o, s, "xOffset", u, s.xOffset), lt(o, s, "yOffset", h, s.yOffset)), e.setAttribute("data-svg-origin", _ + " " + y);
+}, pa = function(e, t) {
+  var a = e._gsap || new ao(e);
   if ("x" in a && !t && !a.uncache)
     return a;
-  var i = e.style, n = a.scaleX < 0, o = "px", s = "deg", l = getComputedStyle(e), c = we(e, de) || "0", d, u, h, g, m, p, w, y, b, x, _, v, T, A, C, k, M, F, z, L, U, D, I, P, $, Te, We, Ce, st, Ji, Ne, lt;
-  return d = u = h = p = w = y = b = x = _ = 0, g = m = 1, a.svg = !!(e.getCTM && Kr(e)), l.translate && ((l.translate !== "none" || l.scale !== "none" || l.rotate !== "none") && (i[W] = (l.translate !== "none" ? "translate3d(" + (l.translate + " 0 0").split(" ").slice(0, 3).join(", ") + ") " : "") + (l.rotate !== "none" ? "rotate(" + l.rotate + ") " : "") + (l.scale !== "none" ? "scale(" + l.scale.split(" ").join(",") + ") " : "") + (l[W] !== "none" ? l[W] : "")), i.scale = i.rotate = i.translate = "none"), A = Wi(e, a.svg), a.svg && (a.uncache ? ($ = e.getBBox(), c = a.xOrigin - $.x + "px " + (a.yOrigin - $.y) + "px", P = "") : P = !t && e.getAttribute("data-svg-origin"), Si(e, P || c, !!P || a.originIsAbsolute, a.smooth !== !1, A)), v = a.xOrigin || 0, T = a.yOrigin || 0, A !== Zt && (F = A[0], z = A[1], L = A[2], U = A[3], d = D = A[4], u = I = A[5], A.length === 6 ? (g = Math.sqrt(F * F + z * z), m = Math.sqrt(U * U + L * L), p = F || z ? vt(z, F) * gt : 0, b = L || U ? vt(L, U) * gt + p : 0, b && (m *= Math.abs(Math.cos(b * Et))), a.svg && (d -= v - (v * F + T * L), u -= T - (v * z + T * U))) : (lt = A[6], Ji = A[7], We = A[8], Ce = A[9], st = A[10], Ne = A[11], d = A[12], u = A[13], h = A[14], C = vt(lt, st), w = C * gt, C && (k = Math.cos(-C), M = Math.sin(-C), P = D * k + We * M, $ = I * k + Ce * M, Te = lt * k + st * M, We = D * -M + We * k, Ce = I * -M + Ce * k, st = lt * -M + st * k, Ne = Ji * -M + Ne * k, D = P, I = $, lt = Te), C = vt(-L, st), y = C * gt, C && (k = Math.cos(-C), M = Math.sin(-C), P = F * k - We * M, $ = z * k - Ce * M, Te = L * k - st * M, Ne = U * M + Ne * k, F = P, z = $, L = Te), C = vt(z, F), p = C * gt, C && (k = Math.cos(C), M = Math.sin(C), P = F * k + z * M, $ = D * k + I * M, z = z * k - F * M, I = I * k - D * M, F = P, D = $), w && Math.abs(w) + Math.abs(p) > 359.9 && (w = p = 0, y = 180 - y), g = Q(Math.sqrt(F * F + z * z + L * L)), m = Q(Math.sqrt(I * I + lt * lt)), C = vt(D, I), b = Math.abs(C) > 2e-4 ? C * gt : 0, _ = Ne ? 1 / (Ne < 0 ? -Ne : Ne) : 0), a.svg && (P = e.getAttribute("transform"), a.forceCSS = e.setAttribute("transform", "") || !Jr(we(e, W)), P && e.setAttribute("transform", P))), Math.abs(b) > 90 && Math.abs(b) < 270 && (n ? (g *= -1, b += p <= 0 ? 180 : -180, p += p <= 0 ? 180 : -180) : (m *= -1, b += b <= 0 ? 180 : -180)), t = t || a.uncache, a.x = d - ((a.xPercent = d && (!t && a.xPercent || (Math.round(e.offsetWidth / 2) === Math.round(-d) ? -50 : 0))) ? e.offsetWidth * a.xPercent / 100 : 0) + o, a.y = u - ((a.yPercent = u && (!t && a.yPercent || (Math.round(e.offsetHeight / 2) === Math.round(-u) ? -50 : 0))) ? e.offsetHeight * a.yPercent / 100 : 0) + o, a.z = h + o, a.scaleX = Q(g), a.scaleY = Q(m), a.rotation = Q(p) + s, a.rotationX = Q(w) + s, a.rotationY = Q(y) + s, a.skewX = b + s, a.skewY = x + s, a.transformPerspective = _ + o, (a.zOrigin = parseFloat(c.split(" ")[2]) || !t && a.zOrigin || 0) && (i[de] = Ea(c)), a.xOffset = a.yOffset = 0, a.force3D = be.force3D, a.renderTransform = a.svg ? js : Qr ? Zr : Qs, a.uncache = 0, a;
-}, Ea = function(e) {
+  var i = e.style, n = a.scaleX < 0, o = "px", s = "deg", c = getComputedStyle(e), l = ve(e, ge) || "0", d, u, h, g, w, p, f, b, A, v, _, y, E, k, C, S, P, U, z, L, H, I, q, D, ie, Be, tt, Me, ft, gn, Qe, bt;
+  return d = u = h = p = f = b = A = v = _ = 0, g = w = 1, a.svg = !!(e.getCTM && bo(e)), c.translate && ((c.translate !== "none" || c.scale !== "none" || c.rotate !== "none") && (i[Y] = (c.translate !== "none" ? "translate3d(" + (c.translate + " 0 0").split(" ").slice(0, 3).join(", ") + ") " : "") + (c.rotate !== "none" ? "rotate(" + c.rotate + ") " : "") + (c.scale !== "none" ? "scale(" + c.scale.split(" ").join(",") + ") " : "") + (c[Y] !== "none" ? c[Y] : "")), i.scale = i.rotate = i.translate = "none"), k = on(e, a.svg), a.svg && (a.uncache ? (ie = e.getBBox(), l = a.xOrigin - ie.x + "px " + (a.yOrigin - ie.y) + "px", D = "") : D = !t && e.getAttribute("data-svg-origin"), Ni(e, D || l, !!D || a.originIsAbsolute, a.smooth !== !1, k)), y = a.xOrigin || 0, E = a.yOrigin || 0, k !== ha && (U = k[0], z = k[1], L = k[2], H = k[3], d = I = k[4], u = q = k[5], k.length === 6 ? (g = Math.sqrt(U * U + z * z), w = Math.sqrt(H * H + L * L), p = U || z ? Dt(z, U) * _t : 0, A = L || H ? Dt(L, H) * _t + p : 0, A && (w *= Math.abs(Math.cos(A * Ut))), a.svg && (d -= y - (y * U + E * L), u -= E - (y * z + E * H))) : (bt = k[6], gn = k[7], tt = k[8], Me = k[9], ft = k[10], Qe = k[11], d = k[12], u = k[13], h = k[14], C = Dt(bt, ft), f = C * _t, C && (S = Math.cos(-C), P = Math.sin(-C), D = I * S + tt * P, ie = q * S + Me * P, Be = bt * S + ft * P, tt = I * -P + tt * S, Me = q * -P + Me * S, ft = bt * -P + ft * S, Qe = gn * -P + Qe * S, I = D, q = ie, bt = Be), C = Dt(-L, ft), b = C * _t, C && (S = Math.cos(-C), P = Math.sin(-C), D = U * S - tt * P, ie = z * S - Me * P, Be = L * S - ft * P, Qe = H * P + Qe * S, U = D, z = ie, L = Be), C = Dt(z, U), p = C * _t, C && (S = Math.cos(C), P = Math.sin(C), D = U * S + z * P, ie = I * S + q * P, z = z * S - U * P, q = q * S - I * P, U = D, I = ie), f && Math.abs(f) + Math.abs(p) > 359.9 && (f = p = 0, b = 180 - b), g = j(Math.sqrt(U * U + z * z + L * L)), w = j(Math.sqrt(q * q + bt * bt)), C = Dt(I, q), A = Math.abs(C) > 2e-4 ? C * _t : 0, _ = Qe ? 1 / (Qe < 0 ? -Qe : Qe) : 0), a.svg && (D = e.getAttribute("transform"), a.forceCSS = e.setAttribute("transform", "") || !yo(ve(e, Y)), D && e.setAttribute("transform", D))), Math.abs(A) > 90 && Math.abs(A) < 270 && (n ? (g *= -1, A += p <= 0 ? 180 : -180, p += p <= 0 ? 180 : -180) : (w *= -1, A += A <= 0 ? 180 : -180)), t = t || a.uncache, a.x = d - ((a.xPercent = d && (!t && a.xPercent || (Math.round(e.offsetWidth / 2) === Math.round(-d) ? -50 : 0))) ? e.offsetWidth * a.xPercent / 100 : 0) + o, a.y = u - ((a.yPercent = u && (!t && a.yPercent || (Math.round(e.offsetHeight / 2) === Math.round(-u) ? -50 : 0))) ? e.offsetHeight * a.yPercent / 100 : 0) + o, a.z = h + o, a.scaleX = j(g), a.scaleY = j(w), a.rotation = j(p) + s, a.rotationX = j(f) + s, a.rotationY = j(b) + s, a.skewX = A + s, a.skewY = v + s, a.transformPerspective = _ + o, (a.zOrigin = parseFloat(l.split(" ")[2]) || !t && a.zOrigin || 0) && (i[ge] = za(l)), a.xOffset = a.yOffset = 0, a.force3D = xe.force3D, a.renderTransform = a.svg ? vl : wo ? vo : yl, a.uncache = 0, a;
+}, za = function(e) {
   return (e = e.split(" "))[0] + " " + e[1];
-}, Qa = function(e, t, a) {
-  var i = te(t);
-  return Q(parseFloat(t) + parseFloat(rt(e, "x", a + "px", i))) + i;
-}, Qs = function(e, t) {
-  t.z = "0px", t.rotationY = t.rotationX = "0deg", t.force3D = 0, Zr(e, t);
-}, ct = "0deg", Nt = "0px", dt = ") ", Zr = function(e, t) {
-  var a = t || this, i = a.xPercent, n = a.yPercent, o = a.x, s = a.y, l = a.z, c = a.rotation, d = a.rotationY, u = a.rotationX, h = a.skewX, g = a.skewY, m = a.scaleX, p = a.scaleY, w = a.transformPerspective, y = a.force3D, b = a.target, x = a.zOrigin, _ = "", v = y === "auto" && e && e !== 1 || y === !0;
-  if (x && (u !== ct || d !== ct)) {
-    var T = parseFloat(d) * Et, A = Math.sin(T), C = Math.cos(T), k;
-    T = parseFloat(u) * Et, k = Math.cos(T), o = Qa(b, o, A * k * -x), s = Qa(b, s, -Math.sin(T) * -x), l = Qa(b, l, C * k * -x + x);
+}, oi = function(e, t, a) {
+  var i = re(t);
+  return j(parseFloat(t) + parseFloat(mt(e, "x", a + "px", i))) + i;
+}, yl = function(e, t) {
+  t.z = "0px", t.rotationY = t.rotationX = "0deg", t.force3D = 0, vo(e, t);
+}, At = "0deg", jt = "0px", yt = ") ", vo = function(e, t) {
+  var a = t || this, i = a.xPercent, n = a.yPercent, o = a.x, s = a.y, c = a.z, l = a.rotation, d = a.rotationY, u = a.rotationX, h = a.skewX, g = a.skewY, w = a.scaleX, p = a.scaleY, f = a.transformPerspective, b = a.force3D, A = a.target, v = a.zOrigin, _ = "", y = b === "auto" && e && e !== 1 || b === !0;
+  if (v && (u !== At || d !== At)) {
+    var E = parseFloat(d) * Ut, k = Math.sin(E), C = Math.cos(E), S;
+    E = parseFloat(u) * Ut, S = Math.cos(E), o = oi(A, o, k * S * -v), s = oi(A, s, -Math.sin(E) * -v), c = oi(A, c, C * S * -v + v);
   }
-  w !== Nt && (_ += "perspective(" + w + dt), (i || n) && (_ += "translate(" + i + "%, " + n + "%) "), (v || o !== Nt || s !== Nt || l !== Nt) && (_ += l !== Nt || v ? "translate3d(" + o + ", " + s + ", " + l + ") " : "translate(" + o + ", " + s + dt), c !== ct && (_ += "rotate(" + c + dt), d !== ct && (_ += "rotateY(" + d + dt), u !== ct && (_ += "rotateX(" + u + dt), (h !== ct || g !== ct) && (_ += "skew(" + h + ", " + g + dt), (m !== 1 || p !== 1) && (_ += "scale(" + m + ", " + p + dt), b.style[W] = _ || "translate(0, 0)";
-}, js = function(e, t) {
-  var a = t || this, i = a.xPercent, n = a.yPercent, o = a.x, s = a.y, l = a.rotation, c = a.skewX, d = a.skewY, u = a.scaleX, h = a.scaleY, g = a.target, m = a.xOrigin, p = a.yOrigin, w = a.xOffset, y = a.yOffset, b = a.forceCSS, x = parseFloat(o), _ = parseFloat(s), v, T, A, C, k;
-  l = parseFloat(l), c = parseFloat(c), d = parseFloat(d), d && (d = parseFloat(d), c += d, l += d), l || c ? (l *= Et, c *= Et, v = Math.cos(l) * u, T = Math.sin(l) * u, A = Math.sin(l - c) * -h, C = Math.cos(l - c) * h, c && (d *= Et, k = Math.tan(c - d), k = Math.sqrt(1 + k * k), A *= k, C *= k, d && (k = Math.tan(d), k = Math.sqrt(1 + k * k), v *= k, T *= k)), v = Q(v), T = Q(T), A = Q(A), C = Q(C)) : (v = u, C = h, T = A = 0), (x && !~(o + "").indexOf("px") || _ && !~(s + "").indexOf("px")) && (x = rt(g, "x", o, "px"), _ = rt(g, "y", s, "px")), (m || p || w || y) && (x = Q(x + m - (m * v + p * A) + w), _ = Q(_ + p - (m * T + p * C) + y)), (i || n) && (k = g.getBBox(), x = Q(x + i / 100 * k.width), _ = Q(_ + n / 100 * k.height)), k = "matrix(" + v + "," + T + "," + A + "," + C + "," + x + "," + _ + ")", g.setAttribute("transform", k), b && (g.style[W] = k);
-}, Ks = function(e, t, a, i, n) {
-  var o = 360, s = J(n), l = parseFloat(n) * (s && ~n.indexOf("rad") ? gt : 1), c = l - i, d = i + c + "deg", u, h;
-  return s && (u = n.split("_")[1], u === "short" && (c %= o, c !== c % (o / 2) && (c += c < 0 ? o : -o)), u === "cw" && c < 0 ? c = (c + o * cn) % o - ~~(c / o) * o : u === "ccw" && c > 0 && (c = (c - o * cn) % o - ~~(c / o) * o)), e._pt = h = new ce(e._pt, t, a, i, c, Rs), h.e = d, h.u = "deg", e._props.push(a), h;
-}, fn = function(e, t) {
+  f !== jt && (_ += "perspective(" + f + yt), (i || n) && (_ += "translate(" + i + "%, " + n + "%) "), (y || o !== jt || s !== jt || c !== jt) && (_ += c !== jt || y ? "translate3d(" + o + ", " + s + ", " + c + ") " : "translate(" + o + ", " + s + yt), l !== At && (_ += "rotate(" + l + yt), d !== At && (_ += "rotateY(" + d + yt), u !== At && (_ += "rotateX(" + u + yt), (h !== At || g !== At) && (_ += "skew(" + h + ", " + g + yt), (w !== 1 || p !== 1) && (_ += "scale(" + w + ", " + p + yt), A.style[Y] = _ || "translate(0, 0)";
+}, vl = function(e, t) {
+  var a = t || this, i = a.xPercent, n = a.yPercent, o = a.x, s = a.y, c = a.rotation, l = a.skewX, d = a.skewY, u = a.scaleX, h = a.scaleY, g = a.target, w = a.xOrigin, p = a.yOrigin, f = a.xOffset, b = a.yOffset, A = a.forceCSS, v = parseFloat(o), _ = parseFloat(s), y, E, k, C, S;
+  c = parseFloat(c), l = parseFloat(l), d = parseFloat(d), d && (d = parseFloat(d), l += d, c += d), c || l ? (c *= Ut, l *= Ut, y = Math.cos(c) * u, E = Math.sin(c) * u, k = Math.sin(c - l) * -h, C = Math.cos(c - l) * h, l && (d *= Ut, S = Math.tan(l - d), S = Math.sqrt(1 + S * S), k *= S, C *= S, d && (S = Math.tan(d), S = Math.sqrt(1 + S * S), y *= S, E *= S)), y = j(y), E = j(E), k = j(k), C = j(C)) : (y = u, C = h, E = k = 0), (v && !~(o + "").indexOf("px") || _ && !~(s + "").indexOf("px")) && (v = mt(g, "x", o, "px"), _ = mt(g, "y", s, "px")), (w || p || f || b) && (v = j(v + w - (w * y + p * k) + f), _ = j(_ + p - (w * E + p * C) + b)), (i || n) && (S = g.getBBox(), v = j(v + i / 100 * S.width), _ = j(_ + n / 100 * S.height)), S = "matrix(" + y + "," + E + "," + k + "," + C + "," + v + "," + _ + ")", g.setAttribute("transform", S), A && (g.style[Y] = S);
+}, xl = function(e, t, a, i, n) {
+  var o = 360, s = ee(n), c = parseFloat(n) * (s && ~n.indexOf("rad") ? _t : 1), l = c - i, d = i + l + "deg", u, h;
+  return s && (u = n.split("_")[1], u === "short" && (l %= o, l !== l % (o / 2) && (l += l < 0 ? o : -o)), u === "cw" && l < 0 ? l = (l + o * Sn) % o - ~~(l / o) * o : u === "ccw" && l > 0 && (l = (l - o * Sn) % o - ~~(l / o) * o)), e._pt = h = new pe(e._pt, t, a, i, l, nl), h.e = d, h.u = "deg", e._props.push(a), h;
+}, Rn = function(e, t) {
   for (var a in t)
     e[a] = t[a];
   return e;
-}, Xs = function(e, t, a) {
-  var i = fn({}, a._gsap), n = "perspective,force3D,transformOrigin,svgOrigin", o = a.style, s, l, c, d, u, h, g, m;
-  i.svg ? (c = a.getAttribute("transform"), a.setAttribute("transform", ""), o[W] = t, s = $t(a, 1), nt(a, W), a.setAttribute("transform", c)) : (c = getComputedStyle(a)[W], o[W] = t, s = $t(a, 1), o[W] = c);
-  for (l in Ve)
-    c = i[l], d = s[l], c !== d && n.indexOf(l) < 0 && (g = te(c), m = te(d), u = g !== m ? rt(a, l, c, m) : parseFloat(c), h = parseFloat(d), e._pt = new ce(e._pt, s, l, u, h - u, vi), e._pt.u = m || 0, e._props.push(l));
-  fn(s, i);
+}, _l = function(e, t, a) {
+  var i = Rn({}, a._gsap), n = "perspective,force3D,transformOrigin,svgOrigin", o = a.style, s, c, l, d, u, h, g, w;
+  i.svg ? (l = a.getAttribute("transform"), a.setAttribute("transform", ""), o[Y] = t, s = pa(a, 1), gt(a, Y), a.setAttribute("transform", l)) : (l = getComputedStyle(a)[Y], o[Y] = t, s = pa(a, 1), o[Y] = l);
+  for (c in $e)
+    l = i[c], d = s[c], l !== d && n.indexOf(c) < 0 && (g = re(l), w = re(d), u = g !== w ? mt(a, c, l, w) : parseFloat(l), h = parseFloat(d), e._pt = new pe(e._pt, s, c, u, h - u, Bi), e._pt.u = w || 0, e._props.push(c));
+  Rn(s, i);
 };
-le("padding,margin,Width,Radius", function(r, e) {
+he("padding,margin,Width,Radius", function(r, e) {
   var t = "Top", a = "Right", i = "Bottom", n = "Left", o = (e < 3 ? [t, a, i, n] : [t + n, t + a, i + a, i + n]).map(function(s) {
     return e < 2 ? r + s : "border" + s + r;
   });
-  Ta[e > 1 ? "border" + r : r] = function(s, l, c, d, u) {
+  Ua[e > 1 ? "border" + r : r] = function(s, c, l, d, u) {
     var h, g;
     if (arguments.length < 4)
-      return h = o.map(function(m) {
-        return ze(s, m, c);
+      return h = o.map(function(w) {
+        return Ke(s, w, l);
       }), g = h.join(" "), g.split(h[0]).length === 5 ? h[0] : g;
-    h = (d + "").split(" "), g = {}, o.forEach(function(m, p) {
-      return g[m] = h[p] = h[p] || h[(p - 1) / 2 | 0];
-    }), s.init(l, g, u);
+    h = (d + "").split(" "), g = {}, o.forEach(function(w, p) {
+      return g[w] = h[p] = h[p] || h[(p - 1) / 2 | 0];
+    }), s.init(c, g, u);
   };
 });
-var $r = {
+var xo = {
   name: "css",
-  register: Ai,
+  register: Oi,
   targetTest: function(e) {
     return e.style && e.nodeType;
   },
   init: function(e, t, a, i, n) {
-    var o = this._props, s = e.style, l = a.vars.startAt, c, d, u, h, g, m, p, w, y, b, x, _, v, T, A, C, k;
-    Hi || Ai(), this.styles = this.styles || Yr(e), C = this.styles.props, this.tween = a;
+    var o = this._props, s = e.style, c = a.vars.startAt, l, d, u, h, g, w, p, f, b, A, v, _, y, E, k, C, S;
+    an || Oi(), this.styles = this.styles || mo(e), C = this.styles.props, this.tween = a;
     for (p in t)
-      if (p !== "autoRound" && (d = t[p], !(he[p] && Lr(p, t, a, i, e, n)))) {
-        if (g = typeof d, m = Ta[p], g === "function" && (d = d.call(a, i, e, n), g = typeof d), g === "string" && ~d.indexOf("random(") && (d = Kt(d)), m)
-          m(this, e, p, d, a) && (A = 1);
+      if (p !== "autoRound" && (d = t[p], !(we[p] && io(p, t, a, i, e, n)))) {
+        if (g = typeof d, w = Ua[p], g === "function" && (d = d.call(a, i, e, n), g = typeof d), g === "string" && ~d.indexOf("random(") && (d = ca(d)), w)
+          w(this, e, p, d, a) && (k = 1);
         else if (p.substr(0, 2) === "--")
-          c = (getComputedStyle(e).getPropertyValue(p) + "").trim(), d += "", at.lastIndex = 0, at.test(c) || (w = te(c), y = te(d), y ? w !== y && (c = rt(e, p, c, y) + y) : w && (d += w)), this.add(s, "setProperty", c, d, i, n, 0, 0, p), o.push(p), C.push(p, 0, s[p]);
+          l = (getComputedStyle(e).getPropertyValue(p) + "").trim(), d += "", ht.lastIndex = 0, ht.test(l) || (f = re(l), b = re(d), b ? f !== b && (l = mt(e, p, l, b) + b) : f && (d += f)), this.add(s, "setProperty", l, d, i, n, 0, 0, p), o.push(p), C.push(p, 0, s[p]);
         else if (g !== "undefined") {
-          if (l && p in l ? (c = typeof l[p] == "function" ? l[p].call(a, i, e, n) : l[p], J(c) && ~c.indexOf("random(") && (c = Kt(c)), te(c + "") || c === "auto" || (c += be.units[p] || te(ze(e, p)) || ""), (c + "").charAt(1) === "=" && (c = ze(e, p))) : c = ze(e, p), h = parseFloat(c), b = g === "string" && d.charAt(1) === "=" && d.substr(0, 2), b && (d = d.substr(2)), u = parseFloat(d), p in qe && (p === "autoAlpha" && (h === 1 && ze(e, "visibility") === "hidden" && u && (h = 0), C.push("visibility", 0, s.visibility), Ze(this, s, "visibility", h ? "inherit" : "hidden", u ? "inherit" : "hidden", !u)), p !== "scale" && p !== "transform" && (p = qe[p], ~p.indexOf(",") && (p = p.split(",")[0]))), x = p in Ve, x) {
-            if (this.styles.save(p), k = d, g === "string" && d.substring(0, 6) === "var(--") {
-              if (d = we(e, d.substring(4, d.indexOf(")"))), d.substring(0, 5) === "calc(") {
-                var M = e.style.perspective;
-                e.style.perspective = d, d = we(e, "perspective"), M ? e.style.perspective = M : nt(e, "perspective");
+          if (c && p in c ? (l = typeof c[p] == "function" ? c[p].call(a, i, e, n) : c[p], ee(l) && ~l.indexOf("random(") && (l = ca(l)), re(l + "") || l === "auto" || (l += xe.units[p] || re(Ke(e, p)) || ""), (l + "").charAt(1) === "=" && (l = Ke(e, p))) : l = Ke(e, p), h = parseFloat(l), A = g === "string" && d.charAt(1) === "=" && d.substr(0, 2), A && (d = d.substr(2)), u = parseFloat(d), p in Ve && (p === "autoAlpha" && (h === 1 && Ke(e, "visibility") === "hidden" && u && (h = 0), C.push("visibility", 0, s.visibility), lt(this, s, "visibility", h ? "inherit" : "hidden", u ? "inherit" : "hidden", !u)), p !== "scale" && p !== "transform" && (p = Ve[p], ~p.indexOf(",") && (p = p.split(",")[0]))), v = p in $e, v) {
+            if (this.styles.save(p), S = d, g === "string" && d.substring(0, 6) === "var(--") {
+              if (d = ve(e, d.substring(4, d.indexOf(")"))), d.substring(0, 5) === "calc(") {
+                var P = e.style.perspective;
+                e.style.perspective = d, d = ve(e, "perspective"), P ? e.style.perspective = P : gt(e, "perspective");
               }
               u = parseFloat(d);
             }
-            if (_ || (v = e._gsap, v.renderTransform && !t.parseTransform || $t(e, t.parseTransform), T = t.smoothOrigin !== !1 && v.smooth, _ = this._pt = new ce(this._pt, s, W, 0, 1, v.renderTransform, v, 0, -1), _.dep = 1), p === "scale")
-              this._pt = new ce(this._pt, v, "scaleY", v.scaleY, (b ? Ct(v.scaleY, b + u) : u) - v.scaleY || 0, vi), this._pt.u = 0, o.push("scaleY", p), p += "X";
+            if (_ || (y = e._gsap, y.renderTransform && !t.parseTransform || pa(e, t.parseTransform), E = t.smoothOrigin !== !1 && y.smooth, _ = this._pt = new pe(this._pt, s, Y, 0, 1, y.renderTransform, y, 0, -1), _.dep = 1), p === "scale")
+              this._pt = new pe(this._pt, y, "scaleY", y.scaleY, (A ? Nt(y.scaleY, A + u) : u) - y.scaleY || 0, Bi), this._pt.u = 0, o.push("scaleY", p), p += "X";
             else if (p === "transformOrigin") {
-              C.push(de, 0, s[de]), d = Ws(d), v.svg ? Si(e, d, 0, T, 0, this) : (y = parseFloat(d.split(" ")[2]) || 0, y !== v.zOrigin && Ze(this, v, "zOrigin", v.zOrigin, y), Ze(this, s, p, Ea(c), Ea(d)));
+              C.push(ge, 0, s[ge]), d = bl(d), y.svg ? Ni(e, d, 0, E, 0, this) : (b = parseFloat(d.split(" ")[2]) || 0, b !== y.zOrigin && lt(this, y, "zOrigin", y.zOrigin, b), lt(this, s, p, za(l), za(d)));
               continue;
             } else if (p === "svgOrigin") {
-              Si(e, d, 1, T, 0, this);
+              Ni(e, d, 1, E, 0, this);
               continue;
-            } else if (p in Xr) {
-              Ks(this, v, p, h, b ? Ct(h, b + d) : d);
+            } else if (p in Ao) {
+              xl(this, y, p, h, A ? Nt(h, A + d) : d);
               continue;
             } else if (p === "smoothOrigin") {
-              Ze(this, v, "smooth", v.smooth, d);
+              lt(this, y, "smooth", y.smooth, d);
               continue;
             } else if (p === "force3D") {
-              v[p] = d;
+              y[p] = d;
               continue;
             } else if (p === "transform") {
-              Xs(this, d, e);
+              _l(this, d, e);
               continue;
             }
-          } else p in s || (p = Lt(p) || p);
-          if (x || (u || u === 0) && (h || h === 0) && !Ps.test(d) && p in s)
-            w = (c + "").substr((h + "").length), u || (u = 0), y = te(d) || (p in be.units ? be.units[p] : w), w !== y && (h = rt(e, p, c, y)), this._pt = new ce(this._pt, x ? v : s, p, h, (b ? Ct(h, b + u) : u) - h, !x && (y === "px" || p === "zIndex") && t.autoRound !== !1 ? qs : vi), this._pt.u = y || 0, x && k !== d ? (this._pt.b = c, this._pt.e = k, this._pt.r = Is) : w !== y && y !== "%" && (this._pt.b = c, this._pt.r = Ds);
+          } else p in s || (p = Qt(p) || p);
+          if (v || (u || u === 0) && (h || h === 0) && !il.test(d) && p in s)
+            f = (l + "").substr((h + "").length), u || (u = 0), b = re(d) || (p in xe.units ? xe.units[p] : f), f !== b && (h = mt(e, p, l, b)), this._pt = new pe(this._pt, v ? y : s, p, h, (A ? Nt(h, A + u) : u) - h, !v && (b === "px" || p === "zIndex") && t.autoRound !== !1 ? sl : Bi), this._pt.u = b || 0, v && S !== d ? (this._pt.b = l, this._pt.e = S, this._pt.r = ol) : f !== b && b !== "%" && (this._pt.b = l, this._pt.r = rl);
           else if (p in s)
-            Vs.call(this, e, p, c, b ? b + d : d);
+            fl.call(this, e, p, l, A ? A + d : d);
           else if (p in e)
-            this.add(e, p, c || e[p], b ? b + d : d, i, n);
+            this.add(e, p, l || e[p], A ? A + d : d, i, n);
           else if (p !== "parseTransform") {
-            Di(p, d);
+            Yi(p, d);
             continue;
           }
-          x || (p in s ? C.push(p, 0, s[p]) : typeof e[p] == "function" ? C.push(p, 2, e[p]()) : C.push(p, 1, c || e[p])), o.push(p);
+          v || (p in s ? C.push(p, 0, s[p]) : typeof e[p] == "function" ? C.push(p, 2, e[p]()) : C.push(p, 1, l || e[p])), o.push(p);
         }
       }
-    A && Ur(this);
+    k && co(this);
   },
   render: function(e, t) {
-    if (t.tween._time || !Gi())
+    if (t.tween._time || !nn())
       for (var a = t._pt; a; )
         a.r(e, a.d), a = a._next;
     else
       t.styles.revert();
   },
-  get: ze,
-  aliases: qe,
+  get: Ke,
+  aliases: Ve,
   getSetter: function(e, t, a) {
-    var i = qe[t];
-    return i && i.indexOf(",") < 0 && (t = i), t in Ve && t !== de && (e._gsap.x || ze(e, "x")) ? a && ln === a ? t === "scale" ? Bs : Os : (ln = a || {}) && (t === "scale" ? Fs : zs) : e.style && !Mi(e.style[t]) ? Ls : ~t.indexOf("-") ? Ns : zi(e, t);
+    var i = Ve[t];
+    return i && i.indexOf(",") < 0 && (t = i), t in $e && t !== ge && (e._gsap.x || Ke(e, "x")) ? a && kn === a ? t === "scale" ? ul : dl : (kn = a || {}) && (t === "scale" ? hl : pl) : e.style && !Vi(e.style[t]) ? ll : ~t.indexOf("-") ? cl : en(e, t);
   },
   core: {
-    _removeProperty: nt,
-    _getMatrix: Wi
+    _removeProperty: gt,
+    _getMatrix: on
   }
 };
-ue.utils.checkPrefix = Lt;
-ue.core.getStyleSaver = Yr;
+me.utils.checkPrefix = Qt;
+me.core.getStyleSaver = mo;
 (function(r, e, t, a) {
-  var i = le(r + "," + e + "," + t, function(n) {
-    Ve[n] = 1;
+  var i = he(r + "," + e + "," + t, function(n) {
+    $e[n] = 1;
   });
-  le(e, function(n) {
-    be.units[n] = "deg", Xr[n] = 1;
-  }), qe[i[13]] = r + "," + e, le(a, function(n) {
+  he(e, function(n) {
+    xe.units[n] = "deg", Ao[n] = 1;
+  }), Ve[i[13]] = r + "," + e, he(a, function(n) {
     var o = n.split(":");
-    qe[o[1]] = i[o[0]];
+    Ve[o[1]] = i[o[0]];
   });
 })("x,y,z,scale,scaleX,scaleY,xPercent,yPercent", "rotation,rotationX,rotationY,skewX,skewY", "transform,transformOrigin,svgOrigin,force3D,smoothOrigin,transformPerspective", "0:translateX,1:translateY,2:translateZ,8:rotate,8:rotationZ,8:rotateZ,9:rotateX,10:rotateY");
-le("x,y,z,top,right,bottom,left,width,height,fontSize,padding,margin,perspective", function(r) {
-  be.units[r] = "px";
+he("x,y,z,top,right,bottom,left,width,height,fontSize,padding,margin,perspective", function(r) {
+  xe.units[r] = "px";
 });
-ue.registerPlugin($r);
-var f = ue.registerPlugin($r) || ue;
-f.core.Tween;
-const Fe = "Thinking", kt = "Show more", ya = "Show less";
-function Yi(r, e) {
+me.registerPlugin(xo);
+var m = me.registerPlugin(xo) || me;
+m.core.Tween;
+const Fe = "Thinking", Ot = "Show more", It = "Show less";
+function sn(r, e) {
   const t = r.toLowerCase();
-  return t.includes("source") || t.includes("data") ? "Searching across company records, contact databases, technographics, commerce signals, and local business indexes to find matches." : t.includes("competitor") || t.includes("positioning") ? "Comparing the business context against known market alternatives, displacement angles, objections, and differentiation claims." : t.includes("messaging") || t.includes("proof") ? "Extracting repeatable claims, customer proof, pain language, and credible hooks that can become outbound strategy." : t.includes("pylon") ? "Reading the uploaded business context to identify category language, buyer pains, competitive traps, and GTM opportunities." : t.includes("company") ? "Reviewing public company information, website copy, firmographics, and recent external signals to understand the account context." : t.includes("icp") || t.includes("buyer") ? "Mapping personas, buying committees, seniority, department ownership, and account-fit signals from the available evidence." : t.includes("blog") ? "Reading launch notes, blog posts, category language, and positioning themes to infer the strongest outreach angles." : t.includes("career") || t.includes("hiring") ? "Checking careers pages, new roles, team growth, and hiring language to understand near-term operating priorities." : t.includes("gtm") ? "Connecting signal strength, audience fit, and likely urgency to decide which outbound motion is most likely to convert." : t.includes("funding") || t.includes("round") ? "Reviewing recent funding announcements, raise dates, investor notes, and company updates from the past three months." : t.includes("transcript") || t.includes("notes") ? "Extracting CRM fields, next steps, risk language, and owner context from the conversation transcript." : t.includes("logs") || t.includes("auth") ? "Inspecting connector logs, authentication events, permission changes, and recent workspace activity." : t.includes("account") || t.includes("signals") ? "Combining account history with public source changes and recent activity to prepare a concise research brief." : e % 2 === 0 ? "Inspecting relevant records, comparing source confidence, and filtering out low-quality matches before returning results." : "Cross-checking the strongest evidence across sources so the final answer only includes useful, defensible results.";
+  return t.includes("vercel") ? "Reading the uploaded Vercel context to identify developer pains, AI app workflows, competitive traps, and GTM opportunities." : t.includes("developer personas") ? "Mapping engineering leaders, platform teams, founders, and frontend owners to account-fit and urgency signals." : t.includes("frontend cloud") || t.includes("ai app") ? "Extracting Next.js, preview deployments, global performance, enterprise controls, and Vercel AI SDK proof points." : t.includes("source") || t.includes("data") ? "Searching across company records, contact databases, technographics, commerce signals, and local business indexes to find matches." : t.includes("competitor") || t.includes("positioning") ? "Comparing the business context against known market alternatives, displacement angles, objections, and differentiation claims." : t.includes("messaging") || t.includes("proof") ? "Extracting repeatable claims, customer proof, pain language, and credible hooks that can become outbound strategy." : t.includes("company") ? "Reviewing public company information, website copy, firmographics, and recent external signals to understand the account context." : t.includes("icp") || t.includes("buyer") ? "Mapping personas, buying committees, seniority, department ownership, and account-fit signals from the available evidence." : t.includes("blog") ? "Reading launch notes, blog posts, category language, and positioning themes to infer the strongest outreach angles." : t.includes("career") || t.includes("hiring") ? "Checking careers pages, new roles, team growth, and hiring language to understand near-term operating priorities." : t.includes("gtm") ? "Connecting signal strength, audience fit, and likely urgency to decide which outbound motion is most likely to convert." : t.includes("funding") || t.includes("round") ? "Reviewing recent funding announcements, raise dates, investor notes, and company updates from the past three months." : t.includes("transcript") || t.includes("notes") ? "Extracting CRM fields, next steps, risk language, and owner context from the conversation transcript." : t.includes("logs") || t.includes("auth") ? "Inspecting connector logs, authentication events, permission changes, and recent workspace activity." : t.includes("account") || t.includes("signals") ? "Combining account history with public source changes and recent activity to prepare a concise research brief." : e % 2 === 0 ? "Inspecting relevant records, comparing source confidence, and filtering out low-quality matches before returning results." : "Cross-checking the strongest evidence across sources so the final answer only includes useful, defensible results.";
 }
-function Na(r) {
+function ln(r) {
   return r <= 1 ? "4m 12s" : r <= 3 ? "4m 20s" : "4m 50s";
 }
-function Js(r) {
-  const e = r.trim().toLowerCase(), t = e.match(/(\d+(?:\.\d+)?)\s*m/), a = e.match(/(\d+(?:\.\d+)?)\s*s/);
-  let i = 0, n = !1;
-  if (t && (i += Number(t[1]) * 60, n = !0), a && (i += Number(a[1]), n = !0), !n) {
-    const o = Number(e);
-    return Number.isFinite(o) ? Math.max(0, o) : null;
-  }
-  return Number.isFinite(i) ? Math.max(0, i) : null;
-}
-function oa(r) {
+function In(r) {
   const e = Math.max(0, Math.floor(r)), t = Math.floor(e / 60), a = e % 60;
   return t > 0 ? `${t}m ${a}s` : `${a}s`;
 }
-function Zs(r, e, t, a = {}) {
-  const i = Js(t);
-  if (i === null) {
-    e.textContent = t;
-    return;
-  }
-  if (e.textContent = "0s", a.reducedMotion || i <= 0) {
-    e.textContent = oa(i);
-    return;
-  }
-  const n = r.duration();
-  if (n <= 0) {
-    e.textContent = oa(i);
-    return;
-  }
-  const o = { seconds: 0 };
-  r.to(
-    o,
-    {
-      seconds: i,
-      duration: n,
-      ease: "none",
-      onUpdate: () => {
-        e.textContent = oa(o.seconds);
-      },
-      onComplete: () => {
-        e.textContent = oa(i);
-      },
-      onReverseComplete: () => {
-        e.textContent = "0s";
-      }
-    },
-    0
-  );
+const kl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAeUlEQVQ4jd3TsRFAYAyG4Td+1rGFRm8CnbOO0gL0GgOomcEWjmg07jj86aRN8tyXIsJYKN9rAXoceeCxDBABKavUvsBRmhgBInk1NhYNkF21rAkImcpLGXQmroZnQLfmptcCj4D5hB8A4vkLpwSLEZDeBjjNgc43yQ5kyxoFPrhHWwAAAABJRU5ErkJggg==", Sl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAaVBMVEVHcEz+tQD/vAD8tAD6K2D/tgAlxPkVwP8YwP//tgD+uAAOwP8Mwv/5K2DHLyeKAGkcwP8Aw/8Mv/+6IUj/rwD5K2GzAE24G0j//wChAFmwD0f9KkYXv//9tAD4KmC3H0a5H0jZJVTkJ1jwBUmcAAAAG3RSTlMAzFX6SZEOh0ZCD70sfxAFFmn6jRQod/YUM7hQnaq0AAAAdklEQVQYlY2PSRKDIBAAhz0oSFyzFIvJ/x8ZgYhcrLJPdHOYGYBrNIwQ1hSVyEUIklm3p8sQtyXTYfR3hzDnQD/v15NFZZNq7Q2o/4bHYrDkYrA2Be9DWLveJnLwowFRBR2HlTDrvEwJOymIO1ShPX4jip/c+QPspgsTY5Zd9wAAAABJRU5ErkJggg==", Cl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAQlBMVEUXFxfy6OiEgICfmZlpZWXWzs5NS0syMTFjYGBbWFjf1tZva2uclpbk29vDu7tFQkI4NjaLhoa7tLS0ra3q4eEkJCQHTzuzAAAATUlEQVQYlWNgoARwMDFxIvOZGBkZmeEsRkYubhYeuAAvKysfPwMDC1yACaIJVUCAjU0QWYAbbBBMgFVImBkMuGG2iKA4QJSdXZQiHwEAwJgBiwaJnkkAAAAASUVORK5CYII=", qn = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAFklEQVR4nGNQOhpHEmIY1TCqYfhqAACML0UQHuDXpwAAAABJRU5ErkJggg==", Tl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAALVBMVEVHcEwAc/8Ac/8Acv8Ac/8AcP8Ac/8Ac/8Ac/8Ac/8Ac/8Ac/8Ac/8AcP8Ac/8pWYqpAAAADnRSTlMAMm5b2g/F7aVJlYG0HQV+ULEAAABmSURBVBiVbY/bDsAgCEMRcF7X///c4dQMk/UJCs1JiUyKUNEKOi0x+o1EwDbGmBAyeBsXhJGDfS0VqA/MjH0544VczpiQeELcvYMN4ow/SHSQitrQ5INEu1vAQaysHk0EXUYTHcsDTdkETLWztHkAAAAASUVORK5CYII=", El = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAKlBMVEVHcExPtf0upv0bpP0Vk/3b8f7b8f7c8v5Tuf0XmP0Qkf0Ynf0Zof0bo/0p6qQOAAAAB3RSTlMA+1/j4+NfcZs3/QAAAF5JREFUGJVtz8sOwCAIRNERHxXQ///dKpBUk87unrABoDznHKPvJQLIMqB3QrYcGpAwvG9QDUgGO5Ut94Unsx2swXNB8sGT5YmBf0FuWCkHWB5QRE6ooBvaerd8UBteZt8ICiaoa+IAAAAASUVORK5CYII=", Bn = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAB2UlEQVQ4jZWSsW9OYRjFf+e9935J/wJt+B/UIBqKEE2DTfJFpWyiWiImi0FrtJGWLyKSJhIWk0mnaoi0BKMYSAzKYrFo73vfY7it7+vXNuFJnul5znnPc84rX8yHwQ+AlcrZ9axv9akmiWxRvkBBKEbsNIWwrLNKY9k3oA8AkUDzkq5xr3wnMICNuJwPOHILfADQGufXAPrVfoKAfdROrxjPbvs8OwCYKMYcPQ8e7ACDiIrjjWZw9QQTNmkWyyJMkZfPXGaLwK6OWRLZqDxJ7uV8Dnxkq7sBg5YQxh5oE+iFUhwSgC8V+xzTAtDYhqS7VpWFQd0t39Syp8sliceb9/Sh7i5JYpaZ8i1Q3y3hmDTLmuvrYCkOS3G4i8Qh0yOp3v1rXF5Q/aN8qNq4AHXOqfI5OiPC/Xb+3ORz4P7Ou5BPe223NnGi2OsqveR/TFQ4qFa5tE2Meg30gHdvVNVZWpDjsVB9b5xCPrxhJO9U0ThphavAj63xHiRrNEMg3ez+hTa9VblyPGuVd+Rqj8Q08HsDgQlO6UYA97RZSUjzMQ+Hslb1EED3WaZVXYkK+0FzQOpQkQdZI8AX0CeRjao3DjVmysX1nGte3GiV7/UznhBZE/QR8VlFOPMHnYnGfYh6xT4AAAAASUVORK5CYII=", Pl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAUVBMVEVHcEwAtv//cCD/WTcAw/+gTOIAtv//Njcky3H/czcky3Eky3FikcacmrbFi47/NTQizG8At///czeGTv+MRv/IQ6//cC9elcD/byiil7FflMHhlt8GAAAAD3RSTlMAO2o2Y3N9dHV3PDJ3d8DNbxI3AAAAZUlEQVQYlYWMSQ6AIBAEB2V1BdnU/z/UITLEC7FO3ZV0AyCjUsoYM0JF7ciBDFXsJI6eeCfpTIZORIxx2K61dY9w5xyvovTgCj0hfAihTCSdLHfOwCSjri0CH+yvKBP9FTDpueUHZzYHUnCSxBoAAAAASUVORK5CYII=", Ml = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAVFBMVEX0XUj////0V0DzTDH3nJH0WUP0Vj/5r6f7ycTzPxv5uLHzUjv96+r96Ob4rKT83Nj2i3771dH+9vb1eWr7z8v2gXP1fW76w77+8O/yMADyIwD4oZcjV8HwAAAAZ0lEQVQYlY2PSRKAIAwEGWJYFBfABfX//5SDZTiaW3dNTU2U+nmGyAwsTDaM07x8hiJSAjr9Mmc471cR+sbGvDSJHYf3ToSiGaU0HdX0qfStUMN5OWQZUhsTIkmA7xBsw9XU6X/ffAC+LwMx3zJEQgAAAABJRU5ErkJggg==", Dl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAUVBMVEUBARsAABkAAAwAAAAAABVKOkMXEiN8fIH/zc2RcnbntbWHam8HBRwZFCTzvr75w8P/0NBENj8nHyyog4fQo6S1jpD4wsKde391XGLDmZvsubmMAc49AAAAd0lEQVQYlW2PwRKDMAhElwRjTGyobaxt/v9DSxwOVrt7eCwDM4DR4SA34ifjHHcRQU0GzSHMtzkEA8GXON2nWAwePslTstQaBy3W3nhVbaRt41Tl7fpEjlk+a+loOtH25Wbw4GV4qFUdCwPMpGbDn0Mvujx3fv8L/hgFdRdpvpEAAAAASUVORK5CYII=", Rl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAWlBMVEUAAAD///8nJydBQUGpqan29vYaGhqysrKHh4fY2Ng8PDzg4OCNjY3s7Ox0dHS5ubnm5uZdXV0WFhbBwcEICAhiYmKDg4OWlpYkJCS0tLQRERFISEg4ODhsbGw7gbjnAAAAdUlEQVQYlV3PRxKAIAwFUAQlIFJsIJb7X9ORgC27vCEhn9SUvIrW5NOT0hqrHfS3DmOVyg7YT21TZUGYPSuCUxxEEUggKYg85RIwRaFD0bjjkZjAB6aWGC4xuLQR+Y1c8d9N+0vCzsup67Ezyc30TvOE+8c/ARgLBHAKow9dAAAAAElFTkSuQmCC", Il = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAC+klEQVQ4jV2RzWtcZRyFz/m9985MZtLQzDgf+VhomXRqAhVJ28FGha6kC0Gr/hdSdNlKCVkUC250IypY0HVXLvwEqQubmsSFSuJNGnXVVjOt1aYzk8y973tchEr0WZ3Fw+HAIf5Hq9U+Cuh5QEYiC0E5gHNmWATClST5/qf9vnsYms1mvlZrXiDhdneLl8nBPZI5M/6YZfEHpD8GWK5anTxTrx+81ul0/L8FzWYzbzZ60Xt71yw0zNJXzThN8mcABedQJVEm7dc01ZdS/EajMXq10+l4A4AoGj0fgr0dRf4FwG2bYUPiNxJ+D0F/ACEPQKRXHOO093gnTYfOAYBrtdpHSTgzDIeAzvr60leVysTpQmH3Y+9d2wzPSTZCopgkKx+WyxOjUWQ1AIN6fcLzyJHjCxIyEn0AkDACsCCFLomeZNd7PbdSKvkFUn0A2wAO7+yUzhYK3dcNwMksi98n9UMI3CTR73bdPImixKtA2C2V/IKkB8713pK0EQLuDw1tT0s0V6lMPAqELoADgG6T1o6i7G8JqzdurCzdvXvrZq02uU2q4X005px+IzEA+IiEEZOQOsdJyUwSJSyaWXv/15IYApdItrMMcQi24z1vAsgZiZj0iVl4xoz1fH7n0xA0bOZempqabU9NzbYlvBjCn0sktsxYB3Q/l8MGqbkIYOj3D6zl890REocHg/wsyaFu180XizhmpnYIoRtFo+cBgOQUCWYZnpL4ravVxu45l54iuRICbq+vL1+uVsefjmOdMAtPSlwrFAYfeR/NJcnyfLk8USJtC1AaRfja3blza6tSGT/jvX3hnE5Uq+NlgAcBJRIXAfzlvXtCsmKtNjZM8pBz/rr3PJUky1cMAOK4/6ZZeC1N8ZnkCIAAd83QIDVO4llALcnRufB5mtrZOO5dwp64x8zMTC5Nh86R/EXCIe/j9+I4fVzCZAhYTdNSkss9eAXgY3Hcu7S6ujr4T8FDpqePz2SZXiZxUsK1vSWyEBhCsE82N79b2+//Azn7ZJedFPGXAAAAAElFTkSuQmCC", ql = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAFklEQVR4nGPojvlGEmIY1TCqYfhqAAAq1t0QMabSpAAAAABJRU5ErkJggg==", Bl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAFklEQVR4nGOwbvpGEmIY1TCqYfhqAACHB7MQtEO1oAAAAABJRU5ErkJggg==", Ll = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACLElEQVQ4jX2QMUhbYRSFv1dMhjyhL2BeMBmc0qWLXQVpHFzi4tSCS0XUwbmTWTJIBrM4CG4lggiddOjgJDgmm5B2cHk65EGSIb+Q/w0vw+nQmJo2euHCuXDvxznXkeQCH4F3QA54C6RHOmOt9aIoShtjEvPz8+3Z2dmy4zinjGoG+HZ5efnp9vaWMAzp9/uEYYi1FgDXdUmlUnieRxiG+f39/bqkL8Bnx3F6SOr4vq9SqaRGo6EgCBTHsaZVEARaX19XpVKRtXYgqeRI6mSzWb/b7bK5ucnq6irGGKy19Ho9oiga6ziOeXh44O7ujpWVFa6vr3/O8Kzq9TrGGAqFAslkkoWFBRKJBPl8Hs/zxm2tZXl5GSAzAQC4uLgY6zAMyeVyAJyfn3N1dcXc3Bzb29t/D55+AOjPKFUqFSUSCQE6OjqSJDUaDaXTacVxrMFgIN/3JakzFSBJvu/L8zx5nqdWq6UgCJ6OJgBv/o3wvA4ODjDGsLW1RRRFU3deBRSLRXZ2dmg2m1Sr1elLr0VotVrq9/sqFAoCXozwa3FxcSrcGIPneRwfH79sU1Kx2WyOvy5JtVpNu7u72tvbGzs6OzvT4eHhfw6cEaRWrVa/lstlBoPBhANjDMPhkHa7zePjI8YYut0uJycndDqd7hPABRpra2vvb25uJhwmk0lyuRyu65LJZMbz0tISGxsbP5xnUQrA9/v7+w+pVMpKstls1gBDwAK9kR4C7VGf/gbPbZWL1WleXwAAAABJRU5ErkJggg==", Ol = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAFklEQVR4nGP4Oo+bJMQwqmFUw/DVAAACRZ4QdD+g5wAAAABJRU5ErkJggg==", Nl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAclBMVEVHcEwAKZFgzf8odsEAKpEAKJBgzf9gzf8AKZFgzf9Qsuxhz/9h0P8AKZEAKZEAKpJgzf8AKZEAKZEAKZIAAG4AKf9gzf8AJY4AKZEDkv9j0f8ASbMAjP9Ht/wAiP8AD4kAG4sinv8AMJlHoN8AOaIrgNL2JF6mAAAAFXRSTlMADo0BaZ3sXcqaK0aywNVF6c79NxD+lfCrAAAAfElEQVQYlY2P2xKCMAxEQUBb8ILAJGlpC4j+/y8SxxKGB2bctz2TZLNJ8pfSu1Lqlm/gQYSsQkBO2LNeAgpCw3LXFTzxbZwLk71E0GDvQjAA+uczGj/eewsQJ1oaZ8sWzhIyeHb1aQsZLIj7PtqVsh6vVgDlrkyldXZUdAFXgAfvMnEX9AAAAABJRU5ErkJggg==", Fl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACZUlEQVQ4jX2TTUhUURiGnzMqM2NOzsbQfsckmsjwmhqpUQoVlom26EcIRIraBCmY0MqGwkRa6KZ0Ue0yF5L2Y7QaM0GQpEubxhloBhfO2J8Td4a5g42nhV69JviuzoHvfc/7vd93BP/DrVQhl+oRogFwASBREaggPPjUkLlcrJ5cihP7UgdStGwQXceQPSQsHkJqdE3ApTixSi8CZVOyAYlKUlQTUqNpAORtewCiAcBhc1C4q5DTxXVE/oSxbsmivKYRmQHR72HDdy4Z0sbP+fcCt+ICGTTIo60v+RIJMKKOUlp2jgU7qDNj7C5T2H+qnO7as+hazOin2gKyw3BWln8YX8RPps3BXHSORQSpNFj4Fca5Ixff5DjuqkpzKw3pCBTkmsCrz2/5nYxz72o/d57eQLdC0/3HDPd50Bej5JcWwevVQOvTkWvB+cJ+LpU38kOP0/m8jbrzbcSzJS+6b1N5rZnMHCsTT56Z43RZzDdfJIBEkmnPIqZrpAToCQ09rmFzZJGIxQn7v62fKu6iICsL036mlangNElh4eaVh3QNtKGlNJq6HuEd6md+1s++6gredHQbbDUdIUaQ8tayAz+1xXUI+1b6hjycrLmOni0Z7Gyn5OIFcg4W4J/4aApRqBYkw8bd+3WcY+4TxBMaiYSGkAJSIKVAj8UoqDjO7CfV3IFneRMPKD2Gizzndg7ll7BnbwnvJgf4myE5UnuZYGCawOQH9FjMeL2XGbVlWUBRnCSl1zyRTbFhlSMRnZ15g6SEHTi6OVn0khTN6z+TGW7FBdxFUISUK45ECMkIgmF86pi5/B9ga/KYLsUOOgAAAABJRU5ErkJggg==", Ul = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAARVBMVEX///8AAAAkJCQMDAyBgYEWFhaqqqoaGhrc3NwFBQVqamq8vLx8fHympqZlZWX19fVQUFDy8vIoKCi3t7dgYGCRkZGbm5v4fqiUAAAAa0lEQVQYlWWOWxKAIAgApSwEUyut+x81Iu0x7ZezgyzG/EiTvWjCwaBAukWnwDPRKzAzl+U0YVQCIYJ7b1/lWxUue+8zEDVR5E0QxNZhxndFiD0i0iaLqwiRJSn5bwWfysV5/kfs1k7J/DgA2zoDaFhX6hEAAAAASUVORK5CYII=", zl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAS1BMVEV6AF3////ewNeTMHuHGWzbutPhxtu8f62tY5yDEmjNn8K5eqrw4uyiTo6oWJX17PP7+Pr58/fQpsaUM33Ci7Xy5/DUrMqaP4XFkLjghu1BAAAAWklEQVQYla2PSw6AIBBDOx9EUcAvcP+TymL0BHTVvjRNCoyRd6rOY2YxsFDASoJt+irdRUpw2bKQR9hVj9MA7ypUEOgyoH3jJlnyv/EwEkXw84HSULmilUE/XidhAl42YZzTAAAAAElFTkSuQmCC", Hl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAUVBMVEX////J4doAXTO31cwAWy90qJdam4dQmIJmoY7U5uHs9PK/2tLw9vW01MvM4ty6188AUBtEknsAYDkAVihkpZJtqZcAUyIATxp/sqOUvrGszcN4doo7AAAAaUlEQVQYlY3PSRKAIAxE0VYUMAHjiMP9DyolWoWu+Mu3SQcoyHl0PTyRCN1QDbAjgsg0cYIGrUHN6gszO6UogwXM7DLAGppNXrB7fjaC4LAx3SUIABsdMwlY/5YS9rm+C/JsP1XKU8mrF0CSA/WBIjolAAAAAElFTkSuQmCC", Vl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABE0lEQVQ4jZ3Tvy5EQRQG8N9dd/0LhY430IhEIfECWg1PolBotlV4FFGpeYENQWiERqETWVnWtSju7O647og4ycm958w533fmm5lMabvYRAPvfrc8fA/Rgh18/tNbGa6xGDE8YiLB3sNcFN/lKELQxwaOMZsA6GANR4GkA+0wToGp1MYr9hR62nmUbGABt+F/CeNhrcClUuB5IyHFAAKq0HxWWVvBaVQzZK2zOhGbdYUpgCyR/zNAtyb3VldY1WDAfIFlTIa4F3I/posBPnAfxeeJ6R6Ud2YIMDiqhvIinWAm0fyMVSORc7jy/X53lefdr/GXSu3NWNjnesTSDNNkNV7VbH8gyDa2MG30NlLWxCsOsPcFht5JrzhcXkgAAAAASUVORK5CYII=", Ln = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAQlBMVEX///9/AADUtrbfzc2IAgTcxcWYVVT////////////Xv7+0hYWqeXjAl5aJICD7+Pj28vKRNDSjZmTw6OjPq6ro3dxrdh8QAAAACXRSTlPu////////7+F1O+6fAAAAhUlEQVQYlV2PWw7FIAhERRFb8W27/61evNXYdD4IORCGUYdTL7lDuVNkh8zoZCz1IkgJyEurBvCEGBmR7AQWE3gLCBtgu2/moDfg3PVV1g2dkIwJKeYJOgPlTlj9BGeJnEtAXEc1R5m9gIUag7d1b8hjoQG2ZSsEigHSf9snnBH5J9w3/g+hBQbGLvrOhQAAAABJRU5ErkJggg==", Gl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA3UlEQVQ4jc2TsWoCURBFzzw2C8ZCgiQKKQTJIpgv0C9IF9Q6tZX/4G/4VVauSBYtAsElhaQISYr1ppBEAy7ytvLCNI85hzcMY72uHk3biRk1PCKRytzQ+p1s7QsfSlxRGMCMmvMBKldQuvz/FuQ1X4TQbEHUhqhtRPdwXYfxSMymOYLqDfSedkDjDoLAjqiV/4P6LTz0vabCr/ssBblbOEyWiZcVJDGkrycEErytRTKH51gkMSwX8P11XG6Dbva3l1IZwhDeNwVH+PzYlU+cROqH7COROpkbFpH8nvMPujhEsWwjq+gAAAAASUVORK5CYII=", Ql = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABE0lEQVQ4jcXSPUqDURCF4SefMYoJxkawSSepxUpEoitIKboHK7eQ3so1iI1iLSIiIhZiEUKwkHSCiIiFQkhCsMiIIn7xp3HgwnDnnHdmLjdzCYxjERXMYxYzmBiUtXGHG1zhDKfFarWduWQba2jiHB30cIGjAFTiJMhhAXNj5fJBFsd4wAo2MRqmFyxF9wMU474b8O1cqdTM4hAbWMYeTjCFWhjbYa7hPlZdRy7J57cy8QZZrGIXfRTwhBHvMR2TJqHdL1arnSSKPeyEGZ7R+mC+xWPk/WjUEbS0aHzK+1+JhgHqKfmfAI000U9X+NMELYO/0MV1mig7BNCLKSYN/sKvAQJQGCb4DlCPCf4P8PYGqfEKP29DzuPh+lUAAAAASUVORK5CYII=", On = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAP1BMVEX///8iIiINDQ3U1NR5eXmysrKioqL///8AAAD////AwMCJiYns7OzJycmrq6uWlpY6OjpERERQUFBqamplZWXeFUpeAAAACHRSTlP2////////NOB4UscAAABqSURBVBiVdc/BDoQgDEXRIkVvAUVn/P9vlQUqmthN807StJVJrCuZ5JGrvHKV1hypA7/tOUI4IVJTsoI2GN1MgKxDB2akcIOv86suF2AbadVAA4/LM2jRa+2Pv7H47rA4UB6Xfj8j8n7/AHV0CGt04/+HAAAAAElFTkSuQmCC", Yl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAKlBMVEUAAAD///8nJye3t7cyMjKHh4f8/Pz39/ecnJwaGhoSEhI5OTnW1tbT09NHEhmuAAAAOklEQVQYlWNgoB5gZUUTYGNH5XMwMnIg8zkZgYALSYAZJMCM4HMzggE3XIAHIsALF2BhAgMWSt0OAwBMcQCayCv/8QAAAABJRU5ErkJggg==", Wl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAKlBMVEUUbvUUb/UTbvX///8CavUAYvUObfUbdvalw/vn8P6IsfpdlPi80/zA1vx9PzTeAAAAAnRSTlP3SrtnEswAAABpSURBVBiVfY8LDsAgCEPRFpi63f+6Q7OvS0YU0heUIknyIyTJSweZdJCezPoZdwB3p3lm1AF0BRRoBXA7wQLUyDo62GroHpoP0HU8qMzXH6gFRY+xumH1aGo8fVCVRvI29nH6t4zIvP4Ox/kDQdeBOboAAAAASUVORK5CYII=", jl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACMElEQVQ4jaWRX0hTcRzFP/duOsQsM5AsyYc0ih4q9WGEUGA5S9CoJJAsiiAo7a1/lCG1zNSih/Ch0CAsUSExMBLf1F5EKCFS0mFZqJubbmvOO++9v18PCabtZXSez/fD+Z6jkF+9IxlzNNVYlMQgT1yC4hfxWVYA+6Kbc4FRNRZAc/IuemzpxHQUTf8NsAIkpm9lS/ammA4TPTbwLgPSDtjJu1SwymAKSWVjD6YpaKwsxKKuDtv69D10DkV/IaIbnKnrouzgbs4X7KH84Vu0JSNqEhVshilWFgyGIxRVtdE96CInK429mZvp/ThB4a1W/AvaqoTEm6ZKim36hydgAnj8C1x43I1r2k8gHCGnoomciia8wUXGpua5+OQd074QAJOeoI7GDAApJx99+PJ9VtivvJBhbUn+Ckdk0rF6WXS7TRTf6RDqkRrpng9J3TBl/vVXctjlFhuPN/TDcolzIe35vstN+1VFYWLGz5IhKMzdLluuFSsoUFbbJUcmfUpG6no+udzkVjYruimfASgAlLZbCI4NAtkAJ/J2ytYbJUqc1QKAbghO13XR3jfypwAph9gwbKejw1yp8/C9LBxOX6nzjdANU66VbpjyVE2nwHF/FseDzL9WWFZv1RjSUjA66fWOT839M9fXnz4+f5v1AA56bo5H3RSAo86MpJL6AefrARFY0GQgpMm7Lf1iXUl9H4dqt621K9Ep1SqO+LNJCdarUqoiFI400Ku/hGqx1vkb3iELIMm4QLQAAAAASUVORK5CYII=", Kl = {
+  adyen: kl,
+  airtable: Sl,
+  brex: Cl,
+  "bright layer": qn,
+  brightlayer: qn,
+  census: Tl,
+  clearbit: El,
+  "dbt labs": Bn,
+  dbt: Bn,
+  figma: Pl,
+  gusto: Ml,
+  hex: Dl,
+  linear: Rl,
+  mercury: Il,
+  "northstar ai": ql,
+  "northstar dev": Bl,
+  notion: Ll,
+  orbitgrid: Ol,
+  paypal: Nl,
+  plaid: Fl,
+  retool: Ul,
+  rippling: zl,
+  sequoia: Hl,
+  square: Vl,
+  "stanford gsb": Ln,
+  stanford: Ln,
+  stripe: Gl,
+  tesla: Ql,
+  unify: On,
+  "unify gtm": On,
+  vercel: Yl,
+  webflow: Wl,
+  wharton: jl
+}, Xl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMAAAD04JH5AAAAMFBMVEVHcEwJQwMJQwMJQwMJQwMJQwMJQwMJQwMJQwMJQwMJQwMJQwMJQwMJQwMJQwMJQwMy2V0jAAAAD3RSTlMAIE3h7w3QL5ivgDprwF6vhlRnAAAEyklEQVR4nO2a2bKsKBBFZQYR+f+/veDADGJ51O4Id72UirJkSDITh+HTp9c1JoIP10+0xsFPa/48QKwP4AP4AD6AD+AD+C8AEMCkESAvAQBOKUKIKsUn9gYAo/4IqfldACN6r490DKC1urMjegA0vrEfugC0Ht8G6CMAcJrgycnbC9BDIIVxqxE/N2K6AfB0WP92nwCmLVycMQ3M/Z8LrdMNoNHBdCR8L2lQmbuNDhDt/8UlAK1AVwMsTRAB4D8COBgG0r2ouguANocXu78FdHMc1sfA3wHQ5ihgansCuA1AyxaAmW9mGVeTpbwOgNLziw6sETGOzNpI1wAQmhlgU4GB9trZSwBAruX2Pg1FmNPyxrus8eNi01ibBUqaouQQwAnkg2Fw/7CpE7ojZOyAr6cGsAj2AwwTTq9KX6UFcNdplyFawM8AkGwYPACgwqtZH9wAkLYyfRogrQOBlwFCxwNmg9A/+K8ABpHWofxEzQ2Bn4Z/BjBllez2lmRsGt8AIHUmYeJSAmDBEKqLABjjLNACBZOPlRAV1/gSgJohhOmSXmjouuQ1gNJiVBoEVZknXwIoOzQN/yOVmaG/APhOLjo03pc7knVKfwDw/roWJYCwQFvWRP0AAILphCArdMPYV/8yhIK3IYHHIhoAQ9zEBbcOdE0EunRgpejYApjSonknlF3QSGhuzRnWAoiHedGxnbNVJ9O2RoHiReus1gHiPih71lAfyK2RxT6YhiZA5FxWXHvY7IUgSSQLjWUzAi2A6P1qsQVrjEQVGpB8ziAZD6QcICSoBjck94H3WyITnhmubYFtAgQmoxFdkbGAgEVmOeJie9DeBvDc7fBupih4OkZoLK0fUiFXwjWPObnJ5gewO3B3MU4x1vgo28VmLtQiwadqNCzHpZCYPB8BTuYoOnBF4DSO7Qg7eNZRHEqOi3z69KSIhGnq4VEtqzTtmWFHAjCUncTm3ULZQiw8YdNS2/pgFwUW3WznvivY1ULxUmOtVuytYFsoWrfMSukMPQ2vrSs48H5jVwPFALwHYAocDub/b2G2j7zamd5LAP4YvgPgW0C+A+BcSkTeAXC1wuElgGFEGCMFQ3/pWQA73ddZ9hbAroMWAKwUG14GmPmu0A5w+xFCBGD8KEoVL+3eXQMo2gG9eoQeAO1pn4KfewvA8tbFHFSYCnwHoPGlykMAutoJTwGUkzUPAuC3Aap98BhAbS/+MYDaZyl/DIBCACHnJwEwt45oaAlhmOXrA7A7WHH6CLM063XKJfMl+wDMWCXJmTEtU+2C8SeAoJeWJoBpSgjPyaZyFWBNzp8FyPYRD2XighDAZzLX1Ob9AOa5IUAwZOhoAqnTAMc500RiiACiVCrC5wEKW1Vt8QQgfsBpgNIuWlM2IA0BknT2eYCa6azJmooIgEUPOA9wZhNLr98xxADxA34AAKdGwWJtYoBo/+MHgMr2hSpyrY5NDBARNACYrPkEJQIOSi3DSQlgAN4c1gEk58U8cJlgIqWtpa3+DGAgLl6uAkzzKOqpYBCv6tt+QZLQRy7C8W3j/Bww0Q3A3WMnrC9pAHjr48ugwcP9bj/Cw6w3cQqeQAA0VSQXgwMwtmM0245cCJ75bsvZw+87P3369OnTp0//G/0DtJN6Z2FS0WoAAAAASUVORK5CYII=", Jl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAKwUlEQVRoge2ZeXDV1RXHP/f3liyPEBOSx0teEkhCHigIRqlAoAUdwYXFQRBsUYeqVca61Rk7KDrQcaau2CqirVtBLdYNioDFCgJWC7KoqImYBZKQ5IUsvMDbt9/pHy/vmUgSQFNnnOE7c2d+c5dzz3bvPef84AzO4Ax+0lC9DYiIETgfuBwYBaQBYaAa2A68r5Ty9QcTImIBLgUmA8WACegAvgLeBT5XSkVPldhAEZklIp+IiC69wykivxeRXBHRvgfTmojkicgSEWnpY5+oiHwsIpeLSNrJiBaLyGoR8cVXRyIRaWxsksrKSqmtrRWfz9+VeEREPhKRS7+HADNFZFcnDRER8Xq9cujQIamsrBSn0ynRaLTrXl4ReUFEhnSlo7oQtAObiLmLIRAIsH79el577XWczmYikQiapjFw4ECmTr2Em266kaysQfHlrcAipdTaU2T+OuBPwCAAp9PJ88+/wLZtO/B4POi6jslkxG63s2DBAqZPv4KkJDNABPgUmKGUau1KMFtE/hPXeHl5hcyYMUtsNnuvbeTIc2XduvXi9ycs4hSRiSLS17lSInKxiByJa3zNmtekpGREn3vNnTtfqqqqulpki4hkACgRMQH3AA/oup68Y8eH3HvvEurq6gAYPHgwo0efS2ZmJoFAgAMHDlBdXUM0GmX48OGsWvUSQ4cOARBgK/AWscPeE8zANcAv/H6/euaZZ1m58ln8fj9Go5Hhwx04HA7MZjNtbe3s37+ftrY2AEpKhvHwww8xYcJ4lFJ+4AHgSUQkX0TKRUSczma59NIrJCcnT+z2Alm06Fb5+usD4nJ1iNfrE7fbLYcPH5Ynn3xKxo4dJ7t375FIJOHC8TPh6/TXnpqv81DK5s3vybBhDrHZ7FJSMkKee+55aWxsFLfbLV6vV1wul5SXl8vChTdKbm6+5OTkyezZc6WlpTW+1z4RyUVEron3PPXU0wmz3XzzInG73SIiouu6BEJBiXQ5VB0dHdIbfEF/jy0Ov98vZWWTxGazS2HhMFm7dt23GohGJBAKiq7riX2uvfb6BF+rV78Sn6qLyEwlIm8AVweDQcrKfk5TUxMFBfls2LAeq9WKN+DjHx9voKKhiqy0DOZMuAJHTmGfh3TJmsf04z5Pt6s1a2AGS+fdBcCGDRu5+eZFACxadAtLlz4AQEVDFes+eQ+X5xijCoYzf+IMUszJ1NfXM2PGlbS2tuJwlPDBB1swGAwALxmBnwFUVHxNU1MTAHPnzsFqtSIID761gpe3v00gHERTGtvLd7HqtuXkZFh7FWDfwS9ld9X+bn1TRo5PfG/d+gEA6enpzJ9/NQB1rY3c/sJS9tdWoIuQYk6mrrWRpfPupKCggJkzp/PSS6uoqqqmrq6eoqJCgHEaYAeor69PbFBaWgpAQ3szmz/fQSAcBEAXnQONNeyq/KxPC9hsORjSk7q1PLs9MV5bG7sgcnNzSE9PB2Bn5adUNh1EFwHAHwrwzp73aT3WDsB558V4EhHq6mrjpHKNxG6PbohGY6+2pjS070QbCoVBM/QpwICLhpIxZky3PktWQeJb01SCmU5+MSgNVPe9NE1DqfhcvetI/EM0oAlgyJBvH7j9+78AwHZWNldeOK0b0WLbEMY7SvsUoN0SxGBN7dbaLIHEeHyvhoZGPB43ABPPHstQa143OvPKppOZltGNJ4DCwgSvTsOyZcvKgJHZ2dm8+uoavF4vdXW1zJt3NampqUw+Zxw5GVaMmoGpYyaxfOH9ZA/M7JX5oITlEdd6IkS7qdMrAa5Pm4KmNEKhMJs2bSIUCpGSksKkSRNJT03jitKLiOgRbGdlc+f0X3PLtAVoStHc3MzixfcSCAQpLi7m7rt/Fye7ERH5ZfxuXrFipeTm5ovNZpfbbrtDWlp6jrGCwaDU1NT0OPa+d39kRO0d0lP7r+8bERHxeLwyZcrFYrPZpaioRN588y0Jh8M90mtsbJIbbrhJbDa75OUNkVWrXo4PhUXkSsOyZcuOA9MAa16enb179+F0Oqmqquabb75h5MhzyMrKSmjS5epg+fLlPProYzgcjm6uFyEqfzy6loZIe4/hhFv3c5mllCSzmfz8fDZvfg+fz8euXZ/g8/kYM2Y0SUlJiflffvklS5bcz/btO9B1nbKyCdx11x1YLBaAz4AnlMTi/nuAZYB527btLF58X+JWUkoxZswY8vPzcLvd7NmzF6/XC8DQoUNYvfpvOBwOBGGr7yt9ydG/q+NRf48CZGgWHsm6jkkpIwgFQ6xY8TTPPvtXfL5YWpGens4FF5yPxZLKoUO1lJdXIJ2nvLi4mMcff5Tx48cBBIH7gCcVJCLRF4DLRISdO3fxzDN/4eOPPyIQCJ7AiFKKESNGcMMNC7nqqtmkpqbSFHHJ4vZXZE+gptfcQKGYkOzgoawFWA3puN1u3njjTVatepmampoEs12RkpLClClTuPXWRYwde0G8+5/Eot8jXcPpXOBtYDyAy+Vi7959rF27jt2799Da2orFksqoUaOYNWsmF100hdzcXDRNwydBub31RX2Xv8qgo5/ARFcY0Jiccg7LsxeSrExEo1EaGhrZsmULGzduoqLiawKBAFarlfHjxzFnzmxKS88nPX1gnMQOYL5S6khMKV0gIoOBp4GZQBInQUSiVIeb5Q9H35DPg7WnlZVdmDSM+wfNpcg4OPYGnBwBYgq+SynVFu88wVclFme/S6clekJQwlSFnbLNV85G3z4Oh1vVicbvGwpFoTGbGQPGMjllJMNMNszK2NeSD4FZSqlj3en0ABF5D5h2uK1JXtz6usoamElGvhXyLVIfbVNfhOulMdyujkY9hI76iLZ4MZdkgqHXXKY7/YhOqOooxpwBJGVYyNQGkGccxGjzEPIMmUi9B9fhFtrdHdwy7VfxuOsdpdSV36XVp8jeoF/e2vkvmlxHVMr5OaRNL1HKpCUE171hjq8/QOhQB0mOLNIuL8aQkQxaL4JEhUirF/emKkJ1x0hyDEKbczYtKVFaosf4NHgQCUVxb6nC/3kzeYNyuG7y7D6V0acAJ4UCZYz5b7CqnejxACmjrJiKzsKYbUElxWIm8UeIHPESrD5K4KsWokf9sbWG0y5m9K8AWoqJAZcUoXtChJ0eIs0ePK1e1C4TWrIRzWJCJGYpCUTQ/WHQY6fFXJjBgKmFqOQfpsMfbAFjzgAybizF+0EtgfIWdE8o0Wj7znSjhpaRTOoFuaSW5fXuaqeBHyZAJ5TZwIBpRSSX2ggddBFxeoh2BNADESBmKUNGMiZ7GuaiDAyZKX3UBE8P/SIAAJrCONiCcbAFCUWRsA7RzkfNoKHMBjovgH5F/wnQBcpsQJn7Tnr6C/2vkh8ZP3kBTt2FRJDwqVW4fwgkrCP6qQcmvQmgA5iNpkQCHj58HM/mmhMS736HLoQbjgOxooLZaIqPhHqa3psAhwDyBtlUkbVAGtqbVaTNR6StX/5nnDKG24u61p+qe5rTWzD3C+DfQFKTq0X/7XMPcPBInab3kHD8P6BpCkdOESt/8yDW9EEAfmCiUuqEglRvAmjAE8CtgCkcCUtDe7MKR3srOvcvTEYT9kxb3H2CwHKl1JLTIiIimSLyZxEJ9Fgu+HHgF5GHRCS9Nz77PJES+1lRRqymXwT8OK9T7E9MNbAG2KPUaedLZ3AGZ/BTwf8ALVYCyo7Yf50AAAAASUVORK5CYII=", Zl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAYFBMVEUfQO3w8v7///+7xfqWpvf9/f/DzPphePKdrPexvPlVbvF1ifSisPils/jb4Pz2+P5EX/BmffPV2/wmRu44Vu9CXvB8j/QjQ+3L0/ttg/MtTO7i5v08We/Q1/tQavHr7v3UMFLmAAAAkElEQVQ4jd2SzQ6CQAyE21mqgMCCoCg/8v5v6QbDwWxNueKcmvZL2mlL9FfK+EvnCHDgZFMqyBUAly0uUMYtHCpff8IG11YBpPbVmu/Y35QhndAdRQj6BxrNRQAow5MoQarVV2AYecpl7n8C9JJ54U6tBxenIAbiFe0FzBZ7hrRsWouyVm0eyz638TDmyx1ab/9IBsdakyN7AAAAAElFTkSuQmCC", $l = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMAAAD04JH5AAAANlBMVEVHcEwAAAD///9ubm4CAgIAAAAAAAAEBAQCAgIBAQEqKiqNjY1PT0/09PS+vr7j4+OoqKjT09NxkOL0AAAACnRSTlMA////aYjBKqre7lcc0QAABcJJREFUeJzNW9ma6iAMnoqOFiiU93/ZYxdalmzoKCd3fqbkJxsBws8PQffr43cc3qLx93G9UzJw4bc3RWcwbo0g/lR6xNAg/vHX0jd6CNXwIfErBIH46+fEL3TltP/nti9pJO3w4elvRCjh9g35w4DGwwe9LyfEF78mH0HwRfkggi/ZP1LlB1/x/5SKWLh/W/4w5Png4/mnprGrARZKjdBD/jB0isCTjlh80QO1VWY2T1JWvzbC/WUFWOP8JaXJO9OO4vGaB5hwgWlyqnGoe3sOVJj0nZxtGe3WmgPmiRa/kG9Qw9jmgjMvfTOFEQ95b7CAEcz+0ILUEDexBbQvZIQ5ht8Sjq7828kAjNIYMPkEoZBTcwZikrmC0AUCJ30jmznpLBn5LlmHbDJsYKxrEjUEAYCrIA2qNudKnHXik+Pj55cdsNWsSbjyCH7ZIDjlCx17yEKGU9nIBcEpH57+BBv6VAKnAwbAYX9Emfpyee1DIQDLObRBlXyEjn8HwMTIH9zlgiZ+9mMeQGCH8JRvRgTk2kQBmFn5mlSxloQCASA6wMSwvDUCBSAGM+HGMx6fK8UgJpYFHED8mEp/E5egHDsJHMDE579ZCJEaBQUQPZAY/MiShJNZjgUFwBpAR/UuNsZV7JhIwgAYMo1ZMxc12LNCQ5M1qQIMwIR+pp1HytPJQ94+016AAFC44iwsHfcY2pkQAIHwgGpjeFhBgVbYVYAkZAQA6QEbigxEILammnRDGIAhQe901opMqbirE4YIAyA/OSh6A7PiR6TwdGAApNKqkdnKkxoOBGAlFlho1RS/AdkUCq+JIIDdBfhNgBEpIMYByAgCCGTkJmTRiVVsmEZBAF7mAsOaMCVsGwDQViAAgr8gL2bDZgQB0FIfXK0r2a8FPFwhALvJJCMriadELwS9BQKgpEGwKEvgg0dYSQEYYX5ZaBbtmIkRCQCSkYVEpMz/EsDcG0B3DcAu8yyEQggOKXtonkYnhMIwrYID7Pk6PaTLD84bw7BOROUpMXRYV/KkZZJrS0RlKlZAGV5W2apmSXgaU/G+Kdi/1/ANQXZmh/AcSswGFADwCWD8jP60A86z22H7IV+O9/2cfTp1Pmufb4r8rACeqeIxuT54APnZeBxpK/0tdW3hFcUDiYIB6Prj1OSu/lvC01CUDpXb5+az4O6U44G3pzCAAn+986l1zPPA6QsGkEU1eA2mc4wSHlASvTm9UJeR+tieTuhloU4uOZs2p9EGxNHLSlY9ieGJZ/fIRBAA+3LAbTsltIcUVjtiRzQ77Kw0188JcxfltuLZjYBtHzAAqsSt3B5XxK0ZxBP38NhH6DGdz4Cr7DwEng3M46lPKAAxElfkVV4DPKpaEFeemNVRreFHtf7wQyjxlTNC6gGNsEsAROPN4NJUBAi8+vgYgsT2iTiux9acTMUbMV0N1DaTujEpNe+MVenpnNsNm96VOpXzrEQdIVAAcrvGxSytEIMxJq2FZ4CHOUMhL61Sy0rqgaoO3ojcZtPXdodtcyXCbpnznOqjDzqYm9OoyimfhSAwD5DMlTMDQB+SinmUZigQnv9zZ1jc5fVZHhYzyRNvAe+8PmfXU/b6/rweKCdp437RlVY+fYSVP/INDKcVAHNqYHm2p274M8RfQQtH2sHDlUhP8UlWFLQ8PETNlGmmpSFkrWaSg8arrI0nC3zkeGA5IMgcU9RNdRc2Mtk8vYe5Gr3oY5J2nMib6aoF1wdnzFIVG+NCmZikDTdjQzMbdgYAkaiJaqFbUzufFULgQ+Wge2NDo+WKlKWZsKG3dGxv6dRoR+lKjV2lt5e6erVx4Pa8vad1eLmt9wliDudxjffONAsfzrbe11vr9Uovf3402Pdu7e7f3N6/vb/7A4f+Tzy6P3Lp/8yn/0On/k+9+j926//cr/+Dx/5PPj+vBO7R60Kdn/3+9H/4vNAnnn73fH7eLD2CePv5/8g+//8HuY9n5X1kJ20AAAAASUVORK5CYII=", ec = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAACXBIWXMAAAsTAAALEwEAmpwYAAAEtklEQVR4nO2dzW3bQBCFWYJLSAnpQI5IwtccE5OK3EHSQdKB3UHSQdKBS3A6cAk+B7JmAwJRINgSxZ9dvdmZ9wF71orvI3dI7JBFQQghhBBCCCEqCJ/qW1nVoRthvXiDng85E2FdXu6C3x/btnpkCIYJ68XFti2fDoW/P0JbfUXPlURG2ur+VPCvROCykD/d2Tw2eC4Lhtf5qSM09U/0fyIDGbLOTx1/2uUNgzC0zk++IrA+0ENoqs/nCp71gSK6sxAR/Ov6oPqOPhbukLZ6RAfP+gDA5rr6gQ765BWB9YH+27rUg4+VIz6+RYc562rQ1rexjoVL0AHGGgWhAGQC6DOXVwAw6OAoABh0cBQADDo4CgAGHRwFAIMOjgKAQQdHAcCgg6MAYNDBUQAw6OAoABh0cBQADDo4CgAGHVwuAoT14qKwCDq4HASQvd3Q4ePyfWEJdHCaBQg9XU9mrgjo4DQKEAZujzOxLQ0dnCYBwsDuZlPdzujgtAggEbqestyt7F2AELnrKbtlwasAIXHXUzbdTB4F2Cbsbs6u29mTAKEpf6Lmp7Y+8CBAaJc36PmprQ8sCxCUdj2pqg+sCiAKu5tV1gfWBAh7L6fMZUDrA/Sfj3cQy6y6m9XUB1oKpBkH7smSyAWKbbv8hf7zY0dYX/2/dKLnkr0AiIckU8emKb+9nLcomJcJATq6Mwt9IA6Odnl/bM6CnpslAXZ0Zxr6gOzW+VMbMETBPM0JsEPaGnZPHZryctAcV/jwzAqAWBYOrfN9iILwTAtwrtvGbVP9njIvURCeCwFSvk9wzkZLURCeKwFi1gdD1/neeazw4bkUYE59sLku72LNQRSE51aAsfXBtq2jP/cWBeG5F2BIfbD/+JYC1LauAH31wfOH5Zekv7XCn728AhxZFlIGvwMdHAU4sR0r9UudRUF4vAL8o3uYc7wGWLylAPVRWQov3xCM/dui4Ox1ewWYuh1r21QPseYgCsJzJ8DUbtoU3bWiIDxXAqT4huCc3bGiIDwXAsz9VnCq3bGiIDzTApz7G4Jju2dEQXhmBUBuFB3aPSMKwjMnwDm/FTy3PhAFczQjgNZmkb76QBTML3sBtHbTDqkPRMG8shYgh27avvpAFMwnSwFy7KZ9OYKSr5xnKQD6D8eT4CpvCXq6nijAiDMnKC1gT3U3w0AfgFijyLDbOcZu6NlYFUBzt/PYrqekWBegQ019gFrn+/AgALrbeUh3MwxPAiC6nVWs8314FOAcy0LMrqekeBUg1W1jiq6npHgXIGa3s9p1vg90cFoEmFMfZP0hKXRw2gQYUx90bx8vcgcdnEYBTtUH8Me3MUEHp1mAQ/VBqu5mGOjgchDANOjgKAAYdHAUAAw6OAoABh0cBQCDDo4CgEEHRwHAoIOjAGDQwVEAMOjgKAAYdHAUAAw6OAoABh0cBQCDDo4CgEEHRwGcfxRq7nhO/BJqN6jpnsm5y8YCWr4VeGyY2o6lGVlVD+iws+uysQg6dHXdtB7pXvEOCZ/rvC421+/uzrXOZ9ll44WUt41c553eNmbTTUvidtdm101L4nXXcp13Wh9k3U1LptcHY78BQIzUB3x8SwghhBBCCCGEFLH4C8u+Aoc9IfrwAAAAAElFTkSuQmCC", tc = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMAAAD04JH5AAAAe1BMVEX/SAD49e74+/X/RQD49/H/OgD/PwD/NQD4+fL52sv9eU/4/vj49+/48Oj46+D8lnj54tb6vaf6yLX7rZT7uKD6w677pYr9hGH+bED8jWz9fFn7sJz/Ug78nYD+YjL7spr6z7v508T+WCL9jXL+VBn+Xin9c0n9ck/+aDmRqRtHAAAFLklEQVR4nO1a2WKqMBCFyYqERRYVr1qw6vX/v/DGtkLCJhWiD5fz2ErmZLbMTGJZM2bMmDFjxowZM3qAEKXofeIpsxaf2YaQ93BAdFu4AODy5Zm+Q76VAra/ACIgv/iS0knsRh2wS8BqMAOCtsH+80DGKo1Finzb5tthC1IUe1zaTThbNko+XWvybewP+2zj/XyH3eUoHZACawRsNxuwHjp41WcwhoFcSZdv42iAFzBHpQ3r5xmgrVsn4D+2KV1rX3HneQJ1F7jZ4DEBEul2c69PR2MLAT6AQM1uEDytArQRdRM4jwmgOoE/I9zQrzOwFw8Z0DqB+HkCJG46QfwowepBMDIMTl5DBZCf+hekNdbiNOJIoI1AlAz8TW8yQDuNAKTjcmEApULvysBiz/o2RVYKa+wdx52JZONwwEJg8MJyZ26Kehksy19iezP2QERkm4RhWOxPLOF3bUDYW52Q1U8k4PAwQRWDCKGUSOcnmY1LzWZ9jsC+U5gIJ64l6aE0A4aPHkdAi6/f4RHnQMfCSoUCzq5z+ZLA9IUs2Yu7Gbi/7TKDQQIWWfj8Hpeiq0g0ScCiVlWoQt7eLRglIB0hruLRv7Y5glkC0gzrsurjdls8miZg0XOVFvmyaQbjBGS/mpYJvyUeaZkHzDFgQRWPthaPspe27pnwaBFjHMjGL9Mij0szUHJdFWVjAmGUnUz11fSUV+djZNFv8etCwD1R3JTAwU8OhiggGrtKPBJpl0UItWbqpgaxtAy19mxRnY88YLvUbYj/pifWhpRAz45SpviNGraikPTWMM8Doar84e3b/2FQWIYYkKxD73UGjqloINce1WsMTKUEuouGMRg3regBoqsGA4FxwzIwZL7xFMi+NssBN8xzx3P1rCA8U4541MXzIqOMEMbOse4esPzNpG84SKKKAefCflSNCFrZ2sBmZ0IF6Ohpu6SqpcnFVxhAYkIFVPUAKULfJD3aSovtGSlTlYkAzxtbpOqgZcy0oAvoqBy/bc2wOufgBtxQnWVB3Fai7io3kO3i5ARIUmnAbQ10NUq88+ReQPJyf7xonWHRbUUR/k5OgIUVgT+tFka7Kk4NeCGrLNw1lGQKgenPgwGrs7CMRNi/RQPKTwwQqLbHO8ayyKgJlCjAeWsUoEuVC92B1z6/IbBUgqx1dbVeEZvJw5BmSiZstTCqjCSGXTv9Cuig7M9vSYU0qH6Am4fVBAxC5ZKqeeDLckH5//PXF93Q5uP8s8YAKZlSYuTouBXoqg71IdAqErpTL19xNO4mswMkUioC212elGnB2tf+dzEzN9uoQmSrHh9kUSzLYrQuuKod3H5ajgdJteobgx1GycfS8Wr9Kn/+Cu8BWP2OVWAOnNf+2FovTQKS2QPAC2OdWda422oB9sdcX00gX0xxe9Iuf0hzzn1Tb1Aq+Vx0j0rAORqTf9c/RJewQxcYPgw15lL+PdYgJxStoIUCdsOLgfkQkvIoK/UPX48riJV4taEE8HDNDDSE9JIUTvFRyk+/J1CI7ILCB+BYgkt9hMli9GOeNvmnnN+E8Jr8L2rkuN0nUZ7naZxdqZHhnGw39dFLpIlBksQXjD2Co6F+/KWmcnyX/EDbP09f/dqPOqoCcPHql37o6GuBFhqqMroJHPRE4736oSE66+WH92IX1Dqdmw8WLydQm4xO33A/AjqrPvh6C9z60fLeVPDFOx67kkB8WwE8A6PPIaCHVLiu6308eFdlDoiQ8/XI3vTc+YeDoavAGTNmzJgxY8aM/xP/ADYvOcaCsS5eAAAAAElFTkSuQmCC", ac = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMAAAD04JH5AAAAUVBMVEVHcExlnvRjnPNCde1Heu5Fee47bexvqvZelvJimvNQhvBtqPVjnPM+cOxDd+5Vi/FRh/BIfO9po/RZkPJelvM1ZupMgO9Pg+85a+x0sPcxYemNZrUPAAAADHRSTlMAmdKVGl3L/ipGDnY5Am0CAAAHiElEQVR4nO1aaXeqOhSVMCMCohXa//9DXxJCcqZQtehd6y231Pul3n2GfYakHg4ffPDBB0+hPjLU7+RPvgUc/zH/93fyLv5MYi/1T/MmA2qRvizLd8mgEvhLY0D1JgMOlL4sl5938eMcOO/fmAFjgcIBMFBvbQQffPB2ZNXj2JG+SpSreIzRvADUOLajMk+rWpXsZkJdksbD7Vjg/m3N02rk+/BnJWl7wAYXg2BDa+kNzPs+MThKbdfRW+aQhtaZ0Drss6Mo7L03wXsP+AO3wVXtYkACkv+N3YcqbB2/N+G6kwHNUaJfww9B3NfPPinISpp7X38g+4vuxuB9e72qbBcD7Pgvt7LfsuwbG657laFuREqjVB7Ye1/2rUJI9txRm6rKQjuuE1R6i/TGpNa/on/JPvq1Iz2HQn3HmrBPyd2LIwj/rk3nIQOM7kPpv9WApvWNN2AHzTX1fTgq2nVs3z3e9+kqZinatYXRUwqNN1hhGo/Dxf5cPPpLv2DoB4tE2uCbY5ya9lyovdD4ggWGHprQBxuMGcM0HHkU4NAt19MW4Adjd/V8JBZ4/+PsLgbTxJpkhZzH5CUbuSOgx74bCxb+a4j/xbO7HGgT6K6ixOCPPv4lCD4besCEreAD+qEviACD83jojJjdVf2I6ZH6IH2PBdiv9NM0DUiIjZIWznF9Eenh4CP+S8R7FH3DPw1FgwNQsoVH2jdG5HyLhB8X3xAMmDxQCJQNPdT+SOVHZ/6a+FbWPi484r3BbQIqqMIp/9d1E7QeTE/YkfhXeo/b7TaBQkiQ+q30We2R8NPs0+hz563yAr9GGgwg4htx+nn0ofeu7q+i9z1Q/rCSO35gwJHHv+TBx/wt8v3Xygf8Ducb6IYRcnnoAPorGTu09FDlY3oNWIYg/CT6dOqQznNZO6/ofU+lD/nxSDwmT0N574n7q/YGlXLstrJr5EoofGeCEd+eXBELLkD3THrp7//Bn9FfLmLjscl/7QFhwQDch43H4g2X+BXJPtb+6yXQJN57qP218orfQ9A8cQkXkKuNytdTb7ql4uey1bA6wb2Hrlxk5YON7+KI72o8Bp15eaR2HtbxqePnDux7F9B3pHVT6Lua/7YaYN48TlofFRq5ku9w5iMLIITcM3ZM3p3MUx2SmP946pCNB05cuHGFoectOMP4dzADp+50SpeTvnzQIOsmAp/4cOMB9Dj7Z0hunuIgb/sLO9n3rsF9Yd2dQvxv69JxPkMDoPerEaeDdMHEdU/FJww9v3IJ7EZ8gN4yO9gUtGM0/ovr8KQViX7I/SQnH9Ivb4a/0CLc9h5vPFj6bN/jhe+DT8S3xiA95DAFV6I+d8gEyRdXDrDs+/DfxOB7z1fkh5pWP2w7SP6Wm/FPUuUheiq7EzShPlQq1nQvNPoXqfHxvov6DtD+ycXe08+nec70uRQLrxW37V7KPar8Gws+afxU/tYCMykTpj52zkT75oB2DnLaOKPOI6S+A+z6Zda1WtC+V94Vdz1x47HJnxb64D1pPCcqv1k/82yWleb661ln+6gnlh4l73DoF/p5tiuB2qr86EnL0zv1n03ybzD50IQTrP2T519O6DXte1j5Ej3fOAA5brpL4HHw5xXLutgo3Pe9APpI5wF9j0nvzHVPtR9MKNzGXitY97jzBHpa9iAAsbbLko/cn7/86bBSPP09qn1eeGji32T3ffZp7hf/wVVhU+UMKlL51PmpSPmH70D0ztojW53ndzxw4Xvh0a/mpceG7u2lR88E3XII9Dr5Lz16pmDqyvTonmV/JGHdFGb+glfyZyqWfLBwvPLsm8aDHzpPsacImgygTrD7JPfr0Dl3efYgovxZolRhHvvqJ9R4QfTZ0lE8hjRiQqP6yfaddembOD87Z8J3MP1I2/+avwx+HCJpqwfU+aZJ2Dd9/Du68S28cOE8BXbNv5jgrJC/eFfbq4b41EHLJlv4Ojz00dibA/1igmyAveqhhSdp78yiThHYMfXXjw1A7Nao4l1fSn7HDnsoADOih8HX9IsMonWQb7gP2Nm6TZcOEHuY/DUAG1+9TG3hCcmH2ybceLqO7Xsw+jOid1WwOT8LeebiskfCZ/teRHihBrf4tQUrvXTJQu5YOnrUQAsf8v5ufr0e4oUrQs8LH9cd1r5nj/YggAb9WQckn23bHV43Cf0seL9VAAG1cMVzxkddYdGPBB9oz+Ku7/dVPPvId3rMp/Qg/IR+qwBRFgoy8zt82mJnHZp7EH6IO67N1xgUcuj5FQ/v+Uj6yIBHVpemCPQ0/viSBfn/RYD9v5/eIGWl55Mf859k/wfj4fND3dHL5fsnrmEnBjyxu2ZFR93f7Hto5hH65zbXJoXu08aH2j7u+jT6P+mzfzirClh4XaTv0sZD6Yu/fLs47/jKM5Pkb3v/k//t74Y6D7j0Ztx46MzfLfoBVcr7Hlh4t6T/EzsBPIg6jZUejj6j3+8b/k1a0KZPln1GHz3/PIksT3Hlzdh7qvx8/4uLJssL2X3W9V/A7qDjUHwx96H2ivR17M6GyhghzjxN/vvd22525Hmapu64naZ5/Y7vSXzw/8R/Qg9B9jpEPycAAAAASUVORK5CYII=", ic = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAACXBIWXMAAA7DAAAOwwHHb6hkAAACS0lEQVR4nO3YMU4sQRRD0YpZGxJsBqdsAL2cjZI+dsBEVpnxPVKnX8hz1V31j95neeZpNziP3P4DeYYAiGB4AxDB8AkgguEMQATDIZAIhlsAEUzGNfCUU/g+BJA+sBkBpA9sRgDpA5sRQPrAZgSQPrAZAaQPbEYA6QObEUD6wGYEkD6wGQGkD2xGAOkDmxFA+sBmBJA+sBkBpA9sRgDpA5sRQPrAZgSQPrAZAaQPbEYA6QObEUD6wGYEkD6wGQGkD2xGAOkDmxFA+sBmBJA+sBkBpA9sRgDpA5sRQPrAZgSQPrAZAaQPbEYA6QObEUD6wGYEkD6wGQGkD2xGAOkDmxFA+sBmBJA+sBkBpA9sRgDpA5sRQPrAZgSQPrAZAaQPbEYA6QObEUD6wGYEkD6wGQGkD2xGAOkDmz19AB9vXz83H4XvQwAEsLwBeAMsnwA+AcsZgDPAcgjkELjcArgFLNdAroH7FP8P8Ojv+3z9frn5nPB9/P+AGQH8jQB4AyxvAD4ByyeAM8ByBuAQuBwCuQUstwCugVtzDTzl1P7/AKecCKCbCKCbCKCbCKCbCKCbCKCbCKCbCKCbCKCbCKCbCKCbCKCbCKCbCKCbCKCbCKCbCKCbCKCbCKCbCKCbCKCbCKCbCKCbCKCbCKCbCKCbCKCbCKCbCKCbCKCbCKCbCKCbCKCbCKCbCKCbCKCbCKCbCKCb3AHwzL/egAACfgQRwP0hWp/DJ+D+jyACuD9E63N4A9z/EUQA94dofQ5vgPs/gpIDAAAAAAAANX4BBmnORmJP8BcAAAAASUVORK5CYII=", nc = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAE1klEQVR42u2dQWgcVRjHv9mZbHbbqG2JiKVIKKUEUuJiRaJ4UKnVg4Qi6FmklBKKB/HUU08i4kFEUGoOUkRK9CRFsAQpRUQKrWJKDTGUGorkUDUJyTbdnZ3X8//bZOs2m3Sz+f1u3+xkZvP2t9/75u2beVEIwWDrkqMJEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQADqRZL1PEL35TSwbntlfkHh7Li9xXMkkXqxUJP7lpsRh7I0aHyMZABAAEACa76LXOiewro8/tLdH4uyhPld1lPQAub16xJC5M1yTsJZO6utLM/LXxw7ON/X+4uIOPX6X1kVppDVIdzon8Q8T5c1ck5AB6AIAAYAa4L77/JcHn3B9+hGNo+Mu3t/UCUOWahxNuv9gVOJq9XtVPNY+Po5ecN8BF9tuPV+Yce9/3L3BnyT8rzwlr7735BIZABAAEAA6ogYYnXhMtxRPqVKuz19vQvjXxVddn73DxYMtPv8liTN7X+L5Ja0Zdnbrl64WehqfoCzjDDZ+fbGV4w5kALoAQACgBlh1h0/+7JYN26Nh1wmeceMAhS3dolm46GoE1z6WbzwukvlP4IY7/hV9+Y6MO9j5yVvN1AhkALoAQACgBlh1h88mdsqGfNH1adFrNOMGErJpjW1MP4/aGTdfYbpRTUAGoAsABADjvoDV6HLXrWbP0WwPsmrL7XPjCid1nCDS+QyvDJxyR/iLDAAIAAgA93lvYIFma+evdPSW1gR5+a0gOn35IzIAIAAgAPyvGmA50Xn5RZtye5RoxjYmhLd1w7YvyQCAAIAAsFINUHfv30sDu1ynUnZ/QSu2M7H77SDET5EBAAEAAWDFcYDD/b3axedPuD0O0GybeVwg108GAAQABAAzS+qu+w+XXnf7+Gf85Gk228x3gqRkAEAAQAAws8SeLyVuaP8ofX4HU7PfyACAAIAAYGaJpbdUgvDoAX7ut06aE3hD4mW7RgYABAAEgBXnA+S47u+wIuBzCQsLc2QAQABAADCzxJLezD2L9m9XE+ymmTYRWXZW4kr0tVQEIwerZABAAEAAMLPECgtaA0SPfOv2eYdmaqtnBV/XDdGYW1fxK4kv/Ko13cg+MgAgACAArLheQPTF9IBTZNTNERyi2dZynV475579u9Dw+QvBrxlU0zWDcpUrrBkEdAGAANCSGqDuXsHBIVcDjDiHXnWv76JZ5beVc+46/kOJa+msxHGsz2W8k2mNcPHqHGsHA10AIABsyLqBviY4VOrTPivrc9ete5xjLrYjbr7B0/Zg583PunX4fnct5OZI1tU4C+545yVOw3cSl/+RZy2Hd5+9TQYABAAEgHasAe55AF8jDO3RPjPp7TFdb2DY1QCfunGEwgZfp591c+o+dl8R7eNTt45inHPX7dXZ9bxuJwMAAgACQLvUAE2f8PQfj6uCyVG3x/GW3peQhYr7j380fWbOB+6y/mfps4/pPHoyACAAIABQA7Ro3ODF/oclzhf9OoTD1ni9gh43uD/jzjguYbVyQeLy/M12GpsnAwACAAJAp9YA9x4nuNwlGyrbtEZIYv2tIMupxPnbet0/ly1KfGlquZ3H5skAgACAALBVawAgAwACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAALAmrkLQlhZu08sZn8AAAAASUVORK5CYII=", rc = "data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAIAAgAMBEQACEQEDEQH/xAAbAAABBQEBAAAAAAAAAAAAAAADAAIEBQYBB//EADsQAAICAQIBBwoEBgIDAAAAAAECAAMEBRESBiEiMUFRcSMyQlJhgZGhsdETFOHwFRZTVHLBYpMHNEP/xAAaAQACAwEBAAAAAAAAAAAAAAAAAgEDBAUG/8QALxEAAgIBAwIFAwMEAwAAAAAAAAECAxEEEjEhUQUTIjJBFGGhsdHhUnGB8CMzQv/aAAwDAQACEQMRAD8A9xgAoAKACgBWapruBpgIyLeK3+lX0m/T3yVFsZQb4MlqXLjNclcGiqhPWfpt9h85ohTH5GcMGbzdd1fKJN2o5PglhQfBdhNcK618FbRT32W2bl7HYnr4mJmyGFwVSQAW21kGu10I6irES9YfKK2TcXlHrmGd8fVcsbdlln4g+DbiLLT0T5ihd0lwzQ6Z/wCStRpYLqWLTk1+tX5N/wDYPhzTLZ4ZW/Y8Dq5/JutD5VaTrfCmLfwXnrot6L+4dR9285l2ltp9y6dy2M4y4LuZxxQAUAFABQAUAGXWpRW1lrBEUblieYSG8EpNvCMdrXKW68tTgFqauo2em32+sXfk2Q0+OsuTK2DcknrlsWPJEWxZojIokiNYJpjIqkiK6zTGRS0AZZdFlUkCZZcpCNDeGNuFwdUEMCCQQdwR2GGSDb8l+XWVhlcbWC+TjdQu23sTx9YfPx6pzdToYy9VfRlsLGuT0zFyKcuhL8axbKrBujqdwROQ04vD5NCeQsgBQAUAGW2pTW1lrBUUbknsEhtJZZKTbwjEa1qlmo28K7rjqegnf7T7ZllY5P7HUpoVa68lO4jRY7RHsEuiyqSI1izRCRTJEaxZpjIqcSPYsvjIqkiO6S6MiloGVlqkJgbwR1ITAgkNxGAirFcgwaLkpygv0TI4H4rMKxvKVer/AMl9v1mTUVRtWfkeLcT1jHvqyaUuodXqccSsvUROU008MvCSAFADK8pNQN1pxKj5Os9Mj0m7vd9Zjvsy9qOnpKNsd8uWUDSpM1sEwliYjAOJdFlbRHdZdGRVJEexZfGRVJEd1miMimUQDJ7JbGRU0DKeyWKZW0N4IymJg6K4byMBErkbwwGSuI5htNhyG1dsW8adkN5G4+SJ9Bz2eB+vjMl63eoeJv5lHIWr5f5LBeweeeinif3v7pXbPZHJdp6vMsUfgxJ5zuTzzm5O5gG0Yhg2EdCNAmWWplbRzGwr824U4tZsc93UB3k9gl0Hkpm4xWWaPD5FVFQ2fkszdq08w+J6/gJcsoxyvzwixHJHRQOlisx7zc/+jG3sqdkmDu5GaLYpC021E+klrEj47xvNkRuZndW5DZFCNbp1v5lR/wDNhwv7uw/KWxv7kZyZRqWRirqVZTsVI2IMt8wNohXI8wXaEWuQ7A2hUriOYYJNaEEEbgjtBiOZO09M0HO/iGm1XMd7R0LP8h9+v3ykCn5UX8eVXjg9Gtdz4n9PrMGqlmSj2OroIYg5dykMzG8YYyIGNGTFaBEEnYDcx0xGb/RtOr03DWpQPxDz2N6zfab4x2o4ttjslknxisHZdXVt+LYib9XEwECUsj1YOoZSCD1EGBB2AGS5caMltH8SpXa1Nhdt6S9W/iOb3eEZSwNHsYpa+eHmD7Qi1xd5G0KtcXeG0OlcTeG00vJC81ZVuOfNtXiHiP0+kmEsvBEkQ9TsNuo5Lnn8oQPAcw+k5trzNs7mnjtqivsRYhaMaSAwyUyAmFt+dxy3ULU3+IlkH6kVWr0P+x6LOmcEUAMHyk0zOGo35D1PbU53V0BbYdg9m0zz3J5N1M4OCRH0DVW0nIfiDPQ46VanqbsPjCFmCbatyL/+ccX+1v8AiPvH81Gf6eXcDm8qMXKw78c4t4/FrZNyRzbjaQ7UHktGUFcr8ws2hFribyMBVrkbyNoZa4u8NpP0kmnUMZxzeUA9x5j9Y0J+pESj0I1jcVjN3kmZH1Z3IrCSGSBsDDJAaTAhoad+sHYjqMnOCMG/0nNTPwkuUji22dfVbtnUrmpxycC6p1TcWTJYVCgBGycDEyv/AGMeqw97KN/jFcU+UMpyjwynzOSmHYCcWyyhuwb8S/Pn+crlSnwWrUS+epnM/SsnTnC3oOE+a6ndTMs1KD6miMoz4I4SVbxsBFT2Rd5G0KqRdxG0KqeyG8jAaocLq3cQYKfUVoiWjhsZe4kSH0Z2Y9VkGTvIGOEwJOGQA0yckYD4WdkYF34mO+xPnKecMPaI8LZQeUU20wtWJGjw+VOM4AyqnqbtK9Jfv8pthrIv3LBzLNBNe15LbG1LDythRk1MT6PFsfgeeXxthLhmWdVkPciXLCsUABZWPXlUPTcN0YbGLKKksMmMnF5RhLsdqL7KX85GKk984s8xk4v4OnH1JNHVWV7gwEVZG4jARVhuIwFqTidR3naTF5eBWsIi6tX+FqOSh/qEjwPOPrNNy22NHR00t1UX9iFvKjQcJkE4G7iAYJWlrTbqOPXkrxVO3Cw3I6xsOr27SypRc0pcFGoco1ScOUa7+XtL/tj/ANr/AHnR+lq7fqcf62/+r8L9hfy9pf8AbH/tf7w+lq7flkfWX/1fhfsZLVMGzBy3qdCKyx/DY9RXxnNurdcmnwdWixWwTT6j9P1HMxbEFFrsNwBUecH2bQrvsg/SxLaK5r1L/Jvp2jhigBj9aA/i2Rt3j48InC1bSulg6mnX/EiKomXJZgKFkbiGh4XmhuFwSsCv8TLpX/mD8OeX6dbrYr7lVjxBsHytxymVVkDzbF4T4j9PpOjrI4kpdzR4dZmDh2KAmYjpJDeKQSNJhkkQOx3B2PeJGQxk3Whasmo4wDkDJQeUXv8AaPZOvp71bH7nndVpnTLp7X/uC1mgyjbESxeGxVZe5hvIaT6MlNp5QOrFx6W4qqKkbvVAJChFcIaU5S6N5DRhAGZlV4dBttPMOodrHuErttjVHdIeuuVktqMa9jXWva/nOxYzzk5ucnJ/J2YwUUkh6iV5ICKJAo8SUxS00Sriua09SjYeJ/fznS8Ohmbn2MmplhbSZrWF+e0+yoDyg6Vf+Q/e3vnUur3wwVaa3yrFL4+TANuObqM456QaTtFYyRwmQTg5vIJHVWvVYtlTsjqdwynYiCk08oWUVJYfBocHlXaihc2kWgemh2Pw6vpNtevaXrWTl2+GRfWt4LarlNprjpPZWe5qz/reaVraXy8GOXh96+E/8jzyi0wdV7N4Vt9oPW0d/wAMj6HUdvyiJk8p6tiuLQzH1rOYfAfpKLPEYr2Ith4dL/2ylyMu/Mt/EyHLHsHYvgJzLbZ2vM2boVQrWIo4kpZLQZYorQRYCBF64IQ0uBR+XxlQ+d1t4z0ulp8qpR+fk5ds98myTNBWY7lXphouObSPJWHygHot3+/6+M5mrp2veuGdrw7U7o+VLlcGdJmI6o3eQSc3kAINIAcDIIHgyCGPUxRWFQyBGgymKxGgyGKI0GWQVhVMgRlto2IXf8w46Kno+0zp+H6bfLzZcLj+/wDBi1VuFsReTtmAUAGXVJfW1VqhkYbMp6iJDSawyYycWmuTA67pFmmXF03fFc9B/V9h/fPOPqKHU8/B6PR6uN8cP3FSTMxtG7wZJ2KA4GBGBwMggeshiMMpiisMpitCMMhiiMMpgVssdMwXy34m3WoHpHv9gmrS6V3PL9pk1FyrWFyaZEWtAqABQNgB2T0EYqKwuDlNtvLHRiBQAUAGXVV31NVaivWw2ZWG4IkSSksMaMnF5XJjNa5M3UFrtOBtp6zX6S+HePnOXfo5R6w6o7ml8RjP029H3+P4M2eY7EbH2zCdUQMgDoMAHKZAuAqmQKwimQIwymKIwybnYDrkYK2XumaNZZtZlg1p1hPSP2nQ0+glP1WdEc6/WJdIdWaOtFrQIgCqBsAOydmMVFYXBzG23ljpJAoAKACgAoAKAFbqWiYOo7m+ra3+qnM36++UW6euzldTTRq7qPa+nb4M3mcj8msk4d9dq+q/Rb7fSYZ6Ca9rydWrxat/9kcfkqbtH1KhtrMG7xReIfEbzLLT2x5izbDV0T4mv0/UjtTann1Ov+SkSpxkuUW74vhj66rX8yp28FJgot8IVziuWTcfStQuICYd3iy8I+csjp7ZcRZnnqqI8yRcYnJjIbY5VyVjuTpGaYeHzfveDDZ4jBexZL/B0vFwgDVXu/rtzn9Jvq01dXtXXuc63UWW+59CbNBQKACgAoAf/9k=", oc = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMAAAD04JH5AAAAYFBMVEUAAAD///8NDQ1ubm6AgID4+PjGxsaQkJDDw8OTk5NWVlbMzMwFBQXi4uJDQ0Pu7u6Hh4cYGBhfX18uLi7b29ugoKA0NDRkZGR6enqsrKwcHBwlJSVPT088PDy7u7t0dHRfXcMWAAAEGklEQVR4nO2b2ZaqMBBFK2JsBcMko6L+/19e0yqkQiGDkNzVi/PU0JqzhYyVFLC2hJfe3Wt0hNl0jK5ukXqCMAP9RpIW2XzOWFmRJj0AIo6Wcn8qisUHgCRc1v2pMOkCKC8m/AEuJQnA72bspe68DSByc/4AudABvLNJf4CzhwGEYf8HgVABgti0P0AcKABG3/9bTgNQ2vAHKN8A4moH4CpeAD92/AF+ngDClj9A8AtgoQW85UiAZOHx75Oi5AGQ2vMHSBlwxyaAw0EYGoNpXQTsbfoDeGBkEtStEKwMA41iqOwCVHCyC3CCjV0Ay/arVq1atepPaUNrxlDbZ20Z71CQpI6BMX/LPkmkiy8/PwMwFhwsAyy+Bu8HYMK1DMDYkgSDAIIFp+CDANhuuZX4MADW0xZON2/XiApdHesP7OUL9d+XXrglVWhgvKdnLLj6aYLg2PxXLuvd+qojznTV9yj6AnIYuP3ARgJkrT2SpC8akKKPt4IX4wDa/qw/HoIJ9LXzKICK2iPq75L3CFhruWMALgHhz269AOcdIsAj6QiAmPQfEpXM0J5OgvbQhgO42F/ZIunXFX0XbWUMBtD8D17955A5UoW+vZsA4GD/EBqAQRGBGH1dCWUOBKi4XsBIgNdmQptgGADuUJkMxI0F+I2kN9qOAsix/2/LHw2AOyRejAC4a/UPpgHADRHkgwG27ec/DSDy1HICfyCAQzz/aQAAqEMS/iCAENk3lWcSAB7MkiEARP3/AkDrEnebXoAQ+XMlED4NAGJU4K0PALddpm7HTwTQqvSjQ/oEoM3/UN80FUArNP0EgKcy2nGEyQBQolIVHh1Ae/5bXMx0AEygSAJU9dXhgH9/oZXyBQDuEjGAX18F7X/OBnD2GCXpkdFsfNsq5BsAbY6mAlyoeS/jxGbwVwBah6QAHKnX03r/3wPoM7waQK/6UgG59PgSAPIOgKpFxul9wG8BiOX384futbv0758BQB9n3wAb7e4uPJAKf146TA5dpiRA63aH5giRaTX+BRDtaEdN/gwAF9whvV+2T68BFwCACHU7dW2n2ugyAHBSCHizaHXJnnIJAHXJpS6zs47xan4A8GsCHPWs+h7CXADvaX+g9/fH8MaNAEBWBjxIiZO/m6sb3vYd8hY7Krxq1apVq/6AjO2vd9lbPFMrFYHlcTKDRXeU++WC1VO9AHdY+mBBj1Lw7AJ4IKzWwkwAo+IZxlT8B4fb7R/vt5ngkNtO8RDPJBdr59tl2EcCJJaOd5+SF4CthvAbXgJirW1Iz/3hV7KbBQJXTXaznu7HmOkx6aglPMqEX5P+7ZTPRz0wmG2SE0mvsjUaqggdab+yIhgZmrsTn5n11G+pJHUWS/66OL3J71JceGWY+7NWiLOfh6UniFDiP1JoL2rGECK2AAAAAElFTkSuQmCC", sc = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMAAAD04JH5AAAAYFBMVEUAAAD////39/fPz89oaGh+fn5OTk6np6fAwMD7+/vr6+ssLCxRUVEwMDDw8PCEhISamppfX19XV1cRERHk5OTe3t4lJSWOjo48PDw1NTUbGxvW1taUlJRISEi5ublubm40NeWWAAAB0ElEQVR4nO2YabKCQAyEzeAGCgqK4H7/Wz6ktOQpsyCZzJ/+LtBdXZmuZCYTAAAAAAAAAAAAjGQVWD9ahNVfE6VBDUREUUj9aUakZuH0j00ATQSnYAa28cNAtgmlX7cBEJ3ngQxU9GQbRj/PXgbKIBGcFkRBIyjU20Ccy+vvOgEQLXfiBoq4a4AKcQPlP335Qp7SB1NhA/tPA4ms/uVTn+giqX/Nvg0kkrvR7Vuf6Cann39NQBvBXUr/1BtAE4FUG816JkAygnTZr98UssyCetfpE4msh2mkNxAdBQz0dJBoBKkyGVC1dwNbk75AG6Wx2QD5LmTtExSKILfpk/K7Hp6tBujsU39jfALPCDxeanVp128iOHgzsLCrP/D2aTJ3mIAHpac53Fk6qBOBn8UgT1wN7L1EcHCcgDYCH58ma3d9Ih8RWEu4S8Q/BbMh+j4icOjALopbf2AA7J8mK+cn+CLjLWTNKWKCtZALzSliIlkzGhj0BF8s+fTvgyegjYDtUjsaThFjBFyFXNk2YQ1xxaNf/xhAU8g8Z0plV9LBEsG19zvEjZIjAuc9qA+GQj6M0ad4fAQ/ddCb0W00JzUK8nckAAAAAAAAAAAAAAAAmPgDGWsRmgQEIL4AAAAASUVORK5CYII=", lc = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMAAAD04JH5AAAAdVBMVEUBVv////8AQv8ASv8AU/8AT/8ARf+yyP91mf8ASP8ATP8AUf/o8f/Y4/4AQP+LrP8AWf/4/P94nf9Lff4NYP/y+P8gaP9qlf/I2f7i7P+vxP9ejf7T4P5Vh/66z/6Usv+jvf+Bov82cf8qbP8dZP/D1f8AOP/EUwxbAAADHUlEQVR4nO2Za3eiMBCGMyTEcilCvWIVsa37/3/ioi4lgWTCYnrYPWeejzonPMI7TEDGCIIgCIIgCIIgCIIgCOJfg8tMhvMdXvBDAeklE3MJhBu48ZrPdBJ4DX94D2YRCIpWABZZMoNABh2bj2heAYDliCwmfs9ToAm4sxgnq1XkM689AVcWg+WtxmfTDgSgkvZzzM+PmiPzdhKGArBZ2bIo1m1NcZI/JwBwluZTHL50NYfAz2UwCkCZxy4BSLccXVmEURTFTkuzAMDOlEVN4JZFZGGeL6+v+/rTdalsAlBFwyz2BOAYWrOYtbf4ynESrAKmLPYF7FmMjt06DDWwCxiyOBC4ZdHUtG27Ps4TdqVQASjXehYNAlB+GfIqtJJ37OaNCgC8afYmgX7NjXipFVyxGecQgGui5MwsAPukl8Wo0r7fYJ3gEoBCyaJFQKu5C+z177EQOAUA6u97nk1ArTEJYPNthECXRbuAnte41r7bP5OBB2+P+YsIaFkUX9o3F2x0KncMjP39nocKqHmNFsrnaAYda3YUK+ksVrLI0+7jLb6Hy1L7ihqHLOQXR03d3jtF3OYw/XLsXcS6QNdUfuBu/eqqKfP25wanKoXi+uLeNiS5c1mFq6O4WLcHTLgM5Kj9qwiW+KLq8X9lb3hFOeUBi2/HBmHBWbwu0ZKXKftVERxGC7BEnrGSatrjlVyNyuLivg+MVht7STlxvxyKyr5oT4CFkb04nbphF8FutEDTZe/eBZoZ4m7IbwEW2oqfEBjRkJ2AtfgZgSZejoZcqA8jfGvK4nMCLMnQhtQEmDAVPyngaMhF73FMngbFTwugDdkXYGHS2355EGh6zNqQA4FmnveGgw8Be0MaBPrDwYuAtcdMAkxow8GPgG1CGgX04TB1FgwwTkiLAEu64VAb321MwtCQNoFuOGy8HZ7deqzfkHaBZjhcm4Jj7vk95m60ABNR/pFbXm9Np9eQmECj8BN/OugNiQv8EGpDnv1F/C9QGvJzpn922oZcznEF7oSiTov9aYY/NL7hUhpeXRIEQRAEQRAEQRAEQRD/Jb8BD/IjneuNTMAAAAAASUVORK5CYII=", _o = [
+  { url: Xl, keys: ["builtwith", "built with"] },
+  { url: Jl, keys: ["contactout", "contact out"] },
+  { url: Zl, keys: ["exa", "exa ai", "exa.ai"] },
+  { url: $l, keys: ["fullenrich", "full enrich"] },
+  { url: ec, keys: ["harmonic"] },
+  { url: tc, keys: ["hubspot", "hub spot"] },
+  { url: ac, keys: ["ocean", "ocean io", "ocean.io", "oceanio"] },
+  { url: ic, keys: ["predictleads", "predict leads"] },
+  { url: nc, keys: ["salesforce"] },
+  { url: rc, keys: ["the swarm", "swarm"] },
+  { url: oc, keys: ["v0", "v0 app", "v0.app"] },
+  { url: sc, keys: ["vercel", "vercel com", "vercel.com"] },
+  { url: lc, keys: ["waterfall", "waterfall io", "waterfall.io", "waterfallio"] }
+], cc = new Map(
+  _o.flatMap(({ url: r, keys: e }) => e.map((t) => [Ka(t), r]))
+), dc = _o.map(({ url: r, keys: e }) => {
+  const t = e.map(Ka), a = t.map(ko);
+  return { url: r, normalizedKeys: t, compactKeys: a };
+}), uc = /* @__PURE__ */ new Map([
+  ["builtwith", "builtwith"],
+  ["builtwithio", "builtwith"],
+  ["contactout", "contactout"],
+  ["fullenrich", "fullenrich"],
+  ["fullenrichio", "fullenrich"],
+  ["predictleads", "predictleads"],
+  ["predictleadsio", "predictleads"],
+  ["theirstack", "theirstack"],
+  ["theirdata", "theirstack"],
+  ["waterfallio", "waterfall"]
+]);
+function si(r) {
+  const e = Ka(r), t = cc.get(e);
+  if (t) return t;
+  const a = ko(e);
+  if (!a) return "";
+  for (const { url: i, normalizedKeys: n, compactKeys: o } of dc)
+    if (n.some((s) => s && e.includes(s)) || o.some((s) => s && a.includes(s))) return i;
+  return "";
 }
-const $s = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAeUlEQVQ4jd3TsRFAYAyG4Td+1rGFRm8CnbOO0gL0GgOomcEWjmg07jj86aRN8tyXIsJYKN9rAXoceeCxDBABKavUvsBRmhgBInk1NhYNkF21rAkImcpLGXQmroZnQLfmptcCj4D5hB8A4vkLpwSLEZDeBjjNgc43yQ5kyxoFPrhHWwAAAABJRU5ErkJggg==", el = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAaVBMVEVHcEz+tQD/vAD8tAD6K2D/tgAlxPkVwP8YwP//tgD+uAAOwP8Mwv/5K2DHLyeKAGkcwP8Aw/8Mv/+6IUj/rwD5K2GzAE24G0j//wChAFmwD0f9KkYXv//9tAD4KmC3H0a5H0jZJVTkJ1jwBUmcAAAAG3RSTlMAzFX6SZEOh0ZCD70sfxAFFmn6jRQod/YUM7hQnaq0AAAAdklEQVQYlY2PSRKDIBAAhz0oSFyzFIvJ/x8ZgYhcrLJPdHOYGYBrNIwQ1hSVyEUIklm3p8sQtyXTYfR3hzDnQD/v15NFZZNq7Q2o/4bHYrDkYrA2Be9DWLveJnLwowFRBR2HlTDrvEwJOymIO1ShPX4jip/c+QPspgsTY5Zd9wAAAABJRU5ErkJggg==", ja = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACKklEQVQ4jZ2Sz0tUcRTFP9/33jwaf+ITXNWuQst2ZoPRQqSUMWNIoRaFZFASSEFLw7KSNi0MbNMiWmQ2JQXmOKPixog0gohMon+g8sVIj0lt3ry5LQafjY0tuvDd3HvOufee+1X2j4o5lDrA/4TIvLIdSwrVFhcyTCVcdlfrhI+aW2poWxWSSWHg+iqxsbSfm4yn8bz8fr6A5wkXzqVITOQIoQYDy1I+cOFDhtMnU/R0/ywsMJ1wGY2mOXMqRfTRGoahaA4HfOBA/wpKg3BbIE8A27Fk/c3MlkljkyFKITduBeVhtEQ6TpjyIlEqgAwOFcmfeNuxpKCJr1663OxfYfsOjaoqjffvPJrDAXouBfE84e2bDOXliuo9BgbAxHg6zyyAuv0GbZGc+0vf1thbq3P5Yop4zMVeEnr7ghsCnz95PHmcprIyt3drm8nI8C8CBogorEqNkeFcg4OHch7s3KUDoGzHksWPGZaTQqjBQNcVQ3dWmYy71O7T+foly3JSuHItSF39JgM3m2g7lgzeLRKlkPHJUom0mxJ9XiK9fUEBpKU1ILNzZXn4PIEHw8Wi68jh5oDYjiWRdlM6u0yxHUtuDxaJpiGahoyMlvicvJ8YG3PJZqH3atDPxWMu2azQ2bWNe/eLOd5h0ti0sUreGT1PmJl2OdKSc//82RTPnqaJTZVSHyqwP+SusB66rnwywLGISU2NTlm5+ovoT/DdqXgtqNCWiH+FyPxvxJQOsx2aRhAAAAAASUVORK5CYII=", tl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAQlBMVEUXFxfy6OiEgICfmZlpZWXWzs5NS0syMTFjYGBbWFjf1tZva2uclpbk29vDu7tFQkI4NjaLhoa7tLS0ra3q4eEkJCQHTzuzAAAATUlEQVQYlWNgoARwMDFxIvOZGBkZmeEsRkYubhYeuAAvKysfPwMDC1yACaIJVUCAjU0QWYAbbBBMgFVImBkMuGG2iKA4QJSdXZQiHwEAwJgBiwaJnkkAAAAASUVORK5CYII=", wn = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAFklEQVR4nGNQOhpHEmIY1TCqYfhqAACML0UQHuDXpwAAAABJRU5ErkJggg==", al = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAALVBMVEVHcEwAc/8Ac/8Acv8Ac/8AcP8Ac/8Ac/8Ac/8Ac/8Ac/8Ac/8Ac/8AcP8Ac/8pWYqpAAAADnRSTlMAMm5b2g/F7aVJlYG0HQV+ULEAAABmSURBVBiVbY/bDsAgCEMRcF7X///c4dQMk/UJCs1JiUyKUNEKOi0x+o1EwDbGmBAyeBsXhJGDfS0VqA/MjH0544VczpiQeELcvYMN4ow/SHSQitrQ5INEu1vAQaysHk0EXUYTHcsDTdkETLWztHkAAAAASUVORK5CYII=", il = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAKlBMVEVHcExPtf0upv0bpP0Vk/3b8f7b8f7c8v5Tuf0XmP0Qkf0Ynf0Zof0bo/0p6qQOAAAAB3RSTlMA+1/j4+NfcZs3/QAAAF5JREFUGJVtz8sOwCAIRNERHxXQ///dKpBUk87unrABoDznHKPvJQLIMqB3QrYcGpAwvG9QDUgGO5Ut94Unsx2swXNB8sGT5YmBf0FuWCkHWB5QRE6ooBvaerd8UBteZt8ICiaoa+IAAAAASUVORK5CYII=", bn = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAB2UlEQVQ4jZWSsW9OYRjFf+e9935J/wJt+B/UIBqKEE2DTfJFpWyiWiImi0FrtJGWLyKSJhIWk0mnaoi0BKMYSAzKYrFo73vfY7it7+vXNuFJnul5znnPc84rX8yHwQ+AlcrZ9axv9akmiWxRvkBBKEbsNIWwrLNKY9k3oA8AkUDzkq5xr3wnMICNuJwPOHILfADQGufXAPrVfoKAfdROrxjPbvs8OwCYKMYcPQ8e7ACDiIrjjWZw9QQTNmkWyyJMkZfPXGaLwK6OWRLZqDxJ7uV8Dnxkq7sBg5YQxh5oE+iFUhwSgC8V+xzTAtDYhqS7VpWFQd0t39Syp8sliceb9/Sh7i5JYpaZ8i1Q3y3hmDTLmuvrYCkOS3G4i8Qh0yOp3v1rXF5Q/aN8qNq4AHXOqfI5OiPC/Xb+3ORz4P7Ou5BPe223NnGi2OsqveR/TFQ4qFa5tE2Meg30gHdvVNVZWpDjsVB9b5xCPrxhJO9U0ThphavAj63xHiRrNEMg3ez+hTa9VblyPGuVd+Rqj8Q08HsDgQlO6UYA97RZSUjzMQ+Hslb1EED3WaZVXYkK+0FzQOpQkQdZI8AX0CeRjao3DjVmysX1nGte3GiV7/UznhBZE/QR8VlFOPMHnYnGfYh6xT4AAAAASUVORK5CYII=", nl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAUVBMVEVHcEwAtv//cCD/WTcAw/+gTOIAtv//Njcky3H/czcky3Eky3FikcacmrbFi47/NTQizG8At///czeGTv+MRv/IQ6//cC9elcD/byiil7FflMHhlt8GAAAAD3RSTlMAO2o2Y3N9dHV3PDJ3d8DNbxI3AAAAZUlEQVQYlYWMSQ6AIBAEB2V1BdnU/z/UITLEC7FO3ZV0AyCjUsoYM0JF7ciBDFXsJI6eeCfpTIZORIxx2K61dY9w5xyvovTgCj0hfAihTCSdLHfOwCSjri0CH+yvKBP9FTDpueUHZzYHUnCSxBoAAAAASUVORK5CYII=", rl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAVFBMVEX0XUj////0V0DzTDH3nJH0WUP0Vj/5r6f7ycTzPxv5uLHzUjv96+r96Ob4rKT83Nj2i3771dH+9vb1eWr7z8v2gXP1fW76w77+8O/yMADyIwD4oZcjV8HwAAAAZ0lEQVQYlY2PSRKAIAwEGWJYFBfABfX//5SDZTiaW3dNTU2U+nmGyAwsTDaM07x8hiJSAjr9Mmc471cR+sbGvDSJHYf3ToSiGaU0HdX0qfStUMN5OWQZUhsTIkmA7xBsw9XU6X/ffAC+LwMx3zJEQgAAAABJRU5ErkJggg==", ol = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAUVBMVEUBARsAABkAAAwAAAAAABVKOkMXEiN8fIH/zc2RcnbntbWHam8HBRwZFCTzvr75w8P/0NBENj8nHyyog4fQo6S1jpD4wsKde391XGLDmZvsubmMAc49AAAAd0lEQVQYlW2PwRKDMAhElwRjTGyobaxt/v9DSxwOVrt7eCwDM4DR4SA34ifjHHcRQU0GzSHMtzkEA8GXON2nWAwePslTstQaBy3W3nhVbaRt41Tl7fpEjlk+a+loOtH25Wbw4GV4qFUdCwPMpGbDn0Mvujx3fv8L/hgFdRdpvpEAAAAASUVORK5CYII=", sl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAWlBMVEUAAAD///8nJydBQUGpqan29vYaGhqysrKHh4fY2Ng8PDzg4OCNjY3s7Ox0dHS5ubnm5uZdXV0WFhbBwcEICAhiYmKDg4OWlpYkJCS0tLQRERFISEg4ODhsbGw7gbjnAAAAdUlEQVQYlV3PRxKAIAwFUAQlIFJsIJb7X9ORgC27vCEhn9SUvIrW5NOT0hqrHfS3DmOVyg7YT21TZUGYPSuCUxxEEUggKYg85RIwRaFD0bjjkZjAB6aWGC4xuLQR+Y1c8d9N+0vCzsup67Ezyc30TvOE+8c/ARgLBHAKow9dAAAAAElFTkSuQmCC", ll = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAC+klEQVQ4jV2RzWtcZRyFz/m9985MZtLQzDgf+VhomXRqAhVJ28FGha6kC0Gr/hdSdNlKCVkUC250IypY0HVXLvwEqQubmsSFSuJNGnXVVjOt1aYzk8y973tchEr0WZ3Fw+HAIf5Hq9U+Cuh5QEYiC0E5gHNmWATClST5/qf9vnsYms1mvlZrXiDhdneLl8nBPZI5M/6YZfEHpD8GWK5anTxTrx+81ul0/L8FzWYzbzZ60Xt71yw0zNJXzThN8mcABedQJVEm7dc01ZdS/EajMXq10+l4A4AoGj0fgr0dRf4FwG2bYUPiNxJ+D0F/ACEPQKRXHOO093gnTYfOAYBrtdpHSTgzDIeAzvr60leVysTpQmH3Y+9d2wzPSTZCopgkKx+WyxOjUWQ1AIN6fcLzyJHjCxIyEn0AkDACsCCFLomeZNd7PbdSKvkFUn0A2wAO7+yUzhYK3dcNwMksi98n9UMI3CTR73bdPImixKtA2C2V/IKkB8713pK0EQLuDw1tT0s0V6lMPAqELoADgG6T1o6i7G8JqzdurCzdvXvrZq02uU2q4X005px+IzEA+IiEEZOQOsdJyUwSJSyaWXv/15IYApdItrMMcQi24z1vAsgZiZj0iVl4xoz1fH7n0xA0bOZempqabU9NzbYlvBjCn0sktsxYB3Q/l8MGqbkIYOj3D6zl890REocHg/wsyaFu180XizhmpnYIoRtFo+cBgOQUCWYZnpL4ravVxu45l54iuRICbq+vL1+uVsefjmOdMAtPSlwrFAYfeR/NJcnyfLk8USJtC1AaRfja3blza6tSGT/jvX3hnE5Uq+NlgAcBJRIXAfzlvXtCsmKtNjZM8pBz/rr3PJUky1cMAOK4/6ZZeC1N8ZnkCIAAd83QIDVO4llALcnRufB5mtrZOO5dwp64x8zMTC5Nh86R/EXCIe/j9+I4fVzCZAhYTdNSkss9eAXgY3Hcu7S6ujr4T8FDpqePz2SZXiZxUsK1vSWyEBhCsE82N79b2+//Azn7ZJedFPGXAAAAAElFTkSuQmCC", cl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAFklEQVR4nGPojvlGEmIY1TCqYfhqAAAq1t0QMabSpAAAAABJRU5ErkJggg==", dl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAFklEQVR4nGOwbvpGEmIY1TCqYfhqAACHB7MQtEO1oAAAAABJRU5ErkJggg==", ul = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACLElEQVQ4jX2QMUhbYRSFv1dMhjyhL2BeMBmc0qWLXQVpHFzi4tSCS0XUwbmTWTJIBrM4CG4lggiddOjgJDgmm5B2cHk65EGSIb+Q/w0vw+nQmJo2euHCuXDvxznXkeQCH4F3QA54C6RHOmOt9aIoShtjEvPz8+3Z2dmy4zinjGoG+HZ5efnp9vaWMAzp9/uEYYi1FgDXdUmlUnieRxiG+f39/bqkL8Bnx3F6SOr4vq9SqaRGo6EgCBTHsaZVEARaX19XpVKRtXYgqeRI6mSzWb/b7bK5ucnq6irGGKy19Ho9oiga6ziOeXh44O7ujpWVFa6vr3/O8Kzq9TrGGAqFAslkkoWFBRKJBPl8Hs/zxm2tZXl5GSAzAQC4uLgY6zAMyeVyAJyfn3N1dcXc3Bzb29t/D55+AOjPKFUqFSUSCQE6OjqSJDUaDaXTacVxrMFgIN/3JakzFSBJvu/L8zx5nqdWq6UgCJ6OJgBv/o3wvA4ODjDGsLW1RRRFU3deBRSLRXZ2dmg2m1Sr1elLr0VotVrq9/sqFAoCXozwa3FxcSrcGIPneRwfH79sU1Kx2WyOvy5JtVpNu7u72tvbGzs6OzvT4eHhfw6cEaRWrVa/lstlBoPBhANjDMPhkHa7zePjI8YYut0uJycndDqd7hPABRpra2vvb25uJhwmk0lyuRyu65LJZMbz0tISGxsbP5xnUQrA9/v7+w+pVMpKstls1gBDwAK9kR4C7VGf/gbPbZWL1WleXwAAAABJRU5ErkJggg==", hl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAFklEQVR4nGP4Oo+bJMQwqmFUw/DVAAACRZ4QdD+g5wAAAABJRU5ErkJggg==", pl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAclBMVEVHcEwAKZFgzf8odsEAKpEAKJBgzf9gzf8AKZFgzf9Qsuxhz/9h0P8AKZEAKZEAKpJgzf8AKZEAKZEAKZIAAG4AKf9gzf8AJY4AKZEDkv9j0f8ASbMAjP9Ht/wAiP8AD4kAG4sinv8AMJlHoN8AOaIrgNL2JF6mAAAAFXRSTlMADo0BaZ3sXcqaK0aywNVF6c79NxD+lfCrAAAAfElEQVQYlY2P2xKCMAxEQUBb8ILAJGlpC4j+/y8SxxKGB2bctz2TZLNJ8pfSu1Lqlm/gQYSsQkBO2LNeAgpCw3LXFTzxbZwLk71E0GDvQjAA+uczGj/eewsQJ1oaZ8sWzhIyeHb1aQsZLIj7PtqVsh6vVgDlrkyldXZUdAFXgAfvMnEX9AAAAABJRU5ErkJggg==", gl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACZUlEQVQ4jX2TTUhUURiGnzMqM2NOzsbQfsckmsjwmhqpUQoVlom26EcIRIraBCmY0MqGwkRa6KZ0Ue0yF5L2Y7QaM0GQpEubxhloBhfO2J8Td4a5g42nhV69JviuzoHvfc/7vd93BP/DrVQhl+oRogFwASBREaggPPjUkLlcrJ5cihP7UgdStGwQXceQPSQsHkJqdE3ApTixSi8CZVOyAYlKUlQTUqNpAORtewCiAcBhc1C4q5DTxXVE/oSxbsmivKYRmQHR72HDdy4Z0sbP+fcCt+ICGTTIo60v+RIJMKKOUlp2jgU7qDNj7C5T2H+qnO7as+hazOin2gKyw3BWln8YX8RPps3BXHSORQSpNFj4Fca5Ixff5DjuqkpzKw3pCBTkmsCrz2/5nYxz72o/d57eQLdC0/3HDPd50Bej5JcWwevVQOvTkWvB+cJ+LpU38kOP0/m8jbrzbcSzJS+6b1N5rZnMHCsTT56Z43RZzDdfJIBEkmnPIqZrpAToCQ09rmFzZJGIxQn7v62fKu6iICsL036mlangNElh4eaVh3QNtKGlNJq6HuEd6md+1s++6gredHQbbDUdIUaQ8tayAz+1xXUI+1b6hjycrLmOni0Z7Gyn5OIFcg4W4J/4aApRqBYkw8bd+3WcY+4TxBMaiYSGkAJSIKVAj8UoqDjO7CfV3IFneRMPKD2Gizzndg7ll7BnbwnvJgf4myE5UnuZYGCawOQH9FjMeL2XGbVlWUBRnCSl1zyRTbFhlSMRnZ15g6SEHTi6OVn0khTN6z+TGW7FBdxFUISUK45ECMkIgmF86pi5/B9ga/KYLsUOOgAAAABJRU5ErkJggg==", ml = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAB/0lEQVQ4jX2TPWiTURSGn3OTtFWTNIs/tNL629o4FDSgUByaQSJSFzcxCBqQLoogqFtm6SJ2dXCxi7tUNOIfFWoR/Km2SKu2iiYIbRrbfF/6fcehSUxikhcu53Lu+55zeO+9Qg1+LO2JuEYSQBShWxUR+AKkXNU7Xe1zk5V8KW3S6bC/sNm+heueU/DUFi7CBXM3Z3kuH9g6s1IukMn0BqzW9QegAw2ENZCXLYHW2DaZzhkAq3X9djOxbcHaamVGB+ysNQpgFpf3HQWNN+s399nlysU8+bXKITS+sLz/iFFxE4BpVuDZY4d3bxzyea1MGyNuwqAy2Ez8O6PcHyvQ0+ehPSRVZwqDRoSuRmLLguQ1i+yScva8D5H/KN0G1KknXvymXLqQZ3LC4cQpL9FYvZtVRxayez8IGgZY/QPPUw4TL9Z5Mu5g28rQaR/HT3oxBnr6DP7AP7mITHsFHQfCAG2b4ON7h9evHI5FPcSGvDx95HB1OA/AwX7DzdE2tviL/V19KN+zu3td5K1AS3kwBZGNqFXGb+SLXtgGb7/pDM7PCDJSSypFY6pX2UiRkY7g7CcD8HM2lBRhrJ6Z9aAqY53+UBKKDygSmSp0+A/H1eUGKrnGUllRuL4zeCguMlWAit9YQjq3a4ftmjMoURXpFkFR/Yoh5UPvbffP/6rk/wX8trxabySvwAAAAABJRU5ErkJggg==", fl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAARVBMVEX///8AAAAkJCQMDAyBgYEWFhaqqqoaGhrc3NwFBQVqamq8vLx8fHympqZlZWX19fVQUFDy8vIoKCi3t7dgYGCRkZGbm5v4fqiUAAAAa0lEQVQYlWWOWxKAIAgApSwEUyut+x81Iu0x7ZezgyzG/EiTvWjCwaBAukWnwDPRKzAzl+U0YVQCIYJ7b1/lWxUue+8zEDVR5E0QxNZhxndFiD0i0iaLqwiRJSn5bwWfysV5/kfs1k7J/DgA2zoDaFhX6hEAAAAASUVORK5CYII=", wl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAS1BMVEV6AF3////ewNeTMHuHGWzbutPhxtu8f62tY5yDEmjNn8K5eqrw4uyiTo6oWJX17PP7+Pr58/fQpsaUM33Ci7Xy5/DUrMqaP4XFkLjghu1BAAAAWklEQVQYla2PSw6AIBBDOx9EUcAvcP+TymL0BHTVvjRNCoyRd6rOY2YxsFDASoJt+irdRUpw2bKQR9hVj9MA7ypUEOgyoH3jJlnyv/EwEkXw84HSULmilUE/XidhAl42YZzTAAAAAElFTkSuQmCC", bl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAUVBMVEX////J4doAXTO31cwAWy90qJdam4dQmIJmoY7U5uHs9PK/2tLw9vW01MvM4ty6188AUBtEknsAYDkAVihkpZJtqZcAUyIATxp/sqOUvrGszcN4doo7AAAAaUlEQVQYlY3PSRKAIAxE0VYUMAHjiMP9DyolWoWu+Mu3SQcoyHl0PTyRCN1QDbAjgsg0cYIGrUHN6gszO6UogwXM7DLAGppNXrB7fjaC4LAx3SUIABsdMwlY/5YS9rm+C/JsP1XKU8mrF0CSA/WBIjolAAAAAElFTkSuQmCC", yl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABE0lEQVQ4jZ3Tvy5EQRQG8N9dd/0LhY430IhEIfECWg1PolBotlV4FFGpeYENQWiERqETWVnWtSju7O647og4ycm958w533fmm5lMabvYRAPvfrc8fA/Rgh18/tNbGa6xGDE8YiLB3sNcFN/lKELQxwaOMZsA6GANR4GkA+0wToGp1MYr9hR62nmUbGABt+F/CeNhrcClUuB5IyHFAAKq0HxWWVvBaVQzZK2zOhGbdYUpgCyR/zNAtyb3VldY1WDAfIFlTIa4F3I/posBPnAfxeeJ6R6Ud2YIMDiqhvIinWAm0fyMVSORc7jy/X53lefdr/GXSu3NWNjnesTSDNNkNV7VbH8gyDa2MG30NlLWxCsOsPcFht5JrzhcXkgAAAAASUVORK5CYII=", yn = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAQlBMVEX///9/AADUtrbfzc2IAgTcxcWYVVT////////////Xv7+0hYWqeXjAl5aJICD7+Pj28vKRNDSjZmTw6OjPq6ro3dxrdh8QAAAACXRSTlPu////////7+F1O+6fAAAAhUlEQVQYlV2PWw7FIAhERRFb8W27/61evNXYdD4IORCGUYdTL7lDuVNkh8zoZCz1IkgJyEurBvCEGBmR7AQWE3gLCBtgu2/moDfg3PVV1g2dkIwJKeYJOgPlTlj9BGeJnEtAXEc1R5m9gIUag7d1b8hjoQG2ZSsEigHSf9snnBH5J9w3/g+hBQbGLvrOhQAAAABJRU5ErkJggg==", xl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA3UlEQVQ4jc2TsWoCURBFzzw2C8ZCgiQKKQTJIpgv0C9IF9Q6tZX/4G/4VVauSBYtAsElhaQISYr1ppBEAy7ytvLCNI85hzcMY72uHk3biRk1PCKRytzQ+p1s7QsfSlxRGMCMmvMBKldQuvz/FuQ1X4TQbEHUhqhtRPdwXYfxSMymOYLqDfSedkDjDoLAjqiV/4P6LTz0vabCr/ssBblbOEyWiZcVJDGkrycEErytRTKH51gkMSwX8P11XG6Dbva3l1IZwhDeNwVH+PzYlU+cROqH7COROpkbFpH8nvMPujhEsWwjq+gAAAAASUVORK5CYII=", vl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABE0lEQVQ4jcXSPUqDURCF4SefMYoJxkawSSepxUpEoitIKboHK7eQ3so1iI1iLSIiIhZiEUKwkHSCiIiFQkhCsMiIIn7xp3HgwnDnnHdmLjdzCYxjERXMYxYzmBiUtXGHG1zhDKfFarWduWQba2jiHB30cIGjAFTiJMhhAXNj5fJBFsd4wAo2MRqmFyxF9wMU474b8O1cqdTM4hAbWMYeTjCFWhjbYa7hPlZdRy7J57cy8QZZrGIXfRTwhBHvMR2TJqHdL1arnSSKPeyEGZ7R+mC+xWPk/WjUEbS0aHzK+1+JhgHqKfmfAI000U9X+NMELYO/0MV1mig7BNCLKSYN/sKvAQJQGCb4DlCPCf4P8PYGqfEKP29DzuPh+lUAAAAASUVORK5CYII=", xn = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAP1BMVEX///8iIiINDQ3U1NR5eXmysrKioqL///8AAAD////AwMCJiYns7OzJycmrq6uWlpY6OjpERERQUFBqamplZWXeFUpeAAAACHRSTlP2////////NOB4UscAAABqSURBVBiVdc/BDoQgDEXRIkVvAUVn/P9vlQUqmthN807StJVJrCuZ5JGrvHKV1hypA7/tOUI4IVJTsoI2GN1MgKxDB2akcIOv86suF2AbadVAA4/LM2jRa+2Pv7H47rA4UB6Xfj8j8n7/AHV0CGt04/+HAAAAAElFTkSuQmCC", _l = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAKlBMVEUAAAD///8nJye3t7cyMjKHh4f8/Pz39/ecnJwaGhoSEhI5OTnW1tbT09NHEhmuAAAAOklEQVQYlWNgoB5gZUUTYGNH5XMwMnIg8zkZgYALSYAZJMCM4HMzggE3XIAHIsALF2BhAgMWSt0OAwBMcQCayCv/8QAAAABJRU5ErkJggg==", Al = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAKlBMVEUUbvUUb/UTbvX///8CavUAYvUObfUbdvalw/vn8P6IsfpdlPi80/zA1vx9PzTeAAAAAnRSTlP3SrtnEswAAABpSURBVBiVfY8LDsAgCEPRFpi63f+6Q7OvS0YU0heUIknyIyTJSweZdJCezPoZdwB3p3lm1AF0BRRoBXA7wQLUyDo62GroHpoP0HU8qMzXH6gFRY+xumH1aGo8fVCVRvI29nH6t4zIvP4Ox/kDQdeBOboAAAAASUVORK5CYII=", Sl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACMElEQVQ4jaWRX0hTcRzFP/duOsQsM5AsyYc0ih4q9WGEUGA5S9CoJJAsiiAo7a1/lCG1zNSih/Ch0CAsUSExMBLf1F5EKCFS0mFZqJubbmvOO++9v18PCabtZXSez/fD+Z6jkF+9IxlzNNVYlMQgT1yC4hfxWVYA+6Kbc4FRNRZAc/IuemzpxHQUTf8NsAIkpm9lS/ammA4TPTbwLgPSDtjJu1SwymAKSWVjD6YpaKwsxKKuDtv69D10DkV/IaIbnKnrouzgbs4X7KH84Vu0JSNqEhVshilWFgyGIxRVtdE96CInK429mZvp/ThB4a1W/AvaqoTEm6ZKim36hydgAnj8C1x43I1r2k8gHCGnoomciia8wUXGpua5+OQd074QAJOeoI7GDAApJx99+PJ9VtivvJBhbUn+Ckdk0rF6WXS7TRTf6RDqkRrpng9J3TBl/vVXctjlFhuPN/TDcolzIe35vstN+1VFYWLGz5IhKMzdLluuFSsoUFbbJUcmfUpG6no+udzkVjYruimfASgAlLZbCI4NAtkAJ/J2ytYbJUqc1QKAbghO13XR3jfypwAph9gwbKejw1yp8/C9LBxOX6nzjdANU66VbpjyVE2nwHF/FseDzL9WWFZv1RjSUjA66fWOT839M9fXnz4+f5v1AA56bo5H3RSAo86MpJL6AefrARFY0GQgpMm7Lf1iXUl9H4dqt621K9Ep1SqO+LNJCdarUqoiFI400Ku/hGqx1vkb3iELIMm4QLQAAAAASUVORK5CYII=", kl = {
-  adyen: $s,
-  airtable: el,
-  apollo: ja,
-  "apollo io": ja,
-  apolloio: ja,
-  brex: tl,
-  "bright layer": wn,
-  brightlayer: wn,
-  census: al,
-  clearbit: il,
-  "dbt labs": bn,
-  dbt: bn,
-  figma: nl,
-  gusto: rl,
-  hex: ol,
-  linear: sl,
-  mercury: ll,
-  "northstar ai": cl,
-  "northstar dev": dl,
-  notion: ul,
-  orbitgrid: hl,
-  paypal: pl,
-  plaid: gl,
-  ramp: ml,
-  retool: fl,
-  rippling: wl,
-  sequoia: bl,
-  square: yl,
-  "stanford gsb": yn,
-  stanford: yn,
-  stripe: xl,
-  tesla: vl,
-  unify: xn,
-  "unify gtm": xn,
-  vercel: _l,
-  webflow: Al,
-  wharton: Sl
-}, q = "https://i.pravatar.cc/96", Cl = {
-  "andre park": `${q}?img=52`,
-  "ava garcia": `${q}?img=46`,
-  "chadley dupre": `${q}?img=59`,
-  "chandler bree": `${q}?img=11`,
-  "clara wong": `${q}?img=32`,
-  "david kim": `${q}?img=33`,
-  "ellen nelle": `${q}?img=47`,
-  "evan brooks": `${q}?img=8`,
-  "fatima ali": `${q}?img=45`,
-  "jamie chen": `${q}?img=12`,
-  "jules meyer": `${q}?img=14`,
-  "leo martin": `${q}?img=56`,
-  "liam price": `${q}?img=6`,
-  "marcus reed": `${q}?img=53`,
-  "maya patel": `${q}?img=5`,
-  "miles kibble iii": `${q}?img=15`,
-  "miles kibbles iii": `${q}?img=15`,
-  "mr kibbles iii": `${q}?img=15`,
-  "natalie dank": `${q}?img=49`,
-  "nina kapoor": `${q}?img=31`,
-  "noah singh": `${q}?img=4`,
-  "owen lee": `${q}?img=7`,
-  "patrick bateman": `${q}?img=68`,
-  "priya rao": `${q}?img=21`,
-  "rachel cho": `${q}?img=44`,
-  "sam hollis": `${q}?img=13`,
-  "sara nelson": `${q}?img=41`,
-  "zoe carter": `${q}?img=23`
+function Nn(r) {
+  return r.trim().charAt(0) || "?";
+}
+function li(r) {
+  const e = Ka(r).replace(/\s+/g, "");
+  return e ? e.includes("unify") || e.includes("onprem") ? "on-prem" : e.includes("waterfall") ? "waterfall" : uc.get(e) ?? e : "unknown";
+}
+function Ka(r) {
+  return r.toLowerCase().replace(/\b(inc|llc|ltd|corp|corporation|company)\b\.?/g, "").replace(/[^a-z0-9]+/g, " ").trim();
+}
+function ko(r) {
+  return r.replace(/\s+/g, "");
+}
+const B = "https://i.pravatar.cc/96", hc = {
+  "andre park": `${B}?img=52`,
+  "ava garcia": `${B}?img=46`,
+  "chadley dupre": `${B}?img=59`,
+  "chandler bree": `${B}?img=11`,
+  "clara wong": `${B}?img=32`,
+  "david kim": `${B}?img=33`,
+  "ellen nelle": `${B}?img=47`,
+  "evan brooks": `${B}?img=8`,
+  "fatima ali": `${B}?img=45`,
+  "jamie chen": `${B}?img=12`,
+  "jules meyer": `${B}?img=14`,
+  "leo martin": `${B}?img=56`,
+  "liam price": `${B}?img=6`,
+  "marcus reed": `${B}?img=53`,
+  "maya patel": `${B}?img=5`,
+  "miles kibble iii": `${B}?img=15`,
+  "miles kibbles iii": `${B}?img=15`,
+  "mr kibbles iii": `${B}?img=15`,
+  "natalie dank": `${B}?img=49`,
+  "nina kapoor": `${B}?img=31`,
+  "noah singh": `${B}?img=4`,
+  "owen lee": `${B}?img=7`,
+  "patrick bateman": `${B}?img=68`,
+  "priya rao": `${B}?img=21`,
+  "rachel cho": `${B}?img=44`,
+  "sam hollis": `${B}?img=13`,
+  "sara nelson": `${B}?img=41`,
+  "zoe carter": `${B}?img=23`
 };
-function eo(r) {
+function So(r) {
   return r.trim().toLowerCase().replace(/\s+/g, " ");
 }
-function Tl(r) {
-  const e = eo(r).replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-  return e ? `${q}?u=${encodeURIComponent(e)}` : "";
+function pc(r) {
+  const e = So(r).replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  return e ? `${B}?u=${encodeURIComponent(e)}` : "";
 }
-function Oa(r, e) {
-  const t = eo(r), a = e?.trim() || void 0;
-  return Cl[t] ?? a ?? Tl(r);
+function Xa(r, e) {
+  const t = So(r), a = e?.trim() || void 0;
+  return hc[t] ?? a ?? pc(r);
 }
-const to = `
+const Co = `
 <svg viewBox="0 0 18 11" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
   <path d="M5.71835 3.84074V0H0V5.12789C0 7.97387 2.13981 10.9988 6.10463 10.9988H8.4998V5.49938L7.40298 5.48406C6.46808 5.4708 5.71706 4.7386 5.71706 3.8395L5.71835 3.84074Z" fill="currentColor"/>
   <path d="M11.2814 7.15899V10.9997H16.9998V5.87225C16.9998 3.02586 14.86 0.000976562 10.8952 0.000976562H8.5V5.50036L9.59682 5.51568C10.5317 5.52893 11.2827 6.26113 11.2827 7.16023L11.2814 7.15899Z" fill="currentColor"/>
 </svg>`;
-function vn(r) {
+function Fn(r) {
   const e = document.createElement("template");
-  e.innerHTML = to.trim();
+  e.innerHTML = Co.trim();
   const t = e.content.firstElementChild;
   return t.classList.add(r), t;
 }
-const El = "/media/chat-background.png", Ml = ["/media/", "/data-logos/", "media/", "data-logos/"], Qi = (r) => r;
-function Pl(r) {
-  const e = Dl(r.assetBaseUrl), t = Il(r.assetUrlMap);
+const gc = "/media/chat-background.png", mc = ["/media/", "/data-logos/", "media/", "data-logos/"], cn = (r) => r;
+function wc(r) {
+  const e = bc(r.assetBaseUrl), t = Ac(r.assetUrlMap);
   return (a) => {
     const i = a.trim();
     if (!i) return a;
-    const n = ql(i, t);
-    return n || (!e || !Ll(i) ? a : `${e}/${i.replace(/^\/+/, "")}`);
+    const n = yc(i, t);
+    return n || (!e || !vc(i) ? a : `${e}/${i.replace(/^\/+/, "")}`);
   };
 }
-function Rl(r, e) {
-  r.style.setProperty("--wa-media-image", Ol(e(El)));
+function fc(r, e) {
+  r.style.setProperty("--wa-media-image", _c(e(gc)));
 }
-function Dl(r) {
+function bc(r) {
   return r?.trim().replace(/\/+$/, "") ?? "";
 }
-function Il(r) {
+function Ac(r) {
   const e = /* @__PURE__ */ new Map();
   if (!r) return e;
   for (const [t, a] of Object.entries(r)) {
     const i = t.trim(), n = a.trim();
     if (!i || !n) continue;
-    e.set(i, n), e.set(xa(i), n);
+    e.set(i, n), e.set(Ia(i), n);
     const o = i.replace(/^\/+/, "");
-    e.set(o, n), e.set(`/${o}`, n), e.set(xa(o), n), e.set(`/${xa(o).replace(/^\/+/, "")}`, n);
+    e.set(o, n), e.set(`/${o}`, n), e.set(Ia(o), n), e.set(`/${Ia(o).replace(/^\/+/, "")}`, n);
   }
   return e;
 }
-function ql(r, e) {
-  return e.get(r) ?? e.get(xa(r)) ?? "";
+function yc(r, e) {
+  return e.get(r) ?? e.get(Ia(r)) ?? "";
 }
-function xa(r) {
+function Ia(r) {
   try {
     return decodeURI(r);
   } catch {
     return r;
   }
 }
-function Ll(r) {
-  return Nl(r) || r.startsWith("//") || r.startsWith("#") ? !1 : Ml.some((e) => r.startsWith(e));
+function vc(r) {
+  return xc(r) || r.startsWith("//") || r.startsWith("#") ? !1 : mc.some((e) => r.startsWith(e));
 }
-function Nl(r) {
+function xc(r) {
   return /^[a-z][a-z0-9+.-]*:/i.test(r);
 }
-function Ol(r) {
+function _c(r) {
   return `url("${r.replace(/\\/g, "\\\\").replace(/"/g, '\\"').replace(/\n/g, "\\a ")}")`;
 }
-const Bl = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="52 42 88 66">
+const kc = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="52 42 88 66">
 <path fill="#4285f4" d="M58 108h14V74L52 59v43c0 3.32 2.69 6 6 6"/>
 <path fill="#34a853" d="M120 108h14c3.32 0 6-2.69 6-6V59l-20 15"/>
 <path fill="#fbbc04" d="M120 48v26l20-15v-8c0-7.42-8.47-11.65-14.4-7.2"/>
 <path fill="#ea4335" d="M72 74V48l24 18 24-18v26L96 92"/>
 <path fill="#c5221f" d="M52 51v8l20 15V48l-5.6-4.2c-5.94-4.45-14.4-.22-14.4 7.2"/>
-</svg>`, Fl = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="60 90.4 570.02 539.67">
+</svg>`, Sc = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="60 90.4 570.02 539.67">
 <defs>
 <linearGradient id="linear0" gradientUnits="userSpaceOnUse" x1="9.98908" y1="22.364901" x2="30.932199" y2="9.37495" gradientTransform="matrix(15,0,0,15,0,0)">
 <stop offset="0" style="stop-color:rgb(12.54902%,65.490196%,98.039216%);stop-opacity:1;"/>
@@ -2290,11 +2295,11 @@ const Bl = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="52 42 88 66">
 <path style=" stroke:none;fill-rule:nonzero;fill:rgb(100%,100%,100%);fill-opacity:1;" d="M 179.332031 535.847656 C 159.5625 535.847656 143.332031 529.472656 130.640625 516.71875 C 117.953125 503.964844 111.605469 487.320312 111.605469 466.789062 C 111.605469 445.105469 118.046875 427.570312 130.929688 414.179688 C 143.8125 400.785156 160.679688 394.089844 181.53125 394.089844 C 201.234375 394.089844 217.273438 400.5 229.644531 413.316406 C 242.082031 426.136719 248.296875 443.035156 248.296875 464.015625 C 248.296875 485.566406 241.855469 502.945312 228.976562 516.144531 C 216.15625 529.28125 199.609375 535.847656 179.332031 535.847656 Z M 179.902344 508.78125 C 190.679688 508.78125 199.355469 504.984375 205.921875 497.398438 C 212.492188 489.808594 215.773438 479.253906 215.773438 465.734375 C 215.773438 451.640625 212.585938 440.675781 206.210938 432.832031 C 199.832031 424.988281 191.320312 421.066406 180.671875 421.066406 C 169.699219 421.066406 160.867188 425.113281 154.171875 433.214844 C 147.476562 441.246094 144.128906 451.898438 144.128906 465.160156 C 144.128906 478.617188 147.476562 489.265625 154.171875 497.109375 C 160.867188 504.890625 169.445312 508.78125 179.902344 508.78125 Z M 179.902344 508.78125 "/>
 </g>
 </svg>`;
-function ao(r) {
+function To(r) {
   return typeof r.initialSequenceIndex == "number" && Number.isFinite(r.initialSequenceIndex) ? Math.min(Math.max(0, Math.round(r.initialSequenceIndex)), Math.max(0, r.sequences.length - 1)) : Math.max(0, Math.floor((r.sequences.length - 1) / 2));
 }
-function io(r, e) {
-  const t = ao(r), a = [];
+function Eo(r, e) {
+  const t = To(r), a = [];
   for (let i = t + 1; i < r.sequences.length && a.length < e; i += 1)
     a.push(i);
   for (let i = t - 1; i >= 0 && a.length < e; i -= 1)
@@ -2302,7 +2307,7 @@ function io(r, e) {
   for (; a.length < e; ) a.push(t);
   return a;
 }
-const zl = [
+const Po = "chatbot-stories:pause-for-thinking-interaction", Cc = [
   "wa-message--component",
   ...[
     "table",
@@ -2321,26 +2326,26 @@ const zl = [
   ].map(
     (r) => `wa-message--${r}`
   )
-], Ul = 1.28, S = (r) => Number((r * Ul).toFixed(3)), Hl = [3, 3, 3], Gl = {
+], Tc = 1.28, x = (r) => Number((r * Tc).toFixed(3)), Ec = [3, 3, 3], Pc = {
   "David Kim": "+1 (917) 234-3381"
-}, ie = {
-  pressDuration: S(0.09),
-  releaseDuration: S(0.2),
-  loadingHoldDuration: S(0.78),
-  successHoldDuration: S(0.12),
-  learningRevealDuration: S(0.34),
+}, se = {
+  pressDuration: x(0.09),
+  releaseDuration: x(0.2),
+  loadingHoldDuration: x(0.78),
+  successHoldDuration: x(0.12),
+  learningRevealDuration: x(0.34),
   detailSwapDuration: 0.16,
   readyPopUpDuration: 0.12,
   readyPopSettleDuration: 0.22,
-  settleHold: S(0.24)
-}, _n = "Learning your style", Vl = "Voice calibrated", An = "73 tone & tactic rules defined", Ka = [
-  { detail: "Analyzing vocabulary", progress: 31, duration: 1.05, hold: 0.38 },
+  settleHold: x(0.24)
+}, Un = "Learning your style", Mc = "Voice calibrated", zn = "73 tone & tactic rules defined", ci = [
+  { detail: "Analyzing tone", progress: 31, duration: 1.05, hold: 0.38 },
   { detail: "Investigating wins", progress: 64, duration: 1.2, hold: 0.46 },
   { detail: "Figuring out your voice", progress: 100, duration: 1.15, hold: 0.76 }
-], Wl = {
-  gmail: qn(Bl),
-  outlook: qn(Fl)
-}, Yl = [
+], Dc = {
+  gmail: $n(kc),
+  outlook: $n(Sc)
+}, Rc = [
   82,
   86,
   94,
@@ -2358,7 +2363,7 @@ const zl = [
   38,
   0,
   4
-], Ql = /* @__PURE__ */ new Set([5, 8, 10, 16]), jl = [
+], Ic = /* @__PURE__ */ new Set([5, 8, 10, 16]), qc = [
   "M9.62137 135.631C9.62137 135.631 -4.10678 106.019 7.70875 69.6796",
   "M11.3787 60.2136C11.3787 60.2136 34.0777 2.91262 102.427 2.91262",
   "M197.058 103.718C197.058 103.718 200.942 20.068 113.252 3.7767",
@@ -2376,125 +2381,170 @@ const zl = [
   "M77.6602 76.1553C73.8544 79.6117 68.8738 85.2524 67.2233 93.1456C65.4466 101.621 68.7087 107.049 70.4854 118.282C72.1359 128.767 71.2913 136.621 70.2524 146.204C69.1748 156.126 66.1553 171.942 56.5631 190.359",
   "M71.9224 196.039C76.0777 187.456 80.7088 175.825 83.7476 161.553C85.7767 152.019 88.4078 139.67 87.0097 125.252C86.4758 119.748 86.233 114.223 85.6117 108.728C84.4758 98.699 83.6214 95.9418 85.3787 92.2039C87.5728 87.5243 92.5437 84.0874 97.9418 83.3592C105.107 82.3981 111.67 86.4078 114.466 91.2718C114.913 92.0485 115.398 93.0874 116.563 99.6505C117.583 105.417 118.126 108.476 118.66 114.311C119.184 120.039 119.651 127.816 119.505 137.311",
   "M98.1747 172.204C100.495 161.476 102.466 148.019 102.592 132.466C102.709 118.631 101.34 106.495 99.5631 96.5437"
-], Kl = {
-  duration: S(0.44),
+], Bc = {
+  duration: x(0.44),
   ease: "back.out(1.7)"
-}, Sn = {
+}, Hn = {
   startOverlap: "-=0.08",
   charsPerSecond: 54,
   minDuration: 0.36,
   maxDuration: 1.55
-}, Mt = {
+}, rt = {
   startOverlap: "-=0.08",
   charsPerSecond: 86,
   labelCharsPerSecond: 72,
   minDuration: 0.28,
   maxDuration: 1.1
-}, Xl = {
-  charsPerSecond: Mt.labelCharsPerSecond,
-  minDuration: Mt.minDuration,
-  maxDuration: Mt.maxDuration
-}, Jl = {
+}, Lc = {
+  charsPerSecond: rt.labelCharsPerSecond,
+  minDuration: rt.minDuration,
+  maxDuration: rt.maxDuration
+}, Oc = {
   charsPerSecond: 62,
   minDuration: 0.18,
   maxDuration: 0.42
-}, kn = {
-  detailOffsetY: 0,
-  duration: S(0.24)
-}, Zl = "height,minHeight,overflow,opacity,visibility,y,transform", ve = {
-  duration: S(0.34),
-  returnDuration: S(0.38),
-  ease: "power2.inOut"
 }, Ye = {
-  y: 0,
-  duration: S(0.26),
+  entranceStagger: x(0.055),
+  minActiveHold: x(0.34),
+  singleActiveHold: x(1.55),
+  defaultActiveWindow: x(1.36),
+  configuredStepActiveRatio: 0.56,
+  maxActiveWindow: x(4.6),
+  finishFactors: [0.46, 0.82, 0.58, 1, 0.7, 0.52, 0.94, 0.76, 0.64, 0.88]
+}, Z = {
+  faviconDropY: 5,
+  faviconDropScale: 0.78,
+  faviconDropDuration: x(0.12),
+  checkStartY: -4,
+  checkStartScale: 0.66,
+  checkPopScale: 1.16,
+  checkPopDuration: x(0.2),
+  checkSettleDuration: x(0.1),
+  checkOverlap: "-=0.065"
+}, Aa = {
+  detailOffsetY: 0,
+  duration: x(0.24)
+}, Nc = "display,height,marginTop,minHeight,overflow,opacity,visibility,y,transform", Se = {
+  duration: x(0.34),
+  returnDuration: x(0.38),
   ease: "power2.inOut"
-}, Xa = {
-  templateHold: S(0.54),
-  progressDuration: S(3.9),
-  finalHold: S(0.34)
-}, ut = {
-  duration: S(2.2),
-  finalHold: S(0.48),
-  title: (r, e) => `Enrolling ${r} / ${e}`,
-  label: "Queuing personalized sequences",
-  detail: "Scheduling email, social, and call steps for every selected visitor."
-}, Cn = {
-  railCenterDuration: S(0.34),
+}, Vn = x(0.08), De = {
+  y: 0,
+  duration: x(0.26),
+  ease: "power2.inOut"
+}, Rt = {
+  duration: x(0.18),
+  ease: "power2.out"
+}, Kt = {
+  templateHold: x(0.54),
+  progressDuration: x(3.9),
+  finalHold: x(0.34)
+}, te = {
+  duration: x(2.2),
+  finalHold: x(0.48),
+  title: "Enrolling list in sequence",
+  completeTitle: "Enrolled list in sequence",
+  queueHold: x(0.44),
+  mailboxHold: x(0.5),
+  progressDelay: x(0.04),
+  queueLabel: "Queuing personalized sequences",
+  queueDetail: "Scheduling email, social, and call steps for every selected visitor.",
+  mailboxLabel: "Selecting the best mailboxes for deliverability.",
+  mailboxDetail: "Switching out recently used mailboxes.",
+  sendLabel: (r, e) => `Sending the first email to ${r}/${e}`
+}, $ = {
+  iconSize: 16,
+  launchSplit: 0.18,
+  launchDuration: x(0.18),
+  fallDurationMin: x(0.78),
+  fallDurationRange: x(0.34),
+  apexYMin: 42,
+  apexYRange: 58,
+  launchXRange: 24,
+  driftXRange: 132,
+  fadeMargin: 24,
+  exitOvershootMin: 56,
+  exitOvershootRange: 64,
+  minExitY: 170,
+  minFadeStartY: 112,
+  scaleRange: 0.22,
+  rotationRange: 18
+}, di = {
+  railCenterDuration: x(0.34),
   railCenterEase: "power3.out"
-}, re = {
+}, ce = {
   compactWidth: 96,
   compactHeight: 30,
   collapsedWidth: 0,
   collapsedHeight: 0,
-  showDuration: S(0.42),
-  hideDuration: S(0.32),
-  contentShowDelay: S(0.1),
-  contentHideDuration: S(0.1),
-  threadPushDuration: S(0.38),
+  showDuration: x(0.42),
+  hideDuration: x(0.32),
+  contentShowDelay: x(0.1),
+  contentHideDuration: x(0.1),
+  threadPushDuration: x(0.38),
   showEase: "expo.out",
   hideEase: "power3.in",
   contentEase: "power2.out",
   threadPushEase: "power3.out",
   threadGap: 44
-}, $l = "left,right,bottom,width,height,minHeight,paddingTop,paddingRight,paddingBottom,paddingLeft,borderWidth,gap", Ja = {
+}, Fc = "left,right,bottom,width,height,minHeight,paddingTop,paddingRight,paddingBottom,paddingLeft,borderWidth,gap", ui = {
   paddingTop: "",
   paddingRight: "",
   paddingBottom: "",
   paddingLeft: "",
   borderWidth: "",
   gap: ""
-}, Ot = {
+}, Xt = {
   scrollOutRatio: 1.02,
   minScrollOut: 420,
-  duration: S(0.58),
+  duration: x(0.58),
   threadOverlap: "-=0.36"
-}, Tn = 110, X = {
-  revealDuration: S(0.42),
+}, Gn = 110, K = {
+  revealDuration: x(0.42),
   revealEase: "power3.inOut",
   componentFollowDelay: 0.12,
   componentRevealDelay: 0.16,
-  followDuration: S(0.24),
+  followDuration: x(0.24),
   followEase: "power2.out"
-}, ht = {
+}, vt = {
   scrollDistance: 160,
   offsetY: 78,
-  scrollDuration: S(0.36),
-  contentDuration: S(0.42),
+  scrollDuration: x(0.36),
+  contentDuration: x(0.42),
   contentDelay: 0.04,
   contentEase: "power3.in",
   stagger: 0.015
-}, ec = {
-  cardDuration: S(0.28)
-}, En = 4, tc = "-=0.22", Mn = {
+}, Uc = {
+  cardDuration: x(0.28)
+}, Qn = 4, zc = "-=0.22", Yn = {
   from: { autoAlpha: 0, y: 5 },
   to: {
     autoAlpha: 1,
     y: 0,
-    duration: S(0.24),
+    duration: x(0.24),
     ease: "power2.out",
     stagger: 0.035
   }
-}, ac = [
+}, Hc = [
   ["CRM", "Core Data", "Ad Intelligence"],
   ["Web Intent", "Product Analytics", "SMB Data", "Ecommerce"],
   ["Enrichment", "Company / Fundraising", "Tech Stack"],
   ["Web / SEO", "Relationships", "And more"]
-], sa = {
+], ya = {
   contentWidth: 1881,
   height: 1280
-}, ic = 96, Pn = ".wa-cursor-file, .wa-file-landing-clone, .wa-file-landing-label, .wa-csv-drop", Rn = "[data-marketing-data-sources-grid]", nc = "[data-data-table]", Za = "[data-table-page-button]", $a = "[data-table-page-range]", Dn = "[data-sequence-engagement]", rc = "[data-sequence-card]", oc = "[data-sequence-person-card]", In = "[data-sequence-people-rail]", j = {
-  duration: S(0.12),
-  incomingLag: S(0.1),
-  rowStagger: S(0.03),
-  columnStagger: S(0.07),
-  totalDuration: S(0.95),
+}, Vc = 96, Wn = ".wa-cursor-file, .wa-file-landing-clone, .wa-file-landing-label, .wa-csv-drop, .wa-enrollment-mail", jn = "[data-marketing-data-sources-grid]", Kn = "[data-data-table]", hi = "[data-table-page-button]", pi = "[data-table-page-range]", Xn = "[data-sequence-engagement]", Gc = "[data-sequence-card]", Qc = "[data-sequence-person-card]", Jn = "[data-sequence-people-rail]", X = {
+  duration: x(0.12),
+  incomingLag: x(0.1),
+  rowStagger: x(0.03),
+  columnStagger: x(0.07),
+  totalDuration: x(0.95),
   incomingY: -7,
   outgoingY: 7
-}, la = {
-  in: f.parseEase("power2.out"),
-  out: f.parseEase("power2.in")
-}, sc = "https://cdn.jsdelivr.net/npm/simple-icons@latest/icons", lc = "https://www.google.com/s2/favicons", cc = {
+}, va = {
+  in: m.parseEase("power2.out"),
+  out: m.parseEase("power2.in")
+}, Yc = "https://cdn.jsdelivr.net/npm/simple-icons@latest/icons", Wc = "https://www.google.com/s2/favicons", jc = {
   adyen: "adyen",
   airtable: "airtable",
   brex: "brex",
@@ -2514,12 +2564,9 @@ const zl = [
   tesla: "tesla",
   vercel: "vercel",
   webflow: "webflow"
-}, dc = {
+}, Kc = {
   adyen: "adyen.com",
   airtable: "airtable.com",
-  apollo: "apollo.io",
-  "apollo io": "apollo.io",
-  apolloio: "apollo.io",
   brex: "brex.com",
   "bright layer": "brightlayer.com",
   brightlayer: "brightlayer.com",
@@ -2541,8 +2588,8 @@ const zl = [
   orbitgrid: "orbitgrid.com",
   paypal: "paypal.com",
   plaid: "plaid.com",
+  pylon: "usepylon.com",
   posthog: "posthog.com",
-  ramp: "ramp.com",
   retool: "retool.com",
   rippling: "rippling.com",
   salesforce: "salesforce.com",
@@ -2554,34 +2601,78 @@ const zl = [
   unify: "unifygtm.com",
   "unify gtm": "unifygtm.com",
   vercel: "vercel.com",
+  waterfall: "waterfall.com",
   webflow: "webflow.com"
-}, ei = {
+}, gi = {
   offscreenMargin: 280,
-  pullInDuration: S(0.22),
+  pullInDuration: x(0.22),
   pullInEase: "power2.out"
-}, Ee = {
-  duration: S(0.34),
+}, Le = {
+  duration: x(0.34),
   stagger: 0.035,
   ease: "power3.out",
   rotations: [2, -5, 6, -8],
   shadowY: 16,
   shadowBlur: 28,
   shadowAlpha: 0.18
-}, Me = {
-  rowStartHold: S(0.36),
-  serviceRevealDuration: S(0.32),
-  serviceLoadDuration: S(1.36),
-  serviceLoadVariance: S(0.28),
-  serviceSettleDuration: S(0.28),
-  rowCompleteHold: S(0.32),
-  rowOffsets: [0, S(0.16), S(0.28)]
-}, Pe = {
+}, Oe = {
+  rowStartHold: x(0.36),
+  serviceRevealDuration: x(0.32),
+  serviceLoadDuration: x(1.36),
+  serviceLoadVariance: x(0.28),
+  serviceSettleDuration: x(0.28),
+  rowCompleteHold: x(0.32),
+  rowOffsets: [0, x(0.16), x(0.28)]
+}, Xc = [
+  {
+    label: "Work email",
+    state: "complete",
+    chips: [
+      { label: "Unify", service: "on-prem", state: "complete" },
+      { label: "Wiza", service: "wiza", state: "pending" },
+      { label: "ContactOut", service: "contactout", state: "pending" },
+      { label: "Prospeo", service: "prospeo", state: "pending" },
+      { label: "Waterfall", service: "waterfall", state: "pending" },
+      { label: "FullEnrich", service: "fullenrich", state: "pending" }
+    ]
+  },
+  {
+    label: "Phone number",
+    state: "complete",
+    chips: [
+      { label: "Unify", service: "on-prem", state: "complete" },
+      { label: "ContactOut", service: "contactout", state: "pending" },
+      { label: "Forager", service: "forager", state: "pending" },
+      { label: "Wiza", service: "wiza", state: "pending" },
+      { label: "Prospeo", service: "prospeo", state: "pending" },
+      { label: "FullEnrich", service: "fullenrich", state: "pending" }
+    ]
+  },
+  {
+    label: "Social profile",
+    state: "complete",
+    chips: [
+      { label: "Unify", service: "on-prem", state: "failed" },
+      { label: "ContactOut", service: "contactout", state: "complete" },
+      { label: "Prospeo", service: "prospeo", state: "pending" },
+      { label: "Wiza", service: "wiza", state: "pending" },
+      { label: "Forager", service: "forager", state: "pending" }
+    ]
+  }
+], Zn = {
+  contactout: "M4.2 10.7V5.3h7.6v5.4H4.2Zm1.2-6.8h1.2m2.8 0h1.2M6 7.9h.1m3.8 0h.1",
+  default: "M3.3 4.2 8 2l4.7 2.2M3.3 7.1 8 4.9l4.7 2.2M3.3 10 8 7.8l4.7 2.2M8 7.8v5.4",
+  fullenrich: "M3.1 9.9a5 5 0 1 1 9.8 0M5.2 8.6a2.8 2.8 0 1 1 5.6 0M2.9 11.8h10.2",
+  prospeo: "m8 2.7 4.4 2.5v5.6L8 13.3l-4.4-2.5V5.2L8 2.7Zm0 0v5.2m4.4-2.7L8 7.9 3.6 5.2",
+  waterfall: "m3.2 6.2 3.1 3 1.7-1.6 1.7 1.6 3.1-3",
+  wiza: "M8 2.4 5.2 11.8h5.6L8 2.4Zm-3.8 9.4h7.6"
+}, Ne = {
   tableRow: {
     from: { autoAlpha: 0, y: 7 },
     to: {
       autoAlpha: 1,
       y: 0,
-      duration: S(0.24),
+      duration: x(0.24),
       ease: "power2.out",
       stagger: 0.045
     }
@@ -2591,7 +2682,7 @@ const zl = [
     to: {
       autoAlpha: 1,
       y: 0,
-      duration: S(0.2),
+      duration: x(0.2),
       ease: "power2.out",
       stagger: 0.045
     }
@@ -2601,7 +2692,7 @@ const zl = [
     to: {
       autoAlpha: 1,
       y: 0,
-      duration: S(0.24),
+      duration: x(0.24),
       ease: "power2.out",
       stagger: 0.045
     }
@@ -2617,7 +2708,7 @@ const zl = [
       autoAlpha: 1,
       y: 0,
       scale: 1,
-      duration: S(0.28),
+      duration: x(0.28),
       ease: "power2.out",
       stagger: 0.05
     }
@@ -2628,7 +2719,7 @@ const zl = [
       autoAlpha: 1,
       y: 0,
       scale: 1,
-      duration: S(0.24),
+      duration: x(0.24),
       ease: "power2.out",
       stagger: 0.05
     }
@@ -2644,7 +2735,7 @@ const zl = [
       autoAlpha: 1,
       y: 0,
       scale: 1,
-      duration: S(0.44),
+      duration: x(0.44),
       ease: "back.out(1.35)",
       stagger: 0.16
     }
@@ -2654,18 +2745,18 @@ const zl = [
     to: {
       autoAlpha: 1,
       y: 0,
-      duration: S(0.22),
+      duration: x(0.22),
       ease: "power2.out",
       stagger: 0.045
     },
     position: "-=0.18"
   }
 };
-class uc {
+class Jc {
   constructor(e, t = {}) {
-    this.root = e, this.resolveAssetUrl = t.resolveAssetUrl ?? Qi, this.stage = this.required(".wa-stage"), this.browserWindow = this.required(".wa-window"), this.chatShell = this.required("[data-chat-shell]"), this.chatBody = this.required(".wa-chat-shell__body"), this.thread = this.required("[data-chat-thread]"), this.composer = this.required("[data-chat-input]"), this.composerText = this.required("[data-composer-text]"), this.composerContents = Array.from(this.composer.children).filter(
+    this.root = e, this.resolveAssetUrl = t.resolveAssetUrl ?? cn, this.stage = this.required(".wa-stage"), this.browserWindow = this.required(".wa-window"), this.chatShell = this.required("[data-chat-shell]"), this.chatBody = this.required(".wa-chat-shell__body"), this.thread = this.required("[data-chat-thread]"), this.composer = this.required("[data-chat-input]"), this.composerText = this.required("[data-composer-text]"), this.composerContents = Array.from(this.composer.children).filter(
       (a) => a instanceof HTMLElement
-    ), this.chatShell.addEventListener("click", this.handleDataTableControlClick), this.signupScene = this.required("[data-signup-scene]"), this.signupLogo = this.required("[data-signup-logo-target]"), this.signupEmail = this.required("[data-signup-email]"), this.signupSubmit = this.required("[data-signup-submit]"), this.status = this.root.querySelector("[data-chat-status]"), this.prefersReducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? !1, this.removeElements("[data-thinking], [data-research-steps], [data-result-grid]"), this.removeElements(Pn), this.clearMarketingPanels(), this.observeThreadContentFit();
+    ), this.chatShell.addEventListener("click", this.handleChatShellClick), this.signupScene = this.required("[data-signup-scene]"), this.signupLogo = this.required("[data-signup-logo-target]"), this.signupEmail = this.required("[data-signup-email]"), this.signupSubmit = this.required("[data-signup-submit]"), this.status = this.root.querySelector("[data-chat-status]"), this.prefersReducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? !1, this.removeElements("[data-thinking], [data-research-steps], [data-result-grid]"), this.removeElements(Wn), this.clearMarketingPanels(), this.observeThreadContentFit();
   }
   root;
   stage;
@@ -2701,26 +2792,64 @@ class uc {
   threadContentFitFrame = null;
   threadContentResizeObserver = null;
   threadContentMutationObserver = null;
+  maxVisibleThreadContentHeight = 0;
   windowSceneMeasure = null;
-  handleDataTableControlClick = (e) => {
-    const t = this.findDataTablePageButton(e.target);
-    if (!t) return;
-    const a = this.getDataTablePageButtonRuntime(t);
+  handleChatShellClick = (e) => {
+    if (this.handleThinkingToggleClick(e)) return;
+    const t = this.findDataTableActionButton(e.target);
+    if (t) {
+      e.preventDefault(), this.selectDataTableActionButton(t, { animate: !0 });
+      return;
+    }
+    const a = this.findDataTablePageButton(e.target);
     if (!a) return;
-    e.preventDefault(), this.updateDataTablePageControlsForTable(a.table, a.page, t.dataset.pageRange ?? null), this.activeTablePageTimelines.get(a.tableId)?.kill();
-    const i = this.dataTablePage(a.tableId, a.page, {
+    const i = this.getDataTablePageButtonRuntime(a);
+    if (!i) return;
+    e.preventDefault(), this.updateDataTablePageControlsForTable(i.table, i.page, i.pageRange), this.activeTablePageTimelines.get(i.tableId)?.kill();
+    const n = this.dataTablePage(i.tableId, i.page, {
       updateExpected: !1,
-      initialPage: a.initialPage,
-      initialRangeText: a.initialRangeText
+      initialPage: i.initialPage,
+      initialRangeText: i.initialRangeText
     });
-    this.activeTablePageTimelines.set(a.tableId, i), i.eventCallback("onComplete", () => {
-      this.activeTablePageTimelines.get(a.tableId) === i && this.activeTablePageTimelines.delete(a.tableId);
+    this.activeTablePageTimelines.set(i.tableId, n), n.eventCallback("onComplete", () => {
+      this.activeTablePageTimelines.get(i.tableId) === n && this.activeTablePageTimelines.delete(i.tableId);
     });
   };
+  handleThinkingToggleClick(e) {
+    if (!(e.target instanceof Element)) return !1;
+    const t = e.target.closest(".wa-thinking__chevron");
+    if (t) {
+      const o = t.closest(".wa-thinking");
+      return !o?.dataset.thinkingCollapsed || !this.ensurePausedForThinkingInteraction() ? !1 : (e.preventDefault(), e.stopPropagation(), this.toggleThinkingSteps(o), !0);
+    }
+    const a = e.target.closest(".wa-thinking");
+    if (a?.dataset.thinkingCollapsed)
+      return this.ensurePausedForThinkingInteraction() ? (e.preventDefault(), e.stopPropagation(), this.toggleThinkingSteps(a), !0) : !1;
+    const i = e.target.closest(".wa-research-step__chevron");
+    if (i) {
+      const o = i.closest(".wa-research-step");
+      return !o || o.dataset.stepState !== "complete" || !this.ensurePausedForThinkingInteraction() ? !1 : (e.preventDefault(), e.stopPropagation(), this.toggleThinkingStepDetail(o), !0);
+    }
+    const n = e.target.closest(".wa-research-step__label-row");
+    if (n) {
+      const o = n.closest(".wa-research-step");
+      return !o || o.dataset.stepState !== "complete" || !this.ensurePausedForThinkingInteraction() ? !1 : (e.preventDefault(), e.stopPropagation(), this.toggleThinkingStepDetail(o), !0);
+    }
+    return !1;
+  }
+  isPausedForThinkingInteraction() {
+    return this.root.dataset.storyPaused === "true" || this.root.dataset.chatHistoryPaused === "true";
+  }
+  ensurePausedForThinkingInteraction() {
+    return this.isPausedForThinkingInteraction() ? !0 : (this.root.dispatchEvent(new CustomEvent(Po, {
+      bubbles: !0,
+      cancelable: !0
+    })), this.isPausedForThinkingInteraction());
+  }
   reset() {
-    this.cancelScheduledScroll(), this.scrollTween?.kill(), this.scrollTween = null, this.clearTransientElements(), this.clearMarketingPanels(), this.messageIndex = 0, this.cardIndex = 0, this.composerText.textContent = "", f.killTweensOf([this.composer, this.composerText, ...this.composerContents, this.thread]), this.clearDataTableState(), this.clearSequencePersonTimelines(), this.signupEmail.textContent = "", this.setSignupEmailFilled(!1), this.status?.replaceChildren(document.createTextNode("Ready")), this.clearCustomResults(), this.clearThreadContentFitState(), this.thread.scrollTop = 0, f.set(this.thread, {
+    this.cancelScheduledScroll(), this.scrollTween?.kill(), this.scrollTween = null, this.clearTransientElements(), this.clearMarketingPanels(), this.messageIndex = 0, this.cardIndex = 0, this.composerText.textContent = "", m.killTweensOf([this.composer, this.composerText, ...this.composerContents, this.thread]), this.clearDataTableState(), this.clearSequencePersonTimelines(), this.signupEmail.textContent = "", this.setSignupEmailFilled(!1), this.status?.replaceChildren(document.createTextNode("Ready")), this.clearCustomResults(), this.clearThreadContentFitState(), this.thread.scrollTop = 0, m.set(this.thread, {
       clearProps: "maxHeight,minHeight,paddingTop,paddingBottom,borderWidth"
-    }), f.set(this.signupScene, { autoAlpha: 0, y: 0, scale: 1, display: "none" }), f.set([this.signupLogo, this.signupSubmit], { clearProps: "transform,opacity,visibility" }), f.set(this.thread, {
+    }), m.set(this.signupScene, { autoAlpha: 0, y: 0, scale: 1, display: "none" }), m.set([this.signupLogo, this.signupSubmit], { clearProps: "transform,opacity,visibility" }), m.set(this.thread, {
       autoAlpha: 1,
       y: 0,
       display: ""
@@ -2732,21 +2861,28 @@ class uc {
     this.requestThreadContentFitUpdate();
   }
   destroy() {
-    this.chatShell.removeEventListener("click", this.handleDataTableControlClick), this.threadContentFitFrame !== null && (cancelAnimationFrame(this.threadContentFitFrame), this.threadContentFitFrame = null), this.threadContentResizeObserver?.disconnect(), this.threadContentMutationObserver?.disconnect(), this.windowSceneMeasure?.remove(), this.windowSceneMeasure = null, this.clearDataTableState(), this.clearSequencePersonTimelines();
+    this.chatShell.removeEventListener("click", this.handleChatShellClick), this.threadContentFitFrame !== null && (cancelAnimationFrame(this.threadContentFitFrame), this.threadContentFitFrame = null), this.threadContentResizeObserver?.disconnect(), this.threadContentMutationObserver?.disconnect(), this.windowSceneMeasure?.remove(), this.windowSceneMeasure = null, this.clearDataTableState(), this.clearSequencePersonTimelines();
+  }
+  collapsePausedThinkingInteractions() {
+    this.queryElements(this.chatShell, '.wa-thinking[data-thinking-expanded="true"]').forEach((e) => {
+      this.setThinkingStepsExpanded(e, !1, { animate: !1 });
+    }), this.queryElements(this.chatShell, '.wa-research-step[data-detail-expanded="true"]').forEach((e) => {
+      this.setThinkingStepDetailExpanded(e, !1, { animate: !1 });
+    });
   }
   prepareStoryStart() {
     this.resetComposerPresentation();
   }
   animateStorySwitchExit() {
-    const e = this.getStorySwitchExitTargets(), t = f.timeline();
+    const e = this.getStorySwitchExitTargets(), t = m.timeline();
     if (this.stopScrollMotion(), !e.length)
       return t.to({}, { duration: 1e-3 });
-    const a = this.getThreadBottomScrollTarget(), i = Math.min(a, this.thread.scrollTop + ht.scrollDistance);
-    return f.killTweensOf(e), i > this.thread.scrollTop + 0.5 && t.to(
+    const a = this.getThreadBottomScrollTarget(), i = Math.min(a, this.thread.scrollTop + vt.scrollDistance);
+    return m.killTweensOf(e), i > this.thread.scrollTop + 0.5 && t.to(
       this.thread,
       {
         scrollTop: i,
-        duration: ht.scrollDuration,
+        duration: vt.scrollDuration,
         ease: "power2.inOut",
         overwrite: "auto"
       },
@@ -2754,43 +2890,43 @@ class uc {
     ), t.to(
       e,
       {
-        y: `-=${ht.offsetY}`,
+        y: `-=${vt.offsetY}`,
         autoAlpha: 0,
-        duration: ht.contentDuration,
-        ease: ht.contentEase,
-        stagger: ht.stagger,
+        duration: vt.contentDuration,
+        ease: vt.contentEase,
+        stagger: vt.stagger,
         overwrite: "auto"
       },
-      ht.contentDelay
+      vt.contentDelay
     ), t;
   }
   setStatus(e) {
-    const t = f.timeline();
+    const t = m.timeline();
     return this.status && t.to(this.status, {
       autoAlpha: 0,
       y: -3,
-      duration: S(0.12),
+      duration: x(0.12),
       ease: "power1.out"
     }).call(() => {
       this.status && (this.status.textContent = e);
     }).to(this.status, {
       autoAlpha: 1,
       y: 0,
-      duration: S(0.18),
+      duration: x(0.18),
       ease: "power2.out"
     }), t;
   }
   prepareSignup(e = "") {
-    this.signupEmail.textContent = e, this.setSignupEmailFilled(!!e), f.set(this.signupScene, {
+    this.signupEmail.textContent = e, this.setSignupEmailFilled(!!e), m.set(this.signupScene, {
       display: "grid",
       autoAlpha: 1,
       y: 0,
       scale: 1,
       pointerEvents: "auto"
-    }), f.set([this.signupLogo, this.signupSubmit], { clearProps: "transform,opacity,visibility" }), f.set([this.thread, this.composer], {
+    }), m.set([this.signupLogo, this.signupSubmit], { clearProps: "transform,opacity,visibility" }), m.set([this.thread, this.composer], {
       autoAlpha: 0,
       y: 34
-    }), f.set(this.composer, this.getComposerHiddenVars()), f.set(this.composerContents, this.getComposerContentsHiddenVars()), this.setComposerVisibleState(!1);
+    }), m.set(this.composer, this.getComposerHiddenVars()), m.set(this.composerContents, this.getComposerContentsHiddenVars()), this.setComposerVisibleState(!1);
   }
   setSignupEmailFilled(e) {
     this.signupScene.dataset.signupFilled = String(e), e || delete this.signupScene.dataset.signupSubmitted;
@@ -2798,7 +2934,7 @@ class uc {
   typeComposer(e, t = 1.1) {
     const a = { count: 0 };
     let i = -1;
-    return f.timeline().fromTo(
+    return m.timeline().fromTo(
       a,
       { count: 0 },
       {
@@ -2820,16 +2956,16 @@ class uc {
     );
   }
   sendComposerText() {
-    return f.timeline().to(this.composerText, {
+    return m.timeline().to(this.composerText, {
       autoAlpha: 0,
       y: -9,
-      duration: S(0.18),
+      duration: x(0.18),
       ease: "power2.out",
       overwrite: "auto"
     });
   }
   setComposerFocus(e) {
-    return f.timeline().to(
+    return m.timeline().to(
       {},
       {
         duration: 1e-3,
@@ -2838,10 +2974,10 @@ class uc {
     );
   }
   showComposer() {
-    const e = f.timeline(), t = this.measureComposerFullFrame(), a = this.getComposerCompactFrame(t);
+    const e = m.timeline(), t = this.measureComposerFullFrame(), a = this.getComposerCompactFrame(t);
     return e.set(this.composer, {
       ...this.getComposerHiddenVars(),
-      ...Ja,
+      ...ui,
       display: "grid",
       visibility: "visible",
       left: a.left,
@@ -2855,15 +2991,15 @@ class uc {
       opacity: 0,
       y: 0
     }).call(() => this.setComposerVisibleState(!0)).set(this.thread, {
-      paddingBottom: () => Math.max(Tn, this.getComposerThreadInsetForFrame(t))
-    }, 0).add(this.tweenThreadToBottom(re.threadPushDuration, re.threadPushEase), 0).to(this.composer, {
+      "--wa-thread-base-bottom-padding": () => `${Math.max(Gn, this.getComposerThreadInsetForFrame(t))}px`
+    }, 0).add(this.tweenThreadToBottom(ce.threadPushDuration, ce.threadPushEase), 0).to(this.composer, {
       left: t.left,
       bottom: t.bottom,
       width: t.width,
       height: t.height,
       minHeight: t.height,
-      duration: re.showDuration,
-      ease: re.showEase,
+      duration: ce.showDuration,
+      ease: ce.showEase,
       force3D: !0,
       autoRound: !1,
       overwrite: "auto",
@@ -2875,15 +3011,15 @@ class uc {
       }
     }, 0).to(this.composerContents, {
       opacity: 1,
-      duration: S(0.18),
-      ease: re.contentEase,
+      duration: x(0.18),
+      ease: ce.contentEase,
       overwrite: "auto"
-    }, re.contentShowDelay).call(() => this.pinThreadToBottom()), e;
+    }, ce.contentShowDelay).call(() => this.pinThreadToBottom()), e;
   }
   hideComposer() {
     const e = this.measureComposerFullFrame(), t = this.getComposerCollapsedFrame(e);
-    return f.timeline().set(this.composer, {
-      ...Ja,
+    return m.timeline().set(this.composer, {
+      ...ui,
       left: e.left,
       right: "auto",
       bottom: e.bottom,
@@ -2895,7 +3031,7 @@ class uc {
       scaleY: 1
     }).to(this.composerContents, {
       opacity: 0,
-      duration: re.contentHideDuration,
+      duration: ce.contentHideDuration,
       ease: "power2.out",
       overwrite: "auto"
     }, 0).to(this.composer, {
@@ -2911,8 +3047,8 @@ class uc {
       borderWidth: 0,
       gap: 0,
       opacity: 1,
-      duration: re.hideDuration,
-      ease: re.hideEase,
+      duration: ce.hideDuration,
+      ease: ce.hideEase,
       force3D: !0,
       autoRound: !1,
       overwrite: "auto",
@@ -2920,19 +3056,19 @@ class uc {
         this.setComposerFocusState(!1), this.setComposerVisibleState(!1);
       },
       onComplete: () => {
-        f.set(this.composerContents, { visibility: "hidden" }), f.set(this.composer, {
+        m.set(this.composerContents, { visibility: "hidden" }), m.set(this.composer, {
           visibility: "hidden"
-        }), f.set(this.thread, { paddingBottom: Tn }), this.pinThreadToBottom();
+        }), this.thread.style.removeProperty("--wa-thread-base-bottom-padding"), this.updateThreadContentFitState(), this.pinThreadToBottom();
       }
     }, 0);
   }
   clearComposer() {
-    return f.timeline().call(() => {
-      this.composerText.textContent = "", f.set(this.composerText, { autoAlpha: 1, y: 0 });
+    return m.timeline().call(() => {
+      this.composerText.textContent = "", m.set(this.composerText, { autoAlpha: 1, y: 0 });
     });
   }
   resetComposerPresentation() {
-    this.setComposerFocusState(!1), this.setComposerVisibleState(!1), f.set(this.composer, this.getComposerHiddenVars()), f.set(this.composerContents, this.getComposerContentsHiddenVars()), f.set(this.composerText, { autoAlpha: 1, y: 0 });
+    this.setComposerFocusState(!1), this.setComposerVisibleState(!1), m.set(this.composer, this.getComposerHiddenVars()), m.set(this.composerContents, this.getComposerContentsHiddenVars()), m.set(this.composerText, { autoAlpha: 1, y: 0 });
   }
   clearDataTableState() {
     this.activeTablePageTimelines.forEach((e) => e.kill()), this.activeTablePageTimelines.clear(), this.expectedDataTablePages.clear();
@@ -2957,7 +3093,7 @@ class uc {
       width: "",
       height: "",
       minHeight: "",
-      ...Ja
+      ...ui
     };
   }
   getComposerContentsHiddenVars() {
@@ -2969,10 +3105,10 @@ class uc {
   }
   getComposerThreadInsetForFrame(e) {
     const t = this.chatShell.clientHeight - e.bottom - e.height, a = this.thread.offsetTop + this.thread.clientHeight, i = Math.max(0, a - t);
-    return Math.ceil(i + re.threadGap);
+    return Math.ceil(i + ce.threadGap);
   }
   measureComposerFullFrame() {
-    f.set(this.composer, { clearProps: $l });
+    m.set(this.composer, { clearProps: Fc });
     const e = this.chatShell.getBoundingClientRect(), t = this.composer.getBoundingClientRect();
     return {
       left: t.left - e.left,
@@ -2982,7 +3118,7 @@ class uc {
     };
   }
   getComposerCompactFrame(e) {
-    const t = Math.min(re.compactWidth, e.width), a = Math.min(re.compactHeight, e.height);
+    const t = Math.min(ce.compactWidth, e.width), a = Math.min(ce.compactHeight, e.height);
     return {
       left: e.left + (e.width - t) / 2,
       bottom: e.bottom + (e.height - a) / 2,
@@ -2991,7 +3127,7 @@ class uc {
     };
   }
   getComposerCollapsedFrame(e) {
-    const t = re.collapsedWidth, a = re.collapsedHeight;
+    const t = ce.collapsedWidth, a = ce.collapsedHeight;
     return {
       left: e.left + (e.width - t) / 2,
       bottom: e.bottom + (e.height - a) / 2,
@@ -3000,7 +3136,7 @@ class uc {
     };
   }
   showSignup(e = "") {
-    return f.timeline().call(() => {
+    return m.timeline().call(() => {
       this.signupEmail.textContent = e, this.setSignupEmailFilled(!!e);
     }).set(this.signupScene, {
       display: "grid",
@@ -3016,7 +3152,7 @@ class uc {
   typeSignupEmail(e, t = 0.86) {
     const a = { count: 0 };
     let i = -1;
-    return f.timeline().fromTo(
+    return m.timeline().fromTo(
       a,
       { count: 0 },
       {
@@ -3041,28 +3177,28 @@ class uc {
     );
   }
   submitSignup() {
-    return f.timeline().call(() => {
+    return m.timeline().call(() => {
       this.signupScene.dataset.signupSubmitted = "true";
     }).to(this.signupSubmit, {
       scale: 0.9,
-      duration: S(0.08),
+      duration: x(0.08),
       ease: "power2.out"
     }).to(this.signupSubmit, {
       scale: 1,
-      duration: S(0.2),
+      duration: x(0.2),
       ease: "back.out(3.2)"
     });
   }
   transitionSignupToChat() {
-    return f.timeline().to(this.signupScene, {
+    return m.timeline().to(this.signupScene, {
       y: () => this.getSignupScrollOutDistance(),
       autoAlpha: 1,
       scale: 1,
-      duration: Ot.duration,
+      duration: Xt.duration,
       ease: "power3.inOut"
     }).to(this.signupScene, {
       autoAlpha: 0,
-      duration: S(0.08),
+      duration: x(0.08),
       ease: "power1.out"
     }, ">-0.08").set(this.signupScene, { pointerEvents: "none" }).fromTo(
       this.thread,
@@ -3070,39 +3206,40 @@ class uc {
       {
         autoAlpha: 1,
         y: 0,
-        duration: Ot.duration,
+        duration: Xt.duration,
         ease: "power3.out"
       },
-      Ot.threadOverlap
+      Xt.threadOverlap
     ).set(this.composer, this.getComposerHiddenVars()).set(this.composerContents, this.getComposerContentsHiddenVars()).call(() => this.setComposerVisibleState(!1));
   }
   getSignupScrollOutDistance() {
     const e = this.signupScene.getBoundingClientRect().height;
-    return -Math.max(Ot.minScrollOut, Math.round(e * Ot.scrollOutRatio));
+    return -Math.max(Xt.minScrollOut, Math.round(e * Xt.scrollOutRatio));
   }
   stopScrollMotion() {
     this.cancelScheduledScroll(), this.scrollTween?.kill(), this.scrollTween = null;
   }
   prepareForChatHistoryPause() {
+    this.syncPausedThinkingLayouts();
   }
-  scrollToLive(e = X.followDuration) {
+  scrollToLive(e = K.followDuration) {
     this.stopScrollMotion();
-    const t = this.getThreadBottomScrollTarget();
+    const t = this.getThreadLiveScrollTarget();
     if (this.prefersReducedMotion || Math.abs(this.thread.scrollTop - t) < 1) {
       this.thread.scrollTop = t;
       return;
     }
-    this.scrollTween = f.to(this.thread, {
+    this.scrollTween = m.to(this.thread, {
       scrollTop: t,
       duration: e,
-      ease: X.followEase,
+      ease: K.followEase,
       overwrite: "auto",
       onComplete: () => {
         this.scrollTween = null;
       }
     });
   }
-  scrollToLiveTimeline(e = X.followDuration) {
+  scrollToLiveTimeline(e = K.followDuration) {
     return this.scrollChatTarget(() => null, {
       align: "bottom",
       duration: e,
@@ -3114,23 +3251,24 @@ class uc {
     return this.revealMessage(t);
   }
   assistantMessage(e) {
-    const t = this.claimMessage("assistant", ""), a = t.querySelector("[data-message-body]"), i = f.timeline().add(this.revealMessage(t));
+    const t = this.claimMessage("assistant", ""), a = t.querySelector("[data-message-body]"), i = m.timeline().add(this.revealMessage(t));
     return a ? i.add(
       this.streamText(a, e, {
-        duration: this.getStreamDuration(e, Sn),
+        duration: this.getStreamDuration(e, Hn),
         targetForScroll: t
       }),
-      Sn.startOverlap
+      Hn.startOverlap
     ) : i;
   }
-  thinkingState(e, t = 1.1) {
-    const a = this.normalizeThinkingInput(e), i = a.items.length > 1;
-    return this.runThinkingSequence(a, {
+  thinkingState(e, t = 1.1, a = {}) {
+    const i = this.normalizeThinkingInput(e), n = i.items.length > 1;
+    return this.runThinkingSequence(i, {
       hold: t,
-      itemStartY: i ? 10 : 6,
-      headerDuration: i ? 0.24 : 0.28,
-      afterStepHold: i ? t * 0.45 : t,
-      finalHold: i ? t * 0.35 : 0
+      itemStartY: n ? 10 : 6,
+      headerDuration: n ? 0.24 : 0.28,
+      afterStepHold: n ? t * 0.45 : t,
+      finalHold: n ? t * 0.35 : 0,
+      preserveScroll: a.preserveScroll ?? !1
     });
   }
   prepareResultCard(e) {
@@ -3143,27 +3281,34 @@ class uc {
   }
   dataTable(e) {
     const t = this.createDataTable(e), a = e.scrollAnchor === "previous-message" ? this.getLastMessageBody() : null;
-    return this.revealComponentItems("table", t, ".wa-data-table__row", Pe.tableRow, a);
+    return this.revealComponentItems("table", t, ".wa-data-table__row", Ne.tableRow, a, {
+      preserveScroll: e.preserveScroll ?? !1
+    });
   }
-  scrollDataTableFooterIntoView(e, t = X.revealDuration, a = {}) {
-    const i = this.findDataTable(e), n = a.align === "top" ? i?.querySelector(".wa-data-table__footer") ?? i : i;
-    if (!n) return;
-    this.stopScrollMotion();
-    const o = this.getElementScrollTarget(n, {
+  scrollDataTableFooterIntoView(e, t = K.revealDuration, a = {}) {
+    const i = this.findDataTable(e), o = a.align === "top" || typeof a.bottomClearance == "number" ? i?.querySelector(".wa-data-table__footer") ?? i : i;
+    if (!o) return;
+    this.stopScrollMotion(), this.updateThreadContentFitState();
+    const s = typeof a.bottomClearance == "number", c = () => (this.updateThreadContentFitState(), typeof a.bottomClearance == "number" ? this.getElementBottomClearanceScrollTarget(o, a.bottomClearance, a.offset ?? 0) : this.getElementScrollTarget(o, {
       align: a.align ?? "bottom",
       offset: a.offset ?? 0
-    });
-    if (this.prefersReducedMotion || Math.abs(this.thread.scrollTop - o) < 1) {
-      this.thread.scrollTop = o;
+    })), l = c();
+    if (this.prefersReducedMotion || !s && Math.abs(this.thread.scrollTop - l) < 1) {
+      this.thread.scrollTop = l;
       return;
     }
-    this.scrollTween = f.to(this.thread, {
-      scrollTop: o,
+    const d = this.thread.scrollTop, u = { value: 0 };
+    this.scrollTween = m.to(u, {
+      value: 1,
       duration: t,
-      ease: X.revealEase,
+      ease: K.revealEase,
       overwrite: "auto",
+      onUpdate: () => {
+        const h = s ? c() : l;
+        this.thread.scrollTop = d + (h - d) * u.value;
+      },
       onComplete: () => {
-        this.scrollTween = null;
+        this.thread.scrollTop = s ? c() : l, this.scrollTween = null;
       }
     });
   }
@@ -3173,20 +3318,20 @@ class uc {
       return t.match === "last" ? a[a.length - 1] ?? null : a[0] ?? null;
     }, {
       align: t.align ?? "top",
-      duration: t.duration ?? X.revealDuration,
+      duration: t.duration ?? K.revealDuration,
       offset: t.offset,
       fallback: "current"
     });
   }
   scrollChatTarget(e, t) {
-    const a = f.timeline();
+    const a = m.timeline();
     let i = this.thread.scrollTop, n = null;
     return a.call(() => {
       n = e(), this.stopScrollMotion(), this.updateThreadContentFitState(), i = n ? this.getElementScrollTarget(n, t) : this.getMissingScrollTarget(t.fallback ?? "current");
     }), a.to(this.thread, {
       scrollTop: () => i,
       duration: t.duration,
-      ease: X.revealEase,
+      ease: K.revealEase,
       overwrite: "auto",
       onComplete: () => {
         this.scrollTween = null;
@@ -3195,7 +3340,7 @@ class uc {
       i = n ? this.getElementScrollTarget(n, t) : this.getMissingScrollTarget(t.fallback ?? "current");
     }), a.to(this.thread, {
       scrollTop: () => i,
-      duration: S(0.16),
+      duration: x(0.16),
       ease: "power2.out",
       overwrite: "auto"
     }), a;
@@ -3203,11 +3348,15 @@ class uc {
   getElementScrollTarget(e, t) {
     return t.align === "bottom" ? this.getElementBottomScrollTarget(e, t.offset ?? 0) : this.getAlignedElementScrollTarget(e, t.offset ?? 0);
   }
+  getElementBottomClearanceScrollTarget(e, t, a = 0) {
+    const i = e.getBoundingClientRect(), n = this.thread.getBoundingClientRect(), o = window.visualViewport ? window.visualViewport.offsetTop + window.visualViewport.height : window.innerHeight, s = Math.min(n.bottom, o), c = this.getThreadContentScale(), l = s - i.bottom, d = Math.max(0, t - l) / c, u = this.thread.scrollTop + d + a / c;
+    return Math.min(this.getThreadBottomScrollTarget(), Math.max(0, u));
+  }
   getMissingScrollTarget(e) {
     return e === "bottom" ? this.getThreadBottomScrollTarget() : this.thread.scrollTop;
   }
   dataTablePage(e, t, a = {}) {
-    const i = f.timeline(), n = { value: 0 }, o = a.updateExpected ?? !0, s = {
+    const i = m.timeline(), n = { value: 0 }, o = a.updateExpected ?? !0, s = {
       canSwitch: !1,
       committed: !1,
       table: null,
@@ -3217,16 +3366,17 @@ class uc {
       targetRows: [],
       buttons: [],
       range: null,
+      paginationDirection: null,
       cellSwaps: []
     };
     return i.to(n, {
       value: 1,
-      duration: j.totalDuration,
+      duration: X.totalDuration,
       ease: "none",
       onStart: () => {
         o && this.expectedDataTablePages.set(e, t);
-        const l = this.getDataTablePageRuntime(e, t);
-        s.table = l?.table ?? null, s.initialPage = a.initialPage ?? l?.activePage ?? null, s.currentRows = l?.currentRows ?? [], s.targetRows = l?.targetRows ?? [], s.buttons = l?.buttons ?? [], s.targetButton = l?.targetButton, s.range = l?.range ?? null, s.initialRangeText = a.initialRangeText ?? s.range?.textContent ?? null, s.canSwitch = !!(s.table && s.targetRows.length && s.table.dataset.activePage !== String(t)), s.canSwitch && (n.value = 0, f.set(s.currentRows, { autoAlpha: 1, y: 0 }), s.cellSwaps = this.prepareDataTablePageCellSwaps(s.currentRows, s.targetRows), this.updateDataTablePageControls(s, t), this.setMotionHints(this.getDataTablePageMotionTargets(s)));
+        const c = this.getDataTablePageRuntime(e, t);
+        s.table = c?.table ?? null, s.initialPage = a.initialPage ?? c?.activePage ?? null, s.currentRows = c?.currentRows ?? [], s.targetRows = c?.targetRows ?? [], s.buttons = c?.buttons ?? [], s.targetButton = c?.targetButton, s.range = c?.range ?? null, s.initialRangeText = a.initialRangeText ?? s.range?.textContent ?? null, s.canSwitch = !!(s.table && s.targetRows.length && s.table.dataset.activePage !== String(t)), s.canSwitch && (n.value = 0, m.set(s.currentRows, { autoAlpha: 1, y: 0 }), s.cellSwaps = this.prepareDataTablePageCellSwaps(s.currentRows, s.targetRows), this.updateDataTablePageControls(s, t), this.startDataTablePaginationMotion(s, t), this.setMotionHints(this.getDataTablePageMotionTargets(s)));
       },
       onUpdate: () => {
         s.canSwitch && this.renderDataTablePageCellSwaps(s, n.value);
@@ -3240,14 +3390,14 @@ class uc {
   prepareDataTablePageCellSwaps(e, t) {
     const a = [], i = Math.min(e.length, t.length);
     for (let n = 0; n < i; n += 1) {
-      const o = this.queryElements(e[n], ".wa-data-table__cell"), s = this.queryElements(t[n], ".wa-data-table__cell"), l = Math.min(o.length, s.length);
-      for (let c = 0; c < l; c += 1) {
-        const d = this.getElementChildren(o[c]), u = this.createDataTablePageCellClone(s[c]);
-        !d.length || !u.childNodes.length || (o[c].dataset.cellSwapActive = "true", o[c].append(u), this.setDataTablePageCellSwapState(d, 1, 0), this.setDataTablePageCellSwapState([u], 0, j.incomingY), a.push({
-          cell: o[c],
+      const o = this.queryElements(e[n], ".wa-data-table__cell"), s = this.queryElements(t[n], ".wa-data-table__cell"), c = Math.min(o.length, s.length);
+      for (let l = 0; l < c; l += 1) {
+        const d = this.getElementChildren(o[l]), u = this.createDataTablePageCellClone(s[l]);
+        !d.length || !u.childNodes.length || (o[l].dataset.cellSwapActive = "true", o[l].append(u), this.setDataTablePageCellSwapState(d, 1, 0), this.setDataTablePageCellSwapState([u], 0, X.incomingY), a.push({
+          cell: o[l],
           currentContent: d,
           clone: u,
-          delay: this.getDataTablePageCellDelay(n, c)
+          delay: this.getDataTablePageCellDelay(n, l)
         }));
       }
     }
@@ -3260,29 +3410,29 @@ class uc {
     }), t;
   }
   renderDataTablePageCellSwaps(e, t) {
-    const a = t * j.totalDuration;
+    const a = t * X.totalDuration;
     e.cellSwaps.forEach((i) => {
-      const n = _t(
-        (a - i.delay) / j.duration
-      ), o = _t(
-        (a - i.delay - j.incomingLag) / j.duration
-      ), s = la.in(o), l = la.out(n);
+      const n = qt(
+        (a - i.delay) / X.duration
+      ), o = qt(
+        (a - i.delay - X.incomingLag) / X.duration
+      ), s = va.in(o), c = va.out(n);
       this.setDataTablePageCellSwapState(
         i.currentContent,
-        1 - l,
-        this.interpolate(0, j.outgoingY, l)
+        1 - c,
+        this.interpolate(0, X.outgoingY, c)
       ), this.setDataTablePageCellSwapState(
         [i.clone],
         s,
-        this.interpolate(j.incomingY, 0, s)
+        this.interpolate(X.incomingY, 0, s)
       );
     });
   }
   getDataTablePageCellDelay(e, t) {
-    return e * j.rowStagger + t * j.columnStagger;
+    return e * X.rowStagger + t * X.columnStagger;
   }
   setDataTablePageCellSwapState(e, t, a) {
-    const i = t > 1e-3, n = _t(t).toFixed(3), o = Math.abs(a) < 0.01 ? "0" : a.toFixed(2);
+    const i = t > 1e-3, n = qt(t).toFixed(3), o = Math.abs(a) < 0.01 ? "0" : a.toFixed(2);
     e.forEach((s) => {
       s.style.opacity = n, s.style.transform = `translate3d(0, ${o}px, 0)`, s.style.visibility = i ? "visible" : "hidden";
     });
@@ -3294,7 +3444,7 @@ class uc {
       a.style.display = "grid";
     }), e.buttons.forEach((a) => {
       this.updateDataTablePageButton(a, t);
-    }), e.range && e.targetButton?.dataset.pageRange && (e.range.textContent = e.targetButton.dataset.pageRange), f.set(e.targetRows, {
+    }), e.range && e.targetButton?.dataset.pageRange && (e.range.textContent = e.targetButton.dataset.pageRange), m.set(e.targetRows, {
       autoAlpha: 1,
       y: 0,
       clearProps: "opacity,visibility,transform,translate,rotate,scale"
@@ -3303,11 +3453,17 @@ class uc {
   cleanupDataTablePageTransition(e) {
     const t = this.getDataTablePageMotionTargets(e);
     t.length && this.clearMotionHints(t), e.cellSwaps.forEach((a) => {
-      a.clone.remove(), delete a.cell.dataset.cellSwapActive, f.set(a.currentContent, { clearProps: "opacity,visibility,transform,translate,rotate,scale" });
-    }), !e.committed && e.canSwitch && (f.set(e.currentRows, { autoAlpha: 1, y: 0 }), e.initialPage !== null && Number.isFinite(e.initialPage) && this.updateDataTablePageControls(e, e.initialPage, e.initialRangeText)), e.cellSwaps = [];
+      a.clone.remove(), delete a.cell.dataset.cellSwapActive, m.set(a.currentContent, { clearProps: "opacity,visibility,transform,translate,rotate,scale" });
+    }), !e.committed && e.canSwitch && (m.set(e.currentRows, { autoAlpha: 1, y: 0 }), e.initialPage !== null && Number.isFinite(e.initialPage) && this.updateDataTablePageControls(e, e.initialPage, e.initialRangeText)), e.cellSwaps = [], e.table && (delete e.table.dataset.paginationMotion, delete e.table.dataset.paginationDirection);
   }
   getDataTablePageMotionTargets(e) {
     return e.cellSwaps.flatMap((t) => [...t.currentContent, t.clone]);
+  }
+  startDataTablePaginationMotion(e, t) {
+    e.table && (e.paginationDirection = this.getDataTablePaginationDirection(t, e.initialPage), e.table.dataset.paginationDirection = e.paginationDirection, e.table.dataset.paginationMotion = "true");
+  }
+  getDataTablePaginationDirection(e, t) {
+    return t !== null && e < t ? "previous" : "next";
   }
   getElementChildren(e) {
     return Array.from(e.children).filter((t) => t instanceof HTMLElement);
@@ -3317,8 +3473,8 @@ class uc {
   }
   updateDataTablePageControlsForTable(e, t, a) {
     this.updateDataTablePageControlsForElements(
-      this.queryElements(e, Za),
-      e.querySelector($a),
+      this.queryElements(e, hi),
+      e.querySelector(pi),
       t,
       a
     );
@@ -3329,13 +3485,13 @@ class uc {
     }), t && i !== null && (t.textContent = i);
   }
   updateDataTablePageButton(e, t) {
-    const a = this.parseFiniteNumber(e.dataset.tablePageButton) === t;
-    e.dataset.active = String(a), e.setAttribute("aria-current", a ? "page" : "false");
+    const a = e.dataset.pageButtonRole ?? "dot", n = this.parseFiniteNumber(e.dataset.pageCount) ?? t, o = a === "previous" ? Math.max(1, t - 1) : a === "next" ? Math.min(n, t + 1) : this.parseFiniteNumber(e.dataset.tablePageButton), s = a === "dot" && o === t, c = a === "previous" && t <= 1 || a === "next" && t >= n;
+    o !== null && (e.dataset.tablePageButton = String(o)), e.dataset.active = String(s), e.toggleAttribute("disabled", c), e.setAttribute("aria-disabled", String(c)), e.setAttribute("aria-current", s ? "page" : "false");
   }
   getDataTablePageRestores() {
     const e = [];
     return this.expectedDataTablePages.forEach((t, a) => {
-      const i = this.findDataTable(a), n = this.parseFiniteNumber(i?.dataset.activePage), o = i?.querySelector(`[data-table-page-button="${t}"]`);
+      const i = this.findDataTable(a), n = this.parseFiniteNumber(i?.dataset.activePage), o = i ? this.findDataTablePageDotButton(i, t) : null;
       !i || !o || n === null || n === t || e.push({
         tableId: a,
         currentPage: n,
@@ -3345,31 +3501,59 @@ class uc {
     }), e;
   }
   enrichmentPanel(e) {
-    const t = this.createEnrichmentPanel(e), a = this.claimComponentMessage("enrichment", t), i = this.queryElements(t, ".wa-waterfall-row"), n = this.queryElements(t, ".wa-waterfall-chip"), o = this.queryElements(t, ".wa-waterfall-service-step"), s = this.revealPreparedItems(a, i, Pe.waterfallRow), l = t.querySelector(".wa-thinking__glyph");
-    return f.set(o, { autoAlpha: 0, y: 3, scale: 0.98 }), f.set(n, { scale: 1 }), s.call(() => this.setLocalLogoMode(l, "thinking"), void 0, 0), s.add(this.animateEnrichmentWaterfall(i), `+=${Me.rowStartHold}`), s.call(() => this.setLocalLogoMode(l, "done")), s;
+    const t = this.createEnrichmentPanel(e), a = this.claimComponentMessage("enrichment", t), i = this.queryElements(t, ".wa-waterfall-row"), n = this.queryElements(t, ".wa-waterfall-chip"), o = this.queryElements(t, ".wa-waterfall-service-step"), s = this.revealPreparedItems(a, i, Ne.waterfallRow), c = t.querySelector(".wa-thinking__glyph");
+    return m.set(o, { autoAlpha: 0, y: 3, scale: 0.98 }), m.set(n, { scale: 1 }), s.call(() => this.setLocalLogoMode(c, "thinking"), void 0, 0), s.add(this.animateEnrichmentWaterfall(i), `+=${Oe.rowStartHold}`), s.call(() => this.setLocalLogoMode(c, "done")), s;
   }
   strategyPlans(e) {
-    const t = e.map((h) => this.createStrategyPlan(h)), a = document.createElement("div"), i = t.flatMap((h) => this.queryElements(h, ".wa-strategy-plan__bullets li")), n = this.getLastMessageBody(), o = Pe.strategyCard, s = "strategyCardsIn", l = o.to.stagger, c = [...t, ...i];
-    a.className = "wa-result-grid has-strategy-plans", a.dataset.strategyPlans = e.map((h) => h.id).join(" "), a.append(...t), t.length && f.set(t, { ...o.from }), f.set(i, { ...Mn.from });
-    const d = this.claimComponentMessage("strategy", a), u = f.timeline().add(this.revealMessage(d, n, En)).addLabel(s, tc).call(() => this.setMotionHints(c), void 0, s).to(t, { ...o.to }, s);
+    const t = e.map((h) => this.createStrategyPlan(h)), a = document.createElement("div"), i = t.flatMap((h) => this.queryElements(h, ".wa-strategy-plan__bullets li")), n = this.getLastMessageBody(), o = Ne.strategyCard, s = "strategyCardsIn", c = o.to.stagger, l = [...t, ...i];
+    a.className = "wa-result-grid has-strategy-plans", a.dataset.strategyPlans = e.map((h) => h.id).join(" "), a.append(...t), t.length && m.set(t, { ...o.from }), m.set(i, { ...Yn.from });
+    const d = this.claimComponentMessage("strategy", a), u = m.timeline().add(this.revealMessage(d, n, Qn)).addLabel(s, zc).call(() => this.setMotionHints(l), void 0, s).to(t, { ...o.to }, s);
     return t.forEach((h, g) => {
-      const m = this.queryElements(h, ".wa-strategy-plan__bullets li");
-      m.length && u.to(m, { ...Mn.to }, `${s}+=${g * l}`);
-    }), u.call(() => this.clearMotionHints(c)).call(
-      () => this.animateMessageScrollIntoView(d, X.followDuration, n, En),
+      const w = this.queryElements(h, ".wa-strategy-plan__bullets li");
+      w.length && u.to(w, { ...Yn.to }, `${s}+=${g * c}`);
+    }), u.call(() => this.clearMotionHints(l)).call(
+      () => this.animateMessageScrollIntoView(d, K.followDuration, n, Qn),
       void 0,
       "+=0.02"
     );
   }
   strategyPlanHover(e, t) {
-    return f.timeline().call(() => {
+    return m.timeline().call(() => {
       const a = this.root.querySelector(e), i = a?.closest("[data-strategy-plans]");
       (i ? this.queryElements(i, ".wa-strategy-plan") : []).forEach((o) => o.toggleAttribute("data-cursor-hover", t && o === a));
     });
   }
+  strategyPlanCursorHover(e, t, a) {
+    const i = m.timeline();
+    let n = [], o = null, s = null, c = !1;
+    const l = (p) => {
+      p !== o && (o?.removeAttribute("data-cursor-hover"), o = p, o?.setAttribute("data-cursor-hover", ""));
+    }, d = () => {
+      l(null), n.forEach((p) => p.removeAttribute("data-cursor-hover"));
+    }, u = () => {
+      const p = this.root.getBoundingClientRect(), f = t.readPosition(), b = {
+        x: p.left + f.x,
+        y: p.top + f.y
+      };
+      for (const A of n) {
+        const v = A.getBoundingClientRect();
+        if (b.x >= v.left && b.x <= v.right && b.y >= v.top && b.y <= v.bottom)
+          return A;
+      }
+      return null;
+    }, h = () => {
+      l(u());
+    }, g = () => {
+      s?.kill(), s = null, c && (m.ticker.remove(h), c = !1), d();
+    }, w = () => {
+      const p = this.root.querySelector(e), f = p?.matches("[data-strategy-plans]") ? p : p?.closest("[data-strategy-plans]");
+      n = f ? this.queryElements(f, ".wa-strategy-plan") : [], d(), n.length && (h(), m.ticker.add(h), c = !0, s = m.delayedCall(a, g));
+    };
+    return i.eventCallback("onInterrupt", g), i.call(w);
+  }
   dataSourcesGrid(e) {
     const t = this.createDataSourcesGrid(e);
-    return this.revealComponentItems("sources", t, ".wa-data-source-card", Pe.smallCard);
+    return this.revealComponentItems("sources", t, ".wa-data-source-card", Ne.smallCard);
   }
   marketingDataSourcesGrid(e) {
     const t = this.createMarketingDataSourcesGrid(e), a = t.querySelector(".wa-data-source-grid__header"), i = this.compactElements(
@@ -3377,12 +3561,12 @@ class uc {
       ...this.queryElements(t, ".wa-data-source-group"),
       ...this.queryElements(t, ".wa-data-vendor-logo")
     );
-    return this.clearMarketingPanels(), t.dataset.scrollAlign = "equal-inset", f.timeline().call(() => this.setMarketingDataGridScale(t)).add(this.revealComponentItems("sources", t, i, {
+    return this.clearMarketingPanels(), t.dataset.scrollAlign = "equal-inset", m.timeline().call(() => this.setMarketingDataGridScale(t)).add(this.revealComponentItems("sources", t, i, {
       from: { autoAlpha: 0, y: 10 },
       to: {
         autoAlpha: 1,
         y: 0,
-        duration: ec.cardDuration,
+        duration: Uc.cardDuration,
         ease: "power2.out",
         stagger: 0.025
       },
@@ -3395,12 +3579,12 @@ class uc {
       "style",
       a,
       ".wa-style-profile__row, .wa-style-profile__example",
-      Pe.softRow
+      Ne.softRow
     );
   }
   proximityLeadList(e) {
     const t = this.createProximityLeadList(e);
-    return this.revealComponentItems("table", t, ".wa-data-table__row", Pe.tableRow);
+    return this.revealComponentItems("table", t, ".wa-data-table__row", Ne.tableRow);
   }
   mailboxConnection(e) {
     const t = this.createMailboxConnection(e), a = this.compactElements(
@@ -3412,7 +3596,7 @@ class uc {
         autoAlpha: 1,
         y: 0,
         scale: 1,
-        duration: S(0.28),
+        duration: x(0.28),
         ease: "power2.out",
         stagger: 0.045
       },
@@ -3422,48 +3606,48 @@ class uc {
   connectMailbox(e) {
     const t = this.root.querySelector(
       `[data-mailbox-connection="${this.escapeSelectorValue(e)}"]`
-    ), a = t?.querySelector("[data-mailbox-connect]"), i = t?.querySelector("[data-mailbox-learning]"), n = t ? Array.from(t.querySelectorAll("[data-mailbox-thumbprint-path]")) : [], o = t?.querySelector("[data-mailbox-learning-progress]"), s = t?.querySelector(".wa-mailbox-learning__title"), l = t?.querySelector("[data-mailbox-learning-title-text]") ?? s, c = t?.querySelector("[data-mailbox-learning-ready-chevron]"), d = t?.querySelector(".wa-mailbox-learning__detail"), u = t?.querySelector(".wa-mailbox-learning__thumbprint"), h = t ? this.queryElements(t, ".wa-mailbox-connection__signal") : [], g = f.timeline();
-    if (!t || !a || !i || !l || !d || !u || !n.length || !o) return g;
-    const m = { value: 0 };
+    ), a = t?.querySelector("[data-mailbox-connect]"), i = t?.querySelector("[data-mailbox-learning]"), n = t ? Array.from(t.querySelectorAll("[data-mailbox-thumbprint-path]")) : [], o = t?.querySelector("[data-mailbox-learning-progress]"), s = t?.querySelector(".wa-mailbox-learning__title"), c = t?.querySelector("[data-mailbox-learning-title-text]") ?? s, l = t?.querySelector("[data-mailbox-learning-ready-chevron]"), d = t?.querySelector(".wa-mailbox-learning__detail"), u = t?.querySelector(".wa-mailbox-learning__thumbprint"), h = t ? this.queryElements(t, ".wa-mailbox-connection__signal") : [], g = m.timeline();
+    if (!t || !a || !i || !c || !d || !u || !n.length || !o) return g;
+    const w = { value: 0 };
     return g.call(() => {
-      t.dataset.mailboxState = "loading", a.disabled = !0, a.setAttribute("aria-busy", "true"), a.setAttribute("aria-label", a.dataset.mailboxLoadingLabel ?? "Connecting"), i.dataset.mailboxLearningState = "idle", l.textContent = _n, d.textContent = Ka[0].detail, f.set(i, { display: "none", autoAlpha: 0, y: 8, scale: 0.992 }), this.updateMailboxThumbprintFill(n, 0), f.set(o, { scaleX: 0, transformOrigin: "left center" }), f.set(u, { scale: 1, transformOrigin: "center center" }), f.set(this.compactElements(c), { autoAlpha: 0, y: -1, scale: 0.9 });
+      t.dataset.mailboxState = "loading", a.disabled = !0, a.setAttribute("aria-busy", "true"), a.setAttribute("aria-label", a.dataset.mailboxLoadingLabel ?? "Connecting"), i.dataset.mailboxLearningState = "idle", c.textContent = Un, d.textContent = ci[0].detail, m.set(i, { display: "none", autoAlpha: 0, y: 8, scale: 0.992 }), this.updateMailboxThumbprintFill(n, 0), m.set(o, { scaleX: 0, transformOrigin: "left center" }), m.set(u, { scale: 1, transformOrigin: "center center" }), m.set(this.compactElements(l), { autoAlpha: 0, y: -1, scale: 0.9 });
     }).to(a, {
       scale: 0.985,
-      duration: ie.pressDuration,
+      duration: se.pressDuration,
       ease: "power2.out"
     }).to(a, {
       scale: 1,
-      duration: ie.releaseDuration,
+      duration: se.releaseDuration,
       ease: "back.out(2.6)"
-    }).to({}, { duration: ie.loadingHoldDuration }).call(() => {
+    }).to({}, { duration: se.loadingHoldDuration }).call(() => {
       t.dataset.mailboxState = "connected", a.disabled = !0, a.removeAttribute("aria-busy"), a.setAttribute("aria-label", a.dataset.mailboxConnectedLabel ?? "Connected"), i.dataset.mailboxLearningState = "loading";
-    }).to({}, { duration: ie.successHoldDuration }).set(i, { display: "grid", height: "auto" }, "-=0.04").fromTo(
+    }).to({}, { duration: se.successHoldDuration }).set(i, { display: "grid", height: "auto" }, "-=0.04").fromTo(
       i,
       { autoAlpha: 0, y: 8, scale: 0.992 },
       {
         autoAlpha: 1,
         y: 0,
         scale: 1,
-        duration: ie.learningRevealDuration,
+        duration: se.learningRevealDuration,
         ease: "power2.out"
       },
       "-=0.02"
     ).fromTo(
-      this.compactElements(l, d),
+      this.compactElements(c, d),
       { autoAlpha: 0, y: 5 },
       {
         autoAlpha: 1,
         y: 0,
-        duration: S(0.22),
+        duration: x(0.22),
         ease: "power2.out",
         stagger: 0.04
       },
       "<+=0.07"
-    ), Ka.forEach((p, w) => {
-      w > 0 && g.to(d, {
+    ), ci.forEach((p, f) => {
+      f > 0 && g.to(d, {
         autoAlpha: 0,
         y: -3,
-        duration: ie.detailSwapDuration,
+        duration: se.detailSwapDuration,
         ease: "power1.in"
       }).call(() => {
         d.textContent = p.detail;
@@ -3473,18 +3657,18 @@ class uc {
         {
           autoAlpha: 1,
           y: 0,
-          duration: ie.detailSwapDuration,
+          duration: se.detailSwapDuration,
           ease: "power2.out"
         }
       ), g.to(
-        m,
+        w,
         {
           value: p.progress,
           duration: p.duration,
           ease: "power2.inOut",
-          onUpdate: () => this.updateMailboxThumbprintFill(n, m.value)
+          onUpdate: () => this.updateMailboxThumbprintFill(n, w.value)
         },
-        w === 0 ? "-=0.04" : void 0
+        f === 0 ? "-=0.04" : void 0
       ).to(
         o,
         {
@@ -3497,22 +3681,22 @@ class uc {
     }), g.to(d, {
       autoAlpha: 0,
       y: -3,
-      duration: ie.detailSwapDuration,
+      duration: se.detailSwapDuration,
       ease: "power1.in"
-    }).to(l, {
+    }).to(c, {
       autoAlpha: 0,
       y: -3,
-      duration: ie.detailSwapDuration,
+      duration: se.detailSwapDuration,
       ease: "power1.in"
     }, "<").call(() => {
-      i.dataset.mailboxLearningState = "ready", l.textContent = Vl, d.textContent = i.dataset.mailboxLearningReadyDetail ?? An;
+      i.dataset.mailboxLearningState = "ready", c.textContent = Mc, d.textContent = i.dataset.mailboxLearningReadyDetail ?? zn;
     }).fromTo(
-      l,
+      c,
       { autoAlpha: 0, y: 4 },
       {
         autoAlpha: 1,
         y: 0,
-        duration: ie.detailSwapDuration,
+        duration: se.detailSwapDuration,
         ease: "power2.out"
       }
     ).fromTo(
@@ -3521,18 +3705,18 @@ class uc {
       {
         autoAlpha: 1,
         y: 0,
-        duration: ie.detailSwapDuration,
+        duration: se.detailSwapDuration,
         ease: "power2.out"
       },
       "<+=0.03"
     ).fromTo(
-      this.compactElements(c),
+      this.compactElements(l),
       { autoAlpha: 0, y: -1, scale: 0.9 },
       {
         autoAlpha: 1,
         y: 0,
         scale: 1,
-        duration: ie.detailSwapDuration,
+        duration: se.detailSwapDuration,
         ease: "power2.out"
       },
       "<"
@@ -3540,25 +3724,25 @@ class uc {
       u,
       {
         scale: 1.16,
-        duration: ie.readyPopUpDuration,
+        duration: se.readyPopUpDuration,
         ease: "power2.out"
       },
       "<"
     ).to(u, {
       scale: 1,
-      duration: ie.readyPopSettleDuration,
+      duration: se.readyPopSettleDuration,
       ease: "back.out(3)"
     }), h.length && g.to(
       h,
       {
         autoAlpha: 1,
         y: 0,
-        duration: S(0.18),
+        duration: x(0.18),
         ease: "power2.out",
         stagger: 0.035
       },
       "<+=0.38"
-    ), g.to({}, { duration: ie.settleHold }), g;
+    ), g.to({}, { duration: se.settleHold }), g;
   }
   personalizationSwipeGame(e) {
     const t = this.createPersonalizationSwipeGame(e), a = this.compactElements(
@@ -3572,7 +3756,7 @@ class uc {
         autoAlpha: 1,
         y: 0,
         scale: 1,
-        duration: S(0.32),
+        duration: x(0.32),
         ease: "power2.out",
         stagger: 0.05
       },
@@ -3582,14 +3766,14 @@ class uc {
   swipePersonalizationCard(e, t, a) {
     const i = this.root.querySelector(
       `[data-personalization-swipe-game="${this.escapeSelectorValue(e)}"]`
-    ), n = i?.querySelector(`[data-swipe-card="${this.escapeSelectorValue(t)}"]`), o = this.getSwipeCards(i), s = n ? o.indexOf(n) : -1, l = o[s + 1], c = a === "use" ? 1 : -1, d = i?.querySelector(`[data-swipe-action="${a}"]`), u = i?.querySelector("[data-swipe-complete]"), h = i?.querySelector(".wa-swipe-game__actions"), g = f.timeline();
+    ), n = i?.querySelector(`[data-swipe-card="${this.escapeSelectorValue(t)}"]`), o = this.getSwipeCards(i), s = n ? o.indexOf(n) : -1, c = o[s + 1], l = a === "use" ? 1 : -1, d = i?.querySelector(`[data-swipe-action="${a}"]`), u = i?.querySelector("[data-swipe-complete]"), h = i?.querySelector(".wa-swipe-game__actions"), g = m.timeline();
     return !i || !n || s < 0 || (g.call(() => {
       i.dataset.swipeDecision = a, d && (d.dataset.active = "true");
     }).to(
       d ?? {},
       {
         scale: 0.92,
-        duration: S(0.08),
+        duration: x(0.08),
         ease: "power2.out"
       },
       0
@@ -3597,35 +3781,35 @@ class uc {
       d ?? {},
       {
         scale: 1,
-        duration: S(0.18),
+        duration: x(0.18),
         ease: "back.out(2)"
       },
-      S(0.1)
+      x(0.1)
     ).to(
       n,
       {
-        x: c * 520,
+        x: l * 520,
         y: s % 2 === 0 ? -28 : 24,
-        rotation: c * (16 + s * 2),
+        rotation: l * (16 + s * 2),
         autoAlpha: 0,
-        duration: S(0.5),
+        duration: x(0.5),
         ease: "power3.in",
         force3D: !0
       },
       0.08
     ).call(
       () => {
-        delete i.dataset.swipeDecision, d && delete d.dataset.active, n.dataset.swipeState = "done", f.set(n, { display: "none" }), this.layoutSwipeGameCards(i, s + 1);
+        delete i.dataset.swipeDecision, d && delete d.dataset.active, n.dataset.swipeState = "done", m.set(n, { display: "none" }), this.layoutSwipeGameCards(i, s + 1);
       },
       void 0,
       "-=0.12"
-    ), l ? g.fromTo(
-      l,
+    ), c ? g.fromTo(
+      c,
       {
-        x: -c * 18,
+        x: -l * 18,
         y: 10,
         scale: 0.965,
-        rotation: -c * 1.5,
+        rotation: -l * 1.5,
         autoAlpha: 0.74
       },
       {
@@ -3634,7 +3818,7 @@ class uc {
         scale: 1,
         rotation: 0,
         autoAlpha: 1,
-        duration: S(0.28),
+        duration: x(0.28),
         ease: "power2.out",
         force3D: !0
       },
@@ -3644,7 +3828,7 @@ class uc {
       {
         autoAlpha: 0,
         y: 8,
-        duration: S(0.18),
+        duration: x(0.18),
         ease: "power2.out"
       },
       "-=0.16"
@@ -3654,83 +3838,91 @@ class uc {
         autoAlpha: 1,
         y: 0,
         scale: 1,
-        duration: S(0.28),
+        duration: x(0.28),
         ease: "back.out(1.55)"
       },
       "-=0.06"
     )), g;
   }
   sequenceEngagement(e) {
-    const t = this.createSequenceEngagement(e), a = this.getActiveSequenceIndex(t), i = e.sequences.some((s) => s.steps?.length), n = i ? ".wa-sequence-people-wrap, .wa-sequence-engagement__sequences, .wa-sequence-kickoff" : ".wa-sequence-people-wrap, .wa-sequence-card, .wa-sequence-step, .wa-sequence-wait, .wa-sequence-copy-panel, .wa-engage-channel, .wa-sequence-kickoff", o = i ? {
+    const t = this.createSequenceEngagement(e), a = this.getActiveSequenceIndex(t), i = e.sequences.some((c) => c.steps?.length), n = i ? ".wa-sequence-people-wrap, .wa-sequence-engagement__sequences, .wa-sequence-kickoff" : ".wa-sequence-people-wrap, .wa-sequence-card, .wa-sequence-step, .wa-sequence-wait, .wa-sequence-copy-panel, .wa-engage-channel, .wa-sequence-kickoff", o = i ? {
       from: { autoAlpha: 0, y: 9, scale: 0.99 },
       to: {
         autoAlpha: 1,
         y: 0,
         scale: 1,
-        duration: S(0.24),
+        duration: x(0.24),
         ease: "power2.out",
         stagger: 0
-      }
-    } : Pe.stackCard;
+      },
+      position: "+=0.02"
+    } : Ne.stackCard, s = i ? t.querySelector(".wa-sequence-people-wrap") : null;
     return this.revealComponentItems(
       "sequence",
       t,
       n,
-      o
+      o,
+      s
     ).call(() => this.setSequencePersonRailPosition(t, a), void 0, 0.01).call(() => this.setSequencePersonRailPosition(t, a), void 0, 0.12).call(() => this.clearSequencePersonCardMotionStyles(t));
   }
   sequenceBuildThinking(e) {
     const t = this.createSequenceThinkingStep(e.templateLabel, e.template, 0), a = e.tracks.map(
-      (u, h) => this.createSequenceThinkingStep(u.label, u.detail, h + 1, e.total)
-    ), i = [t, ...a], n = this.getThinkingElapsed(3), o = this.claimThinkingMessage(i, n), s = { value: 1 }, l = a.map((u) => ({
-      label: u.querySelector(".wa-sequence-thinking-progress__count"),
-      bar: u.querySelector(".wa-sequence-thinking-progress__bar span")
-    })), c = l.flatMap((u) => u.bar ? [u.bar] : []);
-    o.message.querySelector(".wa-thinking-block").dataset.sequenceThinking = e.id;
-    const d = f.timeline().call(() => {
-      this.prepareThinkingMessage(o, i, 10), f.set(c, {
+      (w, p) => this.createSequenceThinkingStep(w.label, w.detail, p + 1, e.total)
+    ), i = [t, ...a], n = this.claimThinkingMessage(i), o = { value: 1 }, s = a.map((w) => ({
+      label: w.querySelector(".wa-sequence-thinking-progress__count"),
+      bar: w.querySelector(".wa-sequence-thinking-progress__bar span")
+    })), c = s.flatMap((w) => w.bar ? [w.bar] : []);
+    n.message.querySelector(".wa-thinking-block").dataset.sequenceThinking = e.id;
+    const l = m.timeline().call(() => {
+      this.prepareThinkingMessage(n, i, 10), m.set(c, {
         scaleX: 1 / Math.max(1, e.total),
         transformOrigin: "left center"
       });
-    }).add(this.revealMessage(o.message)).add(this.revealThinkingHeader(o, 0.24)).call(() => {
-      t.dataset.stepState = "current", f.set(t, { display: "grid" });
-    }).add(this.moveThinkingLogoToStep(o, t), "<");
-    return this.addThinkingStepReveal(d, t, { position: "<" }), d.to({}, { duration: Xa.templateHold }).add(this.foldThinkingStep(t)).call(() => {
-      a.forEach((u) => {
-        u.dataset.stepState = "current", f.set(u, { display: "grid" });
+    }).add(this.revealMessage(n.message)).add(this.revealThinkingHeader(n, 0.24)).call(() => {
+      t.dataset.stepState = "current", this.showThinkingStepTimer(t), m.set(t, { display: "grid" });
+    }).add(this.moveThinkingLogoToStep(n, t), "<"), d = this.createThinkingStepReveal(t), u = d.duration() + Kt.templateHold;
+    l.add(d, "<").to({}, { duration: Kt.templateHold }).add(this.createThinkingStepElapsedTimer(t, u), `-=${u}`).add(this.foldThinkingStep(t, n.message)).call(() => {
+      a.forEach((w) => {
+        w.dataset.stepState = "current", this.showThinkingStepTimer(w), m.set(w, { display: "grid" });
       });
-    }, void 0, "+=0.1").add(this.moveThinkingLogoToStep(o, a[0]), "<").to(a, {
+    }, void 0, "+=0.1").add(this.moveThinkingLogoToStep(n, a[0]), "<").to(a, {
       autoAlpha: 1,
       y: 0,
-      duration: S(0.3),
+      duration: x(0.3),
       ease: "power2.out",
       stagger: 0.04
-    }, "<"), this.addThinkingStepStreams(d, a), d.to(s, {
+    }, `<+=${Vn}`);
+    const h = m.timeline();
+    this.addThinkingStepStreams(h, a), l.add(h);
+    const g = h.duration() + 0.14 + Kt.progressDuration;
+    return l.to(o, {
       value: e.total,
-      duration: Xa.progressDuration,
+      duration: Kt.progressDuration,
       ease: "power1.inOut",
       onUpdate: () => {
-        const u = Math.max(1, Math.round(s.value)), h = u / Math.max(1, e.total);
-        l.forEach(({ label: g, bar: m }) => {
-          g && (g.textContent = `${u}/${e.total}`), m && f.set(m, { scaleX: h });
-        }), this.requestMessageScroll(o.message);
+        const w = Math.max(1, Math.round(o.value)), p = w / Math.max(1, e.total);
+        s.forEach(({ label: f, bar: b }) => {
+          f && (f.textContent = `${w}/${e.total}`), b && m.set(b, { scaleX: p });
+        }), this.requestMessageScroll(n.message);
       }
-    }, "+=0.14").to({}, { duration: Xa.finalHold }), a.forEach((u, h) => {
-      d.add(this.foldThinkingStep(u), h === 0 ? void 0 : "<");
-    }), d.add(this.collapseThinkingToHeader(o, i)), this.addThinkingElapsedTimer(d, o.elapsed, n), d;
+    }, "+=0.14").add(a.map(
+      (w) => this.createThinkingStepElapsedTimer(w, g)
+    ), `-=${g}`).to({}, { duration: Kt.finalHold }), a.forEach((w, p) => {
+      l.add(this.foldThinkingStep(w, n.message), p === 0 ? void 0 : "<");
+    }), l.add(this.collapseThinkingToHeader(n, i)), l;
   }
   sequencePerson(e, t) {
-    const a = this.findSequenceEngagement(e), i = f.timeline({ defaults: { overwrite: "auto" } }), n = { value: 0 }, o = {
+    const a = this.findSequenceEngagement(e), i = m.timeline({ defaults: { overwrite: "auto" } }), n = { value: 0 }, o = {
       committed: !1,
       swaps: []
     };
     if (!a) return i;
-    const s = this.getSequenceCardRuntime(a, t), l = s.displayCard, c = s.templateCard, d = this.getActiveSequenceIndex(a);
-    return !c || !l || d === t ? (this.setActiveSequencePerson(a, t, !0), i) : (i.call(() => {
-      this.setSequencePersonRailState(a, t, !0), o.swaps = this.prepareSequencePersonContentSwaps(a, l, c, t), this.setMotionHints(this.getSequencePersonSwapMotionTargets(o)), this.renderSequencePersonContentSwaps(o, n.value);
+    const s = this.getSequenceCardRuntime(a, t), c = s.displayCard, l = s.templateCard, d = this.getActiveSequenceIndex(a);
+    return !l || !c || d === t ? (this.setActiveSequencePerson(a, t, !0), i) : (i.call(() => {
+      this.setSequencePersonRailState(a, t, !0), o.swaps = this.prepareSequencePersonContentSwaps(a, c, l, t), this.setMotionHints(this.getSequencePersonSwapMotionTargets(o)), this.renderSequencePersonContentSwaps(o, n.value);
     }, void 0, 0), i.to(n, {
       value: 1,
-      duration: j.totalDuration,
+      duration: X.totalDuration,
       ease: "none",
       onUpdate: () => {
         this.renderSequencePersonContentSwaps(o, n.value);
@@ -3741,8 +3933,74 @@ class uc {
       this.cleanupSequencePersonContentSwaps(o);
     }), i);
   }
+  sequencePersonCardIntoView(e, t, a = {}) {
+    const i = a.duration ?? x(0.28), n = a.offset ?? 20, o = m.timeline();
+    return o.add(this.scrollChatTargetToThreadTop(() => {
+      const s = this.findSequenceEngagement(e);
+      return s?.querySelector(".wa-sequence-people-wrap") ?? s;
+    }, {
+      duration: i,
+      offset: n
+    }), 0), o.add(this.scrollSequenceRailToPerson(e, t, i), 0), o.call(() => {
+      this.forceSequencePersonCardIntoView(e, t, n);
+    }), o;
+  }
+  forceSequencePersonCardIntoView(e, t, a) {
+    const i = this.findSequenceEngagement(e), n = i?.querySelector(".wa-sequence-people-wrap") ?? i;
+    n && (this.stopScrollMotion(), this.updateThreadContentFitState(), this.thread.scrollTop = this.getElementThreadTopScrollTarget(n, a)), i && this.setSequencePersonRailPosition(i, t);
+  }
+  scrollChatTargetToThreadTop(e, t) {
+    const a = m.timeline();
+    let i = this.thread.scrollTop, n = null;
+    return a.call(() => {
+      n = e(), this.stopScrollMotion(), this.updateThreadContentFitState(), i = n ? this.getElementThreadTopScrollTarget(n, t.offset) : this.thread.scrollTop;
+    }), a.to(this.thread, {
+      scrollTop: () => i,
+      duration: t.duration,
+      ease: K.revealEase,
+      overwrite: "auto",
+      onComplete: () => {
+        this.scrollTween = null;
+      }
+    }), a.call(() => {
+      i = n ? this.getElementThreadTopScrollTarget(n, t.offset) : this.thread.scrollTop;
+    }), a.to(this.thread, {
+      scrollTop: () => i,
+      duration: x(0.12),
+      ease: "power2.out",
+      overwrite: "auto"
+    }), a;
+  }
+  getElementThreadTopScrollTarget(e, t = 0) {
+    const a = this.getThreadContentScale(), i = this.thread.getBoundingClientRect(), n = e.getBoundingClientRect(), o = this.thread.scrollTop + (n.top - i.top - t) / a;
+    return Math.min(this.getThreadBottomScrollTarget(), Math.max(0, o));
+  }
+  scrollSequenceRailToPerson(e, t, a) {
+    const i = { value: 0 }, n = {
+      rail: null,
+      start: 0,
+      target: 0
+    };
+    return m.timeline().call(() => {
+      const o = this.findSequenceEngagement(e), s = o ? this.getSequenceRailRuntime(o, t) : null;
+      i.value = 0, n.rail = s?.rail ?? null, n.start = n.rail?.scrollLeft ?? 0, n.target = s ? this.getSequencePersonRailScrollTarget(s.rail, s.card) : n.start, n.rail && (m.killTweensOf(n.rail, "scrollLeft"), n.rail.dataset.sequenceCentering = "true");
+    }).to(i, {
+      value: 1,
+      duration: this.prefersReducedMotion ? 1e-3 : a,
+      ease: di.railCenterEase,
+      onUpdate: () => {
+        n.rail && (n.rail.scrollLeft = n.start + (n.target - n.start) * i.value);
+      },
+      onComplete: () => {
+        n.rail && (n.rail.scrollLeft = n.target, delete n.rail.dataset.sequenceCentering);
+      },
+      onInterrupt: () => {
+        n.rail && delete n.rail.dataset.sequenceCentering;
+      }
+    });
+  }
   sequenceStep(e, t) {
-    const a = this.findSequenceEngagement(e), i = f.timeline();
+    const a = this.findSequenceEngagement(e), i = m.timeline();
     if (!a) return i;
     const n = this.getActiveSequenceIndex(a), o = this.getSequenceCardRuntime(a, n).displayCard;
     return o ? i.call(() => {
@@ -3752,29 +4010,161 @@ class uc {
   enrollmentProgress(e = {}) {
     const t = Math.max(1, Math.round(e.total ?? 50)), a = { value: 0 }, i = this.createThinkingStep(
       {
-        label: e.label ?? ut.label,
-        detail: e.detail ?? ut.detail,
-        disclosure: kt
+        label: e.label ?? te.queueLabel,
+        detail: e.detail ?? te.queueDetail,
+        disclosure: Ot,
+        toolCalls: []
       },
       0
-    ), n = this.claimThinkingMessage(
-      [i],
-      "",
-      ut.title(0, t)
-    ), o = e.duration ?? ut.duration;
-    return f.timeline().call(() => {
-      this.prepareThinkingMessage(n, [i], 6), f.set(n.elapsed, { display: "none", autoAlpha: 0 });
-    }).add(this.revealMessage(n.message)).add(this.revealThinkingHeader(n, 0.24)).call(() => {
-      f.set(n.elapsed, { display: "none", autoAlpha: 0 });
-    }).call(() => this.activateThinkingStep([i], 0)).add(this.moveThinkingLogoToStep(n, i), "<").add(this.createThinkingStepReveal(i), "<").to(a, {
+    ), n = this.createThinkingStep(
+      {
+        label: te.mailboxLabel,
+        detail: te.mailboxDetail,
+        disclosure: It,
+        toolCalls: []
+      },
+      1
+    ), o = this.createThinkingStep(
+      {
+        label: te.sendLabel(0, t),
+        detail: "",
+        disclosure: It,
+        toolCalls: []
+      },
+      2
+    ), s = this.createSequenceEnrollmentProgress(t), c = s.querySelector("[data-sequence-enrollment-count]"), l = s.querySelector("[data-sequence-enrollment-fill]"), d = o.querySelector(".wa-research-step__body"), u = [i, n, o], h = this.claimThinkingMessage(
+      u,
+      te.title,
+      te.completeTitle
+    ), g = e.duration ?? te.duration, w = this.createThinkingStepReveal(i), p = this.createThinkingStepReveal(n), f = this.createThinkingStepReveal(o), b = this.createSequenceEnrollmentMailBurst(s, t, g), A = w.duration() + te.queueHold, v = p.duration() + te.mailboxHold, _ = f.duration() + te.progressDelay + Math.max(g, b.duration()), y = m.timeline();
+    return d && d.append(s), y.call(() => {
+      this.prepareThinkingMessage(h, u, 6), m.set(s, { autoAlpha: 0, y: 3 }), m.set(l, { scaleX: 0, transformOrigin: "left center" });
+    }).add(this.revealMessage(h.message)).add(this.revealThinkingHeader(h, 0.24)).call(() => this.activateThinkingStep(u, 0)).add(this.moveThinkingLogoToStep(h, i), "<").add(w, "<").to({}, { duration: te.queueHold }).add(this.createThinkingStepElapsedTimer(i, A), `-=${A}`).add(this.foldThinkingStep(i, h.message)).call(() => this.activateThinkingStep(u, 1), void 0, "+=0.1").add(this.moveThinkingLogoToStep(h, n), "<").add(p, "<").to({}, { duration: te.mailboxHold }).add(this.createThinkingStepElapsedTimer(n, v), `-=${v}`).add(this.foldThinkingStep(n, h.message)).call(() => this.activateThinkingStep(u, 2), void 0, "+=0.1").add(this.moveThinkingLogoToStep(h, o), "<").add(f, "<").addLabel("enrollment-progress", `+=${te.progressDelay}`).to(s, {
+      autoAlpha: 1,
+      y: 0,
+      duration: x(0.18),
+      ease: "power2.out"
+    }, "enrollment-progress-=0.02").to(a, {
       value: t,
-      duration: o,
+      duration: g,
       ease: "power1.inOut",
       onUpdate: () => {
-        const s = Math.min(t, Math.max(0, Math.round(a.value)));
-        this.setThinkingTitle(n, ut.title(s, t)), this.requestMessageScroll(n.message);
+        const E = Math.min(t, Math.max(0, Math.round(a.value))), k = te.sendLabel(E, t), C = E / t;
+        this.setThinkingStepLabel(o, k), c && (c.textContent = `${E}/${t}`), l && m.set(l, { scaleX: C }), this.requestMessageScroll(h.message);
       }
-    }, "+=0.04").add(this.completeProgressThinking(n, [i], ut.title(t, t))).to({}, { duration: ut.finalHold });
+    }, "enrollment-progress").add(b, "enrollment-progress").add(this.createThinkingStepElapsedTimer(o, _), `-=${_}`).add(this.completeProgressThinking(h, u, te.completeTitle)).to({}, { duration: te.finalHold });
+  }
+  createSequenceEnrollmentProgress(e) {
+    const t = document.createElement("span"), a = document.createElement("span"), i = document.createElement("span"), n = document.createElement("span");
+    return t.className = "wa-sequence-thinking-progress", t.dataset.sequenceEnrollmentProgress = "true", a.className = "wa-sequence-thinking-progress__count", a.dataset.sequenceEnrollmentCount = "", a.textContent = `0/${e}`, i.className = "wa-sequence-thinking-progress__bar", n.dataset.sequenceEnrollmentFill = "", n.setAttribute("aria-hidden", "true"), i.append(n), t.append(a, i), t;
+  }
+  setThinkingStepLabel(e, t) {
+    const a = e.querySelector(".wa-research-step__label");
+    a && (a.dataset.activeText = t, a.dataset.collapsedText = this.getPastTenseThinkingTitle(t), a.dataset.fullText = t, a.textContent = t, delete a.dataset.streaming);
+  }
+  createSequenceEnrollmentMailBurst(e, t, a) {
+    const i = m.timeline();
+    if (this.prefersReducedMotion) return i;
+    const n = Math.max(1, Math.round(t)), o = a / n;
+    for (let s = 0; s < n; s += 1)
+      i.add(this.createSequenceEnrollmentMailParticle(e, s, n), s * o);
+    return i;
+  }
+  createSequenceEnrollmentMailParticle(e, t, a) {
+    const i = {
+      progress: 0,
+      icon: null,
+      flight: null
+    }, n = () => {
+      i.icon && (m.killTweensOf(i.icon), i.icon.remove(), i.icon = null, i.flight = null);
+    };
+    return m.timeline({
+      onInterrupt: n,
+      onReverseComplete: n
+    }).call(() => {
+      n();
+      const o = this.getSequenceEnrollmentMailFlight(e, t);
+      if (!o) return;
+      const s = this.createSequenceEnrollmentMailIcon(t + 1, a);
+      i.progress = 0, i.flight = o, i.icon = s, this.stage.append(s), m.set(s, {
+        left: o.startX,
+        top: o.startY,
+        x: 0,
+        y: 0,
+        rotation: o.startRotation,
+        scale: o.scale * 0.72,
+        autoAlpha: 0
+      });
+    }).to(i, {
+      progress: 1,
+      duration: this.getSequenceEnrollmentMailParticleDuration(t),
+      ease: "none",
+      onUpdate: () => this.renderSequenceEnrollmentMailParticle(i)
+    }, 0).call(n);
+  }
+  createSequenceEnrollmentMailIcon(e, t) {
+    const a = document.createElement("span");
+    return a.className = "wa-enrollment-mail", a.dataset.enrollmentMail = String(e), a.setAttribute("aria-hidden", "true"), a.append(this.createSvgIcon("wa-enrollment-mail__icon", [
+      "M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z",
+      "M3 7l9 6l9 -6"
+    ], { size: $.iconSize })), a.style.setProperty("--wa-enrollment-mail-index", String(e)), a.style.setProperty("--wa-enrollment-mail-total", String(t)), a;
+  }
+  getSequenceEnrollmentMailFlight(e, t) {
+    if (!e.isConnected) return null;
+    const a = e.getBoundingClientRect(), i = this.stage.getBoundingClientRect();
+    if (!a.width || !a.height || !i.width || !i.height) return null;
+    const n = this.sequenceEnrollmentMailRandom(t, 1), o = this.sequenceEnrollmentMailRandom(t, 2), s = this.sequenceEnrollmentMailRandom(t, 3), c = this.sequenceEnrollmentMailRandom(t, 4), l = this.sequenceEnrollmentMailRandom(t, 5), d = this.sequenceEnrollmentMailRandom(t, 6), u = $.iconSize, h = a.left + Math.min(a.width - 6, a.width * (0.55 + n * 0.34)), g = a.top + a.height * (0.42 + o * 0.16), w = h - i.left - u / 2, p = Math.min(
+      Math.max(u * -1, w),
+      Math.max(u * -1, i.width - u)
+    ), f = g - i.top - u / 2, b = window.visualViewport ? window.visualViewport.offsetTop + window.visualViewport.height : window.innerHeight, A = Math.max(
+      $.minExitY,
+      b - g + $.exitOvershootMin + s * $.exitOvershootRange
+    ), v = Math.max(
+      $.minFadeStartY,
+      b - g - u - $.fadeMargin
+    );
+    return {
+      startX: p,
+      startY: f,
+      launchX: (n - 0.5) * $.launchXRange,
+      driftX: (c - 0.5) * $.driftXRange,
+      apexY: -1 * ($.apexYMin + o * $.apexYRange),
+      fadeStartY: Math.min(v, A - 12),
+      exitY: A,
+      scale: 1 - $.scaleRange / 2 + l * $.scaleRange,
+      startRotation: (d - 0.5) * $.rotationRange,
+      endRotation: (s - 0.5) * 130 + (t % 2 === 0 ? 1 : -1) * 48,
+      duration: this.getSequenceEnrollmentMailParticleDuration(t)
+    };
+  }
+  getSequenceEnrollmentMailParticleDuration(e) {
+    return $.launchDuration + $.fallDurationMin + this.sequenceEnrollmentMailRandom(e, 4) * $.fallDurationRange;
+  }
+  renderSequenceEnrollmentMailParticle(e) {
+    const { icon: t, flight: a } = e;
+    if (!t || !a) return;
+    const i = this.clampUnit(e.progress), n = $.launchSplit, o = this.clampUnit(i / n), s = this.clampUnit((i - n) / (1 - n)), c = this.easeOutQuad(o), l = s * s, d = i <= n ? a.launchX * c : a.launchX + a.driftX * this.easeOutQuad(s), u = i <= n ? a.apexY * c : a.apexY + (a.exitY - a.apexY) * l, h = this.clampUnit((u - a.fadeStartY) / Math.max(1, a.exitY - a.fadeStartY)), w = this.clampUnit(i / 0.08) * (1 - h), p = a.startRotation + (a.endRotation - a.startRotation) * this.easeOutQuad(i), f = a.scale * (0.72 + 0.28 * this.easeOutBack(Math.min(1, o * 1.2)));
+    m.set(t, {
+      x: d,
+      y: u,
+      rotation: p,
+      scale: f,
+      autoAlpha: w
+    });
+  }
+  sequenceEnrollmentMailRandom(e, t) {
+    const a = Math.sin((e + 1) * 12.9898 + t * 78.233) * 43758.5453;
+    return a - Math.floor(a);
+  }
+  clampUnit(e) {
+    return Number.isFinite(e) ? Math.min(1, Math.max(0, e)) : 0;
+  }
+  easeOutQuad(e) {
+    return 1 - (1 - e) * (1 - e);
+  }
+  easeOutBack(e) {
+    const a = e - 1;
+    return 1 + ((1.70158 + 1) * a * a * a + 1.70158 * a * a);
   }
   playSequencePersonInteraction(e, t) {
     this.activeSequencePersonTimelines.get(e)?.kill();
@@ -3791,7 +4181,7 @@ class uc {
     this.activeSequencePersonTimelines.forEach((e) => e.kill()), this.activeSequencePersonTimelines.clear();
   }
   sequenceKickoff(e) {
-    return f.timeline().call(() => {
+    return m.timeline().call(() => {
       const t = this.findSequenceEngagement(e), a = t?.querySelector("[data-sequence-kickoff]"), i = a?.querySelector(".wa-sequence-kickoff__label");
       !t || !a || (t.dataset.sequenceLaunched = "true", a.dataset.processing = "true", a.setAttribute("aria-busy", "true"), a.setAttribute("aria-label", "Enrolling"), i && (i.textContent = "Enrolling"));
     });
@@ -3809,35 +4199,35 @@ class uc {
   prepareCursorFile(e, t, a = "CSV", i = []) {
     const n = this.createCursorFile(e, a, i);
     let o = null, s = { x: 0, y: 0 };
-    const l = () => {
-      o?.(), o = null, f.killTweensOf(s);
+    const c = () => {
+      o?.(), o = null, m.killTweensOf(s);
     };
     return this.registerTransientElement(n, () => {
-      l();
+      c();
     }), {
       el: n,
-      startFollow: () => f.timeline().call(() => {
+      startFollow: () => m.timeline().call(() => {
         o?.(), t.beginDragPayload();
-        const c = this.getCursorFileEntryOffset(n, t);
-        s.x = c.x, s.y = c.y, o = this.followCursorWithFile(n, t, s);
+        const l = this.getCursorFileEntryOffset(n, t);
+        s.x = l.x, s.y = l.y, o = this.followCursorWithFile(n, t, s);
       }).set(n, {
         autoAlpha: 1,
         scale: 1
       }, 0).to(s, {
         x: 0,
         y: 0,
-        duration: ei.pullInDuration,
-        ease: ei.pullInEase
+        duration: gi.pullInDuration,
+        ease: gi.pullInEase
       }, 0),
-      stopFollow: () => f.timeline().call(l).to(n, {
+      stopFollow: () => m.timeline().call(c).to(n, {
         autoAlpha: 0,
         scale: 0.92,
-        duration: S(0.18),
+        duration: x(0.18),
         ease: "power2.in"
       }),
-      releaseAtDrop: () => f.timeline().call(l).add(t.releaseDragPayload(), 0),
-      landAsUploadedFile: (c, d = "CSV uploaded") => f.timeline().call(l).add(this.uploadedFileMessageFromCursorFile(n, c, d), 0),
-      landAsUploadedFiles: (c) => f.timeline().call(l).add(this.uploadedFilesMessageFromCursorFile(n, c), 0)
+      releaseAtDrop: () => m.timeline().call(c).add(t.releaseDragPayload(), 0),
+      landAsUploadedFile: (l, d = "CSV uploaded", u = {}) => m.timeline().call(c).add(this.uploadedFileMessageFromCursorFile(n, l, d, u), 0),
+      landAsUploadedFiles: (l) => m.timeline().call(c).add(this.uploadedFilesMessageFromCursorFile(n, l), 0)
     };
   }
   uploadedFileMessage(e, t = "CSV uploaded") {
@@ -3850,20 +4240,20 @@ class uc {
       autoAlpha: 1,
       y: 0,
       scale: 1,
-      duration: S(0.26),
+      duration: x(0.26),
       ease: "back.out(1.6)"
     });
   }
-  uploadedFileMessageFromCursorFile(e, t, a = "CSV uploaded") {
-    const i = this.createUploadedFile(t, a), n = this.claimUserComponentMessage("file", i);
-    return this.revealDroppedFilesMessage(e, n, [i]);
+  uploadedFileMessageFromCursorFile(e, t, a = "CSV uploaded", i = {}) {
+    const n = this.createUploadedFile(t, a), o = this.claimUserComponentMessage("file", n);
+    return this.revealDroppedFilesMessage(e, o, [n], [], i);
   }
   uploadedFilesMessage(e) {
     const t = this.createUploadedFiles(e);
     return this.revealUserComponentItems("file", t, ".wa-uploaded-file", {
-      ...Pe.compactRow,
-      from: { ...Pe.compactRow.from, scale: 0.99 },
-      to: { ...Pe.compactRow.to, scale: 1 },
+      ...Ne.compactRow,
+      from: { ...Ne.compactRow.from, scale: 0.99 },
+      to: { ...Ne.compactRow.to, scale: 1 },
       position: "-=0.24"
     });
   }
@@ -3877,55 +4267,59 @@ class uc {
     return e === 4 ? "You uploaded four files" : `You uploaded ${e} files`;
   }
   pulse(e) {
-    const t = typeof e == "string" ? this.root.querySelector(e) : e, a = f.timeline();
+    const t = typeof e == "string" ? this.root.querySelector(e) : e, a = m.timeline();
     return t && a.to(t, {
       scale: 1.025,
-      duration: S(0.14),
+      duration: x(0.14),
       ease: "power2.out"
     }).to(t, {
       scale: 1,
-      duration: S(0.28),
+      duration: x(0.28),
       ease: "elastic.out(1, 0.55)"
     }), a;
   }
   revealDroppedFilesMessage(e, t, a, i = [], n = {}) {
     const o = [...a, ...i];
-    let s = [], l = null;
-    const c = { value: 0 };
-    let d = 0;
-    return !a.length || !e.isConnected ? this.revealMessageWithChildren(t, o, {
-      autoAlpha: 1,
-      y: 0,
-      scale: 1,
-      duration: S(0.24),
-      ease: "power2.out",
-      stagger: Ee.stagger
-    }) : (f.set(o, { autoAlpha: 0, y: 0, scale: 1 }), f.timeline().call(() => {
-      const u = this.thread.scrollTop;
-      this.scrollTween?.kill(), this.scrollTween = null, t.style.display = "grid", f.set(t, {
+    let s = [], c = null;
+    const l = { value: 0 };
+    let d = 0, u = 0;
+    const h = n.preserveScroll ?? !1;
+    if (!a.length || !e.isConnected)
+      return this.revealMessageWithChildren(t, o, {
+        autoAlpha: 1,
+        y: 0,
+        scale: 1,
+        duration: x(0.24),
+        ease: "power2.out",
+        stagger: Le.stagger
+      });
+    m.set(o, { autoAlpha: 0, y: 0, scale: 1 });
+    const g = m.timeline().call(() => {
+      u = this.thread.scrollTop, this.scrollTween?.kill(), this.scrollTween = null, t.style.display = "grid", m.set(t, {
         opacity: 1,
         visibility: "hidden",
         y: 0,
         scale: 1,
         transformOrigin: "right center"
-      }), d = this.getMessageScrollTarget(t), this.thread.scrollTop = d, s = this.createFileLandingClones(e, a), l = this.createFileLandingLabel(n.landingLabel, s, i[0] ?? null), this.thread.scrollTop = u, f.set(e, { autoAlpha: 0 });
-    }).to(
+      }), d = h ? u : this.getMessageScrollTarget(t), h || (this.thread.scrollTop = d), s = this.createFileLandingClones(e, a), c = this.createFileLandingLabel(n.landingLabel, s, i[0] ?? null), this.thread.scrollTop = u, m.set(e, { autoAlpha: 0 });
+    });
+    return h || g.to(
       this.thread,
       {
         scrollTop: () => d,
-        duration: Ee.duration,
-        ease: Ee.ease,
+        duration: Le.duration,
+        ease: Le.ease,
         overwrite: "auto"
       },
       0
-    ).to(
-      c,
+    ), g.to(
+      l,
       {
         value: 1,
-        duration: Ee.duration,
-        ease: Ee.ease,
+        duration: Le.duration,
+        ease: Le.ease,
         onUpdate: () => {
-          this.renderFileLandingClones(s, c.value), this.renderFileLandingLabel(l, c.value);
+          this.renderFileLandingClones(s, l.value), this.renderFileLandingLabel(c, l.value);
         }
       },
       0
@@ -3935,31 +4329,31 @@ class uc {
         autoAlpha: 1,
         y: 0,
         scale: 1,
-        duration: S(0.16),
+        duration: x(0.16),
         ease: "power1.out",
-        stagger: Ee.stagger
+        stagger: Le.stagger
       },
-      `-=${S(0.16)}`
+      `-=${x(0.16)}`
     ).call(() => {
-      this.renderFileLandingClones(s, 1), this.renderFileLandingLabel(l, 1), this.thread.scrollTop = d, f.set(o, { autoAlpha: 1, y: 0, scale: 1 }), f.set(t, { opacity: 1, visibility: "visible" }), s.forEach((u) => u.el.remove()), l?.el.remove(), e.remove();
-    }));
+      this.renderFileLandingClones(s, 1), this.renderFileLandingLabel(c, 1), this.thread.scrollTop = h ? u : d, m.set(o, { autoAlpha: 1, y: 0, scale: 1 }), m.set(t, { opacity: 1, visibility: "visible" }), s.forEach((w) => w.el.remove()), c?.el.remove(), e.remove();
+    });
   }
   createFileLandingClones(e, t) {
     const a = this.getCursorFileCards(e), i = this.chatBody;
     return t.map((n, o) => {
-      const l = a[Math.min(o, a.length - 1)].getBoundingClientRect(), c = n.getBoundingClientRect(), d = this.getElementLocalRect(l, i), u = this.getElementLocalRect(c, i), h = n.cloneNode(!0), g = this.getCursorFileCardRotation(o, a.length), m = window.getComputedStyle(n), p = d.left + (l.width - c.width) * 0.5, w = d.top + (l.height - c.height) * 0.5;
-      return h.classList.add("wa-file-landing-clone"), h.dataset.fileLandingClone = "", i.append(h), f.set(h, {
+      const c = a[Math.min(o, a.length - 1)].getBoundingClientRect(), l = n.getBoundingClientRect(), d = this.getElementLocalRect(c, i), u = this.getElementLocalRect(l, i), h = n.cloneNode(!0), g = this.getCursorFileCardRotation(o, a.length), w = window.getComputedStyle(n), p = d.left + (c.width - l.width) * 0.5, f = d.top + (c.height - l.height) * 0.5;
+      return h.classList.add("wa-file-landing-clone"), h.dataset.fileLandingClone = "", i.append(h), m.set(h, {
         position: "absolute",
         zIndex: 21,
         top: 0,
         left: 0,
-        width: c.width,
-        minWidth: c.width,
-        maxWidth: c.width,
-        height: c.height,
-        minHeight: c.height,
+        width: l.width,
+        minWidth: l.width,
+        maxWidth: l.width,
+        height: l.height,
+        minHeight: l.height,
         x: p,
-        y: w,
+        y: f,
         scaleX: 1,
         scaleY: 1,
         rotation: g,
@@ -3968,25 +4362,25 @@ class uc {
         margin: 0,
         autoAlpha: 1,
         visibility: "visible",
-        backgroundColor: m.backgroundColor,
-        borderColor: m.borderTopColor,
-        borderStyle: m.borderTopStyle === "none" ? "solid" : m.borderTopStyle,
-        borderWidth: m.borderTopWidth || "1px",
+        backgroundColor: w.backgroundColor,
+        borderColor: w.borderTopColor,
+        borderStyle: w.borderTopStyle === "none" ? "solid" : w.borderTopStyle,
+        borderWidth: w.borderTopWidth || "1px",
         boxShadow: this.getFileLandingShadow(0)
       }), {
         el: h,
         startX: p,
-        startY: w,
-        startWidth: l.width,
-        startHeight: l.height,
+        startY: f,
+        startWidth: c.width,
+        startHeight: c.height,
         endX: u.left,
         endY: u.top,
-        endWidth: c.width,
-        endHeight: c.height,
+        endWidth: l.width,
+        endHeight: l.height,
         startRotation: g,
-        setX: f.quickSetter(h, "x", "px"),
-        setY: f.quickSetter(h, "y", "px"),
-        setRotation: f.quickSetter(h, "rotation", "deg")
+        setX: m.quickSetter(h, "x", "px"),
+        setY: m.quickSetter(h, "y", "px"),
+        setRotation: m.quickSetter(h, "rotation", "deg")
       };
     });
   }
@@ -3997,7 +4391,7 @@ class uc {
   createFileLandingLabel(e, t, a) {
     if (!e || !t.length) return null;
     const i = document.createElement("div");
-    i.className = "wa-file-landing-label", i.textContent = e, this.chatBody.append(i), f.set(i, {
+    i.className = "wa-file-landing-label", i.textContent = e, this.chatBody.append(i), m.set(i, {
       position: "absolute",
       top: 0,
       left: 0,
@@ -4008,21 +4402,21 @@ class uc {
       x: 0,
       y: 0
     });
-    const n = a ? this.getElementLocalRect(a.getBoundingClientRect(), this.chatBody) : null, o = i.offsetWidth, s = i.offsetHeight, l = 9, c = this.getFileLandingCloneBounds(t, "end"), d = n?.left ?? c.left + c.width / 2 - o / 2, u = n?.top ?? c.top - s - l;
-    return f.set(i, { x: d, y: u }), {
+    const n = a ? this.getElementLocalRect(a.getBoundingClientRect(), this.chatBody) : null, o = i.offsetWidth, s = i.offsetHeight, c = 9, l = this.getFileLandingCloneBounds(t, "end"), d = n?.left ?? l.left + l.width / 2 - o / 2, u = n?.top ?? l.top - s - c;
+    return m.set(i, { x: d, y: u }), {
       el: i,
-      setOpacity: f.quickSetter(i, "opacity")
+      setOpacity: m.quickSetter(i, "opacity")
     };
   }
   renderFileLandingLabel(e, t) {
     e && e.setOpacity(1);
   }
   getFileLandingCloneBounds(e, t) {
-    const a = e.map((g) => t === "start" ? g.startX : g.endX), i = e.map((g) => t === "start" ? g.startY : g.endY), n = e.map((g) => t === "start" ? g.startWidth : g.endWidth), o = e.map((g) => t === "start" ? g.startHeight : g.endHeight), s = e.map((g, m) => a[m] + n[m]), l = e.map((g, m) => i[m] + o[m]), c = Math.min(...a), d = Math.min(...i), u = Math.max(...s), h = Math.max(...l);
+    const a = e.map((g) => t === "start" ? g.startX : g.endX), i = e.map((g) => t === "start" ? g.startY : g.endY), n = e.map((g) => t === "start" ? g.startWidth : g.endWidth), o = e.map((g) => t === "start" ? g.startHeight : g.endHeight), s = e.map((g, w) => a[w] + n[w]), c = e.map((g, w) => i[w] + o[w]), l = Math.min(...a), d = Math.min(...i), u = Math.max(...s), h = Math.max(...c);
     return {
-      left: c,
+      left: l,
       top: d,
-      width: u - c,
+      width: u - l,
       height: h - d
     };
   }
@@ -4031,7 +4425,7 @@ class uc {
     return t.length ? t : [e];
   }
   getCursorFileCardRotation(e, t) {
-    return t > 1 ? Ee.rotations[e] ?? 0 : 0;
+    return t > 1 ? Le.rotations[e] ?? 0 : 0;
   }
   getElementLocalRect(e, t) {
     const a = t.getBoundingClientRect();
@@ -4045,26 +4439,26 @@ class uc {
   }
   getFileLandingShadow(e) {
     const t = 1 - e;
-    return `0 ${this.interpolate(Ee.shadowY, 0, e).toFixed(2)}px ${this.interpolate(
-      Ee.shadowBlur,
+    return `0 ${this.interpolate(Le.shadowY, 0, e).toFixed(2)}px ${this.interpolate(
+      Le.shadowBlur,
       0,
       e
-    ).toFixed(2)}px rgba(23, 23, 20, ${(Ee.shadowAlpha * t).toFixed(3)})`;
+    ).toFixed(2)}px rgba(23, 23, 20, ${(Le.shadowAlpha * t).toFixed(3)})`;
   }
-  revealMessageWithChildren(e, t, a, i = "-=0.22", n = null, o = 0) {
-    return f.timeline().add(this.revealMessage(e, n, o)).call(() => this.setMotionHints(t), void 0, i).to(t, a, i).call(() => this.clearMotionHints(t));
+  revealMessageWithChildren(e, t, a, i = "-=0.22", n = null, o = 0, s = {}) {
+    return m.timeline().add(this.revealMessage(e, n, o, s)).call(() => this.setMotionHints(t), void 0, i).to(t, a, i).call(() => this.clearMotionHints(t));
   }
   revealMessageWithChildFrom(e, t, a, i, n = "-=0.22") {
-    return f.timeline().add(this.revealMessage(e)).call(() => this.setMotionHints(t), void 0, n).fromTo(
+    return m.timeline().add(this.revealMessage(e)).call(() => this.setMotionHints(t), void 0, n).fromTo(
       t,
       a,
       i,
       n
     ).call(() => this.clearMotionHints(t));
   }
-  revealComponentItems(e, t, a, i, n = null) {
-    const o = this.claimComponentMessage(e, t);
-    return this.revealPreparedItems(o, this.resolveRevealTargets(t, a), i, n);
+  revealComponentItems(e, t, a, i, n = null, o = {}) {
+    const s = this.claimComponentMessage(e, t);
+    return this.revealPreparedItems(s, this.resolveRevealTargets(t, a), i, n, o);
   }
   revealUserComponentItems(e, t, a, i) {
     const n = this.claimUserComponentMessage(e, t);
@@ -4073,46 +4467,53 @@ class uc {
   resolveRevealTargets(e, t) {
     return typeof t == "string" ? this.queryElements(e, t) : t;
   }
-  revealPreparedItems(e, t, a, i = null, n = 0) {
-    t.length && f.set(t, { ...a.from });
-    const o = this.revealMessageWithChildren(
+  revealPreparedItems(e, t, a, i = null, n = {}) {
+    t.length && m.set(t, { ...a.from });
+    const o = n.scrollOffset ?? 0, s = n.preserveScroll ?? !1, c = this.revealMessageWithChildren(
       e,
       t,
       { ...a.to },
       a.position,
       i,
-      n
+      o,
+      { preserveScroll: s }
     );
-    return o.call(
-      () => this.animateMessageScrollIntoView(e, X.followDuration, i, n),
+    return s ? c : (c.call(
+      () => this.animateMessageScrollIntoView(e, K.followDuration, i, o),
       void 0,
-      X.componentFollowDelay
-    ), o.call(
-      () => this.animateMessageScrollIntoView(e, X.followDuration, i, n),
+      K.componentFollowDelay
+    ), c.call(
+      () => this.animateMessageScrollIntoView(e, K.followDuration, i, o),
       void 0,
       "+=0.02"
-    );
+    ));
   }
-  revealMessage(e, t = null, a = 0) {
-    let i = 0;
-    const n = e.classList.contains("wa-message--component") ? X.componentRevealDelay : 0.04;
-    return f.timeline().call(() => {
-      this.scrollTween?.kill(), this.scrollTween = null, e.style.display = "grid", this.setMotionHints(e), this.forceThreadLayout(e), this.updateThreadContentFitState(), this.composerVisible && this.pinThreadToBottom(), i = this.getMessageScrollTarget(e, t, a);
-    }).to(
+  revealMessage(e, t = null, a = 0, i = {}) {
+    let n = 0, o = 0;
+    const s = i.preserveScroll ?? !1, c = e.classList.contains("wa-message--component") ? K.componentRevealDelay : 0.04, l = m.timeline().call(() => {
+      o = this.thread.scrollTop, this.scrollTween?.kill(), this.scrollTween = null, e.style.display = "grid", this.setMotionHints(e), this.forceThreadLayout(e), this.updateThreadContentFitState(), s && (e.dataset.preserveMessageScroll = "true"), this.composerVisible && !s && this.pinThreadToBottom(), n = s ? o : this.getMessageScrollTarget(e, t, a), s && (this.thread.scrollTop = o);
+    });
+    return s || l.to(
       this.thread,
       {
-        scrollTop: () => i,
-        duration: X.revealDuration,
-        ease: X.revealEase,
+        scrollTop: () => n,
+        duration: K.revealDuration,
+        ease: K.revealEase,
         overwrite: "auto"
       },
       0
-    ).to(e, {
+    ), l.to(e, {
       autoAlpha: 1,
       y: 0,
       scale: 1,
-      ...Kl
-    }, n).call(() => this.clearMotionHints(e));
+      ...Bc,
+      onUpdate: s ? () => {
+        this.thread.scrollTop = o;
+      } : void 0,
+      onComplete: s ? () => {
+        this.thread.scrollTop = o;
+      } : void 0
+    }, c).call(() => this.clearMotionHints(e));
   }
   forceThreadLayout(e) {
     e.offsetHeight, this.thread.scrollHeight;
@@ -4134,22 +4535,30 @@ class uc {
     }));
   }
   shouldIgnoreThreadContentFitMutations(e) {
-    return e.length > 0 && e.every(
-      (t) => t.type === "attributes" && t.target === this.thread && t.attributeName === "style"
-    );
+    return e.length > 0 && e.every((t) => {
+      if (t.type === "attributes" && t.target === this.thread && t.attributeName === "style" || t.type === "attributes" && t.target instanceof Element && t.target.closest(".wa-enrollment-mail"))
+        return !0;
+      if (t.type !== "childList") return !1;
+      const a = [...Array.from(t.addedNodes), ...Array.from(t.removedNodes)];
+      return a.length > 0 && a.every(
+        (i) => i instanceof HTMLElement && i.classList.contains("wa-enrollment-mail")
+      );
+    });
   }
   updateThreadContentFitState() {
     this.updateMarketingDataGridScales(), this.applyWindowSceneScale();
-    const e = this.getVisibleThreadContentHeight(), t = Math.max(this.thread.clientHeight, this.chatBody.clientHeight), a = e > 0 && t > 0 && e <= t - 1;
+    const e = this.getVisibleThreadContentHeight(), t = Math.max(this.thread.clientHeight, this.chatBody.clientHeight);
+    e > this.maxVisibleThreadContentHeight && (this.maxVisibleThreadContentHeight = e);
+    const a = Math.max(e, this.maxVisibleThreadContentHeight), i = Math.max(0, a - e), n = a > 0 && t > 0 && a <= t - 1;
     if (!e || !t) {
-      delete this.chatBody.dataset.chatContentFit, delete this.thread.dataset.threadContentFit;
+      delete this.chatBody.dataset.chatContentFit, delete this.thread.dataset.threadContentFit, this.thread.style.removeProperty("--wa-thread-growth-spacer");
       return;
     }
-    const i = a ? "short" : "overflow";
-    this.chatBody.dataset.chatContentFit = i, this.thread.dataset.threadContentFit = i;
+    const o = n ? "short" : "overflow";
+    this.thread.style.setProperty("--wa-thread-growth-spacer", `${Math.ceil(i * 100) / 100}px`), this.chatBody.dataset.chatContentFit = o, this.thread.dataset.threadContentFit = o;
   }
   clearThreadContentFitState() {
-    delete this.chatBody.dataset.chatContentFit, delete this.thread.dataset.threadContentFit, this.clearWindowSceneScaleState();
+    this.maxVisibleThreadContentHeight = 0, delete this.chatBody.dataset.chatContentFit, delete this.thread.dataset.threadContentFit, this.thread.style.removeProperty("--wa-thread-growth-spacer"), this.thread.style.removeProperty("--wa-thread-base-bottom-padding"), this.clearWindowSceneScaleState();
   }
   applyWindowSceneScale() {
     const e = this.getWindowSceneBaseSize(), t = this.getWindowSceneAvailableWidth(), a = Math.max(e.width, this.getWindowSceneBaseWidth());
@@ -4157,8 +4566,8 @@ class uc {
       this.clearWindowSceneScaleState();
       return;
     }
-    const i = Number(Math.max(0.01, t / a).toFixed(4)), n = String(i), o = `${Math.ceil(a)}px`, s = `${Math.ceil(e.height * i)}px`, l = `${Math.ceil(e.height)}px`;
-    this.stage.dataset.windowContentScale = "scaled", this.stage.style.getPropertyValue("--wa-window-scene-scale") !== n && this.stage.style.setProperty("--wa-window-scene-scale", n), this.stage.style.getPropertyValue("--wa-window-scene-width") !== o && this.stage.style.setProperty("--wa-window-scene-width", o), this.stage.style.getPropertyValue("--wa-window-scene-height") !== s && this.stage.style.setProperty("--wa-window-scene-height", s), this.stage.style.getPropertyValue("--wa-window-scene-unscaled-height") !== l && this.stage.style.setProperty("--wa-window-scene-unscaled-height", l);
+    const i = Number(Math.max(0.01, t / a).toFixed(4)), n = String(i), o = `${Math.ceil(a)}px`, s = `${Math.ceil(e.height * i)}px`, c = `${Math.ceil(e.height)}px`;
+    this.stage.dataset.windowContentScale = "scaled", this.stage.style.getPropertyValue("--wa-window-scene-scale") !== n && this.stage.style.setProperty("--wa-window-scene-scale", n), this.stage.style.getPropertyValue("--wa-window-scene-width") !== o && this.stage.style.setProperty("--wa-window-scene-width", o), this.stage.style.getPropertyValue("--wa-window-scene-height") !== s && this.stage.style.setProperty("--wa-window-scene-height", s), this.stage.style.getPropertyValue("--wa-window-scene-unscaled-height") !== c && this.stage.style.setProperty("--wa-window-scene-unscaled-height", c);
   }
   clearWindowSceneScaleState() {
     delete this.stage.dataset.windowContentScale, this.stage.style.removeProperty("--wa-window-scene-scale"), this.stage.style.removeProperty("--wa-window-scene-width"), this.stage.style.removeProperty("--wa-window-scene-height"), this.stage.style.removeProperty("--wa-window-scene-unscaled-height");
@@ -4191,23 +4600,29 @@ class uc {
     const e = document.createElement("div");
     return e.setAttribute("aria-hidden", "true"), e.style.position = "absolute", e.style.left = "-10000px", e.style.top = "0", e.style.display = "block", e.style.visibility = "hidden", e.style.pointerEvents = "none", e.style.overflow = "hidden", e.style.contain = "strict", this.stage.append(e), this.windowSceneMeasure = e, e;
   }
-  getVisibleThreadContentHeight() {
+  getVisibleThreadContentBounds() {
     const e = Array.from(this.thread.children).filter(
       (i) => i instanceof HTMLElement && this.isMeasurableThreadChild(i)
     );
-    if (!e.length) return 0;
+    if (!e.length) return null;
     const t = Math.min(...e.map((i) => i.offsetTop)), a = Math.max(...e.map((i) => i.offsetTop + i.offsetHeight));
-    return Math.max(0, a - t);
+    return { top: t, bottom: a, height: Math.max(0, a - t) };
+  }
+  getVisibleThreadContentHeight() {
+    return this.getVisibleThreadContentBounds()?.height ?? 0;
+  }
+  getVisibleThreadContentBottom() {
+    return this.getVisibleThreadContentBounds()?.bottom ?? 0;
   }
   isMeasurableThreadChild(e) {
     const t = window.getComputedStyle(e);
     return t.display !== "none" && t.visibility !== "hidden" && e.offsetHeight > 0;
   }
   setMotionHints(e, t = "transform, opacity") {
-    f.set(e, { willChange: t });
+    m.set(e, { willChange: t });
   }
   clearMotionHints(e) {
-    f.set(e, { willChange: "auto" });
+    m.set(e, { willChange: "auto" });
   }
   claimMessage(e, t) {
     const { message: a, body: i } = this.claimMessageShell(
@@ -4227,7 +4642,7 @@ class uc {
   }
   claimMessageShell(e, t, a) {
     const i = this.messageIndex, n = this.messagePool[i] ?? this.createMessage(i), o = this.getMessageBody(n);
-    return this.messageIndex += 1, n.dataset.messageRole = e, n.dataset.messageId = `${t}-${i}`, this.resetMessageClasses(n), n.classList.toggle("wa-message--first-active", i === 0), n.style.display = "none", delete o.dataset.streaming, o.replaceChildren(), this.thread.append(n), f.set(n, {
+    return this.messageIndex += 1, n.dataset.messageRole = e, n.dataset.messageId = `${t}-${i}`, this.resetMessageClasses(n), n.classList.toggle("wa-message--first-active", i === 0), n.style.display = "none", delete o.dataset.streaming, o.replaceChildren(), this.thread.append(n), m.set(n, {
       autoAlpha: 0,
       y: 16,
       scale: 0.985,
@@ -4235,7 +4650,7 @@ class uc {
     }), { message: n, body: o, index: i };
   }
   resetMessageClasses(e) {
-    e.classList.remove(...zl), e.classList.remove("wa-message--first-active");
+    e.classList.remove(...Cc), e.classList.remove("wa-message--first-active");
   }
   createCsvDropArea(e = {}) {
     const t = document.createElement("article");
@@ -4246,7 +4661,7 @@ class uc {
     return i.textContent = "Add files to chat", a.append(i), t.append(a), t;
   }
   revealCsvDropArea(e) {
-    return f.timeline().to(
+    return m.timeline().to(
       {},
       {
         duration: 1e-3,
@@ -4257,7 +4672,7 @@ class uc {
     );
   }
   revealCsvDropAreaWhenCursorEnters(e, t) {
-    return f.timeline().to(
+    return m.timeline().to(
       {},
       {
         duration: 1e-3,
@@ -4273,14 +4688,14 @@ class uc {
               return;
             }
             this.isCursorInsideChatShell(t) && (this.clearDropRevealWatcher(e), this.showCsvDropArea(e, !1));
-          }, i = () => f.ticker.remove(a);
-          this.dropRevealWatchers.set(e, i), f.ticker.add(a);
+          }, i = () => m.ticker.remove(a);
+          this.dropRevealWatchers.set(e, i), m.ticker.add(a);
         }
       }
     );
   }
   activateCsvDropArea(e) {
-    return f.timeline().to(
+    return m.timeline().to(
       {},
       {
         duration: 1e-3,
@@ -4291,18 +4706,18 @@ class uc {
     );
   }
   completeCsvDropArea(e) {
-    return f.timeline().to(
+    return m.timeline().to(
       {},
       {
         duration: 1e-3,
         onStart: () => {
-          e.dataset.dropState = "complete", e.dataset.dropComplete = "true", this.clearDropRevealWatcher(e), f.killTweensOf(e), f.set(e, { autoAlpha: 0 }), e.remove();
+          e.dataset.dropState = "complete", e.dataset.dropComplete = "true", this.clearDropRevealWatcher(e), m.killTweensOf(e), m.set(e, { autoAlpha: 0 }), e.remove();
         }
       }
     );
   }
   showCsvDropArea(e, t) {
-    e.dataset.dropComplete !== "true" && ((t || !e.dataset.dropState) && (e.dataset.dropState = "idle"), e.isConnected || this.chatShell.append(e), f.set(e, {
+    e.dataset.dropComplete !== "true" && ((t || !e.dataset.dropState) && (e.dataset.dropState = "idle"), e.isConnected || this.chatShell.append(e), m.set(e, {
       autoAlpha: 1,
       transformOrigin: "center center"
     }));
@@ -4322,19 +4737,19 @@ class uc {
     const i = document.createElement("div");
     i.className = "wa-cursor-file", i.setAttribute("aria-hidden", "true");
     const n = this.getCursorFileStackCount(e, a);
-    return n > 1 ? (i.classList.add("wa-cursor-file--stack"), i.append(...this.createCursorFileStack(e, t, n, a))) : i.append(this.createCursorFileCard(e, t)), this.root.append(i), f.set(i, { autoAlpha: 0, scale: 0.88, x: -120, y: -120 }), i;
+    return n > 1 ? (i.classList.add("wa-cursor-file--stack"), i.append(...this.createCursorFileStack(e, t, n, a))) : i.append(this.createCursorFileCard(e, t)), this.root.append(i), m.set(i, { autoAlpha: 0, scale: 0.88, x: -120, y: -120 }), i;
   }
   followCursorWithFile(e, t, a) {
-    const i = e.offsetWidth || 154, n = e.offsetHeight || 42, o = f.quickSetter(e, "x", "px"), s = f.quickSetter(e, "y", "px"), l = { x: -120, y: -120 }, c = () => {
+    const i = e.offsetWidth || 154, n = e.offsetHeight || 42, o = m.quickSetter(e, "x", "px"), s = m.quickSetter(e, "y", "px"), c = { x: -120, y: -120 }, l = () => {
       const d = t.readPosition(), u = d.x - i * 0.5 + a.x, h = d.y - n * 0.5 + a.y;
-      t.isPayloadDragging() && t.el.dataset.cursorMode !== "drag" && t.setMode("drag"), u !== l.x && (l.x = u, o(u)), h !== l.y && (l.y = h, s(h));
+      t.isPayloadDragging() && t.el.dataset.cursorMode !== "drag" && t.setMode("drag"), u !== c.x && (c.x = u, o(u)), h !== c.y && (c.y = h, s(h));
     };
-    return c(), f.ticker.add(c), () => f.ticker.remove(c);
+    return l(), m.ticker.add(l), () => m.ticker.remove(l);
   }
   getCursorFileEntryOffset(e, t) {
-    const a = e.offsetWidth || 154, i = t.readPosition(), n = this.root.getBoundingClientRect(), o = window.innerWidth - n.left, s = i.x - a * 0.5, l = o + ei.offscreenMargin;
+    const a = e.offsetWidth || 154, i = t.readPosition(), n = this.root.getBoundingClientRect(), o = window.innerWidth - n.left, s = i.x - a * 0.5, c = o + gi.offscreenMargin;
     return {
-      x: Math.max(0, l - s),
+      x: Math.max(0, c - s),
       y: 0
     };
   }
@@ -4378,10 +4793,10 @@ class uc {
     o.className = "wa-uploaded-file__icon", o.textContent = i;
     const s = document.createElement("span");
     s.className = "wa-uploaded-file__body";
-    const l = document.createElement("strong");
-    l.textContent = e;
-    const c = document.createElement("span");
-    return c.textContent = t, s.append(l, c), n.append(o, s), n;
+    const c = document.createElement("strong");
+    c.textContent = e;
+    const l = document.createElement("span");
+    return l.textContent = t, s.append(c, l), n.append(o, s), n;
   }
   createUploadedFiles(e) {
     const t = document.createElement("div");
@@ -4406,17 +4821,109 @@ class uc {
     return t === "csv" || t === "xls" || t === "xlsx" ? "spreadsheet" : t === "pdf" ? "pdf" : t === "doc" || t === "docx" ? "doc" : t === "txt" || t === "md" ? "text" : t === "ppt" || t === "pptx" ? "ppt" : "default";
   }
   streamThinkingHeader(e) {
-    return this.streamThinkingChild(e, ".wa-thinking__title", Jl);
+    return this.streamThinkingChild(e, ".wa-thinking__title", Oc);
   }
   streamThinkingStepLabel(e) {
-    return this.streamThinkingChild(e, ".wa-research-step__label", Xl);
+    return this.streamThinkingChild(e, ".wa-research-step__label", Lc);
   }
   streamThinkingStepDetail(e) {
-    return this.streamThinkingChild(e, ".wa-research-step__detail", Mt);
+    const t = e.querySelector(".wa-research-step__detail"), a = t?.querySelector("[data-thinking-detail-text]");
+    if (a) {
+      const i = a.dataset.fullText ?? a.textContent ?? "", n = this.queryElements(t, ".wa-research-step__tool-call"), o = m.timeline();
+      return i && o.add(this.streamText(a, i, {
+        duration: this.getStreamDuration(i, rt),
+        targetForScroll: this.getMessageScrollTargetElement(e)
+      })), n.length && o.add(this.streamThinkingToolCalls(n, e), "+=0.04"), o;
+    }
+    return this.streamThinkingChild(e, ".wa-research-step__detail", rt);
+  }
+  streamThinkingToolCalls(e, t) {
+    const a = m.timeline();
+    return e.forEach((i, n) => {
+      a.add(
+        this.streamThinkingToolCall(i, t, this.getThinkingToolCallActiveHold(t, n, e.length)),
+        n * Ye.entranceStagger
+      );
+    }), a;
+  }
+  streamThinkingToolCall(e, t, a) {
+    const i = e.querySelector(".wa-research-step__tool-favicon"), n = e.querySelector(".wa-research-step__tool-check"), o = e.querySelector(".wa-research-step__tool-label"), s = o?.dataset.fullText ?? o?.textContent ?? "", c = this.getMessageScrollTargetElement(t), l = m.timeline();
+    return !o || !s || (l.call(() => {
+      e.dataset.toolCallState = "active";
+    }).set(e, { autoAlpha: 1, y: 0 }), i && l.fromTo(
+      i,
+      { autoAlpha: 0, scale: 0.68, y: 0 },
+      {
+        autoAlpha: 1,
+        scale: 1,
+        y: 0,
+        duration: x(0.16),
+        ease: "back.out(2.4)"
+      },
+      0
+    ), n && l.set(n, {
+      autoAlpha: 0,
+      y: Z.checkStartY,
+      scale: Z.checkStartScale
+    }, 0), l.add(this.streamText(o, s, {
+      duration: this.getStreamDuration(s, rt),
+      targetForScroll: c
+    }), 0.02).to({}, { duration: this.prefersReducedMotion ? 0.01 : a }).add(this.createThinkingToolCompleteIconTimeline(i, n)).call(() => {
+      e.dataset.toolCallState = "complete";
+    }), l.eventCallback("onReverseComplete", () => {
+      e.dataset.toolCallState = "pending", m.set(e, { autoAlpha: 0, y: 0 }), i && m.set(i, { autoAlpha: 0, scale: 0.68, y: 0 }), n && m.set(n, {
+        autoAlpha: 0,
+        y: Z.checkStartY,
+        scale: Z.checkStartScale
+      });
+    })), l;
+  }
+  createThinkingToolCompleteIconTimeline(e, t) {
+    const a = m.timeline();
+    return this.prefersReducedMotion ? (e && a.set(e, { autoAlpha: 0, y: 0, scale: 1 }), t && a.set(t, { autoAlpha: 1, y: 0, scale: 1 }), a) : (e && a.to(e, {
+      autoAlpha: 0,
+      y: Z.faviconDropY,
+      scale: Z.faviconDropScale,
+      duration: Z.faviconDropDuration,
+      ease: "power2.in"
+    }, 0), t && a.fromTo(
+      t,
+      {
+        autoAlpha: 0,
+        y: Z.checkStartY,
+        scale: Z.checkStartScale
+      },
+      {
+        autoAlpha: 1,
+        y: 0,
+        scale: Z.checkPopScale,
+        duration: Z.checkPopDuration,
+        ease: "back.out(3.2)"
+      },
+      e ? Z.checkOverlap : 0
+    ).to(t, {
+      scale: 1,
+      duration: Z.checkSettleDuration,
+      ease: "power2.out"
+    }), a);
+  }
+  getThinkingToolCallActiveHold(e, t, a) {
+    if (this.prefersReducedMotion) return 0.01;
+    const i = this.parsePositiveNumber(e.dataset.thinkingDuration);
+    if (i === null && a <= 1)
+      return Ye.singleActiveHold;
+    const n = i === null ? Ye.defaultActiveWindow : Math.min(
+      Ye.maxActiveWindow,
+      Math.max(
+        Ye.minActiveHold,
+        i * Ye.configuredStepActiveRatio
+      )
+    ), o = Ye.finishFactors[t % Ye.finishFactors.length];
+    return Math.max(Ye.minActiveHold, n * o);
   }
   streamThinkingChild(e, t, a) {
     const i = e.querySelector(t), n = i?.dataset.fullText ?? i?.textContent ?? "";
-    return !i || !n ? f.timeline() : this.streamText(i, n, {
+    return !i || !n ? m.timeline() : this.streamText(i, n, {
       duration: this.getStreamDuration(n, a),
       targetForScroll: this.getMessageScrollTargetElement(e)
     });
@@ -4424,7 +4931,7 @@ class uc {
   streamText(e, t, a) {
     const i = { count: 0 };
     let n = -1;
-    return f.timeline().fromTo(
+    return m.timeline().fromTo(
       i,
       { count: 0 },
       {
@@ -4440,7 +4947,7 @@ class uc {
           o !== n && (n = o, e.textContent = t.slice(0, o), this.requestMessageScroll(a.targetForScroll));
         },
         onComplete: () => {
-          e.textContent = t, delete e.dataset.streaming, this.cancelScheduledScroll(), this.animateMessageScrollIntoView(a.targetForScroll, X.followDuration * 0.7);
+          e.textContent = t, delete e.dataset.streaming, this.cancelScheduledScroll(), this.shouldPreserveMessageScroll(a.targetForScroll) || this.animateMessageScrollIntoView(a.targetForScroll, K.followDuration * 0.7);
         },
         onReverseComplete: () => {
           n = -1, e.textContent = "", delete e.dataset.streaming, this.cancelScheduledScroll();
@@ -4448,26 +4955,37 @@ class uc {
       }
     );
   }
-  foldThinkingStep(e) {
-    const t = this.queryElements(
+  foldThinkingStep(e, t) {
+    const a = this.queryElements(
       e,
       ".wa-research-step__detail, .wa-sequence-thinking-progress"
     );
-    return f.timeline().call(() => this.reserveElementHeights(t)).to(t, {
+    let i = null;
+    return m.timeline().call(() => {
+      this.reserveElementHeights(a), t && (this.stopScrollMotion(), i = this.createThreadScrollAnchor(t));
+    }).to(a, {
       autoAlpha: 0,
-      y: kn.detailOffsetY,
+      height: 0,
+      minHeight: 0,
+      marginTop: 0,
+      y: Aa.detailOffsetY,
       overflow: "hidden",
       transformOrigin: "left top",
-      duration: kn.duration,
+      duration: Aa.duration,
       ease: "power2.inOut",
+      onUpdate: () => this.preserveThreadScrollAnchor(i),
       onComplete: () => {
-        e.dataset.stepState = "complete", f.set(t, {
+        e.dataset.stepState = "complete", this.setThinkingStepLabelCollapsed(e), this.setThinkingStepDetailCollapsed(e), this.setThinkingToolCallsCollapsed(e), this.hideThinkingStepTimer(e), this.showThinkingStepChevron(e), m.set(a, {
+          display: "none",
+          height: 0,
+          minHeight: 0,
+          marginTop: 0,
           overflow: "hidden",
           y: 0
-        });
+        }), this.preserveThreadScrollAnchor(i);
       },
       onReverseComplete: () => {
-        e.dataset.stepState = "current", this.clearElementHeightReservations(t);
+        e.dataset.stepState = "current", this.setThinkingStepLabelActive(e), this.setThinkingStepDetailActive(e), this.setThinkingToolCallsComplete(e), this.showThinkingStepTimer(e), this.clearElementHeightReservations(a), this.preserveThreadScrollAnchor(i);
       }
     });
   }
@@ -4480,7 +4998,7 @@ class uc {
       );
       if (i <= 0) return;
       const n = Math.ceil(i * 100) / 100;
-      t.dataset.reservedLayoutHeight = String(n), f.set(t, {
+      t.dataset.reservedLayoutHeight = String(n), m.set(t, {
         height: n,
         minHeight: n,
         overflow: "hidden"
@@ -4490,30 +5008,45 @@ class uc {
   clearElementHeightReservations(e) {
     e.length && (e.forEach((t) => {
       delete t.dataset.reservedLayoutHeight;
-    }), f.set(e, {
-      clearProps: Zl
+    }), m.set(e, {
+      clearProps: Nc
     }));
   }
   getMessageScrollTargetElement(e) {
     return e.closest(".wa-message") ?? e;
+  }
+  createThreadScrollAnchor(e) {
+    if (!e?.isConnected) return null;
+    this.updateThreadContentFitState();
+    const t = e.querySelector(".wa-thinking") ?? e;
+    return {
+      element: t,
+      top: t.getBoundingClientRect().top
+    };
+  }
+  preserveThreadScrollAnchor(e) {
+    if (!e?.element.isConnected) return;
+    this.updateThreadContentFitState();
+    const t = this.getThreadContentScale(), a = e.element.getBoundingClientRect().top - e.top;
+    a <= 0.1 || (this.thread.scrollTop += a / t);
   }
   prepareThinkingMessage(e, t, a) {
     const i = t.flatMap(
       (n) => this.queryElements(n, ".wa-research-step__detail, .wa-sequence-thinking-progress")
     );
     t.forEach((n) => {
-      n.dataset.stepState = "pending";
-    }), this.clearElementHeightReservations(i), this.clearElementHeightReservations([e.steps]), f.set(e.header, { autoAlpha: 0, y: 5 }), f.set(e.traveler, { autoAlpha: 0, x: 0, y: 0 }), f.set(e.steps, { display: "grid", autoAlpha: 1, y: 0 }), e.title.dataset.thinkingActive = "true", this.resetThinkingGuide(e), f.set(t, { autoAlpha: 0, y: a, display: "none" });
+      n.dataset.stepState = "pending", this.resetThinkingStepTimer(n), this.hideThinkingStepChevron(n);
+    }), this.clearElementHeightReservations(i), this.clearElementHeightReservations([e.steps]), m.set(e.header, { autoAlpha: 0, y: 5 }), m.set(e.traveler, { autoAlpha: 0, x: 0, y: 0 }), m.set(e.steps, { display: "grid", autoAlpha: 1, y: 0 }), e.title.dataset.thinkingActive = "true", this.resetThinkingGuide(e), m.set(t, { autoAlpha: 0, y: a, display: "none" });
   }
   revealThinkingHeader(e, t) {
-    return f.timeline().to(e.header, {
+    return m.timeline().to(e.header, {
       autoAlpha: 1,
       y: 0,
-      duration: S(t),
+      duration: x(t),
       ease: "power2.out"
     }).call(() => this.snapThinkingLogoTo(e, e.headerGlyph)).to(e.traveler, {
       autoAlpha: 1,
-      duration: S(0.12),
+      duration: x(0.12),
       ease: "power2.out"
     }, "<").add(this.streamThinkingHeader(e.header), "-=0.08");
   }
@@ -4523,94 +5056,153 @@ class uc {
       {
         autoAlpha: 1,
         y: 0,
-        duration: S(0.26),
+        duration: x(0.26),
         ease: "power2.out"
       },
       a.position ?? "<"
-    ).add(this.streamThinkingStepLabel(t), Mt.startOverlap).add(this.streamThinkingStepDetail(t), "-=0.02");
+    ).add(this.streamThinkingStepLabel(t), rt.startOverlap).add(this.streamThinkingStepDetail(t), "-=0.02");
   }
   createThinkingStepReveal(e) {
-    return this.addThinkingStepReveal(f.timeline(), e, { position: 0 });
+    return this.addThinkingStepReveal(m.timeline(), e, { position: Vn });
   }
   addThinkingStepStreams(e, t) {
     t.forEach((a, i) => {
-      e.add(this.streamThinkingStepLabel(a), i === 0 ? Mt.startOverlap : "<");
+      e.add(this.streamThinkingStepLabel(a), i === 0 ? rt.startOverlap : "<");
     }), t.forEach((a, i) => {
       e.add(this.streamThinkingStepDetail(a), i === 0 ? "-=0.02" : "<");
     });
   }
   markThinkingStepsComplete(e) {
     e.forEach((t) => {
-      t.dataset.stepState = "complete";
+      t.dataset.stepState = "complete", this.setThinkingStepLabelCollapsed(t), this.setThinkingStepDetailCollapsed(t), this.setThinkingToolCallsCollapsed(t), this.hideThinkingStepTimer(t), t.dataset.detailCollapsed === "true" ? this.showThinkingStepChevron(t) : this.hideThinkingStepChevron(t);
     });
   }
   getThinkingLogoTargetPosition(e, t, a) {
-    const n = (e.message.querySelector(".wa-thinking-block") ?? e.message).getBoundingClientRect(), o = t.getBoundingClientRect(), s = e.traveler.offsetWidth || e.headerGlyph.offsetWidth || 18, l = e.traveler.offsetHeight || e.headerGlyph.offsetHeight || 11, c = a && Number(f.getProperty(a, "x")) || 0, d = a && Number(f.getProperty(a, "y")) || 0;
+    const n = (e.message.querySelector(".wa-thinking-block") ?? e.message).getBoundingClientRect(), o = t.getBoundingClientRect(), s = e.traveler.offsetWidth || e.headerGlyph.offsetWidth || 18, c = e.traveler.offsetHeight || e.headerGlyph.offsetHeight || 11, l = a && Number(m.getProperty(a, "x")) || 0, d = a && Number(m.getProperty(a, "y")) || 0;
     return {
-      x: o.left - n.left + (o.width - s) / 2 - c,
-      y: o.top - n.top + (o.height - l) / 2 - d
+      x: o.left - n.left + (o.width - s) / 2 - l,
+      y: o.top - n.top + (o.height - c) / 2 - d
     };
+  }
+  getThinkingLogoTargetPositionInBlock(e, t, a) {
+    const i = e.getBoundingClientRect(), n = a.getBoundingClientRect(), o = t.offsetWidth || 18, s = t.offsetHeight || 11;
+    return {
+      x: n.left - i.left + (n.width - o) / 2,
+      y: n.top - i.top + (n.height - s) / 2
+    };
+  }
+  syncPausedThinkingLayouts() {
+    this.queryElements(this.chatShell, ".wa-thinking-block").forEach((e) => {
+      this.stabilizeVisibleThinkingStepFlow(e), this.syncThinkingBlockToCurrentStep(e);
+    });
+  }
+  stabilizeVisibleThinkingStepFlow(e) {
+    if (!e?.isConnected) return;
+    const t = e.querySelector(".wa-research-steps");
+    if (!t || !this.isElementVisible(t)) return;
+    const a = this.queryElements(t, ".wa-research-step").filter(
+      (i) => this.isElementVisible(i)
+    );
+    a.length && (m.killTweensOf(a, "opacity,visibility,x,y,transform"), m.set(a, { autoAlpha: 1, x: 0, y: 0 }), m.set(a, { clearProps: "transform,translate,rotate,scale" }));
+  }
+  syncThinkingBlockToCurrentStep(e) {
+    if (!e?.isConnected) return;
+    const t = e.querySelector(".wa-research-steps"), a = e.querySelector(".wa-thinking-logo-traveler"), i = e.querySelector('.wa-research-step[data-step-state="current"] .wa-research-step__marker');
+    !t || !a || !i || !this.isElementVisible(i) || (m.set(a, {
+      ...this.getThinkingLogoTargetPositionInBlock(e, a, i),
+      autoAlpha: 1
+    }), this.setThinkingGuideToMarker(t, i));
+  }
+  isElementVisible(e) {
+    return e.getClientRects().length > 0 && getComputedStyle(e).display !== "none";
   }
   snapThinkingLogoTo(e, t) {
     const a = this.getThinkingLogoTargetPosition(e, t);
-    f.set(e.traveler, a);
+    m.set(e.traveler, a);
   }
-  moveThinkingLogoTo(e, t, a = ve.duration, i) {
-    return f.timeline().to(e.traveler, {
+  moveThinkingLogoTo(e, t, a = Se.duration, i) {
+    return m.timeline().to(e.traveler, {
       x: () => this.getThinkingLogoTargetPosition(e, t, i).x,
       y: () => this.getThinkingLogoTargetPosition(e, t, i).y,
       duration: a,
-      ease: ve.ease,
+      ease: Se.ease,
       overwrite: "auto"
     });
   }
   getThinkingGuideStart(e) {
-    const t = getComputedStyle(e.steps).getPropertyValue("--wa-thinking-guide-top"), a = Number.parseFloat(t);
+    return this.getThinkingGuideStartForSteps(e.steps);
+  }
+  getThinkingGuideStartForSteps(e) {
+    const t = getComputedStyle(e).getPropertyValue("--wa-thinking-guide-top"), a = Number.parseFloat(t);
     return Number.isFinite(a) ? a : 0;
   }
   resetThinkingGuide(e) {
     e.steps.style.setProperty("--wa-thinking-guide-end", `${this.getThinkingGuideStart(e)}px`);
   }
   getThinkingGuideTargetPosition(e, t, a) {
-    const i = e.steps.getBoundingClientRect(), n = t.getBoundingClientRect(), o = a && Number(f.getProperty(a, "y")) || 0, s = n.top - i.top + n.height / 2 - o;
+    const i = e.steps.getBoundingClientRect(), n = t.getBoundingClientRect(), o = a && Number(m.getProperty(a, "y")) || 0, s = n.top - i.top + n.height / 2 - o;
     return Math.max(this.getThinkingGuideStart(e), s);
   }
-  moveThinkingGuideTo(e, t, a = ve.duration, i) {
-    return f.timeline().to(e.steps, {
+  setPausedThinkingGuideToVisibleSteps(e) {
+    const t = this.queryElements(
+      e,
+      '.wa-research-step[data-step-state="complete"] .wa-research-step__marker, .wa-research-step[data-step-state="failed"] .wa-research-step__marker'
+    ), a = t[t.length - 1], i = this.getThinkingGuideStartForSteps(e);
+    if (!a) {
+      e.style.setProperty("--wa-thinking-guide-end", `${i}px`);
+      return;
+    }
+    const n = e.getBoundingClientRect(), o = a.getBoundingClientRect(), s = o.top - n.top + o.height / 2;
+    e.style.setProperty("--wa-thinking-guide-end", `${Math.max(i, s)}px`);
+  }
+  setThinkingGuideToMarker(e, t) {
+    const a = this.getThinkingGuideStartForSteps(e), i = e.getBoundingClientRect(), n = t.getBoundingClientRect(), o = n.top - i.top + n.height / 2;
+    e.style.setProperty("--wa-thinking-guide-end", `${Math.max(a, o)}px`);
+  }
+  moveThinkingGuideTo(e, t, a = Se.duration, i) {
+    return m.timeline().to(e.steps, {
       "--wa-thinking-guide-end": () => `${this.getThinkingGuideTargetPosition(e, t, i)}px`,
       duration: a,
-      ease: ve.ease,
+      ease: Se.ease,
       overwrite: "auto"
     });
   }
-  moveThinkingGuideToStart(e, t = ve.returnDuration) {
-    return f.timeline().to(e.steps, {
+  moveThinkingGuideToStart(e, t = Se.returnDuration) {
+    return m.timeline().to(e.steps, {
       "--wa-thinking-guide-end": () => `${this.getThinkingGuideStart(e)}px`,
       duration: t,
-      ease: ve.ease,
+      ease: Se.ease,
       overwrite: "auto"
     });
   }
   moveThinkingLogoToStep(e, t) {
     const a = t?.querySelector(".wa-research-step__marker");
-    return a ? f.timeline().add(this.moveThinkingLogoTo(e, a, ve.duration, t), 0).add(this.moveThinkingGuideTo(e, a, ve.duration, t), 0) : f.timeline();
+    return a ? m.timeline().add(this.moveThinkingLogoTo(e, a, Se.duration, t), 0).add(this.moveThinkingGuideTo(e, a, Se.duration, t), 0) : m.timeline();
   }
   collapseThinkingToHeader(e, t) {
-    return f.timeline().call(() => {
-      this.markThinkingStepsComplete(t), this.setLocalLogoMode(e.traveler, "done"), this.reserveElementHeights([e.steps]);
-    }).add(this.moveThinkingLogoTo(e, e.headerGlyph, ve.returnDuration), 0).add(this.moveThinkingGuideToStart(e, ve.returnDuration), 0).to(e.steps, {
+    let a = null;
+    return m.timeline().call(() => {
+      this.markThinkingStepsComplete(t), this.setLocalLogoMode(e.traveler, "done"), this.reserveElementHeights([e.steps]), this.stopScrollMotion(), a = this.createThreadScrollAnchor(e.message);
+    }).add(this.moveThinkingLogoTo(e, e.headerGlyph, Se.returnDuration), 0).add(this.moveThinkingGuideToStart(e, Se.returnDuration), 0).to(e.steps, {
       autoAlpha: 0,
-      y: Ye.y,
-      duration: Ye.duration,
-      ease: Ye.ease,
+      height: 0,
+      minHeight: 0,
+      y: De.y,
+      overflow: "hidden",
+      duration: De.duration,
+      ease: De.ease,
+      onUpdate: () => this.preserveThreadScrollAnchor(a),
       onComplete: () => {
-        this.setThinkingHeaderCollapsed(e), f.set(e.steps, {
+        this.setThinkingHeaderCollapsed(e), m.set(e.steps, {
+          display: "none",
+          height: 0,
+          minHeight: 0,
           overflow: "hidden",
-          y: Ye.y
-        });
+          y: De.y
+        }), this.preserveThreadScrollAnchor(a);
       },
       onReverseComplete: () => {
-        this.setThinkingHeaderActive(e), this.setLocalLogoMode(e.traveler, "thinking"), f.set(e.steps, { display: "grid", autoAlpha: 1 }), this.clearElementHeightReservations([e.steps]);
+        this.setThinkingHeaderActive(e), this.setLocalLogoMode(e.traveler, "thinking"), this.clearElementHeightReservations([e.steps]), m.set(e.steps, { display: "grid", autoAlpha: 1 }), this.preserveThreadScrollAnchor(a);
       }
     }, 0);
   }
@@ -4618,87 +5210,376 @@ class uc {
     const t = e.trim() || Fe;
     return /^thinking(?:\.\.\.)?$/i.test(t) ? "Thinking..." : t;
   }
+  isGenericThinkingTitle(e) {
+    const t = (e || "").trim();
+    return !t || /^thinking(?:\.\.\.)?$/i.test(t);
+  }
+  getCollapsedThinkingTitle(e) {
+    const t = this.isGenericThinkingTitle(e.title) ? e.items[0]?.label : e.title;
+    return this.getPastTenseThinkingTitle(t || Fe);
+  }
+  getPastTenseThinkingTitle(e) {
+    const t = e.trim(), a = t.match(/^([A-Za-z][A-Za-z'-]*)\s+([A-Za-z][A-Za-z'-]*ing)(.*)$/);
+    if (a && !a[1].toLowerCase().endsWith("ing")) {
+      const [, c, l, d = ""] = a, u = this.getPastTenseThinkingAction(l);
+      return `${c} ${this.matchCapitalization(l, u)}${d}`;
+    }
+    const i = t.match(/^([A-Za-z][A-Za-z'-]*)(.*)$/);
+    if (!i) return t || "Finished thinking";
+    const [, n, o = ""] = i, s = this.getPastTenseThinkingAction(n);
+    return `${this.matchCapitalization(n, s)}${o}`;
+  }
+  getPastTenseThinkingAction(e) {
+    const t = e.toLowerCase();
+    return {
+      building: "built",
+      finding: "found",
+      getting: "got",
+      learning: "learned",
+      making: "made",
+      reading: "read",
+      running: "ran",
+      sending: "sent",
+      taking: "took",
+      thinking: "finished thinking",
+      understanding: "understood",
+      writing: "wrote"
+    }[t] ?? this.regularizeThinkingAction(t);
+  }
+  setThinkingStepLabelActive(e) {
+    this.setThinkingStepLabelText(e, "activeText");
+  }
+  setThinkingStepLabelCollapsed(e) {
+    this.setThinkingStepLabelText(e, "collapsedText");
+  }
+  setThinkingStepLabelText(e, t) {
+    const a = e.querySelector(".wa-research-step__label"), i = a?.dataset[t];
+    !a || !i || (a.dataset.fullText = i, a.textContent = i, delete a.dataset.streaming);
+  }
+  setThinkingStepDetailActive(e) {
+    this.setThinkingStepDetailText(e, "activeText");
+  }
+  setThinkingStepDetailCollapsed(e) {
+    this.setThinkingStepDetailText(e, "collapsedText");
+  }
+  setThinkingStepDetailText(e, t) {
+    const a = e.querySelector(".wa-research-step__detail"), i = a?.querySelector("[data-thinking-detail-text]") ?? a, n = i?.dataset[t];
+    !i || !n || (i.dataset.fullText = n, i.textContent = n, delete i.dataset.streaming);
+  }
+  setThinkingToolCallsCollapsed(e) {
+    this.setThinkingToolCallsState(e, "collapsed");
+  }
+  setThinkingToolCallsComplete(e) {
+    this.setThinkingToolCallsState(e, "complete");
+  }
+  setThinkingToolCallsState(e, t) {
+    this.queryElements(e, ".wa-research-step__tool-call").forEach((i) => {
+      const n = i.querySelector(".wa-research-step__tool-favicon"), o = i.querySelector(".wa-research-step__tool-check"), s = i.querySelector(".wa-research-step__tool-label"), c = t === "collapsed" ? "collapsedText" : "activeText", l = s?.dataset[c];
+      if (i.dataset.toolCallState = t, s && l && (s.dataset.fullText = l, s.textContent = l, delete s.dataset.streaming), t === "collapsed") {
+        n && m.set(n, { autoAlpha: 1, scale: 1, y: 0 }), o && m.set(o, {
+          autoAlpha: 0,
+          y: Z.checkStartY,
+          scale: Z.checkStartScale
+        });
+        return;
+      }
+      n && m.set(n, {
+        autoAlpha: 0,
+        y: Z.faviconDropY,
+        scale: Z.faviconDropScale
+      }), o && m.set(o, { autoAlpha: 1, y: 0, scale: 1 });
+    });
+  }
+  regularizeThinkingAction(e) {
+    return e.endsWith("ying") && e.length > 4 ? `${e.slice(0, -4)}ied` : e.endsWith("ing") && e.length > 4 ? `${e.slice(0, -3)}ed` : e;
+  }
+  matchCapitalization(e, t) {
+    return !e || e[0] !== e[0].toUpperCase() ? t : t.charAt(0).toUpperCase() + t.slice(1);
+  }
   setThinkingHeaderActive(e) {
     const t = this.getActiveThinkingTitle(e.title.dataset.activeText);
-    e.title.dataset.fullText = t, e.title.textContent = t, e.title.dataset.thinkingActive = "true", delete e.title.dataset.streaming, f.set(e.elapsed, { display: "", autoAlpha: 1 });
+    e.title.dataset.fullText = t, e.title.textContent = t, e.title.dataset.thinkingActive = "true", delete e.header.dataset.thinkingCollapsed, delete e.title.dataset.streaming;
   }
   setThinkingHeaderCollapsed(e) {
-    const t = e.elapsed.dataset.elapsedTarget || e.elapsed.textContent?.trim() || "", a = t ? `Thought for ${t}` : "Thought";
-    e.title.dataset.fullText = a, e.title.textContent = a, delete e.title.dataset.thinkingActive, delete e.title.dataset.streaming, f.set(e.elapsed, { display: "none" });
+    const t = e.title.dataset.collapsedText || this.getPastTenseThinkingTitle(e.title.dataset.activeText || "");
+    e.title.dataset.fullText = t, e.title.textContent = t, e.header.dataset.thinkingCollapsed = "true", delete e.title.dataset.thinkingActive, delete e.title.dataset.streaming;
   }
   setThinkingTitle(e, t) {
     e.title.dataset.activeText = t, e.title.dataset.fullText = t, e.title.textContent = t;
   }
   completeProgressThinking(e, t, a) {
-    return f.timeline().call(() => {
-      this.markThinkingStepsComplete(t), this.setLocalLogoMode(e.traveler, "done"), this.setThinkingTitle(e, a), f.set(e.elapsed, { display: "none", autoAlpha: 0 }), this.reserveElementHeights([e.steps]);
-    }).add(this.moveThinkingLogoTo(e, e.headerGlyph, ve.returnDuration), 0).add(this.moveThinkingGuideToStart(e, ve.returnDuration), 0).to(e.steps, {
+    let i = null;
+    return m.timeline().call(() => {
+      this.markThinkingStepsComplete(t), this.setLocalLogoMode(e.traveler, "done"), this.setThinkingTitle(e, a), this.reserveElementHeights([e.steps]), this.stopScrollMotion(), i = this.createThreadScrollAnchor(e.message);
+    }).add(this.moveThinkingLogoTo(e, e.headerGlyph, Se.returnDuration), 0).add(this.moveThinkingGuideToStart(e, Se.returnDuration), 0).to(e.steps, {
       autoAlpha: 0,
-      y: Ye.y,
-      duration: Ye.duration,
-      ease: Ye.ease,
+      height: 0,
+      minHeight: 0,
+      y: De.y,
+      overflow: "hidden",
+      duration: De.duration,
+      ease: De.ease,
+      onUpdate: () => this.preserveThreadScrollAnchor(i),
       onComplete: () => {
-        delete e.title.dataset.thinkingActive, delete e.title.dataset.streaming, f.set(e.steps, {
+        delete e.title.dataset.thinkingActive, delete e.title.dataset.streaming, m.set(e.steps, {
+          display: "none",
+          height: 0,
+          minHeight: 0,
           overflow: "hidden",
-          y: Ye.y
-        });
+          y: De.y
+        }), this.preserveThreadScrollAnchor(i);
       },
       onReverseComplete: () => {
-        this.setThinkingHeaderActive(e), this.setLocalLogoMode(e.traveler, "thinking"), f.set(e.steps, { display: "grid", autoAlpha: 1 }), this.clearElementHeightReservations([e.steps]);
+        this.setThinkingHeaderActive(e), this.setLocalLogoMode(e.traveler, "thinking"), this.clearElementHeightReservations([e.steps]), m.set(e.steps, { display: "grid", autoAlpha: 1 }), this.preserveThreadScrollAnchor(i);
       }
     }, 0);
   }
   runThinkingSequence(e, t) {
-    const a = f.timeline(), i = e.items.map((s, l) => this.createThinkingStep(s, l)), n = e.elapsed ?? this.getThinkingElapsed(e.items.length), o = this.claimThinkingMessage(i, n, e.title);
-    return a.call(() => this.prepareThinkingMessage(o, i, t.itemStartY)).add(this.revealMessage(o.message)).add(this.revealThinkingHeader(o, t.headerDuration)), e.items.forEach((s, l) => {
-      const c = i[l], d = l === 0 ? "+=0" : `+=${t.hold}`;
-      a.call(() => this.activateThinkingStep(i, l), void 0, d).add(this.moveThinkingLogoToStep(o, c), "<").add(this.createThinkingStepReveal(c), "<").to({}, { duration: t.afterStepHold }).add(this.foldThinkingStep(c));
-    }), a.add(this.collapseThinkingToHeader(o, i), `+=${t.finalHold}`), this.addThinkingElapsedTimer(a, o.elapsed, n), a;
+    const a = m.timeline(), i = e.items.map((s, c) => this.createThinkingStep(s, c)), n = this.claimThinkingMessage(i, e.title, this.getCollapsedThinkingTitle(e)), o = t.preserveScroll ?? !1;
+    return a.call(() => {
+      this.prepareThinkingMessage(n, i, t.itemStartY), o && (n.message.dataset.preserveMessageScroll = "true");
+    }).add(this.revealMessage(n.message, null, 0, { preserveScroll: o })).add(this.revealThinkingHeader(n, t.headerDuration)), e.items.forEach((s, c) => {
+      const l = i[c], d = c === 0 ? "+=0" : `+=${t.hold}`, u = this.createThinkingStepReveal(l), h = typeof s.duration == "number" && Number.isFinite(s.duration) ? Math.max(0.1, s.duration) : null, g = h === null ? t.afterStepHold : Math.max(0, h - u.duration()), w = u.duration() + g;
+      a.call(() => this.activateThinkingStep(i, c), void 0, d).add(this.moveThinkingLogoToStep(n, l), "<").add(u, "<").to({}, { duration: g }).add(this.createThinkingStepElapsedTimer(l, w), `-=${w}`).add(this.foldThinkingStep(l, n.message));
+    }), a.add(this.collapseThinkingToHeader(n, i), `+=${t.finalHold}`).call(() => {
+      delete n.message.dataset.preserveMessageScroll;
+    }), a;
   }
   activateThinkingStep(e, t) {
     e.forEach((a, i) => {
       if (i > t) {
-        a.dataset.stepState = "pending", f.set(a, { display: "none" });
+        a.dataset.stepState = "pending", this.setThinkingStepLabelActive(a), this.hideThinkingStepTimer(a), this.hideThinkingStepChevron(a), m.set(a, { display: "none" });
         return;
       }
       if (i === t) {
-        a.dataset.stepState = "current", f.set(a, { display: "grid" });
+        a.dataset.stepState = "current", this.setThinkingStepLabelActive(a), this.showThinkingStepTimer(a), m.set(a, { display: "grid" });
         return;
       }
-      a.dataset.stepState = "complete", f.set(a, { display: "grid" });
+      a.dataset.stepState = "complete", this.setThinkingStepLabelCollapsed(a), this.hideThinkingStepTimer(a), this.showThinkingStepChevron(a), m.set(a, { display: "grid" });
     });
   }
   getStreamDuration(e, t) {
     return this.prefersReducedMotion ? 0.01 : Math.min(t.maxDuration, Math.max(t.minDuration, e.length / t.charsPerSecond));
   }
-  claimThinkingMessage(e, t, a = Fe) {
+  claimThinkingMessage(e, t = Fe, a = this.getPastTenseThinkingTitle(t)) {
     const i = document.createElement("div");
     i.className = "wa-thinking-block";
     const n = document.createElement("div");
     n.className = "wa-thinking";
     const o = this.createThinkingLogo();
     o.dataset.logoRole = "shadow";
-    const s = this.createThinkingLogo("wa-thinking-logo-traveler"), l = document.createElement("span"), c = this.getActiveThinkingTitle(a);
-    l.className = "wa-thinking__title", l.dataset.activeText = a, l.dataset.fullText = c, l.dataset.thinkingActive = "true", l.textContent = "";
+    const s = this.createThinkingLogo("wa-thinking-logo-traveler"), c = document.createElement("span"), l = this.getActiveThinkingTitle(t);
+    c.className = "wa-thinking__title", c.dataset.activeText = t, c.dataset.fullText = l, c.dataset.collapsedText = a, c.dataset.thinkingActive = "true", c.textContent = "";
     const d = document.createElement("span");
-    d.className = "wa-thinking__elapsed", d.dataset.elapsedTarget = t, d.textContent = "0s";
+    d.className = "wa-thinking__chevron", d.setAttribute("role", "button"), d.setAttribute("aria-label", "Toggle thinking steps"), d.setAttribute("aria-expanded", "false");
     const u = document.createElement("div");
-    return u.className = "wa-research-steps", u.dataset.researchSteps = "", u.append(...e), n.append(o, l, d), i.append(n, u, s), {
+    return u.className = "wa-research-steps", u.dataset.researchSteps = "", u.append(...e), n.append(o, c, d), i.append(n, u, s), {
       message: this.claimComponentMessage("thinking", i),
       header: n,
       headerGlyph: o,
-      title: l,
+      headerChevron: d,
+      title: c,
       traveler: s,
-      elapsed: d,
       steps: u
     };
   }
-  addThinkingElapsedTimer(e, t, a) {
-    Zs(e, t, a, { reducedMotion: this.prefersReducedMotion });
+  getThinkingStepTimer(e) {
+    return e.querySelector(".wa-research-step__elapsed");
+  }
+  getThinkingStepChevron(e) {
+    return e.querySelector(".wa-research-step__chevron");
+  }
+  showThinkingStepChevron(e) {
+    const t = this.getThinkingStepChevron(e);
+    e.dataset.detailCollapsed = "true", t && m.set(t, { display: "block", visibility: "visible", clearProps: "opacity" });
+  }
+  hideThinkingStepChevron(e) {
+    const t = this.getThinkingStepChevron(e);
+    delete e.dataset.detailCollapsed, delete e.dataset.detailExpanded, t && m.set(t, { display: "none", autoAlpha: 0 });
+  }
+  toggleThinkingSteps(e) {
+    this.setThinkingStepsExpanded(e, e.dataset.thinkingExpanded !== "true", { animate: !0 });
+  }
+  setThinkingStepsExpanded(e, t, a) {
+    const i = e.closest(".wa-thinking-block"), n = i?.querySelector(".wa-research-steps"), o = e.querySelector(".wa-thinking__chevron");
+    if (!n) return;
+    const s = this.createThreadScrollAnchor(i?.closest(".wa-message"));
+    if (m.killTweensOf(n), o?.setAttribute("aria-expanded", String(t)), t) {
+      e.dataset.thinkingExpanded = "true", m.set(n, {
+        display: "grid",
+        height: "auto",
+        minHeight: 0,
+        overflow: "visible",
+        y: 0
+      }), this.setPausedThinkingGuideToVisibleSteps(n);
+      const c = n.getBoundingClientRect().height;
+      if (!a.animate) {
+        m.set(n, { autoAlpha: 1, height: "auto", minHeight: 0, overflow: "visible", y: 0 }), this.requestThreadContentFitUpdate();
+        return;
+      }
+      m.fromTo(
+        n,
+        { autoAlpha: 0, height: 0, minHeight: 0, overflow: "hidden", y: 0 },
+        {
+          autoAlpha: 1,
+          height: c,
+          duration: Rt.duration,
+          ease: Rt.ease,
+          onUpdate: () => this.preserveThreadScrollAnchor(s),
+          onComplete: () => {
+            m.set(n, { height: "auto", minHeight: 0, overflow: "visible", y: 0 }), this.requestThreadContentFitUpdate();
+          }
+        }
+      );
+      return;
+    }
+    if (delete e.dataset.thinkingExpanded, !a.animate) {
+      m.set(n, {
+        display: "none",
+        autoAlpha: 0,
+        height: 0,
+        minHeight: 0,
+        overflow: "hidden",
+        y: De.y
+      }), this.requestThreadContentFitUpdate();
+      return;
+    }
+    m.to(n, {
+      autoAlpha: 0,
+      height: 0,
+      minHeight: 0,
+      overflow: "hidden",
+      y: De.y,
+      duration: Rt.duration,
+      ease: "power2.inOut",
+      onUpdate: () => this.preserveThreadScrollAnchor(s),
+      onComplete: () => {
+        m.set(n, {
+          display: "none",
+          height: 0,
+          minHeight: 0,
+          overflow: "hidden",
+          y: De.y
+        }), this.requestThreadContentFitUpdate();
+      }
+    });
+  }
+  toggleThinkingStepDetail(e) {
+    this.setThinkingStepDetailExpanded(e, e.dataset.detailExpanded !== "true", { animate: !0 });
+  }
+  setThinkingStepDetailExpanded(e, t, a) {
+    const i = this.queryElements(e, ".wa-research-step__detail, .wa-sequence-thinking-progress"), n = this.getThinkingStepChevron(e), o = e.closest(".wa-thinking-block"), s = this.createThreadScrollAnchor(e.closest(".wa-message"));
+    if (i.length) {
+      if (this.stabilizeVisibleThinkingStepFlow(o), m.killTweensOf(i), n?.setAttribute("aria-expanded", String(t)), m.set(n, { display: "block", visibility: "visible", clearProps: "opacity" }), t) {
+        e.dataset.detailExpanded = "true", delete e.dataset.detailCollapsed, i.forEach((l) => {
+          m.set(l, {
+            display: this.getThinkingDetailDisplay(l),
+            height: "auto",
+            minHeight: 0,
+            marginTop: "",
+            overflow: "visible",
+            y: 0
+          });
+        });
+        const c = i.map((l) => l.getBoundingClientRect().height);
+        if (!a.animate) {
+          m.set(i, { autoAlpha: 1, height: "auto", minHeight: 0, overflow: "visible", y: 0 }), this.syncThinkingBlockToCurrentStep(o), this.requestThreadContentFitUpdate();
+          return;
+        }
+        i.forEach((l, d) => {
+          m.fromTo(
+            l,
+            { autoAlpha: 0, height: 0, minHeight: 0, overflow: "hidden", y: Aa.detailOffsetY },
+            {
+              autoAlpha: 1,
+              height: c[d],
+              duration: Rt.duration,
+              ease: Rt.ease,
+              onUpdate: () => {
+                this.syncThinkingBlockToCurrentStep(o), this.preserveThreadScrollAnchor(s);
+              },
+              onComplete: () => {
+                m.set(l, { height: "auto", minHeight: 0, overflow: "visible", y: 0 }), this.syncThinkingBlockToCurrentStep(o), this.requestThreadContentFitUpdate();
+              }
+            }
+          );
+        });
+        return;
+      }
+      if (delete e.dataset.detailExpanded, e.dataset.detailCollapsed = "true", !a.animate) {
+        m.set(i, {
+          display: "none",
+          autoAlpha: 0,
+          height: 0,
+          minHeight: 0,
+          marginTop: 0,
+          overflow: "hidden",
+          y: 0
+        }), this.syncThinkingBlockToCurrentStep(o), this.requestThreadContentFitUpdate();
+        return;
+      }
+      m.to(i, {
+        autoAlpha: 0,
+        height: 0,
+        minHeight: 0,
+        marginTop: 0,
+        overflow: "hidden",
+        y: Aa.detailOffsetY,
+        duration: Rt.duration,
+        ease: "power2.inOut",
+        onUpdate: () => {
+          this.syncThinkingBlockToCurrentStep(o), this.preserveThreadScrollAnchor(s);
+        },
+        onComplete: () => {
+          m.set(i, {
+            display: "none",
+            height: 0,
+            minHeight: 0,
+            marginTop: 0,
+            overflow: "hidden",
+            y: 0
+          }), this.syncThinkingBlockToCurrentStep(o), this.requestThreadContentFitUpdate();
+        }
+      });
+    }
+  }
+  getThinkingDetailDisplay(e) {
+    return e.classList.contains("wa-sequence-thinking-progress") || e.dataset.hasToolCalls === "true" ? "grid" : "block";
+  }
+  resetThinkingStepTimer(e) {
+    const t = this.getThinkingStepTimer(e);
+    t && (t.textContent = "0s", m.set(t, { display: "none", autoAlpha: 0 }));
+  }
+  showThinkingStepTimer(e) {
+    const t = this.getThinkingStepTimer(e);
+    this.hideThinkingStepChevron(e), t && m.set(t, { display: "inline-block", autoAlpha: 1 });
+  }
+  hideThinkingStepTimer(e) {
+    const t = this.getThinkingStepTimer(e);
+    t && m.set(t, { display: "none", autoAlpha: 0 });
+  }
+  createThinkingStepElapsedTimer(e, t) {
+    const a = this.getThinkingStepTimer(e), i = m.timeline(), n = { seconds: 0 }, o = Math.max(0.01, t);
+    return a && i.call(() => {
+      n.seconds = 0, a.textContent = "0s", this.showThinkingStepTimer(e);
+    }).to(n, {
+      seconds: o,
+      duration: o,
+      ease: "none",
+      onUpdate: () => {
+        a.textContent = In(n.seconds);
+      },
+      onComplete: () => {
+        a.textContent = In(o);
+      },
+      onReverseComplete: () => {
+        n.seconds = 0, a.textContent = "0s";
+      }
+    }), i;
   }
   createThinkingLogo(e = "wa-thinking__glyph") {
     const t = document.createElement("span");
-    return t.className = e, t.dataset.logoMode = "thinking", t.setAttribute("aria-hidden", "true"), t.append(vn("wa-thinking__logo-mark")), t;
+    return t.className = e, t.dataset.logoMode = "thinking", t.setAttribute("aria-hidden", "true"), t.append(Fn("wa-thinking__logo-mark")), t;
   }
   setLocalLogoMode(e, t) {
     e && (e.dataset.logoMode = t);
@@ -4724,7 +5605,7 @@ class uc {
   }
   createThinkingStep(e, t) {
     const a = document.createElement("div");
-    a.className = "wa-research-step", a.dataset.researchStep = String(t), a.dataset.stepState = t === 0 ? "current" : "complete";
+    a.className = "wa-research-step", a.dataset.researchStep = String(t), a.dataset.stepState = t === 0 ? "current" : "complete", typeof e.duration == "number" && Number.isFinite(e.duration) && (a.dataset.thinkingDuration = String(e.duration));
     const i = document.createElement("span");
     i.className = "wa-research-step__marker", i.setAttribute("aria-hidden", "true");
     const n = document.createElement("span");
@@ -4732,17 +5613,54 @@ class uc {
     const o = document.createElement("span");
     o.className = "wa-research-step__label-row";
     const s = document.createElement("span");
-    s.className = "wa-research-step__label", s.dataset.fullText = e.label, s.textContent = "";
-    const l = document.createElement("span");
-    l.className = "wa-research-step__detail", l.dataset.fullText = e.detail, l.textContent = "";
+    s.className = "wa-research-step__label", s.dataset.activeText = e.label, s.dataset.collapsedText = this.getPastTenseThinkingTitle(e.label), s.dataset.fullText = e.label, s.textContent = "";
     const c = document.createElement("span");
-    return c.className = "wa-research-step__chevron", c.setAttribute("aria-hidden", "true"), o.append(s, c), n.append(o, l), a.append(i, n), a;
+    c.className = "wa-research-step__elapsed", c.textContent = "0s";
+    const l = document.createElement("span"), d = e.detail, u = d ? this.getPastTenseThinkingTitle(d) : "";
+    if (l.className = "wa-research-step__detail", l.dataset.activeText = d, l.dataset.collapsedText = u, l.dataset.fullText = d, e.toolCalls.length) {
+      l.dataset.hasToolCalls = "true";
+      const g = document.createElement("span");
+      g.className = "wa-research-step__detail-text", g.dataset.thinkingDetailText = "", g.dataset.activeText = d, g.dataset.collapsedText = u, g.dataset.fullText = d, l.append(g, this.createThinkingToolCallList(e.toolCalls));
+    } else
+      l.textContent = "";
+    const h = document.createElement("span");
+    return h.className = "wa-research-step__chevron", h.setAttribute("role", "button"), h.setAttribute("aria-label", "Toggle thinking detail"), h.setAttribute("aria-expanded", "false"), o.append(s, c, h), n.append(o, l), a.append(i, n), a;
+  }
+  createThinkingToolCallList(e) {
+    const t = document.createElement("span");
+    return t.className = "wa-research-step__tool-calls", t.append(...e.map((a) => this.createThinkingToolCall(a))), t;
+  }
+  createThinkingToolCall(e) {
+    const t = document.createElement("span"), a = document.createElement("span"), i = this.createThinkingToolFavicon(e.vendor || e.label), n = this.createSvgIcon("wa-research-step__tool-check", ["M5 12l5 5l10 -10"], {
+      size: 14,
+      pathAttributes: {
+        fill: "none",
+        stroke: "currentColor",
+        "stroke-width": "2.4",
+        "stroke-linecap": "round",
+        "stroke-linejoin": "round"
+      }
+    }), o = document.createElement("span");
+    return t.className = "wa-research-step__tool-call", t.dataset.toolCallState = "pending", t.style.opacity = "0", t.style.visibility = "hidden", a.className = "wa-research-step__tool-icon", i.style.opacity = "0", i.style.transform = "scale(0.68)", n.style.opacity = "0", n.style.transform = `translateY(${Z.checkStartY}px) scale(${Z.checkStartScale})`, o.className = "wa-research-step__tool-label", o.dataset.activeText = e.label, o.dataset.collapsedText = this.getPastTenseThinkingTitle(e.label), o.dataset.fullText = e.label, o.textContent = "", a.append(i, n), t.append(a, o), t;
+  }
+  createThinkingToolFavicon(e) {
+    const t = document.createElement("span");
+    return t.className = "wa-research-step__tool-favicon", t.dataset.toolService = li(e), t.setAttribute("aria-hidden", "true"), this.appendToolFaviconImage(t, si(e), {
+      loading: "eager",
+      onError: () => {
+        t.textContent = Nn(e);
+      }
+    }) || (t.textContent = Nn(e)), t;
+  }
+  appendToolFaviconImage(e, t, a) {
+    if (!t) return !1;
+    const i = document.createElement("img");
+    return i.alt = "", i.decoding = "async", i.loading = a.loading, i.src = this.resolveAssetUrl(t), i.addEventListener("error", () => {
+      e.contains(i) && (i.remove(), a.onError());
+    }, { once: !0 }), e.append(i), !0;
   }
   getThinkingDetail(e, t) {
-    return Yi(e, t);
-  }
-  getThinkingElapsed(e) {
-    return Na(e);
+    return sn(e, t);
   }
   normalizeThinkingInput(e) {
     if (this.isThinkingStateConfig(e)) {
@@ -4766,7 +5684,9 @@ class uc {
     return {
       label: a,
       detail: typeof e == "string" ? this.getThinkingDetail(a, t) : e.detail || this.getThinkingDetail(a, t),
-      disclosure: typeof e == "string" ? t === 0 ? kt : ya : e.disclosure || (t === 0 ? kt : ya)
+      disclosure: typeof e == "string" ? t === 0 ? Ot : It : e.disclosure || (t === 0 ? Ot : It),
+      duration: typeof e == "string" ? void 0 : e.duration,
+      toolCalls: typeof e == "string" ? [] : e.toolCalls ?? []
     };
   }
   isThinkingStateConfig(e) {
@@ -4783,27 +5703,27 @@ class uc {
     return n;
   }
   claimCard(e) {
-    const t = this.cardIndex, a = this.cardPool[t] ?? this.createCard(t), i = a.querySelector("[data-result-kicker]"), n = a.querySelector("[data-result-title]"), o = a.querySelector("[data-result-body]"), s = a.querySelector("[data-result-rows]"), l = a.querySelector("[data-result-actions]");
+    const t = this.cardIndex, a = this.cardPool[t] ?? this.createCard(t), i = a.querySelector("[data-result-kicker]"), n = a.querySelector("[data-result-title]"), o = a.querySelector("[data-result-body]"), s = a.querySelector("[data-result-rows]"), c = a.querySelector("[data-result-actions]");
     return this.cardIndex += 1, a.dataset.resultCard = e.id, a.style.display = "none", i && (i.textContent = e.kicker ?? "Result"), n && (n.textContent = e.title), o && (o.textContent = e.body ?? ""), s?.replaceChildren(
-      ...(e.rows ?? []).map((c, d) => {
+      ...(e.rows ?? []).map((l, d) => {
         const u = document.createElement("li");
-        u.className = "wa-result-row", u.dataset.resultRow = `${e.id}-${d}`, u.dataset.tone = c.tone ?? "neutral";
+        u.className = "wa-result-row", u.dataset.resultRow = `${e.id}-${d}`, u.dataset.tone = l.tone ?? "neutral";
         const h = document.createElement("span");
-        h.textContent = c.label;
+        h.textContent = l.label;
         const g = document.createElement("strong");
-        return g.textContent = c.value, u.append(h, g), u;
+        return g.textContent = l.value, u.append(h, g), u;
       })
-    ), l?.replaceChildren(
-      ...(e.actions ?? []).map((c) => {
+    ), c?.replaceChildren(
+      ...(e.actions ?? []).map((l) => {
         const d = document.createElement("button");
-        return d.className = "wa-result-action", d.type = "button", d.textContent = c.label, d.dataset.resultAction = c.targetId, d;
+        return d.className = "wa-result-action", d.type = "button", d.textContent = l.label, d.dataset.resultAction = l.targetId, d;
       })
-    ), f.set(a, {
+    ), m.set(a, {
       autoAlpha: 0,
       y: 18,
       scale: 0.985,
       transformOrigin: "center top"
-    }), f.set(a.querySelectorAll(".wa-result-row, .wa-result-action"), {
+    }), m.set(a.querySelectorAll(".wa-result-row, .wa-result-action"), {
       autoAlpha: 0,
       y: 8
     }), a;
@@ -4822,7 +5742,7 @@ class uc {
     const t = document.createElement("article"), a = this.getDataTablePages(e), i = e.pagination?.activePage ?? a[0]?.page ?? 1;
     t.className = "wa-data-table", t.dataset.dataTable = e.id, t.dataset.tableVariant = e.variant ?? "default", t.dataset.columnCount = String(e.columns.length), t.dataset.activePage = String(i), e.scrollAlign && (t.dataset.scrollAlign = e.scrollAlign), e.footerClearance !== void 0 && (t.dataset.footerClearance = "true", t.style.setProperty("--wa-data-table-footer-clearance", `${e.footerClearance}px`)), this.expectedDataTablePages.set(e.id, i), t.style.setProperty(
       "--wa-data-table-columns",
-      e.columns.map((c) => c.width ?? "minmax(0, 1fr)").join(" ")
+      e.columns.map((l) => l.width ?? "minmax(0, 1fr)").join(" ")
     );
     const n = document.createElement("div");
     n.className = "wa-data-table__header";
@@ -4830,26 +5750,26 @@ class uc {
     o.className = "wa-data-table__meta", o.textContent = e.eyebrow ?? "Data marketplace";
     const s = document.createElement("h3");
     if (s.className = "wa-data-table__title", s.textContent = e.title, n.append(o, s), e.count) {
-      const c = document.createElement("span");
-      c.className = "wa-data-table__count", c.textContent = e.count, n.append(c);
+      const l = document.createElement("span");
+      l.className = "wa-data-table__count", l.textContent = e.count, n.append(l);
     }
-    const l = document.createElement("div");
-    l.className = "wa-data-table__grid", l.append(this.createDataTableRow("header", e.columns, {}, e.id));
-    for (const c of a)
-      for (const d of c.rows) {
-        const u = this.createDataTableRow(d.id, e.columns, d.values, e.id, c.page);
-        c.page !== i && (u.style.display = "none", f.set(u, { autoAlpha: 0, y: 6 })), l.append(u);
+    const c = document.createElement("div");
+    c.className = "wa-data-table__grid", c.append(this.createDataTableRow("header", e.columns, {}, e.id));
+    for (const l of a)
+      for (const d of l.rows) {
+        const u = this.createDataTableRow(d.id, e.columns, d.values, e.id, l.page);
+        l.page !== i && (u.style.display = "none", m.set(u, { autoAlpha: 0, y: 6 })), c.append(u);
       }
-    return t.append(n, l), (e.actions?.length || e.pagination) && t.append(this.createDataTableFooter(e, a, i)), t;
+    return t.append(n, c), (e.actions?.length || e.pagination) && t.append(this.createDataTableFooter(e, a, i)), t;
   }
   createDataTableRow(e, t, a, i, n) {
     const o = document.createElement("div");
     o.className = "wa-data-table__row", o.dataset.tableRow = e;
     const s = e === "header";
     s && (o.dataset.header = "true"), !s && a.source && (o.dataset.source = a.source), !s && n !== void 0 && (o.dataset.page = String(n));
-    for (const l of t) {
-      const c = document.createElement(s ? "strong" : "span");
-      c.className = "wa-data-table__cell", c.dataset.columnKey = l.key, s ? c.textContent = l.label : this.appendDataTableCellContent(c, l, a), o.append(c);
+    for (const c of t) {
+      const l = document.createElement(s ? "strong" : "span");
+      l.className = "wa-data-table__cell", l.dataset.columnKey = c.key, s ? l.textContent = c.label : this.appendDataTableCellContent(l, c, a, i), o.append(l);
     }
     return s && o.append(this.createDataTableAddButton(i)), o;
   }
@@ -4857,7 +5777,7 @@ class uc {
     const a = document.createElement("button");
     return a.className = `wa-data-table__add${t ? ` ${t}` : ""}`, a.type = "button", a.tabIndex = -1, a.setAttribute("aria-label", `Add row to ${e}`), a.append(this.createDataTableAddIcon()), a;
   }
-  appendDataTableCellContent(e, t, a) {
+  appendDataTableCellContent(e, t, a, i) {
     switch (this.getDataTableCellType(t)) {
       case "person":
         e.append(this.createDataTablePerson(a, a[t.key] ?? "", t.person));
@@ -4869,9 +5789,12 @@ class uc {
         this.appendDataTablePillDetailCell(e, t, a);
         return;
       case "text":
-        this.appendDataTableTextCell(e, a[t.key] ?? "");
+        this.appendDataTableTextCell(e, a[t.key] ?? "", this.getDataTableEmptyPlaceholder(i, t));
         return;
     }
+  }
+  getDataTableEmptyPlaceholder(e, t) {
+    return t.key === "company" || e === "raw-webinar-attendees" && t.key === "email" ? "" : "-";
   }
   getDataTableCellType(e) {
     return e.cellType ? e.cellType : e.key === "mutualConnection" ? "mutualConnection" : "text";
@@ -4891,13 +5814,13 @@ class uc {
     const i = this.getMutualConnectionPersonOptions(t), n = i.badgeKey ?? "mutualConnectionBadge";
     e.append(this.createDataTablePerson(a, a[t.key] ?? "", i)), a[n] && e.append(this.createDataTableCellBadge(a[n]));
   }
-  appendDataTableTextCell(e, t) {
-    const a = document.createElement("span");
-    a.className = "wa-data-table__cell-text", a.textContent = t || "-", e.append(a), t || (e.dataset.empty = "true");
+  appendDataTableTextCell(e, t, a = "-") {
+    const i = document.createElement("span");
+    i.className = "wa-data-table__cell-text", i.textContent = t || a, e.append(i), t || (e.dataset.empty = "true");
   }
   appendDataTablePillDetailCell(e, t, a) {
-    const i = document.createElement("span"), n = document.createElement("span"), o = document.createElement("span"), s = a[`${t.key}Pill`] ?? "", l = a[t.key] ?? "";
-    i.className = "wa-data-table-pill-detail", n.className = "wa-data-table-pill-detail__pill", n.textContent = s || "-", o.className = "wa-data-table-pill-detail__detail", o.textContent = l || "-", i.append(n, o), e.append(i), l || (e.dataset.empty = "true");
+    const i = document.createElement("span"), n = document.createElement("span"), o = document.createElement("span"), s = a[`${t.key}Pill`] ?? "", c = a[t.key] ?? "";
+    i.className = "wa-data-table-pill-detail", n.className = "wa-data-table-pill-detail__pill", n.textContent = s || "-", o.className = "wa-data-table-pill-detail__detail", o.textContent = c || "-", i.append(n, o), e.append(i), c || (e.dataset.empty = "true");
   }
   createDataTableAddIcon() {
     return this.createSvgIcon("wa-data-table__add-icon", ["M12 5v14", "M5 12h14"], { size: 16 });
@@ -4927,21 +5850,29 @@ class uc {
     if (e.pagination) {
       const n = document.createElement("div");
       n.className = "wa-data-table__pagination";
-      const o = t.find((c) => c.page === a)?.range ?? t[0]?.range ?? "", s = document.createElement("span");
+      const o = t.find((l) => l.page === a)?.range ?? t[0]?.range ?? "", s = document.createElement("span");
       s.className = "wa-data-table__range", s.dataset.tablePageRange = "", s.textContent = o;
-      const l = document.createElement("span");
-      l.className = "wa-data-table__page-controls";
-      for (const c of t) {
-        const d = document.createElement("button"), u = c.page === a;
-        d.className = "wa-data-table__page-button", d.type = "button", d.tabIndex = -1, d.dataset.tablePageButton = String(c.page), d.dataset.pageRange = c.range, d.dataset.active = String(u), d.setAttribute("aria-label", `Show page ${c.page}`), d.setAttribute("aria-current", u ? "page" : "false"), d.textContent = String(c.page), l.append(d);
+      const c = document.createElement("span");
+      c.className = "wa-data-table__page-controls", c.append(this.createDataTablePaginationChevron("previous", a, t.length));
+      for (const l of t) {
+        const d = document.createElement("button"), u = l.page === a;
+        d.className = "wa-data-table__page-button", d.type = "button", d.tabIndex = -1, d.dataset.pageButtonRole = "dot", d.dataset.pageCount = String(t.length), d.dataset.tablePageButton = String(l.page), d.dataset.pageRange = l.range, d.dataset.active = String(u), d.setAttribute("aria-label", `Show page ${l.page}`), d.setAttribute("aria-current", u ? "page" : "false"), c.append(d);
       }
-      n.append(s, l), i.append(n);
+      c.append(this.createDataTablePaginationChevron("next", a, t.length)), n.append(s, c), i.append(n);
     }
     return i;
   }
+  createDataTablePaginationChevron(e, t, a) {
+    const i = document.createElement("button");
+    return i.className = "wa-data-table__page-button", i.type = "button", i.tabIndex = -1, i.dataset.pageButtonRole = e, i.dataset.pageCount = String(a), i.setAttribute("aria-label", e === "previous" ? "Show previous page" : "Show next page"), i.append(this.createDataTablePaginationChevronIcon(e)), this.updateDataTablePageButton(i, t), i;
+  }
+  createDataTablePaginationChevronIcon(e) {
+    const t = e === "previous" ? "M15 6l-6 6l6 6" : "M9 6l6 6l-6 6";
+    return this.createSvgIcon("wa-data-table__page-chevron", [t], { size: 18 });
+  }
   createDataTableAction(e, t) {
     const a = document.createElement("button");
-    a.className = "wa-data-table-action", a.type = "button", a.tabIndex = -1, a.dataset.tableAction = t.id, a.dataset.tableActionTable = e, a.dataset.actionVariant = t.variant ?? "secondary", a.setAttribute("aria-label", t.label);
+    a.className = "wa-data-table-action", a.type = "button", a.tabIndex = -1, a.dataset.tableAction = t.id, a.dataset.tableActionTable = e, a.dataset.actionVariant = t.variant ?? "secondary", a.dataset.selected = "false", a.setAttribute("aria-label", t.label), a.setAttribute("aria-pressed", "false");
     const i = document.createElement("span");
     if (i.className = "wa-data-table-action__label", i.textContent = t.label, a.append(this.createDataTableActionIcon(t.icon ?? "email"), i), t.badge) {
       const n = document.createElement("span");
@@ -4961,33 +5892,79 @@ class uc {
     return this.createSvgIcon("wa-data-table-action__icon", t, { size: 16 });
   }
   findDataTablePageButton(e) {
-    return e instanceof Element ? e.closest(Za) : null;
+    return e instanceof Element ? e.closest(hi) : null;
+  }
+  findDataTableActionButton(e) {
+    return e instanceof Element ? e.closest("[data-table-action]") : null;
+  }
+  dataTableActionSelected(e, t) {
+    return m.timeline().call(() => {
+      const i = this.findDataTable(e)?.querySelector(
+        `[data-table-action="${this.escapeSelectorValue(t)}"]`
+      );
+      i && this.selectDataTableActionButton(i, { animate: !0 });
+    });
+  }
+  selectDataTableActionButton(e, t = {}) {
+    e.closest(Kn)?.querySelectorAll("[data-table-action]").forEach((i) => {
+      const n = i === e;
+      i.dataset.selected = String(n), i.setAttribute("aria-pressed", String(n));
+    }), t.animate && this.playDataTableActionPress(e);
+  }
+  playDataTableActionPress(e) {
+    this.prefersReducedMotion || (m.killTweensOf(e, "scale,transform"), m.set(e, { transformOrigin: "center center" }), m.timeline().to(e, {
+      scale: 0.975,
+      duration: x(0.08),
+      ease: "power2.out",
+      overwrite: "auto"
+    }).to(e, {
+      scale: 1.018,
+      duration: x(0.18),
+      ease: "back.out(2.4)",
+      overwrite: "auto"
+    }).to(e, {
+      scale: 1,
+      duration: x(0.14),
+      ease: "power2.out",
+      overwrite: "auto",
+      clearProps: "transform"
+    }));
   }
   getDataTablePageButtonRuntime(e) {
-    const t = e.closest(nc), a = t?.dataset.dataTable, i = this.parseFiniteNumber(e.dataset.tablePageButton);
-    return !t || !a || i === null ? null : {
+    const t = e.closest(Kn), a = t?.dataset.dataTable, i = this.parseFiniteNumber(e.dataset.tablePageButton);
+    if (!t || !a || i === null) return null;
+    const n = e.dataset.pageRange ?? this.findDataTablePageDotButton(t, i)?.dataset.pageRange ?? null;
+    return {
       table: t,
       tableId: a,
       page: i,
+      pageRange: n,
       initialPage: this.parseFiniteNumber(t.dataset.activePage),
-      initialRangeText: t.querySelector($a)?.textContent ?? null
+      initialRangeText: t.querySelector(pi)?.textContent ?? null
     };
   }
   findDataTable(e) {
     return this.root.querySelector(`[data-data-table="${this.escapeSelectorValue(e)}"]`);
   }
+  findDataTablePageDotButton(e, t) {
+    return e.querySelector(
+      `[data-page-button-role="dot"][data-table-page-button="${this.escapeSelectorValue(String(t))}"]`
+    );
+  }
   getDataTablePageRuntime(e, t) {
     const a = this.findDataTable(e);
     if (!a) return null;
-    const i = this.queryElements(a, Za);
+    const i = this.queryElements(a, hi);
     return {
       table: a,
       activePage: this.parseFiniteNumber(a.dataset.activePage),
       currentRows: this.getVisibleDataTableRows(a),
       targetRows: this.queryElements(a, `.wa-data-table__row[data-page="${t}"]`),
       buttons: i,
-      targetButton: i.find((n) => this.parseFiniteNumber(n.dataset.tablePageButton) === t),
-      range: a.querySelector($a)
+      targetButton: i.find(
+        (n) => n.dataset.pageButtonRole === "dot" && this.parseFiniteNumber(n.dataset.tablePageButton) === t
+      ),
+      range: a.querySelector(pi)
     };
   }
   getVisibleDataTableRows(e) {
@@ -5005,16 +5982,16 @@ class uc {
       e[a.avatarUrlKey ?? "avatarUrl"],
       e[a.avatarKey ?? "avatar"]
     );
-    const s = this.createDataTablePersonSourceBadge(e, a), l = document.createElement("span");
-    l.className = "wa-data-table-person__name", l.textContent = t || "-", n.append(o, s);
-    const c = document.createElement("span");
-    c.className = "wa-data-table-person__copy", c.append(l);
+    const s = this.createDataTablePersonSourceBadge(e, a), c = document.createElement("span");
+    c.className = "wa-data-table-person__name", c.textContent = t || "-", n.append(o, s);
+    const l = document.createElement("span");
+    l.className = "wa-data-table-person__copy", l.append(c);
     const d = e[a.detailKey ?? "prospectDetail"] || e.personDetail || "";
     if (d) {
       const u = document.createElement("span");
-      u.className = "wa-data-table-person__detail", u.textContent = d, c.append(u);
+      u.className = "wa-data-table-person__detail", u.textContent = d, l.append(u);
     }
-    return i.append(n, c), i;
+    return i.append(n, l), i;
   }
   createDataTablePersonSourceBadge(e, t = {}) {
     const a = document.createElement("span"), i = this.getPersonBadgeCompany(e, t), n = this.getCompanyLogoUrl(i, e);
@@ -5043,18 +6020,18 @@ class uc {
   getCompanyLogoUrl(e, t) {
     const a = t.companyLogo || t.logoUrl;
     if (a) return a;
-    const i = this.getCompanyKey(e), n = kl[i];
+    const i = this.getCompanyKey(e), n = Kl[i];
     if (n) return n;
     const o = t.companyLogoSlug || this.getCompanyLogoIconSlug(e);
-    if (o) return `${sc}/${encodeURIComponent(o)}.svg`;
+    if (o) return `${Yc}/${encodeURIComponent(o)}.svg`;
     const s = t.companyDomain || this.getCompanyLogoDomain(e) || this.getEmailDomainFromValues(t);
-    return s ? `${lc}?domain=${encodeURIComponent(s)}&sz=64` : "";
+    return s ? `${Wc}?domain=${encodeURIComponent(s)}&sz=64` : "";
   }
   getCompanyLogoIconSlug(e) {
-    return e ? cc[this.getCompanyKey(e)] ?? "" : "";
+    return e ? jc[this.getCompanyKey(e)] ?? "" : "";
   }
   getCompanyLogoDomain(e) {
-    return e ? dc[this.getCompanyKey(e)] ?? "" : "";
+    return e ? Kc[this.getCompanyKey(e)] ?? "" : "";
   }
   getCompanyKey(e) {
     return e.toLowerCase().replace(/\b(inc|llc|ltd|corp|corporation|company)\b\.?/g, "").replace(/[^a-z0-9]+/g, " ").trim();
@@ -5081,7 +6058,7 @@ class uc {
     return e.split(/\s+/).filter(Boolean).slice(0, 2).map((t) => t[0]?.toUpperCase() ?? "").join("");
   }
   setProfileAvatar(e, t, a, i) {
-    const n = Oa(t, a), o = n ? this.resolveAssetUrl(n) : "";
+    const n = Xa(t, a), o = n ? this.resolveAssetUrl(n) : "";
     if (e.replaceChildren(), e.dataset.hasPhoto = String(!!o), !o) {
       e.textContent = i ?? this.getInitials(t);
       return;
@@ -5099,31 +6076,32 @@ class uc {
     const i = this.createThinkingLogo(), n = document.createElement("span");
     n.className = "wa-thinking__title", n.textContent = "Enriching contacts", a.append(i, n);
     const o = document.createElement("div");
-    return o.className = "wa-waterfall-rows", o.append(
-      this.createWaterfallRow("Work email", "complete", [
-        { label: "On Prem", service: "on-prem", state: "complete" },
-        { label: "Wiza", service: "wiza", state: "pending" },
-        { label: "ContactOut", service: "contactout", state: "pending" },
-        { label: "Prospeo", service: "prospeo", state: "pending" },
-        { label: "Waterfall", service: "waterfall", state: "pending" },
-        { label: "FullEnrich", service: "fullenrich", state: "pending" }
-      ]),
-      this.createWaterfallRow("Phone number", "complete", [
-        { label: "On Prem", service: "on-prem", state: "failed" },
-        { label: "ContactOut", service: "contactout", state: "failed" },
-        { label: "Forager", service: "forager", state: "complete" },
-        { label: "Wiza", service: "wiza", state: "pending" },
-        { label: "Prospeo", service: "prospeo", state: "pending" },
-        { label: "FullEnrich", service: "fullenrich", state: "pending" }
-      ]),
-      this.createWaterfallRow("Social profile", "complete", [
-        { label: "On Prem", service: "on-prem", state: "failed" },
-        { label: "ContactOut", service: "contactout", state: "complete" },
-        { label: "Prospeo", service: "prospeo", state: "pending" },
-        { label: "Wiza", service: "wiza", state: "pending" },
-        { label: "Forager", service: "forager", state: "pending" }
-      ])
-    ), t.append(a, o), t;
+    return o.className = "wa-waterfall-rows", o.append(...this.getWaterfallRows(e).map(
+      (s) => this.createWaterfallRow(s.label, s.state, s.chips)
+    )), t.append(a, o), t;
+  }
+  getWaterfallRows(e) {
+    const t = e.fields.map((a) => this.createWaterfallRowConfig(a.title, a.steps)).filter((a) => !!a);
+    return t.length ? t : Xc;
+  }
+  createWaterfallRowConfig(e, t) {
+    const a = t.map((o) => o.trim()).filter(Boolean), i = this.getWaterfallCompletionIndex(e, a), n = a.map((o, s) => ({
+      label: o,
+      service: li(o),
+      state: s < i ? "failed" : s === i ? "complete" : "pending"
+    }));
+    return !e.trim() || !n.length ? null : {
+      label: e.trim(),
+      state: n.some((o) => o.state === "complete") ? "complete" : "failed",
+      chips: n
+    };
+  }
+  getWaterfallCompletionIndex(e, t) {
+    if (/\b(?:mobile|phone)\b/i.test(e)) {
+      const i = t.findIndex((n) => li(n) === "on-prem");
+      if (i >= 0) return i;
+    }
+    return t.length - 1;
   }
   createWaterfallRow(e, t, a) {
     const i = document.createElement("div");
@@ -5133,9 +6111,9 @@ class uc {
     const o = document.createElement("span");
     o.className = "wa-waterfall-row__label", o.textContent = e;
     const s = document.createElement("span");
-    return s.className = "wa-waterfall-row__chips", a.forEach((l, c) => {
-      const d = document.createElement("span"), u = this.createWaterfallServiceBadge(l);
-      if (d.className = "wa-waterfall-service-step", d.append(u), c < a.length - 1) {
+    return s.className = "wa-waterfall-row__chips", a.forEach((c, l) => {
+      const d = document.createElement("span"), u = this.createWaterfallServiceBadge(c);
+      if (d.className = "wa-waterfall-service-step", d.append(u), l < a.length - 1) {
         const h = document.createElement("span");
         h.className = "wa-waterfall-arrow", h.setAttribute("aria-hidden", "true"), h.append(this.createTablerIcon("arrow-right", 16)), d.append(h);
       }
@@ -5144,7 +6122,7 @@ class uc {
   }
   createWaterfallServiceBadge(e) {
     const t = document.createElement("span"), a = document.createElement("span"), i = document.createElement("span");
-    t.className = "wa-waterfall-chip", t.dataset.service = e.service, t.dataset.stepState = "pending", t.dataset.finalStepState = e.state, a.className = "wa-waterfall-chip__icon", a.setAttribute("aria-hidden", "true"), this.appendWaterfallServiceIcon(a, e.service);
+    t.className = "wa-waterfall-chip", t.dataset.service = e.service, t.dataset.stepState = "pending", t.dataset.finalStepState = e.state, a.className = "wa-waterfall-chip__icon", a.setAttribute("aria-hidden", "true"), this.appendWaterfallServiceIcon(a, e);
     const n = document.createElement("span");
     return n.className = "wa-waterfall-chip__state-icon", n.setAttribute("aria-hidden", "true"), n.append(
       this.createTablerIcon("check", 14),
@@ -5172,65 +6150,59 @@ class uc {
     const o = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     e && o.classList.add(e), o.setAttribute("width", String(a)), o.setAttribute("height", String(a)), o.setAttribute("viewBox", i), o.setAttribute("aria-hidden", "true"), o.setAttribute("focusable", "false");
     for (const s of t) {
-      const l = document.createElementNS("http://www.w3.org/2000/svg", "path");
-      l.setAttribute("d", s);
-      for (const [c, d] of Object.entries(n))
-        l.setAttribute(c, d);
-      o.append(l);
+      const c = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      c.setAttribute("d", s);
+      for (const [l, d] of Object.entries(n))
+        c.setAttribute(l, d);
+      o.append(c);
     }
     return o;
   }
   appendWaterfallServiceIcon(e, t) {
-    if (t === "on-prem") {
-      e.append(vn("wa-waterfall-chip__mark"));
+    const { label: a, service: i } = t;
+    if (i === "on-prem") {
+      e.append(Fn("wa-waterfall-chip__mark"));
       return;
     }
-    const a = document.createElementNS("http://www.w3.org/2000/svg", "svg"), i = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    switch (a.setAttribute("viewBox", "0 0 16 16"), a.setAttribute("aria-hidden", "true"), a.setAttribute("focusable", "false"), i.setAttribute("fill", "none"), i.setAttribute("stroke", "currentColor"), i.setAttribute("stroke-width", "1.8"), i.setAttribute("stroke-linecap", "round"), i.setAttribute("stroke-linejoin", "round"), t) {
-      case "wiza":
-        i.setAttribute("d", "M8 2.4 5.2 11.8h5.6L8 2.4Zm-3.8 9.4h7.6");
-        break;
-      case "contactout":
-        i.setAttribute("d", "M4.2 10.7V5.3h7.6v5.4H4.2Zm1.2-6.8h1.2m2.8 0h1.2M6 7.9h.1m3.8 0h.1");
-        break;
-      case "prospeo":
-        i.setAttribute("d", "m8 2.7 4.4 2.5v5.6L8 13.3l-4.4-2.5V5.2L8 2.7Zm0 0v5.2m4.4-2.7L8 7.9 3.6 5.2");
-        break;
-      case "waterfall":
-        i.setAttribute("d", "m3.2 6.2 3.1 3 1.7-1.6 1.7 1.6 3.1-3");
-        break;
-      case "fullenrich":
-        i.setAttribute("d", "M3.1 9.9a5 5 0 1 1 9.8 0M5.2 8.6a2.8 2.8 0 1 1 5.6 0M2.9 11.8h10.2");
-        break;
-      default:
-        i.setAttribute("d", "M3.3 4.2 8 2l4.7 2.2M3.3 7.1 8 4.9l4.7 2.2M3.3 10 8 7.8l4.7 2.2M8 7.8v5.4");
-        break;
+    const n = si(a) || si(i);
+    if (n) {
+      e.dataset.hasFavicon = "true", this.appendToolFaviconImage(e, n, {
+        loading: "eager",
+        onError: () => {
+          e.replaceChildren(), delete e.dataset.hasFavicon, this.appendWaterfallServiceGlyph(e, i);
+        }
+      });
+      return;
     }
-    a.append(i), e.append(a);
+    this.appendWaterfallServiceGlyph(e, i);
+  }
+  appendWaterfallServiceGlyph(e, t) {
+    const a = document.createElementNS("http://www.w3.org/2000/svg", "svg"), i = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    a.setAttribute("viewBox", "0 0 16 16"), a.setAttribute("aria-hidden", "true"), a.setAttribute("focusable", "false"), i.setAttribute("fill", "none"), i.setAttribute("stroke", "currentColor"), i.setAttribute("stroke-width", "1.8"), i.setAttribute("stroke-linecap", "round"), i.setAttribute("stroke-linejoin", "round"), i.setAttribute("d", Zn[t] ?? Zn.default), a.append(i), e.append(a);
   }
   animateEnrichmentWaterfall(e) {
-    const t = f.timeline();
+    const t = m.timeline();
     return e.forEach((a, i) => {
-      const n = this.queryElements(a, ".wa-waterfall-chip"), o = this.queryElements(a, ".wa-waterfall-service-step"), s = this.getAttemptedWaterfallChips(n), l = this.getWaterfallFinalState(a), c = f.timeline(), d = Me.rowOffsets[i % Me.rowOffsets.length] ?? 0, u = Me.serviceLoadDuration + (i % 2 === 0 ? Me.serviceLoadVariance : -Me.serviceLoadVariance);
-      c.call(() => this.setWaterfallState(a, "loading")).to(o, {
+      const n = this.queryElements(a, ".wa-waterfall-chip"), o = this.queryElements(a, ".wa-waterfall-service-step"), s = this.getAttemptedWaterfallChips(n), c = this.getWaterfallFinalState(a), l = m.timeline(), d = Oe.rowOffsets[i % Oe.rowOffsets.length] ?? 0, u = Oe.serviceLoadDuration + (i % 2 === 0 ? Oe.serviceLoadVariance : -Oe.serviceLoadVariance);
+      l.call(() => this.setWaterfallState(a, "loading")).to(o, {
         autoAlpha: 1,
         y: 0,
         scale: 1,
-        duration: Me.serviceRevealDuration,
+        duration: Oe.serviceRevealDuration,
         ease: "power2.out",
         stagger: 0.035
       }, "<"), s.forEach((h) => {
         const g = this.getWaterfallFinalState(h);
-        c.call(() => this.setWaterfallState(h, "loading")).to(h, {
+        l.call(() => this.setWaterfallState(h, "loading")).to(h, {
           scale: 1.025,
-          duration: Me.serviceSettleDuration,
+          duration: Oe.serviceSettleDuration,
           ease: "power2.out"
         }, "<").to({}, { duration: u }).call(() => this.setWaterfallState(h, g)).to(h, {
           scale: 1,
-          duration: Me.serviceSettleDuration,
+          duration: Oe.serviceSettleDuration,
           ease: g === "complete" ? "back.out(1.8)" : "power2.out"
         });
-      }), c.call(() => this.setWaterfallState(a, l)).to({}, { duration: Me.rowCompleteHold }), t.add(c, d);
+      }), l.call(() => this.setWaterfallState(a, c)).to({}, { duration: Oe.rowCompleteHold }), t.add(l, d);
     }), t;
   }
   getAttemptedWaterfallChips(e) {
@@ -5276,23 +6248,23 @@ class uc {
   }
   createMarketingDataSourcesGrid(e) {
     const t = this.createDataSourcesGrid(e), a = document.createElement("div"), i = document.createElement("div"), n = t.querySelector(".wa-data-source-grid__header"), o = this.groupDataSources(e.sources);
-    return t.classList.add("wa-data-source-grid--marketing"), t.dataset.marketingDataSourcesGrid = e.id, a.className = "wa-data-source-grid__scale", i.className = "wa-data-source-grid__groups", ac.forEach((s) => {
-      const l = document.createElement("div");
-      l.className = "wa-data-source-grid__column", s.forEach((c) => {
-        const d = o.find((u) => u.category === c);
-        d && l.append(this.createMarketingDataSourceGroup(d));
-      }), i.append(l);
+    return t.classList.add("wa-data-source-grid--marketing"), t.dataset.marketingDataSourcesGrid = e.id, a.className = "wa-data-source-grid__scale", i.className = "wa-data-source-grid__groups", Hc.forEach((s) => {
+      const c = document.createElement("div");
+      c.className = "wa-data-source-grid__column", s.forEach((l) => {
+        const d = o.find((u) => u.category === l);
+        d && c.append(this.createMarketingDataSourceGroup(d));
+      }), i.append(c);
     }), a.replaceChildren(...this.compactElements(n, i)), t.replaceChildren(a), this.setMarketingDataGridScale(t), t;
   }
   setMarketingDataGridScale(e) {
     const t = getComputedStyle(this.chatBody), a = Number.parseFloat(t.paddingLeft) || 0, i = Number.parseFloat(t.paddingRight) || a, o = e.clientWidth || e.getBoundingClientRect().width || Math.max(
       0,
       (this.chatBody.clientWidth || this.chatBody.getBoundingClientRect().width) - a - i
-    ), s = this.chatBody.clientHeight || this.chatBody.getBoundingClientRect().height, l = Math.max(0, o) / sa.contentWidth, c = Math.max(0, s) / sa.height, d = Math.min(l || 1, c || 1), u = sa.contentWidth, h = Math.ceil(sa.height * d);
+    ), s = this.chatBody.clientHeight || this.chatBody.getBoundingClientRect().height, c = Math.max(0, o) / ya.contentWidth, l = Math.max(0, s) / ya.height, d = Math.min(c || 1, l || 1), u = ya.contentWidth, h = Math.ceil(ya.height * d);
     this.setStyleProperty(e, "--wa-data-grid-scale", String(d)), this.setStyleProperty(e, "--wa-data-grid-artboard-width", `${u}px`), this.setStyleProperty(e, "--wa-data-grid-gutter-left", "0px"), this.setStyleProperty(e, "--wa-data-grid-gutter-right", "0px"), this.setStyleProperty(e, "--wa-data-grid-scaled-height", `${h}px`);
   }
   updateMarketingDataGridScales() {
-    this.queryElements(this.thread, Rn).forEach((e) => {
+    this.queryElements(this.thread, jn).forEach((e) => {
       this.setMarketingDataGridScale(e);
     });
   }
@@ -5340,8 +6312,8 @@ class uc {
       o.className = "wa-style-profile__row";
       const s = document.createElement("span");
       s.textContent = n.label;
-      const l = document.createElement("strong");
-      l.textContent = n.value, o.append(s, l), i.append(o);
+      const c = document.createElement("strong");
+      c.textContent = n.value, o.append(s, c), i.append(o);
     }), t.append(a, i), e.examples?.length) {
       const n = document.createElement("div");
       n.className = "wa-style-profile__examples", e.examples.forEach((o) => {
@@ -5360,8 +6332,8 @@ class uc {
     i.className = "wa-mailbox-connection__copy";
     const n = document.createElement("h3");
     if (n.className = "wa-mailbox-connection__title", n.textContent = e.title, e.subtitle) {
-      const y = document.createElement("p");
-      y.className = "wa-mailbox-connection__subtitle", y.textContent = e.subtitle, i.append(n, y);
+      const b = document.createElement("p");
+      b.className = "wa-mailbox-connection__subtitle", b.textContent = e.subtitle, i.append(n, b);
     } else
       i.append(n);
     const o = document.createElement("div");
@@ -5369,52 +6341,52 @@ class uc {
     const s = this.createMailboxProviderButton({
       id: e.id,
       icon: "gmail",
-      label: ti("gmail", e.ctaLabel),
-      loadingLabel: ai(e.loadingLabel, "Connecting"),
-      connectedLabel: ti("gmail", e.status, "connected"),
+      label: mi("gmail", e.ctaLabel),
+      loadingLabel: wi(e.loadingLabel, "Connecting"),
+      connectedLabel: mi("gmail", e.status, "connected"),
       isPrimary: !0
-    }), l = this.createMailboxProviderButton({
+    }), c = this.createMailboxProviderButton({
       icon: "outlook",
-      label: ti("outlook", e.secondaryCtaLabel)
+      label: mi("outlook", e.secondaryCtaLabel)
     });
-    o.append(s, l), a.append(i, o);
-    const c = document.createElement("div");
-    c.className = "wa-mailbox-learning", c.dataset.mailboxLearning = "", c.dataset.mailboxLearningReadyDetail = e.learningReadyDetail ?? An;
+    o.append(s, c), a.append(i, o);
+    const l = document.createElement("div");
+    l.className = "wa-mailbox-learning", l.dataset.mailboxLearning = "", l.dataset.mailboxLearningReadyDetail = e.learningReadyDetail ?? zn;
     const d = document.createElement("div");
     d.className = "wa-mailbox-learning__thumbprint", d.append(this.createMailboxThumbprint(e.id));
     const u = document.createElement("h4");
     u.className = "wa-mailbox-learning__title";
     const h = document.createElement("span");
-    h.dataset.mailboxLearningTitleText = "", h.textContent = e.learningTitle ?? _n;
+    h.dataset.mailboxLearningTitleText = "", h.textContent = e.learningTitle ?? Un;
     const g = document.createElement("span");
     g.className = "wa-mailbox-learning__ready-chevron", g.dataset.mailboxLearningReadyChevron = "", g.setAttribute("aria-hidden", "true"), u.append(h, g);
-    const m = document.createElement("p");
-    m.className = "wa-mailbox-learning__detail", m.textContent = e.learningDetail ?? Ka[0].detail;
+    const w = document.createElement("p");
+    w.className = "wa-mailbox-learning__detail", w.textContent = e.learningDetail ?? ci[0].detail;
     const p = document.createElement("div");
     p.className = "wa-mailbox-learning__progress";
-    const w = document.createElement("span");
-    return w.dataset.mailboxLearningProgress = "", p.append(w), c.append(d, u, p, m), t.append(a, c), t;
+    const f = document.createElement("span");
+    return f.dataset.mailboxLearningProgress = "", p.append(f), l.append(d, u, p, w), t.append(a, l), t;
   }
   createMailboxProviderButton(e) {
     const t = document.createElement("button");
-    t.className = "wa-mailbox-connection__button", t.type = "button", t.setAttribute("aria-label", e.label), e.isPrimary && e.id && (t.dataset.mailboxConnect = e.id, t.dataset.mailboxLoadingLabel = ai(e.loadingLabel, "Connecting"), t.dataset.mailboxConnectedLabel = e.connectedLabel ?? "Gmail");
+    t.className = "wa-mailbox-connection__button", t.type = "button", t.setAttribute("aria-label", e.label), e.isPrimary && e.id && (t.dataset.mailboxConnect = e.id, t.dataset.mailboxLoadingLabel = wi(e.loadingLabel, "Connecting"), t.dataset.mailboxConnectedLabel = e.connectedLabel ?? "Gmail");
     const a = this.createMailboxProviderIcon(e.icon), i = document.createElement("span");
     i.className = "wa-mailbox-connection__button-copy";
     const n = document.createElement("span");
     if (n.className = e.isPrimary ? "wa-mailbox-connection__button-label" : "wa-mailbox-connection__provider-label", e.isPrimary && (n.dataset.mailboxButtonLabel = "idle", n.setAttribute("aria-hidden", "true")), n.textContent = e.label, i.append(n), e.isPrimary) {
       const s = document.createElement("span");
-      s.className = "wa-mailbox-connection__button-label", s.dataset.mailboxButtonLabel = "loading", s.setAttribute("aria-hidden", "true"), s.textContent = ai(e.loadingLabel, "Connecting");
-      const l = document.createElement("span"), c = this.createSvgIcon("wa-mailbox-connection__connected-icon", ["M5 12l5 5l10 -10"], {
+      s.className = "wa-mailbox-connection__button-label", s.dataset.mailboxButtonLabel = "loading", s.setAttribute("aria-hidden", "true"), s.textContent = wi(e.loadingLabel, "Connecting");
+      const c = document.createElement("span"), l = this.createSvgIcon("wa-mailbox-connection__connected-icon", ["M5 12l5 5l10 -10"], {
         size: 16
       }), d = document.createElement("span");
-      l.className = "wa-mailbox-connection__button-label", l.dataset.mailboxButtonLabel = "connected", l.setAttribute("aria-hidden", "true"), d.textContent = e.connectedLabel ?? "Gmail", l.append(c, d), i.append(s, l);
+      c.className = "wa-mailbox-connection__button-label", c.dataset.mailboxButtonLabel = "connected", c.setAttribute("aria-hidden", "true"), d.textContent = e.connectedLabel ?? "Gmail", c.append(l, d), i.append(s, c);
     }
     const o = document.createElement("span");
     return o.className = "wa-mailbox-connection__spinner", o.setAttribute("aria-hidden", "true"), t.append(a, i, o), t;
   }
   createMailboxProviderIcon(e) {
     const t = document.createElement("img");
-    return t.className = "wa-mailbox-connection__provider-icon", t.src = this.resolveAssetUrl(Wl[e]), t.alt = "", t.decoding = "async", t.loading = "eager", t.setAttribute("aria-hidden", "true"), t;
+    return t.className = "wa-mailbox-connection__provider-icon", t.src = this.resolveAssetUrl(Dc[e]), t.alt = "", t.decoding = "async", t.loading = "eager", t.setAttribute("aria-hidden", "true"), t;
   }
   createMailboxThumbprint(e) {
     const t = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -5425,14 +6397,14 @@ class uc {
   }
   createMailboxThumbprintGroup(e, t = !1) {
     const a = document.createElementNS("http://www.w3.org/2000/svg", "g");
-    return a.classList.add(e), jl.forEach((i, n) => {
+    return a.classList.add(e), qc.forEach((i, n) => {
       const o = document.createElementNS("http://www.w3.org/2000/svg", "path");
       o.setAttribute("d", i), o.setAttribute("fill", "none"), o.setAttribute("stroke-linecap", "round"), o.setAttribute("stroke-miterlimit", "10"), t && (o.dataset.mailboxThumbprintPath = String(n), o.setAttribute("pathLength", "100"), o.setAttribute("stroke-dasharray", "0 100"), o.setAttribute("stroke-dashoffset", "0")), a.append(o);
     }), a;
   }
   updateMailboxThumbprintFill(e, t) {
     e.forEach((a, i) => {
-      const n = pc(i, t);
+      const n = $c(i, t);
       if (n <= 0) {
         a.setAttribute("stroke-dasharray", "0 100");
         return;
@@ -5482,27 +6454,27 @@ class uc {
     o.className = "wa-swipe-game__axis";
     const s = document.createElement("span");
     s.textContent = e.labels?.avoid ?? "Never me";
-    const l = document.createElement("span");
-    l.dataset.swipeProgress = "";
     const c = document.createElement("span");
-    c.textContent = e.labels?.use ?? "I'd use it", o.append(s, l, c);
+    c.dataset.swipeProgress = "";
+    const l = document.createElement("span");
+    l.textContent = e.labels?.use ?? "I’d use it", o.append(s, c, l);
     const d = document.createElement("div");
     d.className = "wa-swipe-game__stack";
     const u = document.createElement("div");
-    u.className = "wa-swipe-game__glow", u.setAttribute("aria-hidden", "true"), d.append(u), e.signals.forEach((m, p) => {
-      const w = document.createElement("article");
-      w.className = "wa-swipe-card", w.dataset.swipeCard = m.id, w.dataset.swipeDecision = m.decision, w.dataset.cardIndex = String(p);
-      const y = document.createElement("strong");
-      y.className = "wa-swipe-card__label", y.textContent = m.label;
-      const b = document.createElement("span");
-      b.className = "wa-swipe-card__detail", b.textContent = m.detail, w.append(y, b), d.append(w);
+    u.className = "wa-swipe-game__glow", u.setAttribute("aria-hidden", "true"), d.append(u), e.signals.forEach((w, p) => {
+      const f = document.createElement("article");
+      f.className = "wa-swipe-card", f.dataset.swipeCard = w.id, f.dataset.swipeDecision = w.decision, f.dataset.cardIndex = String(p);
+      const b = document.createElement("strong");
+      b.className = "wa-swipe-card__label", b.textContent = w.label;
+      const A = document.createElement("span");
+      A.className = "wa-swipe-card__detail", A.textContent = w.detail, f.append(b, A), d.append(f);
     });
     const h = document.createElement("div");
-    h.className = "wa-swipe-game__complete", h.dataset.swipeComplete = "", h.textContent = e.completeLabel ?? `${e.signals.length} choices captured`, d.append(h), f.set(h, { autoAlpha: 0, y: 12, scale: 0.96 });
+    h.className = "wa-swipe-game__complete", h.dataset.swipeComplete = "", h.textContent = e.completeLabel ?? `${e.signals.length} choices captured`, d.append(h), m.set(h, { autoAlpha: 0, y: 12, scale: 0.96 });
     const g = document.createElement("div");
     return g.className = "wa-swipe-game__actions", g.append(
       this.createSwipeActionButton("avoid", e.labels?.avoid ?? "Never me"),
-      this.createSwipeActionButton("use", e.labels?.use ?? "I'd use it")
+      this.createSwipeActionButton("use", e.labels?.use ?? "I’d use it")
     ), t.append(a, n, o, d, g), this.updateSwipeGameProgress(t, 0), t;
   }
   createSwipeActionButton(e, t) {
@@ -5513,7 +6485,7 @@ class uc {
     const a = this.getSwipeCards(e);
     a.forEach((i, n) => {
       const o = n - t, s = o >= 0 && o < 3;
-      i.dataset.swipeState = o === 0 ? "active" : o > 0 ? "queued" : "done", f.set(i, {
+      i.dataset.swipeState = o === 0 ? "active" : o > 0 ? "queued" : "done", m.set(i, {
         display: o >= 0 ? "grid" : "none",
         x: 0,
         y: Math.max(0, o) * 8,
@@ -5531,93 +6503,94 @@ class uc {
     a && (a.textContent = `${n}/${i}`);
   }
   createSequenceEngagement(e) {
-    const t = document.createElement("section"), a = ao(e);
+    const t = document.createElement("section"), a = To(e);
     t.className = "wa-sequence-engagement", t.dataset.sequenceEngagement = e.id, t.dataset.peopleCount = e.peopleCount, t.dataset.activeSequenceIndex = String(a);
     const i = this.createSectionHeader("wa-sequence-engagement", e.title, e.subtitle), n = document.createElement("div");
     n.className = "wa-sequence-engagement__sequences";
-    const o = e.sequences.some((m) => m.steps?.length);
+    const o = e.sequences.some((w) => w.steps?.length);
     let s = null;
     if (o) {
-      const m = document.createElement("div"), p = document.createElement("div");
-      m.className = "wa-sequence-people-wrap", p.className = "wa-sequence-people", p.dataset.sequencePeopleRail = e.id, p.setAttribute("aria-label", "Sequence people"), m.append(p), e.sequences.forEach((w, y) => {
-        const b = document.createElement("button"), x = document.createElement("span"), _ = document.createElement("span"), v = document.createElement("span"), T = document.createElement("strong"), A = document.createElement("span");
-        b.className = "wa-sequence-person-card", b.type = "button", b.tabIndex = -1, b.dataset.sequencePersonCard = `${e.id}:${y}`, b.dataset.sequencePersonIndex = String(y), b.dataset.active = String(y === a), b.setAttribute("aria-pressed", String(y === a)), b.setAttribute("aria-label", `Preview sequence for ${w.name}`), b.addEventListener("click", () => this.playSequencePersonInteraction(e.id, y)), x.className = "wa-sequence-person-card__avatar-wrap", _.className = "wa-sequence-person-card__avatar", _.dataset.avatarTone = String(y % 9 + 1), this.setProfileAvatar(_, w.name, w.avatarUrl), x.append(_);
-        const C = this.createSequenceCompanyBadge(w.company);
-        C && x.append(C), v.className = "wa-sequence-person-card__copy", T.textContent = w.name, A.textContent = [w.title, w.company].filter(Boolean).join(", "), v.append(T, A), b.append(x, v), p.append(b);
-      }), s = m;
+      const w = document.createElement("div"), p = document.createElement("div");
+      w.className = "wa-sequence-people-wrap", p.className = "wa-sequence-people", p.dataset.sequencePeopleRail = e.id, p.setAttribute("aria-label", "Sequence people"), w.append(p), e.sequences.forEach((f, b) => {
+        const A = document.createElement("button"), v = document.createElement("span"), _ = document.createElement("span"), y = document.createElement("span"), E = document.createElement("strong"), k = document.createElement("span");
+        A.className = "wa-sequence-person-card", A.type = "button", A.tabIndex = -1, A.dataset.sequencePersonCard = `${e.id}:${b}`, A.dataset.sequencePersonIndex = String(b), A.dataset.active = String(b === a), A.setAttribute("aria-pressed", String(b === a)), A.setAttribute("aria-label", `Preview sequence for ${f.name}`), A.addEventListener("click", () => this.playSequencePersonInteraction(e.id, b)), v.className = "wa-sequence-person-card__avatar-wrap", _.className = "wa-sequence-person-card__avatar", _.dataset.avatarTone = String(b % 9 + 1), this.setProfileAvatar(_, f.name, f.avatarUrl), v.append(_);
+        const C = this.createSequenceCompanyBadge(f.company);
+        C && v.append(C), y.className = "wa-sequence-person-card__copy", E.textContent = f.name, k.textContent = [f.title, f.company].filter(Boolean).join(", "), y.append(E, k), A.append(v, y), p.append(A);
+      }), s = w;
     }
-    e.sequences.forEach((m, p) => {
-      const w = document.createElement("article");
-      w.className = "wa-sequence-card", w.dataset.sequenceCard = `${e.id}:${p}`, w.dataset.sequenceIndex = String(p), w.dataset.active = String(p === a), w.dataset.sequenceName = m.name, w.dataset.sequenceMeta = [m.title, m.company].filter(Boolean).join(", "), w.dataset.sequenceAvatarUrl = m.avatarUrl ?? "", w.dataset.sequenceTemplateName = m.name, w.dataset.sequenceTemplateMeta = [m.title, m.company].filter(Boolean).join(", "), w.dataset.sequenceTemplateAvatarUrl = m.avatarUrl ?? "", w.dataset.sequenceEmail = this.getSequenceRecipientEmail(m), w.dataset.sequenceTemplateEmail = this.getSequenceRecipientEmail(m), w.dataset.sequencePhone = this.getSequenceRecipientPhone(m), w.dataset.sequenceTemplatePhone = this.getSequenceRecipientPhone(m), p !== a && (w.style.display = "none", f.set(w, { autoAlpha: 0, y: 8 }));
-      const y = document.createElement("div");
-      y.className = "wa-sequence-card__top";
-      const b = document.createElement("span");
-      b.className = "wa-sequence-card__identity";
-      const x = document.createElement("strong");
-      x.textContent = m.name;
+    e.sequences.forEach((w, p) => {
+      const f = document.createElement("article");
+      f.className = "wa-sequence-card", f.dataset.sequenceCard = `${e.id}:${p}`, f.dataset.sequenceIndex = String(p), f.dataset.active = String(p === a), f.dataset.sequenceName = w.name, f.dataset.sequenceMeta = [w.title, w.company].filter(Boolean).join(", "), f.dataset.sequenceAvatarUrl = w.avatarUrl ?? "", f.dataset.sequenceTemplateName = w.name, f.dataset.sequenceTemplateMeta = [w.title, w.company].filter(Boolean).join(", "), f.dataset.sequenceTemplateAvatarUrl = w.avatarUrl ?? "", f.dataset.sequenceEmail = this.getSequenceRecipientEmail(w), f.dataset.sequenceTemplateEmail = this.getSequenceRecipientEmail(w), f.dataset.sequencePhone = this.getSequenceRecipientPhone(w), f.dataset.sequenceTemplatePhone = this.getSequenceRecipientPhone(w), p !== a && (f.style.display = "none", m.set(f, { autoAlpha: 0, y: 8 }));
+      const b = document.createElement("div");
+      b.className = "wa-sequence-card__top";
+      const A = document.createElement("span");
+      A.className = "wa-sequence-card__identity";
+      const v = document.createElement("strong");
+      v.textContent = w.name;
       const _ = document.createElement("span");
-      _.textContent = [m.title, m.company].filter(Boolean).join(", "), b.append(x, _);
-      const v = document.createElement("span");
-      v.className = "wa-sequence-card__label", v.textContent = m.signal ?? "Personalized", y.append(b, v);
-      const T = document.createElement("p");
-      T.className = "wa-sequence-card__subject", T.textContent = m.subject;
-      const A = document.createElement("p");
-      A.className = "wa-sequence-card__personalization", A.textContent = m.personalization;
-      const C = m.steps;
+      _.textContent = [w.title, w.company].filter(Boolean).join(", "), A.append(v, _);
+      const y = document.createElement("span");
+      y.className = "wa-sequence-card__label", y.textContent = w.signal ?? "Personalized", b.append(A, y);
+      const E = document.createElement("p");
+      E.className = "wa-sequence-card__subject", E.textContent = w.subject;
+      const k = document.createElement("p");
+      k.className = "wa-sequence-card__personalization", k.textContent = w.personalization;
+      const C = w.steps;
       if (C?.length) {
-        const k = document.createElement("div"), M = this.getInitialSequenceStepIndex(e, C.length), F = document.createElement("div"), z = document.createElement("span"), L = document.createElement("strong"), U = document.createElement("div");
-        k.className = "wa-sequence-steps", C.forEach((D, I) => {
-          const P = document.createElement("button"), $ = document.createElement("span"), Te = document.createElement("span"), We = document.createElement("strong"), Ce = this.getSequenceStepWaitDays(D, I, C.length);
-          P.className = "wa-sequence-step", P.type = "button", P.tabIndex = -1, P.dataset.stepIndex = String(I), P.dataset.stepOpen = String(I === M), P.dataset.stepSelected = String(I === M), P.dataset.channel = this.slugChannelName(D.channel), P.dataset.stepSubject = I === 0 ? m.subject : D.label, P.dataset.stepBody = this.getSequenceStepCopy(m, D), P.dataset.stepTemplateChannel = D.channel, P.dataset.stepTemplateLabel = D.label, P.dataset.stepTemplateSubject = I === 0 ? m.subject : D.label, P.dataset.stepTemplateBody = this.getSequenceStepCopy(m, D), Ce && (P.dataset.waitDays = String(Ce), P.dataset.stepTemplateWaitDays = String(Ce)), P.setAttribute("aria-pressed", String(I === 0)), P.addEventListener("click", () => {
-            this.selectSequenceStep(w, I, { cancelPersonTransition: !0 });
-          }), $.className = "wa-sequence-step__channel", $.append(
-            this.createSequenceChannelIcon(D.channel),
-            document.createTextNode(this.formatSequenceChannelLabel(D.channel))
-          ), Te.className = "wa-sequence-step__copy", We.textContent = this.formatSequenceStepTitle(D.label), Te.append(We), P.append($, Te), k.append(P), Ce && k.append(this.createSequenceWaitRow(Ce, I));
-        }), F.className = "wa-sequence-copy-panel", F.dataset.sequenceCopyPanel = "", z.className = "wa-sequence-copy-panel__meta", z.dataset.sequenceCopyMeta = "", L.className = "wa-sequence-copy-panel__subject", L.dataset.sequenceCopySubject = "", U.className = "wa-sequence-copy-panel__body", U.dataset.sequenceCopyBody = "", F.append(z, L, U), w.append(k, F), this.selectSequenceStep(w, M);
+        const S = document.createElement("div"), P = this.getInitialSequenceStepIndex(e, C.length), U = document.createElement("div"), z = document.createElement("span"), L = document.createElement("strong"), H = document.createElement("div");
+        S.className = "wa-sequence-steps", C.forEach((I, q) => {
+          const D = document.createElement("button"), ie = document.createElement("span"), Be = document.createElement("span"), tt = document.createElement("strong"), Me = this.getSequenceStepWaitDays(I, q, C.length);
+          D.className = "wa-sequence-step", D.type = "button", D.tabIndex = -1, D.dataset.stepIndex = String(q), D.dataset.stepOpen = String(q === P), D.dataset.stepSelected = String(q === P), D.dataset.channel = this.slugChannelName(I.channel), D.dataset.stepSubject = q === 0 ? w.subject : I.label, D.dataset.stepBody = this.getSequenceStepCopy(w, I), D.dataset.stepTemplateChannel = I.channel, D.dataset.stepTemplateLabel = I.label, D.dataset.stepTemplateSubject = q === 0 ? w.subject : I.label, D.dataset.stepTemplateBody = this.getSequenceStepCopy(w, I), Me && (D.dataset.waitDays = String(Me), D.dataset.stepTemplateWaitDays = String(Me)), D.setAttribute("aria-pressed", String(q === 0)), D.addEventListener("click", () => {
+            this.selectSequenceStep(f, q, { cancelPersonTransition: !0 });
+          }), ie.className = "wa-sequence-step__channel", ie.append(
+            this.createSequenceChannelIcon(I.channel),
+            document.createTextNode(this.formatSequenceChannelLabel(I.channel))
+          ), Be.className = "wa-sequence-step__copy", tt.textContent = this.formatSequenceStepTitle(I.label), Be.append(tt), D.append(ie, Be), S.append(D), Me && S.append(this.createSequenceWaitRow(Me, q));
+        }), U.className = "wa-sequence-copy-panel", U.dataset.sequenceCopyPanel = "", z.className = "wa-sequence-copy-panel__meta", z.dataset.sequenceCopyMeta = "", L.className = "wa-sequence-copy-panel__subject", L.dataset.sequenceCopySubject = "", H.className = "wa-sequence-copy-panel__body", H.dataset.sequenceCopyBody = "", U.append(z, L, H), f.append(S, U), this.selectSequenceStep(f, P);
       } else
-        w.append(y, T, A);
-      n.append(w);
+        f.append(b, E, k);
+      n.append(f);
     });
-    const l = document.createElement("div");
-    l.className = "wa-engage-channels", e.channels.forEach((m) => {
+    const c = document.createElement("div");
+    c.className = "wa-engage-channels", e.channels.forEach((w) => {
       const p = document.createElement("button");
       p.className = "wa-engage-channel", p.type = "button", p.tabIndex = -1;
-      const w = document.createElement("span");
-      w.className = "wa-engage-channel__copy";
-      const y = document.createElement("strong");
-      y.textContent = m.label;
-      const b = document.createElement("span");
-      if (b.textContent = m.detail, w.append(y, b), p.append(w), m.badge) {
-        const x = document.createElement("span");
-        x.className = "wa-engage-channel__badge", x.textContent = m.badge, p.dataset.badge = m.badge.toLowerCase(), p.append(x);
+      const f = document.createElement("span");
+      f.className = "wa-engage-channel__copy";
+      const b = document.createElement("strong");
+      b.textContent = w.label;
+      const A = document.createElement("span");
+      if (A.textContent = w.detail, f.append(b, A), p.append(f), w.badge) {
+        const v = document.createElement("span");
+        v.className = "wa-engage-channel__badge", v.textContent = w.badge, p.dataset.badge = w.badge.toLowerCase(), p.append(v);
       }
-      l.append(p);
+      c.append(p);
     });
-    const c = document.createElement("div"), d = document.createElement("button"), u = document.createElement("span"), h = document.createElement("button"), g = document.createElement("span");
-    return c.className = "wa-sequence-actions", d.className = "wa-sequence-action wa-sequence-action--draft", d.type = "button", d.tabIndex = -1, d.dataset.sequenceSaveDraft = e.id, d.setAttribute("aria-label", "Save as draft"), u.className = "wa-sequence-kickoff__label", u.textContent = "Save as draft", d.append(u), h.className = "wa-sequence-kickoff", h.type = "button", h.tabIndex = -1, h.dataset.sequenceKickoff = e.id, h.setAttribute("aria-label", `Enroll ${e.peopleCount}`), g.className = "wa-sequence-kickoff__label", g.textContent = `Enroll ${e.peopleCount}`, h.append(g), h.addEventListener("click", () => {
+    const l = document.createElement("div"), d = document.createElement("button"), u = document.createElement("span"), h = document.createElement("button"), g = document.createElement("span");
+    return l.className = "wa-sequence-actions", d.className = "wa-sequence-action wa-sequence-action--draft", d.type = "button", d.tabIndex = -1, d.dataset.sequenceSaveDraft = e.id, d.setAttribute("aria-label", "Save as draft"), u.className = "wa-sequence-kickoff__label", u.textContent = "Save as draft", d.append(u), h.className = "wa-sequence-kickoff", h.type = "button", h.tabIndex = -1, h.dataset.sequenceKickoff = e.id, h.setAttribute("aria-label", `Enroll ${e.peopleCount}`), g.className = "wa-sequence-kickoff__label", g.textContent = `Enroll ${e.peopleCount}`, h.append(g), h.addEventListener("click", () => {
       h.dataset.processing !== "true" && this.sequenceKickoff(e.id).play();
-    }), c.append(d, h), o ? (t.append(...this.compactElements(i, s, n, c)), this.observeInitialSequenceRailCenter(t)) : t.append(i, n, l), t;
+    }), l.append(d, h), o ? (t.append(...this.compactElements(i, s, n, l)), this.observeInitialSequenceRailCenter(t)) : t.append(i, n, c), t;
   }
   createSequenceThinkingStep(e, t, a, i) {
     const n = this.createThinkingStep(
       {
         label: e,
         detail: t,
-        disclosure: a === 0 ? kt : ya
+        disclosure: a === 0 ? Ot : It,
+        toolCalls: []
       },
       a
     );
     n.querySelector(".wa-research-step__detail");
     const o = n.querySelector(".wa-research-step__body");
     if (typeof i == "number" && o) {
-      const s = document.createElement("span"), l = document.createElement("span"), c = document.createElement("span"), d = document.createElement("span");
-      s.className = "wa-sequence-thinking-progress", s.dataset.sequenceThinkingTrack = e, l.className = "wa-sequence-thinking-progress__count", l.textContent = `1/${i}`, c.className = "wa-sequence-thinking-progress__bar", d.setAttribute("aria-hidden", "true"), c.append(d), s.append(l, c), o.append(s);
+      const s = document.createElement("span"), c = document.createElement("span"), l = document.createElement("span"), d = document.createElement("span");
+      s.className = "wa-sequence-thinking-progress", s.dataset.sequenceThinkingTrack = e, c.className = "wa-sequence-thinking-progress__count", c.textContent = `1/${i}`, l.className = "wa-sequence-thinking-progress__bar", d.setAttribute("aria-hidden", "true"), l.append(d), s.append(c, l), o.append(s);
     }
     return n;
   }
   findSequenceEngagement(e) {
-    return this.queryElements(this.root, Dn).find((t) => t.dataset.sequenceEngagement === e) ?? null;
+    return this.queryElements(this.root, Xn).find((t) => t.dataset.sequenceEngagement === e) ?? null;
   }
   getSequenceCardRuntime(e, t) {
     const a = this.getSequenceCards(e);
@@ -5628,10 +6601,10 @@ class uc {
     };
   }
   getSequenceCards(e) {
-    return this.queryElements(e, rc);
+    return this.queryElements(e, Gc);
   }
   getSequencePersonCards(e) {
-    return this.queryElements(e, oc);
+    return this.queryElements(e, Qc);
   }
   getSequenceDisplayCardFromCards(e) {
     return e.find((t) => t.dataset.active === "true" && this.isInlineDisplayVisible(t)) ?? e[0] ?? null;
@@ -5640,7 +6613,7 @@ class uc {
     return e.find((a) => this.parseFiniteNumber(a.dataset.sequenceIndex) === t) ?? null;
   }
   getSequenceRailRuntime(e, t) {
-    const a = e.querySelector(In), i = a?.querySelector(`[data-sequence-person-index="${t}"]`);
+    const a = e.querySelector(Jn), i = a?.querySelector(`[data-sequence-person-index="${t}"]`);
     return a && i ? { rail: a, card: i } : null;
   }
   getActiveSequenceIndex(e) {
@@ -5648,7 +6621,7 @@ class uc {
   }
   clearSequencePersonCardMotionStyles(e) {
     const t = this.getSequencePersonCards(e);
-    f.set(t, { clearProps: "opacity,visibility,transform" });
+    m.set(t, { clearProps: "opacity,visibility,transform" });
   }
   createSequenceWaitRow(e, t) {
     const a = document.createElement("div"), i = document.createElement("span");
@@ -5659,7 +6632,7 @@ class uc {
     a.className = "wa-sequence-wait__prefix", a.textContent = "wait", i.className = "wa-sequence-wait__value", i.textContent = `${t} ${t === 1 ? "day" : "days"}`, e.setAttribute("aria-label", this.formatSequenceWaitLabel(t)), e.replaceChildren(a, i);
   }
   getSequenceStepWaitDays(e, t, a) {
-    return t >= a - 1 ? null : e.waitDays ?? Hl[t] ?? 1;
+    return t >= a - 1 ? null : e.waitDays ?? Ec[t] ?? 1;
   }
   formatSequenceWaitLabel(e) {
     return `wait ${e} ${e === 1 ? "day" : "days"}`;
@@ -5691,8 +6664,8 @@ class uc {
   setActiveSequencePerson(e, t, a = !1) {
     const { cards: i, displayCard: n, templateCard: o } = this.getSequenceCardRuntime(e, t);
     !n || !o || (i.forEach((s) => {
-      const l = s === n;
-      s.dataset.active = String(l), s.style.display = l ? "grid" : "none", f.set(s, { autoAlpha: l ? 1 : 0, y: 0 });
+      const c = s === n;
+      s.dataset.active = String(c), s.style.display = c ? "grid" : "none", m.set(s, { autoAlpha: c ? 1 : 0, y: 0 });
     }), e.dataset.activeSequenceIndex = String(t), this.applySequenceTemplateToDisplayCard(e, n, o, t), this.setSequencePersonRailState(e, t, a));
   }
   setSequencePersonRailState(e, t, a = !1) {
@@ -5706,14 +6679,14 @@ class uc {
     const a = this.getSequenceRailRuntime(e, t);
     if (!a) return;
     const { rail: i, card: n } = a, o = this.getSequencePersonRailScrollTarget(i, n);
-    if (f.killTweensOf(i, "scrollLeft"), this.prefersReducedMotion || Math.abs(i.scrollLeft - o) < 1) {
+    if (m.killTweensOf(i, "scrollLeft"), this.prefersReducedMotion || Math.abs(i.scrollLeft - o) < 1) {
       i.scrollLeft = o, delete i.dataset.sequenceCentering;
       return;
     }
-    i.dataset.sequenceCentering = "true", f.to(i, {
+    i.dataset.sequenceCentering = "true", m.to(i, {
       scrollLeft: o,
-      duration: Cn.railCenterDuration,
-      ease: Cn.railCenterEase,
+      duration: di.railCenterDuration,
+      ease: di.railCenterEase,
       overwrite: "auto",
       onComplete: () => {
         delete i.dataset.sequenceCentering;
@@ -5738,7 +6711,7 @@ class uc {
     });
   }
   observeInitialSequenceRailCenter(e) {
-    const t = e.querySelector(In);
+    const t = e.querySelector(Jn);
     if (!t || typeof ResizeObserver > "u") return;
     const a = [], i = () => a.forEach((s) => s.disconnect()), n = () => {
       t.clientWidth <= 0 || requestAnimationFrame(() => {
@@ -5752,8 +6725,8 @@ class uc {
         n();
         return;
       }
-      const l = new MutationObserver(n);
-      l.observe(s, { attributes: !0, attributeFilter: ["class", "style"] }), a.push(l), n();
+      const c = new MutationObserver(n);
+      c.observe(s, { attributes: !0, attributeFilter: ["class", "style"] }), a.push(c), n();
     });
   }
   getSequencePersonRailScrollTarget(e, t) {
@@ -5774,18 +6747,18 @@ class uc {
   }
   prepareSequencePersonContentSwaps(e, t, a, i) {
     const n = this.getSequenceTransitionTargets(t), o = /* @__PURE__ */ new Map();
-    f.killTweensOf(n), this.cleanupInlineSequencePersonContentSwaps(t), n.forEach((c) => {
-      o.set(c, c.innerHTML);
+    m.killTweensOf(n), this.cleanupInlineSequencePersonContentSwaps(t), n.forEach((l) => {
+      o.set(l, l.innerHTML);
     }), this.applySequenceTemplateToDisplayCard(e, t, a, i);
-    const s = this.getSequenceTransitionTargets(t), l = this.getSequencePersonContentSwapDelays(s);
-    return s.flatMap((c) => {
-      const d = c.innerHTML, u = o.get(c) ?? "";
-      return u === d ? [] : [this.prepareSequencePersonContentSwap(c, u, d, l.get(c) ?? 0)];
+    const s = this.getSequenceTransitionTargets(t), c = this.getSequencePersonContentSwapDelays(s);
+    return s.flatMap((l) => {
+      const d = l.innerHTML, u = o.get(l) ?? "";
+      return u === d ? [] : [this.prepareSequencePersonContentSwap(l, u, d, c.get(l) ?? 0)];
     });
   }
   prepareSequencePersonContentSwap(e, t, a, i) {
     const n = this.measureSequenceContentSwapBox(e, t, a), o = this.createSequenceContentSwapClone(t, "current"), s = this.createSequenceContentSwapClone(a, "incoming");
-    return e.dataset.sequenceContentSwapActive = "true", e.style.minWidth = `${n.width}px`, e.style.minHeight = `${this.formatSequenceSwapSize(n.height)}px`, e.replaceChildren(o, s), this.setDataTablePageCellSwapState([o], 1, 0), this.setDataTablePageCellSwapState([s], 0, j.incomingY), {
+    return e.dataset.sequenceContentSwapActive = "true", e.style.minWidth = `${n.width}px`, e.style.minHeight = `${this.formatSequenceSwapSize(n.height)}px`, e.replaceChildren(o, s), this.setDataTablePageCellSwapState([o], 1, 0), this.setDataTablePageCellSwapState([s], 0, X.incomingY), {
       target: e,
       currentClone: o,
       incomingClone: s,
@@ -5794,18 +6767,18 @@ class uc {
     };
   }
   measureSequenceContentSwapBox(e, t, a) {
-    const i = e.getBoundingClientRect(), n = this.isSequenceCopyPanelShellRow(e), o = n ? [i.height] : [i.height, e.offsetHeight, e.scrollHeight], s = e.parentElement, l = n ? 0 : Math.ceil(Math.max(Math.abs(j.incomingY), Math.abs(j.outgoingY))) + 2;
+    const i = e.getBoundingClientRect(), n = this.isSequenceCopyPanelShellRow(e), o = n ? [i.height] : [i.height, e.offsetHeight, e.scrollHeight], s = e.parentElement, c = n ? 0 : Math.ceil(Math.max(Math.abs(X.incomingY), Math.abs(X.outgoingY))) + 2;
     if (!s || i.width <= 0)
       return {
         width: i.width,
-        height: Math.max(...o) + l
+        height: Math.max(...o) + c
       };
-    const c = e.cloneNode(!1);
-    return c.removeAttribute("data-sequence-content-swap-active"), c.style.position = "absolute", c.style.left = "-10000px", c.style.top = "0", c.style.width = `${i.width}px`, c.style.minWidth = `${i.width}px`, c.style.maxWidth = `${i.width}px`, c.style.minHeight = "0", c.style.height = "auto", c.style.visibility = "hidden", c.style.pointerEvents = "none", c.style.overflow = "visible", c.style.contain = "layout style", s.append(c), [t, a].forEach((d) => {
-      c.innerHTML = d, n ? o.push(c.getBoundingClientRect().height) : o.push(c.offsetHeight, c.scrollHeight, c.getBoundingClientRect().height);
-    }), c.remove(), {
+    const l = e.cloneNode(!1);
+    return l.removeAttribute("data-sequence-content-swap-active"), l.style.position = "absolute", l.style.left = "-10000px", l.style.top = "0", l.style.width = `${i.width}px`, l.style.minWidth = `${i.width}px`, l.style.maxWidth = `${i.width}px`, l.style.minHeight = "0", l.style.height = "auto", l.style.visibility = "hidden", l.style.pointerEvents = "none", l.style.overflow = "visible", l.style.contain = "layout style", s.append(l), [t, a].forEach((d) => {
+      l.innerHTML = d, n ? o.push(l.getBoundingClientRect().height) : o.push(l.offsetHeight, l.scrollHeight, l.getBoundingClientRect().height);
+    }), l.remove(), {
       width: i.width,
-      height: Math.max(...o) + l
+      height: Math.max(...o) + c
     };
   }
   isSequenceCopyPanelShellRow(e) {
@@ -5820,32 +6793,32 @@ class uc {
   }
   getSequencePersonContentSwapDelays(e) {
     const t = e.map((o) => ({ target: o, rect: o.getBoundingClientRect() })).sort((o, s) => {
-      const l = o.rect.top - s.rect.top;
-      return Math.abs(l) > 6 ? l : o.rect.left - s.rect.left;
+      const c = o.rect.top - s.rect.top;
+      return Math.abs(c) > 6 ? c : o.rect.left - s.rect.left;
     }), a = [], i = /* @__PURE__ */ new Map(), n = /* @__PURE__ */ new Map();
     return t.forEach(({ target: o, rect: s }) => {
-      let l = a.findIndex((d) => Math.abs(d - s.top) <= 6);
-      l === -1 && (l = a.length, a.push(s.top));
-      const c = i.get(l) ?? 0;
-      i.set(l, c + 1), n.set(o, this.getDataTablePageCellDelay(l, c));
+      let c = a.findIndex((d) => Math.abs(d - s.top) <= 6);
+      c === -1 && (c = a.length, a.push(s.top));
+      const l = i.get(c) ?? 0;
+      i.set(c, l + 1), n.set(o, this.getDataTablePageCellDelay(c, l));
     }), n;
   }
   renderSequencePersonContentSwaps(e, t) {
-    const a = t * j.totalDuration;
+    const a = t * X.totalDuration;
     e.swaps.forEach((i) => {
-      const n = _t(
-        (a - i.delay) / j.duration
-      ), o = _t(
-        (a - i.delay - j.incomingLag) / j.duration
-      ), s = la.in(o), l = la.out(n);
+      const n = qt(
+        (a - i.delay) / X.duration
+      ), o = qt(
+        (a - i.delay - X.incomingLag) / X.duration
+      ), s = va.in(o), c = va.out(n);
       this.setDataTablePageCellSwapState(
         [i.currentClone],
-        1 - l,
-        this.interpolate(0, j.outgoingY, l)
+        1 - c,
+        this.interpolate(0, X.outgoingY, c)
       ), this.setDataTablePageCellSwapState(
         [i.incomingClone],
         s,
-        this.interpolate(j.incomingY, 0, s)
+        this.interpolate(X.incomingY, 0, s)
       );
     });
   }
@@ -5868,42 +6841,42 @@ class uc {
     return e.swaps.flatMap((t) => [t.currentClone, t.incomingClone]);
   }
   applySequenceTemplateToDisplayCard(e, t, a, i) {
-    const n = this.getSelectedSequenceStepIndex(t), o = this.queryElements(t, ".wa-sequence-step"), s = this.queryElements(t, ".wa-sequence-wait"), l = this.queryElements(a, ".wa-sequence-step");
-    t.dataset.sequenceName = a.dataset.sequenceTemplateName ?? a.dataset.sequenceName ?? "", t.dataset.sequenceMeta = a.dataset.sequenceTemplateMeta ?? a.dataset.sequenceMeta ?? "", t.dataset.sequenceAvatarUrl = a.dataset.sequenceTemplateAvatarUrl ?? a.dataset.sequenceAvatarUrl ?? "", t.dataset.sequenceEmail = a.dataset.sequenceTemplateEmail ?? a.dataset.sequenceEmail ?? "", t.dataset.sequencePhone = a.dataset.sequenceTemplatePhone ?? a.dataset.sequencePhone ?? "", o.forEach((c, d) => {
-      const u = l[d], h = c.querySelector(".wa-sequence-step__channel"), g = c.querySelector(".wa-sequence-step__copy strong");
+    const n = this.getSelectedSequenceStepIndex(t), o = this.queryElements(t, ".wa-sequence-step"), s = this.queryElements(t, ".wa-sequence-wait"), c = this.queryElements(a, ".wa-sequence-step");
+    t.dataset.sequenceName = a.dataset.sequenceTemplateName ?? a.dataset.sequenceName ?? "", t.dataset.sequenceMeta = a.dataset.sequenceTemplateMeta ?? a.dataset.sequenceMeta ?? "", t.dataset.sequenceAvatarUrl = a.dataset.sequenceTemplateAvatarUrl ?? a.dataset.sequenceAvatarUrl ?? "", t.dataset.sequenceEmail = a.dataset.sequenceTemplateEmail ?? a.dataset.sequenceEmail ?? "", t.dataset.sequencePhone = a.dataset.sequenceTemplatePhone ?? a.dataset.sequencePhone ?? "", o.forEach((l, d) => {
+      const u = c[d], h = l.querySelector(".wa-sequence-step__channel"), g = l.querySelector(".wa-sequence-step__copy strong");
       if (!u) return;
-      if (c.dataset.channel = u.dataset.channel ?? "", c.dataset.stepSubject = u.dataset.stepTemplateSubject ?? u.dataset.stepSubject ?? "", c.dataset.stepBody = u.dataset.stepTemplateBody ?? u.dataset.stepBody ?? "", c.dataset.waitDays = u.dataset.stepTemplateWaitDays ?? u.dataset.waitDays ?? "", h) {
-        const y = u.dataset.stepTemplateChannel ?? h.textContent ?? "";
+      if (l.dataset.channel = u.dataset.channel ?? "", l.dataset.stepSubject = u.dataset.stepTemplateSubject ?? u.dataset.stepSubject ?? "", l.dataset.stepBody = u.dataset.stepTemplateBody ?? u.dataset.stepBody ?? "", l.dataset.waitDays = u.dataset.stepTemplateWaitDays ?? u.dataset.waitDays ?? "", h) {
+        const b = u.dataset.stepTemplateChannel ?? h.textContent ?? "";
         h.replaceChildren(
-          this.createSequenceChannelIcon(y),
-          document.createTextNode(this.formatSequenceChannelLabel(y))
+          this.createSequenceChannelIcon(b),
+          document.createTextNode(this.formatSequenceChannelLabel(b))
         );
       }
       g && (g.textContent = this.formatSequenceStepTitle(u.dataset.stepTemplateLabel ?? g.textContent ?? ""));
-      const m = s[d], p = this.parsePositiveNumber(c.dataset.waitDays), w = m?.querySelector(".wa-sequence-wait__label");
-      m && (m.style.display = p === null ? "none" : "grid", m.dataset.waitDays = String(p ?? "")), w && p !== null && this.populateSequenceWaitLabel(w, p);
+      const w = s[d], p = this.parsePositiveNumber(l.dataset.waitDays), f = w?.querySelector(".wa-sequence-wait__label");
+      w && (w.style.display = p === null ? "none" : "grid", w.dataset.waitDays = String(p ?? "")), f && p !== null && this.populateSequenceWaitLabel(f, p);
     }), e.dataset.activeSequenceIndex = String(i), this.selectSequenceStep(t, Math.min(n, Math.max(0, o.length - 1)));
   }
   selectSequenceStep(e, t, a = {}) {
-    const i = this.queryElements(e, ".wa-sequence-step"), n = i.find((c) => this.parseFiniteNumber(c.dataset.stepIndex) === t) ?? i[0], o = e.querySelector("[data-sequence-copy-meta]"), s = e.querySelector("[data-sequence-copy-subject]"), l = e.querySelector("[data-sequence-copy-body]");
-    a.cancelPersonTransition && (this.cancelSequencePersonTransitionForCard(e), this.cleanupInlineSequencePersonContentSwaps(e)), i.forEach((c) => {
-      const d = c === n;
-      c.dataset.stepSelected = String(d), c.dataset.stepOpen = String(d), c.setAttribute("aria-pressed", String(d));
-    }), this.renderSequenceCopyPanel(e, n, o, s, l);
+    const i = this.queryElements(e, ".wa-sequence-step"), n = i.find((l) => this.parseFiniteNumber(l.dataset.stepIndex) === t) ?? i[0], o = e.querySelector("[data-sequence-copy-meta]"), s = e.querySelector("[data-sequence-copy-subject]"), c = e.querySelector("[data-sequence-copy-body]");
+    a.cancelPersonTransition && (this.cancelSequencePersonTransitionForCard(e), this.cleanupInlineSequencePersonContentSwaps(e)), i.forEach((l) => {
+      const d = l === n;
+      l.dataset.stepSelected = String(d), l.dataset.stepOpen = String(d), l.setAttribute("aria-pressed", String(d));
+    }), this.renderSequenceCopyPanel(e, n, o, s, c);
   }
   cancelSequencePersonTransitionForCard(e) {
-    const a = e.closest(Dn)?.dataset.sequenceEngagement;
+    const a = e.closest(Xn)?.dataset.sequenceEngagement;
     if (!a) return;
     const i = this.activeSequencePersonTimelines.get(a);
     i && (i.kill(), this.activeSequencePersonTimelines.delete(a));
   }
   renderSequenceCopyPanel(e, t, a, i, n) {
-    const o = e.querySelector("[data-sequence-copy-panel]"), s = t?.dataset.channel ?? "", l = s.includes("linkedin") || s.includes("social"), c = s.includes("call") || s.includes("dial");
-    if (o && (o.dataset.copyChannel = l ? "connect" : c ? "call" : "email"), l) {
+    const o = e.querySelector("[data-sequence-copy-panel]"), s = t?.dataset.channel ?? "", c = s.includes("linkedin") || s.includes("social"), l = s.includes("call") || s.includes("dial");
+    if (o && (o.dataset.copyChannel = c ? "connect" : l ? "call" : "email"), c) {
       a && (a.textContent = "Send connection request"), i && (i.textContent = t?.dataset.stepBody ?? ""), n && n.replaceChildren(document.createTextNode("0/200"));
       return;
     }
-    if (c) {
+    if (l) {
       a && this.setSequenceCallMeta(a, e.dataset.sequencePhone ?? ""), i && (i.textContent = t?.dataset.stepBody ?? ""), n && this.renderSequenceCallAction(n, e);
       return;
     }
@@ -5918,12 +6891,12 @@ class uc {
     a.textContent = "call:", i.textContent = t, e.replaceChildren(a, document.createTextNode(" "), i);
   }
   renderSequenceCallAction(e, t) {
-    const a = document.createElement("span"), i = document.createElement("span"), n = document.createElement("span"), o = document.createElement("strong"), s = document.createElement("span"), l = document.createElement("span"), c = document.createElement("span"), d = document.createElement("span");
-    a.className = "wa-sequence-call-action", i.className = "wa-sequence-call-action__avatar", this.setProfileAvatar(i, t.dataset.sequenceName ?? "", t.dataset.sequenceAvatarUrl), n.className = "wa-sequence-call-action__copy", o.textContent = t.dataset.sequenceName ?? "", s.textContent = t.dataset.sequenceMeta ?? "", n.append(o, s), l.className = "wa-sequence-call-action__button", c.className = "wa-sequence-call-action__icon", c.setAttribute("aria-hidden", "true"), c.append(
+    const a = document.createElement("span"), i = document.createElement("span"), n = document.createElement("span"), o = document.createElement("strong"), s = document.createElement("span"), c = document.createElement("span"), l = document.createElement("span"), d = document.createElement("span");
+    a.className = "wa-sequence-call-action", i.className = "wa-sequence-call-action__avatar", this.setProfileAvatar(i, t.dataset.sequenceName ?? "", t.dataset.sequenceAvatarUrl), n.className = "wa-sequence-call-action__copy", o.textContent = t.dataset.sequenceName ?? "", s.textContent = t.dataset.sequenceMeta ?? "", n.append(o, s), c.className = "wa-sequence-call-action__button", l.className = "wa-sequence-call-action__icon", l.setAttribute("aria-hidden", "true"), l.append(
       this.createSvgIcon("", [
         "M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -16 -16a2 2 0 0 1 2 -2"
       ])
-    ), d.textContent = "Start", l.append(c, d), a.append(i, n, l), e.replaceChildren(a);
+    ), d.textContent = "Start", c.append(l, d), a.append(i, n, c), e.replaceChildren(a);
   }
   getSequenceStepCopy(e, t) {
     const a = e.name.split(" ")[0] ?? e.name;
@@ -5948,9 +6921,9 @@ class uc {
     return `${t}.${a}@${i}`;
   }
   getSequenceRecipientPhone(e) {
-    const t = Gl[e.name];
+    const t = Pc[e.name];
     if (t) return t;
-    const a = `${e.name}:${e.company}`.split("").reduce((l, c) => l + c.charCodeAt(0), 0), i = [628, 917, 415, 646, 312, 424, 206, 650], n = i[a % i.length], o = 200 + a % 700, s = 1e3 + a * 37 % 9e3;
+    const a = `${e.name}:${e.company}`.split("").reduce((c, l) => c + l.charCodeAt(0), 0), i = [628, 917, 415, 646, 312, 424, 206, 650], n = i[a % i.length], o = 200 + a % 700, s = 1e3 + a * 37 % 9e3;
     return `+1 (${n}) ${String(o).padStart(3, "0")}-${String(s).padStart(4, "0")}`;
   }
   slugChannelName(e) {
@@ -5958,20 +6931,20 @@ class uc {
   }
   revealCard(e) {
     const t = this.claimComponentMessage("result", e), a = e.querySelectorAll(".wa-result-row, .wa-result-action");
-    return f.timeline().call(() => {
+    return m.timeline().call(() => {
       e.style.display = "grid";
     }).add(this.revealMessageWithChildren(t, e, {
       autoAlpha: 1,
       y: 0,
       scale: 1,
-      duration: S(0.48),
+      duration: x(0.48),
       ease: "back.out(1.45)"
     }), 0).to(
       a,
       {
         autoAlpha: 1,
         y: 0,
-        duration: S(0.32),
+        duration: x(0.32),
         ease: "power2.out",
         stagger: 0.06
       },
@@ -5979,18 +6952,20 @@ class uc {
     );
   }
   highlightCardTarget(e, t) {
-    const a = typeof t == "string" ? e.querySelector(t) : t ?? e.querySelector(".wa-result-row, .wa-result-action") ?? e, i = f.timeline();
-    return a && i.to(a, {
-      backgroundColor: "rgba(213, 255, 79, 0.22)",
+    const a = typeof t == "string" ? e.querySelector(t) : t ?? e.querySelector(".wa-result-row, .wa-result-action") ?? e, i = m.timeline();
+    if (!a) return i;
+    const n = getComputedStyle(a), s = getComputedStyle(this.root).getPropertyValue("--wa-highlight-bg").trim() || "rgba(213, 255, 79, 0.22)", c = n.backgroundColor || "transparent";
+    return i.to(a, {
+      backgroundColor: s,
       scale: 1.018,
-      duration: S(0.16),
+      duration: x(0.16),
       ease: "power2.out"
     }).to(a, {
-      backgroundColor: "rgba(255, 255, 255, 0)",
+      backgroundColor: c,
       scale: 1,
-      duration: S(0.42),
+      duration: x(0.42),
       ease: "power2.out"
-    }), i;
+    }).set(a, { clearProps: "backgroundColor" }), i;
   }
   required(e) {
     const t = this.root.querySelector(e);
@@ -6030,7 +7005,7 @@ class uc {
     );
   }
   clearMarketingPanels() {
-    this.removeElements(Rn);
+    this.removeElements(jn);
   }
   getStorySwitchExitTargets() {
     return this.compactElements(
@@ -6047,23 +7022,23 @@ class uc {
   }
   registerTransientElement(e, t) {
     this.transientCleanups.push(() => {
-      t?.(), f.killTweensOf(e), e.remove();
+      t?.(), m.killTweensOf(e), e.remove();
     });
   }
   clearTransientElements() {
     for (const e of this.transientCleanups) e();
-    this.transientCleanups = [], this.removeElements(Pn);
+    this.transientCleanups = [], this.removeElements(Wn);
   }
   removeElements(e) {
     this.root.querySelectorAll(e).forEach((t) => {
-      f.killTweensOf(t), t.remove();
+      m.killTweensOf(t), t.remove();
     });
   }
   getMessageScrollTarget(e, t = null, a = 0) {
     const i = t ? this.getAlignedElementScrollTarget(t, a) : this.getAlignedMessageScrollTarget(e);
     if (i !== null) return i;
     const n = e.offsetTop + e.offsetHeight + this.getThreadBottomPadding() - this.thread.clientHeight;
-    return this.composerVisible ? Math.max(0, n, this.getThreadBottomScrollTarget()) : Math.max(0, n);
+    return this.composerVisible ? Math.max(0, n, this.getThreadLiveScrollTarget()) : Math.max(0, n);
   }
   getAlignedMessageScrollTarget(e) {
     const t = e.matches('[data-scroll-align="equal-inset"]') ? e : e.querySelector('[data-scroll-align="equal-inset"]');
@@ -6086,10 +7061,15 @@ class uc {
     return this.thread.scrollTop + i.top - n.top;
   }
   getThreadBottomPadding() {
-    return Number.parseFloat(getComputedStyle(this.thread).paddingBottom) || 0;
+    const e = getComputedStyle(this.thread), t = Number.parseFloat(e.getPropertyValue("--wa-thread-base-bottom-padding")), a = Number.parseFloat(e.getPropertyValue("--wa-chat-bottom-clearance"));
+    return Number.isFinite(t) ? t : Number.isFinite(a) ? a : Gn;
   }
   getThreadBottomScrollTarget() {
     return Math.max(0, this.thread.scrollHeight - this.thread.clientHeight);
+  }
+  getThreadLiveScrollTarget() {
+    const t = this.getVisibleThreadContentBottom() + this.getThreadBottomPadding() - this.thread.clientHeight;
+    return Math.min(this.getThreadBottomScrollTarget(), Math.max(0, t));
   }
   getElementBottomScrollTarget(e, t = 0) {
     const a = this.getThreadContentScale();
@@ -6099,13 +7079,13 @@ class uc {
     );
   }
   pinThreadToBottom() {
-    this.thread.scrollTop = this.getThreadBottomScrollTarget();
+    this.thread.scrollTop = this.getThreadLiveScrollTarget();
   }
-  tweenThreadToBottom(e = X.followDuration, t = X.followEase) {
-    const a = f.timeline();
+  tweenThreadToBottom(e = K.followDuration, t = K.followEase) {
+    const a = m.timeline();
     let i = this.thread.scrollTop;
     return a.call(() => {
-      this.stopScrollMotion(), this.updateThreadContentFitState(), i = this.getThreadBottomScrollTarget();
+      this.stopScrollMotion(), this.updateThreadContentFitState(), i = this.getThreadLiveScrollTarget();
     }), a.to(this.thread, {
       scrollTop: () => i,
       duration: e,
@@ -6113,45 +7093,51 @@ class uc {
       overwrite: "auto"
     }), a;
   }
-  animateMessageScrollIntoView(e, t = X.followDuration, a = null, i = 0) {
+  animateMessageScrollIntoView(e, t = K.followDuration, a = null, i = 0) {
     this.updateThreadContentFitState();
     const n = this.getMessageScrollTarget(e, a, i);
-    if (this.prefersReducedMotion || Math.abs(this.thread.scrollTop - n) < 1) {
-      this.thread.scrollTop = n;
-      return;
-    }
-    this.scrollTween?.kill(), f.killTweensOf(this.thread, "scrollTop"), this.scrollTween = f.to(this.thread, {
-      scrollTop: n,
-      duration: t,
-      ease: X.followEase,
-      overwrite: "auto",
-      onComplete: () => {
-        this.scrollTween = null;
+    if (!(n <= this.thread.scrollTop + 0.5)) {
+      if (this.prefersReducedMotion || Math.abs(this.thread.scrollTop - n) < 1) {
+        this.thread.scrollTop = n;
+        return;
       }
-    });
+      this.scrollTween?.kill(), m.killTweensOf(this.thread, "scrollTop"), this.scrollTween = m.to(this.thread, {
+        scrollTop: n,
+        duration: t,
+        ease: K.followEase,
+        overwrite: "auto",
+        onComplete: () => {
+          this.scrollTween = null;
+        }
+      });
+    }
   }
   requestMessageScroll(e) {
+    if (this.shouldPreserveMessageScroll(e)) return;
     const t = performance.now();
-    this.scheduledScrollMessage = e, !(t - this.lastStreamScrollAt < ic) && (this.scheduledScrollFrame || (this.lastStreamScrollAt = t, this.scheduledScrollFrame = window.requestAnimationFrame(() => {
+    this.scheduledScrollMessage = e, !(t - this.lastStreamScrollAt < Vc) && (this.scheduledScrollFrame || (this.lastStreamScrollAt = t, this.scheduledScrollFrame = window.requestAnimationFrame(() => {
       const a = this.scheduledScrollMessage;
       this.scheduledScrollFrame = 0, this.scheduledScrollMessage = null, a?.isConnected && this.animateMessageScrollIntoView(a);
     })));
+  }
+  shouldPreserveMessageScroll(e) {
+    return this.getMessageScrollTargetElement(e).dataset.preserveMessageScroll === "true";
   }
   cancelScheduledScroll() {
     this.scheduledScrollFrame && (window.cancelAnimationFrame(this.scheduledScrollFrame), this.scheduledScrollFrame = 0, this.scheduledScrollMessage = null, this.lastStreamScrollAt = 0);
   }
 }
-function _t(r) {
+function qt(r) {
   return Math.min(1, Math.max(0, r));
 }
-function hc(r) {
-  const e = _t(r);
+function Zc(r) {
+  const e = qt(r);
   return e * e * (3 - 2 * e);
 }
-function qn(r) {
+function $n(r) {
   return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(r)}`;
 }
-function ti(r, e, t = "idle") {
+function mi(r, e, t = "idle") {
   const a = r === "gmail" ? "Gmail" : "Outlook", i = e?.trim();
   if (!i) return t === "connected" ? "Connected" : a;
   const n = a.toLowerCase(), o = i.toLowerCase().replace(/\s+/g, " "), s = /* @__PURE__ */ new Set([
@@ -6162,101 +7148,101 @@ function ti(r, e, t = "idle") {
   ]);
   return t === "connected" && (s.has(o) || o === "connected") ? "Connected" : s.has(o) ? a : i;
 }
-function ai(r, e) {
+function wi(r, e) {
   const t = r?.trim();
   return t ? t.toLowerCase() === e.toLowerCase() ? e : t : e;
 }
-function pc(r, e) {
-  const t = Yl[r] ?? 0, a = 24 + r * 11 % 8, i = Math.min(100, t + a), n = hc((e - t) / (i - t));
+function $c(r, e) {
+  const t = Rc[r] ?? 0, a = 24 + r * 11 % 8, i = Math.min(100, t + a), n = Zc((e - t) / (i - t));
   if (n <= 0) return 0;
-  const o = Ql.has(r) ? 20 : 12;
+  const o = Ic.has(r) ? 20 : 12;
   return Math.round(o + n * (100 - o));
 }
-function no(r, e) {
+function Mo(r, e) {
   return Math.hypot(e.x - r.x, e.y - r.y);
 }
-function $e(r, e, t) {
+function ct(r, e, t) {
   return Math.min(t, Math.max(e, r));
 }
-function Ln(r, e, t, a, i) {
-  const n = 1 - i, o = i * i, s = n * n, l = s * n, c = o * i;
+function er(r, e, t, a, i) {
+  const n = 1 - i, o = i * i, s = n * n, c = s * n, l = o * i;
   return {
-    x: l * r.x + 3 * s * i * e.x + 3 * n * o * t.x + c * a.x,
-    y: l * r.y + 3 * s * i * e.y + 3 * n * o * t.y + c * a.y
+    x: c * r.x + 3 * s * i * e.x + 3 * n * o * t.x + l * a.x,
+    y: c * r.y + 3 * s * i * e.y + 3 * n * o * t.y + l * a.y
   };
 }
-function gc(r) {
+function ed(r) {
   let e = 2166136261;
   for (let t = 0; t < r.length; t += 1)
     e ^= r.charCodeAt(t), e = Math.imul(e, 16777619);
   return e >>> 0;
 }
-function ro(r) {
-  let e = gc(r) || 1;
+function Do(r) {
+  let e = ed(r) || 1;
   return () => {
     e += 1831565813;
     let t = e;
     return t = Math.imul(t ^ t >>> 15, t | 1), t ^= t + Math.imul(t ^ t >>> 7, t | 61), ((t ^ t >>> 14) >>> 0) / 4294967296;
   };
 }
-const mc = {
+const td = {
   slow: 560,
   normal: 860,
   quick: 1220
-}, fc = {
+}, ad = {
   entry: 1.08,
   hover: 0.96,
   click: 0.9,
   drag: 1.18,
   text: 1.04,
   exit: 1
-}, wc = 1.24;
-function ca(r, e, t) {
-  const a = ro(t.seed), i = no(r, e), n = t.speed ?? "normal", o = t.intent ?? "hover";
+}, id = 1.24;
+function xa(r, e, t) {
+  const a = Do(t.seed), i = Mo(r, e), n = t.speed ?? "normal", o = t.intent ?? "hover", s = typeof t.duration == "number" && Number.isFinite(t.duration) ? Math.max(0.01, t.duration) : null;
   if (t.reducedMotion || i < 2)
     return {
       start: r,
       c1: r,
       c2: e,
       end: e,
-      duration: t.reducedMotion ? 0.12 : 0.08
+      duration: t.reducedMotion ? 0.12 : s ?? 0.08
     };
-  const s = e.x - r.x, l = e.y - r.y, c = s / i, d = l / i, u = -d, h = c, g = a() > 0.5 ? 1 : -1, m = t.curve ?? 1, w = $e(i * (o === "drag" ? 0.1 : o === "click" ? 0.17 : 0.22), 18, 150) * m * g * (0.72 + a() * 0.44), y = i / mc[n] + 0.16, b = $e(
-    y * fc[o] * wc * (t.durationScale ?? 1),
+  const c = e.x - r.x, l = e.y - r.y, d = c / i, u = l / i, h = -u, g = d, w = a() > 0.5 ? 1 : -1, p = t.curve ?? 1, b = ct(i * (o === "drag" ? 0.1 : o === "click" ? 0.17 : 0.22), 18, 150) * p * w * (0.72 + a() * 0.44), A = i / td[n] + 0.16, v = ct(
+    A * ad[o] * id * (t.durationScale ?? 1),
     0.3,
     1.98
-  ), x = t.overshoot === !1 || i < 120 ? 0 : typeof t.overshoot == "number" ? t.overshoot : $e(i * 0.026, 4, 18), _ = x > 0 ? {
-    x: e.x + c * x,
-    y: e.y + d * x
-  } : e, v = {
-    x: r.x + s * (0.25 + a() * 0.08) + u * w,
-    y: r.y + l * (0.25 + a() * 0.08) + h * w
-  }, T = {
-    x: r.x + s * (0.68 + a() * 0.12) - u * w * 0.42,
-    y: r.y + l * (0.68 + a() * 0.12) - h * w * 0.42
-  }, A = t.settle !== !1 && x > 0;
+  ), _ = s ?? v, y = t.overshoot === !1 || i < 120 ? 0 : typeof t.overshoot == "number" ? t.overshoot : ct(i * 0.026, 4, 18), E = y > 0 ? {
+    x: e.x + d * y,
+    y: e.y + u * y
+  } : e, k = {
+    x: r.x + c * (0.25 + a() * 0.08) + h * b,
+    y: r.y + l * (0.25 + a() * 0.08) + g * b
+  }, C = {
+    x: r.x + c * (0.68 + a() * 0.12) - h * b * 0.42,
+    y: r.y + l * (0.68 + a() * 0.12) - g * b * 0.42
+  }, S = t.settle !== !1 && y > 0;
   return {
     start: r,
-    c1: v,
-    c2: T,
-    end: _,
-    duration: A ? b * 0.86 : b,
-    settle: A ? {
-      start: _,
+    c1: k,
+    c2: C,
+    end: E,
+    duration: S ? _ * 0.86 : _,
+    settle: S ? {
+      start: E,
       c1: {
-        x: _.x - c * x * 0.45 + u * w * 0.04,
-        y: _.y - d * x * 0.45 + h * w * 0.04
+        x: E.x - d * y * 0.45 + h * b * 0.04,
+        y: E.y - u * y * 0.45 + g * b * 0.04
       },
       c2: {
-        x: e.x + c * x * 0.16,
-        y: e.y + d * x * 0.16
+        x: e.x + d * y * 0.16,
+        y: e.y + u * y * 0.16
       },
       end: e,
-      duration: $e(b * 0.18, 0.1, 0.24)
+      duration: ct(_ * 0.18, 0.1, 0.24)
     } : void 0
   };
 }
-const ii = [
+const fi = [
   "button:not(:disabled)",
   "a[href]",
   "[role='button']:not([aria-disabled='true'])",
@@ -6269,7 +7255,7 @@ const ii = [
   "[data-sequence-kickoff]",
   "[data-strategy-plan]",
   ".wa-sequence-step"
-].join(", "), ni = "[data-chat-input][data-visible='true'], [data-signup-field], input, textarea, [contenteditable='true']", ri = {
+].join(", "), bi = "[data-chat-input][data-visible='true'], [data-signup-field], input, textarea, [contenteditable='true']", Ai = {
   delay: 0.42,
   returnDuration: 0.18,
   segments: [
@@ -6278,19 +7264,19 @@ const ii = [
     { x: 0.8, y: -1.2, rotation: 0.16, duration: 1.45 },
     { x: 0, y: 0, rotation: 0, duration: 1.7 }
   ]
-}, da = {
+}, _a = {
   outsideOffset: 24,
   topRatio: 0.3,
   minTopInset: 74,
   maxTopInset: 190
-}, Bt = {
+}, Jt = {
   minDistance: 6,
   minInterval: 24,
   lookahead: 5
-}, bc = -135, yc = 0.34;
-class xc {
+}, nd = -135, rd = 0.34;
+class od {
   constructor(e, t, a = {}) {
-    this.root = e, this.resolver = t, this.options = a, this.el = this.root.querySelector("[data-cursor]") ?? this.createElement(), this.floatLayer = this.ensureFloatLayer(), this.setX = f.quickSetter(this.el, "x", "px"), this.setY = f.quickSetter(this.el, "y", "px"), this.setRotation = f.quickSetter(this.el, "rotation", "deg");
+    this.root = e, this.resolver = t, this.options = a, this.el = this.root.querySelector("[data-cursor]") ?? this.createElement(), this.floatLayer = this.ensureFloatLayer(), this.setX = m.quickSetter(this.el, "x", "px"), this.setY = m.quickSetter(this.el, "y", "px"), this.setRotation = m.quickSetter(this.el, "rotation", "deg");
     const i = this.resolver.resolve({ target: "[data-chat-shell]", anchor: "center" }, "cursor:start");
     this.setPosition(i), this.setMode("default"), this.observeModeTargets(), this.queueIdleFloat();
   }
@@ -6344,7 +7330,7 @@ class xc {
     return this.payloadDragActive;
   }
   beginMimicControl() {
-    this.stopIdleFloat(!0), this.modeOverride = "default", this.setMode("default"), this.el.dataset.cursorMimicking = "true", f.killTweensOf(this.el), f.set(this.el, { autoAlpha: 1, scale: 1 });
+    this.stopIdleFloat(!0), this.modeOverride = "default", this.setMode("default"), this.el.dataset.cursorMimicking = "true", m.killTweensOf(this.el), m.set(this.el, { autoAlpha: 1, scale: 1 });
   }
   mimicViewportPoint(e, t = 0.42, a = e) {
     const i = this.root.getBoundingClientRect(), n = {
@@ -6375,16 +7361,17 @@ class xc {
     }
   }
   moveTo(e, t = {}) {
-    const a = t.label ?? `move-${this.moveIndex}`, i = t.mode ?? "default", n = `${this.storyId}:${a}:${this.resolver.getBreakpoint()}`, o = this.resolver.resolve(e, n), s = { ...this.plannedPosition }, l = t.ease ?? "power2.inOut", c = ca(s, o, {
+    const a = t.label ?? `move-${this.moveIndex}`, i = t.mode ?? "default", n = `${this.storyId}:${a}:${this.resolver.getBreakpoint()}`, o = this.resolver.resolve(e, n), s = { ...this.plannedPosition }, c = t.ease ?? "power2.inOut", l = xa(s, o, {
       seed: n,
       intent: t.intent,
       speed: t.speed,
+      duration: t.duration,
       curve: t.curve,
       durationScale: t.durationScale,
       overshoot: t.overshoot,
       settle: t.settle,
       reducedMotion: this.options.reducedMotion
-    }), d = f.timeline();
+    }), d = m.timeline();
     let u = null;
     return this.moveIndex += 1, this.plannedPosition = { ...o }, d.call(() => {
       this.stopIdleFloat(), this.resetRotation(), i !== "drag" && this.clearPayloadDragState();
@@ -6395,10 +7382,11 @@ class xc {
         () => {
           this.resolver.refresh();
           const h = this.resolver.resolve(e, n);
-          return u = ca(this.currentPosition, h, {
+          return u = xa(this.currentPosition, h, {
             seed: n,
             intent: t.intent,
             speed: t.speed,
+            duration: t.duration,
             curve: t.curve,
             durationScale: t.durationScale,
             overshoot: t.overshoot,
@@ -6406,10 +7394,10 @@ class xc {
             reducedMotion: this.options.reducedMotion
           }), this.plannedPosition = { ...h }, u;
         },
-        c.duration,
-        l
+        l.duration,
+        c
       )
-    ), c.settle && d.add(
+    ), l.settle && d.add(
       this.pathTweenFromFactory(
         () => u?.settle ?? {
           start: this.currentPosition,
@@ -6418,7 +7406,7 @@ class xc {
           end: this.currentPosition,
           duration: 0.01
         },
-        c.settle.duration,
+        l.settle.duration,
         "power2.out"
       )
     ), t.preserveMode || d.call(() => {
@@ -6426,16 +7414,16 @@ class xc {
     }), d;
   }
   parkForChatHistory() {
-    const e = `history-park-${this.moveIndex}`, t = `${this.storyId}:${e}:${this.resolver.getBreakpoint()}`, a = { ...this.currentPosition }, i = this.resolveHistoryParkPoint(), n = ca(a, i, {
+    const e = `history-park-${this.moveIndex}`, t = `${this.storyId}:${e}:${this.resolver.getBreakpoint()}`, a = { ...this.currentPosition }, i = this.resolveHistoryParkPoint(), n = xa(a, i, {
       seed: t,
       intent: "hover",
       speed: "quick",
       overshoot: !1,
       settle: !1,
       reducedMotion: this.options.reducedMotion
-    }), o = f.timeline();
+    }), o = m.timeline();
     return this.moveIndex += 1, this.plannedPosition = { ...i }, o.call(() => {
-      this.stopIdleFloat(!0), f.killTweensOf([this.el, this.floatLayer]), this.resetRotation(!0), this.clearPayloadDragState(), this.modeOverride = "default", this.setMode("default");
+      this.stopIdleFloat(!0), m.killTweensOf([this.el, this.floatLayer]), this.resetRotation(!0), this.clearPayloadDragState(), this.modeOverride = "default", this.setMode("default");
     }, void 0, 0), o.add(
       this.pathTweenFromFactory(
         () => this.createHistoryParkPlan(t),
@@ -6447,7 +7435,7 @@ class xc {
     }), o;
   }
   scanAcross(e, t = {}) {
-    const a = t.label ?? `scan-${this.moveIndex}`, i = f.timeline();
+    const a = t.label ?? `scan-${this.moveIndex}`, i = m.timeline();
     return this.moveIndex += 1, this.options.reducedMotion ? i.to({}, { duration: 0.08 }) : (i.call(() => {
       this.stopIdleFloat(), this.clearPayloadDragState(), this.modeOverride = "default", this.setMode("default");
     }), i.add(
@@ -6461,7 +7449,7 @@ class xc {
     }), i);
   }
   skimThrough(e, t = {}) {
-    const a = t.label ?? `skim-${this.moveIndex}`, i = f.timeline();
+    const a = t.label ?? `skim-${this.moveIndex}`, i = m.timeline();
     return this.moveIndex += 1, this.options.reducedMotion || !e.length ? i.to({}, { duration: 0.08 }) : (i.call(() => {
       this.stopIdleFloat(), this.clearPayloadDragState(), this.modeOverride = null, this.syncModeToPoint(this.currentPosition);
     }), i.add(
@@ -6475,7 +7463,7 @@ class xc {
     }), i);
   }
   click(e = "pointer") {
-    const t = f.timeline();
+    const t = m.timeline();
     return t.call(() => {
       this.stopIdleFloat(), this.clearPayloadDragState();
       const a = this.getModeForPoint(this.currentPosition) === "pointer";
@@ -6495,7 +7483,7 @@ class xc {
   beginDragPayload() {
     if (this.payloadReleaseActive) return;
     const e = this.payloadDragActive;
-    this.payloadDragActive = !0, this.payloadReleaseActive = !1, this.stopIdleFloat(), this.modeOverride = "drag", this.setMode("drag"), !e && f.to(this.el, {
+    this.payloadDragActive = !0, this.payloadReleaseActive = !1, this.stopIdleFloat(), this.modeOverride = "drag", this.setMode("drag"), !e && m.to(this.el, {
       scale: 0.9,
       duration: this.options.reducedMotion ? 0.04 : 0.16,
       ease: "power2.out",
@@ -6503,7 +7491,7 @@ class xc {
     });
   }
   releaseDragPayload() {
-    return f.timeline().call(() => {
+    return m.timeline().call(() => {
       this.payloadDragActive = !1, this.payloadReleaseActive = !0, this.stopIdleFloat(), this.modeOverride = "release", this.setMode("release");
     }).to(this.el, {
       scale: 1.04,
@@ -6520,7 +7508,7 @@ class xc {
     });
   }
   dragTo(e, t = {}) {
-    const a = f.timeline();
+    const a = m.timeline();
     return a.call(() => {
       this.stopIdleFloat(), this.modeOverride = "drag", this.setMode("drag");
     }).to(this.el, {
@@ -6558,17 +7546,17 @@ class xc {
     this.targetObserver?.disconnect(), this.stopModeWatch(), this.stopScheduledModeSync(), this.stopIdleFloat(), this.el.remove();
   }
   resetInteraction() {
-    this.stopIdleFloat(!0), this.modeOverride = null, this.clearPayloadDragState(), delete this.el.dataset.cursorMimicking, f.killTweensOf(this.el), f.set(this.el, { scale: 1 }), this.resetRotation(!0), this.syncModeToPoint(this.currentPosition), this.queueIdleFloat();
+    this.stopIdleFloat(!0), this.modeOverride = null, this.clearPayloadDragState(), delete this.el.dataset.cursorMimicking, m.killTweensOf(this.el), m.set(this.el, { scale: 1 }), this.resetRotation(!0), this.syncModeToPoint(this.currentPosition), this.queueIdleFloat();
   }
   clearTransientInteraction() {
-    this.clearPayloadDragState(), this.modeOverride = null, f.killTweensOf(this.el, "scale"), f.set(this.el, { scale: 1 }), this.syncModeToPoint(this.currentPosition);
+    this.clearPayloadDragState(), this.modeOverride = null, m.killTweensOf(this.el, "scale"), m.set(this.el, { scale: 1 }), this.syncModeToPoint(this.currentPosition);
   }
   clearPayloadDragState() {
     this.payloadDragActive = !1, this.payloadReleaseActive = !1;
   }
   pathTween(e, t, a, i, n, o = "power2.inOut") {
     const s = { t: 0 };
-    return f.fromTo(
+    return m.fromTo(
       s,
       { t: 0 },
       {
@@ -6576,8 +7564,8 @@ class xc {
         duration: n,
         ease: o,
         onUpdate: () => {
-          const l = Ln(e, t, a, i, s.t);
-          this.currentPosition = l, this.renderPosition(l), this.modeOverride || this.maybeSyncModeToPoint(l);
+          const c = er(e, t, a, i, s.t);
+          this.currentPosition = c, this.renderPosition(c), this.modeOverride || this.maybeSyncModeToPoint(c);
         },
         onComplete: () => {
           this.currentPosition = { ...i }, this.renderPosition(i), this.modeOverride || this.syncModeToPoint(i);
@@ -6588,7 +7576,7 @@ class xc {
   pathTweenFromFactory(e, t, a = "power2.inOut") {
     const i = { t: 0 };
     let n = null;
-    return f.fromTo(
+    return m.fromTo(
       i,
       { t: 0 },
       {
@@ -6600,7 +7588,7 @@ class xc {
         },
         onUpdate: () => {
           if (!n) return;
-          const o = Ln(n.start, n.c1, n.c2, n.end, i.t);
+          const o = er(n.start, n.c1, n.c2, n.end, i.t);
           this.currentPosition = o, this.renderPosition(o), this.modeOverride || this.maybeSyncModeToPoint(o);
         },
         onComplete: () => {
@@ -6611,7 +7599,7 @@ class xc {
   }
   createHistoryParkPlan(e) {
     this.resolver.refresh();
-    const t = this.resolveHistoryParkPoint(), a = ca(this.currentPosition, t, {
+    const t = this.resolveHistoryParkPoint(), a = xa(this.currentPosition, t, {
       seed: e,
       intent: "hover",
       speed: "quick",
@@ -6624,20 +7612,20 @@ class xc {
   resolveHistoryParkPoint() {
     const e = this.root.getBoundingClientRect(), t = this.getChatShellRect();
     if (!t) return { ...this.currentPosition };
-    const a = $e(
-      t.height * da.topRatio,
-      da.minTopInset,
-      da.maxTopInset
+    const a = ct(
+      t.height * _a.topRatio,
+      _a.minTopInset,
+      _a.maxTopInset
     );
     return {
-      x: t.right - e.left + da.outsideOffset,
+      x: t.right - e.left + _a.outsideOffset,
       y: t.top - e.top + a
     };
   }
   pointTweenFromFactory(e, t, a = "power2.inOut") {
     const i = { t: 0 };
     let n = { ...this.currentPosition }, o = { ...this.currentPosition };
-    return f.fromTo(i, { t: 0 }, {
+    return m.fromTo(i, { t: 0 }, {
       t: 1,
       duration: t,
       ease: a,
@@ -6658,16 +7646,16 @@ class xc {
   }
   polylineTweenFromFactory(e, t, a = "sine.inOut") {
     const i = { t: 0 };
-    let n = On([{ ...this.currentPosition }]);
-    return f.fromTo(i, { t: 0 }, {
+    let n = ar([{ ...this.currentPosition }]);
+    return m.fromTo(i, { t: 0 }, {
       t: 1,
       duration: t,
       ease: a,
       onStart: () => {
-        i.t = 0, n = On(e());
+        i.t = 0, n = ar(e());
       },
       onUpdate: () => {
-        const o = vc(n, i.t);
+        const o = sd(n, i.t);
         this.currentPosition = o, this.renderPosition(o), this.modeOverride || this.maybeSyncModeToPoint(o);
       },
       onComplete: () => {
@@ -6680,8 +7668,8 @@ class xc {
     const i = { ...this.currentPosition }, n = this.resolveScanPoint(e, `${t}:start`, "start", a), o = this.resolveScanPoint(e, `${t}:end`, "end", a);
     return {
       start: i,
-      c1: ki(i, n, 0.64),
-      c2: ki(n, o, 0.42),
+      c1: Fi(i, n, 0.64),
+      c2: Fi(n, o, 0.42),
       end: o
     };
   }
@@ -6693,20 +7681,20 @@ class xc {
     const n = typeof e == "string" ? this.findVisibleScanElement(e, i) : e;
     if (!n) return null;
     this.resolver.refresh();
-    const o = this.seededScanRandom(t), s = this.root.getBoundingClientRect(), l = n.getBoundingClientRect(), c = this.getChatShellRect(), d = c ? Math.max(l.left, c.left + 18) : l.left, u = c ? Math.min(l.right, c.right - 18) : l.right, h = c ? Math.max(l.top, c.top + 58) : l.top, g = c ? Math.min(l.bottom, c.bottom - 34) : l.bottom, m = Math.max(1, u - d), p = Math.max(1, g - h), w = a % 2 === 0 ? 1 : -1, y = $e(0.62 + w * 0.08 + (o() - 0.5) * 0.08, 0.48, 0.78), b = $e(0.5 + (o() - 0.5) * 0.16, 0.34, 0.66);
+    const o = this.seededScanRandom(t), s = this.root.getBoundingClientRect(), c = n.getBoundingClientRect(), l = this.getChatShellRect(), d = l ? Math.max(c.left, l.left + 18) : c.left, u = l ? Math.min(c.right, l.right - 18) : c.right, h = l ? Math.max(c.top, l.top + 58) : c.top, g = l ? Math.min(c.bottom, l.bottom - 34) : c.bottom, w = Math.max(1, u - d), p = Math.max(1, g - h), f = a % 2 === 0 ? 1 : -1, b = ct(0.62 + f * 0.08 + (o() - 0.5) * 0.08, 0.48, 0.78), A = ct(0.5 + (o() - 0.5) * 0.16, 0.34, 0.66);
     return {
-      x: d - s.left + m * y,
-      y: h - s.top + p * b
+      x: d - s.left + w * b,
+      y: h - s.top + p * A
     };
   }
   resolveScanPoint(e, t, a, i = "first") {
     const n = typeof e == "string" ? this.findVisibleScanElement(e, i) : e;
     if (!n) return this.currentPosition;
     this.resolver.refresh();
-    const o = this.seededScanRandom(t), s = this.root.getBoundingClientRect(), l = n.getBoundingClientRect(), c = this.getChatShellRect(), d = c ? Math.max(l.left, c.left + 18) : l.left, u = c ? Math.min(l.right, c.right - 18) : l.right, h = c ? Math.max(l.top, c.top + 58) : l.top, g = c ? Math.min(l.bottom, c.bottom - 34) : l.bottom, m = Math.max(1, u - d), p = Math.max(1, g - h), w = a === "start" ? 0.16 + o() * 0.08 : 0.76 + o() * 0.12, y = 0.34 + o() * 0.32;
+    const o = this.seededScanRandom(t), s = this.root.getBoundingClientRect(), c = n.getBoundingClientRect(), l = this.getChatShellRect(), d = l ? Math.max(c.left, l.left + 18) : c.left, u = l ? Math.min(c.right, l.right - 18) : c.right, h = l ? Math.max(c.top, l.top + 58) : c.top, g = l ? Math.min(c.bottom, l.bottom - 34) : c.bottom, w = Math.max(1, u - d), p = Math.max(1, g - h), f = a === "start" ? 0.16 + o() * 0.08 : 0.76 + o() * 0.12, b = 0.34 + o() * 0.32;
     return {
-      x: d - s.left + m * w,
-      y: h - s.top + p * y
+      x: d - s.left + w * f,
+      y: h - s.top + p * b
     };
   }
   findVisibleScanElement(e, t = "first") {
@@ -6753,21 +7741,21 @@ class xc {
   renderMimicRotation(e, t) {
     const a = t.x - e.x, i = t.y - e.y;
     if (a * a + i * i < 4) return;
-    const n = Math.atan2(i, a) * 180 / Math.PI, o = _c(n - bc), s = this.rotationState + Ac(this.rotationState, o) * yc;
+    const n = Math.atan2(i, a) * 180 / Math.PI, o = ld(n - nd), s = this.rotationState + cd(this.rotationState, o) * rd;
     this.renderRotation(s);
   }
   resetRotation(e = !1) {
-    if (f.killTweensOf(this.el, "rotation"), e || this.options.reducedMotion) {
+    if (m.killTweensOf(this.el, "rotation"), e || this.options.reducedMotion) {
       this.renderRotation(0);
       return;
     }
-    f.to(this.el, {
+    m.to(this.el, {
       rotation: 0,
       duration: 0.16,
       ease: "power2.out",
       overwrite: "auto",
       onUpdate: () => {
-        this.rotationState = Number(f.getProperty(this.el, "rotation")) || 0;
+        this.rotationState = Number(m.getProperty(this.el, "rotation")) || 0;
       },
       onComplete: () => {
         this.rotationState = 0;
@@ -6777,14 +7765,14 @@ class xc {
   renderRotation(e) {
     Math.abs(e - this.rotationState) < 0.1 || (this.rotationState = e, this.setRotation(e));
   }
-  queueIdleFloat(e = ri.delay) {
-    this.options.reducedMotion || (this.idleFloatDelay?.kill(), this.idleFloatDelay = f.delayedCall(e, () => this.startIdleFloat()));
+  queueIdleFloat(e = Ai.delay) {
+    this.options.reducedMotion || (this.idleFloatDelay?.kill(), this.idleFloatDelay = m.delayedCall(e, () => this.startIdleFloat()));
   }
   startIdleFloat() {
     if (this.options.reducedMotion || this.idleFloat?.isActive()) return;
-    f.killTweensOf(this.floatLayer);
-    const e = f.timeline({ repeat: -1 });
-    for (const t of ri.segments)
+    m.killTweensOf(this.floatLayer);
+    const e = m.timeline({ repeat: -1 });
+    for (const t of Ai.segments)
       e.to(this.floatLayer, {
         x: t.x,
         y: t.y,
@@ -6796,21 +7784,21 @@ class xc {
   }
   stopIdleFloat(e = !1) {
     if (this.idleFloatDelay?.kill(), this.idleFloatDelay = null, this.idleFloat?.kill(), this.idleFloat = null, e || this.options.reducedMotion) {
-      f.set(this.floatLayer, { x: 0, y: 0, rotation: 0 });
+      m.set(this.floatLayer, { x: 0, y: 0, rotation: 0 });
       return;
     }
-    f.to(this.floatLayer, {
+    m.to(this.floatLayer, {
       x: 0,
       y: 0,
       rotation: 0,
-      duration: ri.returnDuration,
+      duration: Ai.returnDuration,
       ease: "power2.out",
       overwrite: "auto"
     });
   }
   maybeSyncModeToPoint(e) {
-    const t = performance.now(), a = e.x - this.lastModeSyncPoint.x, i = e.y - this.lastModeSyncPoint.y, n = Number.isNaN(this.lastModeSamplePoint.x) ? 0 : e.x - this.lastModeSamplePoint.x, o = Number.isNaN(this.lastModeSamplePoint.y) ? 0 : e.y - this.lastModeSamplePoint.y, s = Number.isNaN(a) || a * a + i * i >= Bt.minDistance * Bt.minDistance;
-    this.lastModeSamplePoint = { ...e }, !(!s && t - this.lastModeSyncAt < Bt.minInterval) && (this.lastModeSyncAt = t, this.lastModeSyncPoint = { ...e }, this.syncModeToPoint(e, { x: n, y: o }));
+    const t = performance.now(), a = e.x - this.lastModeSyncPoint.x, i = e.y - this.lastModeSyncPoint.y, n = Number.isNaN(this.lastModeSamplePoint.x) ? 0 : e.x - this.lastModeSamplePoint.x, o = Number.isNaN(this.lastModeSamplePoint.y) ? 0 : e.y - this.lastModeSamplePoint.y, s = Number.isNaN(a) || a * a + i * i >= Jt.minDistance * Jt.minDistance;
+    this.lastModeSamplePoint = { ...e }, !(!s && t - this.lastModeSyncAt < Jt.minInterval) && (this.lastModeSyncAt = t, this.lastModeSyncPoint = { ...e }, this.syncModeToPoint(e, { x: n, y: o }));
   }
   updateModeWatch() {
     if (this.mode !== "default" && !this.modeOverride) {
@@ -6849,8 +7837,8 @@ class xc {
     if (a !== "default") return a;
     const i = Math.hypot(t.x, t.y);
     return i <= 0.25 ? "default" : this.getModeForExactPoint({
-      x: e.x + t.x / i * Bt.lookahead,
-      y: e.y + t.y / i * Bt.lookahead
+      x: e.x + t.x / i * Jt.lookahead,
+      y: e.y + t.y / i * Jt.lookahead
     });
   }
   getModeForExactPoint(e) {
@@ -6861,23 +7849,23 @@ class xc {
     return n !== "default" ? n : this.getModeForLocalPoint(e, t);
   }
   getModeForElement(e) {
-    return e ? e.closest(ii) ? "pointer" : e.closest(ni) ? "text" : "default" : "default";
+    return e ? e.closest(fi) ? "pointer" : e.closest(bi) ? "text" : "default" : "default";
   }
   getModeForLocalPoint(e, t) {
-    return this.refreshModeTargetCache(), this.findLocalHit(this.pointerTargets, e, t, ii) ? "pointer" : this.findLocalHit(this.textTargets, e, t, ni) ? "text" : "default";
+    return this.refreshModeTargetCache(), this.findLocalHit(this.pointerTargets, e, t, fi) ? "pointer" : this.findLocalHit(this.textTargets, e, t, bi) ? "text" : "default";
   }
   findLocalHit(e, t, a, i) {
     for (const n of e) {
       if (!n.matches(i)) continue;
       const o = this.getVisibleRect(n);
       if (!o) continue;
-      const s = o.left - a.left, l = o.right - a.left, c = o.top - a.top, d = o.bottom - a.top;
-      if (t.x >= s && t.x <= l && t.y >= c && t.y <= d) return n;
+      const s = o.left - a.left, c = o.right - a.left, l = o.top - a.top, d = o.bottom - a.top;
+      if (t.x >= s && t.x <= c && t.y >= l && t.y <= d) return n;
     }
     return null;
   }
   refreshModeTargetCache() {
-    this.modeTargetsDirty && (this.pointerTargets = Array.from(this.root.querySelectorAll(ii)).reverse(), this.textTargets = Array.from(this.root.querySelectorAll(ni)).reverse(), this.modeTargetsDirty = !1);
+    this.modeTargetsDirty && (this.pointerTargets = Array.from(this.root.querySelectorAll(fi)).reverse(), this.textTargets = Array.from(this.root.querySelectorAll(bi)).reverse(), this.modeTargetsDirty = !1);
   }
   observeModeTargets() {
     "MutationObserver" in window && (this.targetObserver = new MutationObserver(() => {
@@ -6895,131 +7883,131 @@ class xc {
     const t = document.createElement("div");
     t.className = "wa-cursor__float", t.dataset.cursorFloat = "";
     const a = document.createElement("div");
-    return a.className = "wa-cursor__glyph", a.append(Nn()), t.append(a), e.append(t), this.root.append(e), e;
+    return a.className = "wa-cursor__glyph", a.append(tr()), t.append(a), e.append(t), this.root.append(e), e;
   }
   ensureFloatLayer() {
     const e = this.el.querySelector("[data-cursor-float]");
     if (e) return e;
     const t = this.el.querySelector(".wa-cursor__glyph") ?? document.createElement("div");
-    t.classList.contains("wa-cursor__glyph") || (t.className = "wa-cursor__glyph"), t.querySelector(".wa-cursor__mimic-head") || t.append(Nn());
+    t.classList.contains("wa-cursor__glyph") || (t.className = "wa-cursor__glyph"), t.querySelector(".wa-cursor__mimic-head") || t.append(tr());
     const a = document.createElement("div");
     return a.className = "wa-cursor__float", a.dataset.cursorFloat = "", a.append(t), this.el.append(a), a;
   }
 }
-function Nn() {
+function tr() {
   const r = document.createDocumentFragment(), e = document.createElement("span"), t = document.createElement("span");
   return e.className = "wa-cursor__mimic-tail", t.className = "wa-cursor__mimic-head", e.setAttribute("aria-hidden", "true"), t.setAttribute("aria-hidden", "true"), r.append(e, t), r;
 }
-function ki(r, e, t) {
+function Fi(r, e, t) {
   return {
     x: r.x + (e.x - r.x) * t,
     y: r.y + (e.y - r.y) * t
   };
 }
-function On(r) {
+function ar(r) {
   const e = [];
   let t = 0;
   for (let a = 0; a < r.length - 1; a += 1) {
-    const i = no(r[a], r[a + 1]);
+    const i = Mo(r[a], r[a + 1]);
     e.push(i), t += i;
   }
   return { points: r, segmentLengths: e, totalLength: t };
 }
-function vc(r, e) {
+function sd(r, e) {
   const { points: t, segmentLengths: a, totalLength: i } = r;
   if (t.length <= 1) return t[0] ?? { x: 0, y: 0 };
   if (i <= 0) return t[t.length - 1] ?? t[0];
-  let n = $e(e, 0, 1) * i;
+  let n = ct(e, 0, 1) * i;
   for (let o = 0; o < a.length; o += 1) {
     const s = a[o];
     if (n <= s || o === a.length - 1) {
-      const l = s <= 0 ? 1 : n / s, c = l * l * (3 - 2 * l);
-      return ki(t[o], t[o + 1], c);
+      const c = s <= 0 ? 1 : n / s, l = c * c * (3 - 2 * c);
+      return Fi(t[o], t[o + 1], l);
     }
     n -= s;
   }
   return t[t.length - 1] ?? t[0];
 }
-function _c(r) {
+function ld(r) {
   return (r % 360 + 360) % 360;
 }
-function Ac(r, e) {
+function cd(r, e) {
   return (e - r + 540) % 360 - 180;
 }
-const Bn = /* @__PURE__ */ new Set(), ua = /* @__PURE__ */ new Set(), Sc = ["avatarUrl", "mutualConnectionAvatarUrl"], kc = ["name", "contact", "prospect", "fullName", "mutualConnection", "connector"];
-function Fn(r, e, t = Qi) {
-  r.length && (zn(r[e], t), zn(r[(e + 1) % r.length], t));
+const ir = /* @__PURE__ */ new Set(), ka = /* @__PURE__ */ new Set(), dd = ["avatarUrl", "mutualConnectionAvatarUrl"], ud = ["name", "contact", "prospect", "fullName", "mutualConnection", "connector"];
+function nr(r, e, t = cn) {
+  r.length && (rr(r[e], t), rr(r[(e + 1) % r.length], t));
 }
-function zn(r, e = Qi) {
+function rr(r, e = cn) {
   if (r?.assetUrls?.length)
-    for (const t of r.assetUrls) Mc(t, e);
+    for (const t of r.assetUrls) wd(t, e);
 }
-function Ht(r) {
-  return Ba(Cc(r).flatMap((e) => Tc(e.values)));
+function ta(r) {
+  return Ja(pd(r).flatMap((e) => gd(e.values)));
 }
-function oo(r) {
-  return Ba(r.sources.map((e) => e.logoSrc));
+function hd(r) {
+  return Ja(r.sources.map((e) => e.logoSrc));
 }
-function so(r) {
-  return Ba(r.leads.map((e) => Oa(e.name, e.avatarUrl)));
+function Ro(r) {
+  return Ja(r.leads.map((e) => Xa(e.name, e.avatarUrl)));
 }
-function lo(r) {
-  return Ba(r.sequences.map((e) => Oa(e.name, e.avatarUrl)));
+function Io(r) {
+  return Ja(r.sequences.map((e) => Xa(e.name, e.avatarUrl)));
 }
-function Cc(r) {
+function pd(r) {
   return [
     ...r.rows,
     ...r.pagination?.pages.flatMap((e) => e.rows) ?? []
   ];
 }
-function Tc(r) {
-  const e = Sc.map((t) => r[t]);
-  for (const t of kc) {
+function gd(r) {
+  const e = dd.map((t) => r[t]);
+  for (const t of ud) {
     const a = r[t];
-    if (!a || !Ec(t, r)) continue;
+    if (!a || !md(t, r)) continue;
     const i = t === "mutualConnection" || t === "connector" ? r.mutualConnectionAvatarUrl : r.avatarUrl;
-    e.push(Oa(a, i));
+    e.push(Xa(a, i));
   }
   return e;
 }
-function Ec(r, e) {
+function md(r, e) {
   return r === "mutualConnection" || r === "connector" ? !0 : !!(e.avatarUrl || e.avatar || e.avatarTone || e.source || e.personDetail || e.prospectDetail);
 }
-function Mc(r, e) {
+function wd(r, e) {
   if (typeof document > "u" || typeof Image > "u") return;
-  const t = Rc(e(r));
-  if (!t || Bn.has(t)) return;
-  Bn.add(t), Pc(t);
+  const t = bd(e(r));
+  if (!t || ir.has(t)) return;
+  ir.add(t), fd(t);
   const a = new Image();
   a.decoding = "async", a.loading = "eager", a.src = t, a.decode?.().catch(() => {
   });
 }
-function Ba(r) {
+function Ja(r) {
   const e = /* @__PURE__ */ new Set();
   for (const t of r)
-    Dc(t) && e.add(t);
+    Ad(t) && e.add(t);
   return [...e];
 }
-function Pc(r) {
-  if (!ua.size)
+function fd(r) {
+  if (!ka.size)
     for (const t of document.head.querySelectorAll('link[rel="preload"][as="image"]'))
-      ua.add(t.href);
-  if (ua.has(r)) return;
-  ua.add(r);
+      ka.add(t.href);
+  if (ka.has(r)) return;
+  ka.add(r);
   const e = document.createElement("link");
   e.rel = "preload", e.as = "image", e.href = r, document.head.append(e);
 }
-function Rc(r) {
+function bd(r) {
   try {
     return new URL(r, document.baseURI).href;
   } catch {
     return null;
   }
 }
-function Dc(r) {
+function Ad(r) {
   return typeof r == "string" && r.trim().length > 0;
 }
-const E = {
+const M = {
   typeShort: 0.92,
   typeMedium: 1.16,
   typeLong: 1.34,
@@ -7027,28 +8015,37 @@ const E = {
   thinkingMedium: 1.3,
   beat: 0.26,
   fileGrab: 0.18
+}, Re = {
+  ease: "sine.inOut",
+  overshoot: !1,
+  settle: !1
+}, Ie = {
+  compact: 0.5,
+  paginationClick: 0.52,
+  previewCard: 0.68,
+  sequenceEnroll: 1.05
 };
-function oi(r) {
+function yi(r) {
   return typeof r == "number" ? { x: r, y: 0 } : r;
 }
-function N(r, e, t = {}, a = !0) {
+function O(r, e, t = {}, a = !0) {
   return {
-    desktop: { target: r, anchor: e, offset: oi(t.desktop), humanOffset: a },
-    tablet: { target: r, anchor: e, offset: oi(t.tablet), humanOffset: a },
-    mobile: { target: r, anchor: e, offset: oi(t.mobile), humanOffset: a }
+    desktop: { target: r, anchor: e, offset: yi(t.desktop), humanOffset: a },
+    tablet: { target: r, anchor: e, offset: yi(t.tablet), humanOffset: a },
+    mobile: { target: r, anchor: e, offset: yi(t.mobile), humanOffset: a }
   };
 }
-const Ma = {
-  hitGroundRunning: N("[data-chat-input]", "center", { desktop: -72, tablet: -68, mobile: -54 }),
-  dataMarketplace: N("[data-chat-input]", "center", { desktop: -54, tablet: -52, mobile: -44 }),
-  crmUpdate: N("[data-chat-input]", "center", { desktop: -42, tablet: -46, mobile: -36 }),
-  researchBrief: N("[data-chat-input]", "center", { desktop: -70, tablet: -62, mobile: -50 }),
-  supportResolution: N("[data-chat-input]", "center", { desktop: -62, tablet: -58, mobile: -46 })
-}, co = N("[data-signup-field]", "center", {
+const Ha = {
+  hitGroundRunning: O("[data-chat-input]", "center", { desktop: -72, tablet: -68, mobile: -54 }),
+  dataMarketplace: O("[data-chat-input]", "center", { desktop: -54, tablet: -52, mobile: -44 }),
+  crmUpdate: O("[data-chat-input]", "center", { desktop: -42, tablet: -46, mobile: -36 }),
+  researchBrief: O("[data-chat-input]", "center", { desktop: -70, tablet: -62, mobile: -50 }),
+  supportResolution: O("[data-chat-input]", "center", { desktop: -62, tablet: -58, mobile: -46 })
+}, qo = O("[data-signup-field]", "center", {
   desktop: -74,
   tablet: -66,
   mobile: -48
-}), uo = N("[data-signup-submit]", "center"), Ic = N("[data-send-button]", "center"), ji = {
+}), Bo = O("[data-signup-submit]", "center"), yd = O("[data-send-button]", "center"), dn = {
   desktop: {
     target: "[data-chat-shell]",
     anchor: "right",
@@ -7067,11 +8064,17 @@ const Ma = {
     offset: { x: -28, y: -96 },
     humanOffset: !0
   }
-}, qc = 2.8, Lc = 42, Nc = 2, Oc = 3, Pa = "[data-chat-shell] [data-chat-thread]", Bc = `${Pa} [data-message-role="assistant"]:not(.wa-message--component) [data-message-body]`, Fc = `${Pa} [data-message-role="assistant"].wa-message--thinking .wa-research-step[data-step-state="current"] .wa-research-step__body, ${Pa} [data-message-role="assistant"].wa-message--thinking .wa-research-step[data-step-state="complete"] .wa-research-step__label`, Ra = 0.24, ho = 0.3, Ue = {
+}, vd = 2.8, xd = 42, _d = 2, kd = 3, kt = {
+  approachDuration: 0.78,
+  betweenCardDuration: 0.92,
+  betweenCardDurationStep: 0.08,
+  curve: 0.2,
+  followBuffer: 0.7
+}, Va = "[data-chat-shell] [data-chat-thread]", Sd = `${Va} [data-message-role="assistant"]:not(.wa-message--component) [data-message-body]`, Cd = `${Va} [data-message-role="assistant"].wa-message--thinking .wa-research-step[data-step-state="current"] .wa-research-step__body, ${Va} [data-message-role="assistant"].wa-message--thinking .wa-research-step[data-step-state="complete"] .wa-research-step__label`, Ga = 0.24, Lo = 0.3, Xe = {
   right: { target: "[data-chat-shell]", anchor: "right", outside: "right" },
   bottomRight: { target: "[data-chat-shell]", anchor: "bottomRight", outside: "bottom" }
 };
-function et(r = Ue.right, e) {
+function dt(r = Xe.right, e) {
   return {
     kind: "cursorMove",
     target: r,
@@ -7079,9 +8082,9 @@ function et(r = Ue.right, e) {
     at: e
   };
 }
-function po(r) {
-  const e = N(
-    `[data-mailbox-connect="${ge(r.id)}"]`,
+function Oo(r) {
+  const e = O(
+    `[data-mailbox-connect="${be(r.id)}"]`,
     "center",
     {
       desktop: { x: 2, y: 0 },
@@ -7097,9 +8100,9 @@ function po(r) {
       build: (t) => t.chat.mailboxConnection(r),
       at: "+=0.04"
     },
-    ...mo([
+    ...Fo([
       {
-        selector: `[data-mailbox-connection="${ge(r.id)}"] .wa-mailbox-connection__copy`,
+        selector: `[data-mailbox-connection="${be(r.id)}"] .wa-mailbox-connection__copy`,
         label: `mailbox-cta-skim-${r.id}`,
         scanDuration: 0.5,
         at: "+=0.16"
@@ -7112,11 +8115,9 @@ function po(r) {
         mode: "pointer",
         intent: "click",
         speed: "quick",
-        curve: 0.08,
-        ease: "power1.inOut",
-        durationScale: 0.82,
-        overshoot: !1,
-        settle: !1,
+        duration: Ie.compact,
+        curve: 0.1,
+        ...Re,
         label: `mailbox-connect-${r.id}`
       },
       at: "+=0.08"
@@ -7129,9 +8130,9 @@ function po(r) {
     }
   ];
 }
-function go(r) {
-  const e = Ke(`[data-style-profile="${ge(r)}"]`), t = Da(r);
-  return mo([
+function No(r) {
+  const e = nt(`[data-style-profile="${be(r)}"]`), t = Qa(r);
+  return Fo([
     {
       selector: `${e} .wa-style-profile__row:nth-of-type(1)`,
       label: `${t}-top-row`,
@@ -7158,7 +8159,7 @@ function go(r) {
     }
   ]);
 }
-function mo(r) {
+function Fo(r) {
   return r.flatMap((e) => {
     const t = [];
     return e.scrollBeforeScan && t.push({
@@ -7180,71 +8181,71 @@ function mo(r) {
     }), t;
   });
 }
-const Oe = {
+const We = {
   firstMoveDelay: "+=0.22",
-  betweenStepDelay: "+=0.24",
-  clickDelay: "+=0.08",
+  betweenStepDelay: "+=0.22",
+  clickDelay: "+=0.12",
   sequenceUpdateAt: "-=0.03",
-  firstDurationScale: 3.2,
-  durationScale: 2.35,
+  firstDuration: 1.15,
+  duration: 0.82,
   firstCurve: 0.2,
   curve: 0.14,
-  reviewHold: E.beat + 0.22
+  reviewHold: M.beat + 0.22
 };
-function fo(r, e, t = Oe.firstMoveDelay) {
+function Uo(r, e, t = We.firstMoveDelay) {
   return e.flatMap((a, i) => {
-    const n = `[data-sequence-engagement="${ge(r)}"] .wa-sequence-card[data-active="true"] .wa-sequence-step[data-step-index="${a}"]`, o = i === 0;
+    const n = `[data-sequence-engagement="${be(r)}"] .wa-sequence-card[data-active="true"] .wa-sequence-step[data-step-index="${a}"]`, o = i === 0;
     return [
       {
         kind: "cursorMove",
-        target: N(n, "center", {}, !1),
+        target: O(n, "center", {}, !1),
         options: {
           mode: "pointer",
           intent: "click",
           speed: "slow",
           ease: "sine.inOut",
-          durationScale: o ? Oe.firstDurationScale : Oe.durationScale,
-          curve: o ? Oe.firstCurve : Oe.curve,
+          duration: o ? We.firstDuration : We.duration,
+          curve: o ? We.firstCurve : We.curve,
           overshoot: !1,
           settle: !1,
           label: `${r}-step-${a}`
         },
-        at: i === 0 ? t : Oe.betweenStepDelay
+        at: i === 0 ? t : We.betweenStepDelay
       },
-      { kind: "cursorClick", at: Oe.clickDelay },
+      { kind: "cursorClick", at: We.clickDelay },
       {
         kind: "custom",
         build: (s) => s.chat.sequenceStep(r, a),
-        at: Oe.sequenceUpdateAt
+        at: We.sequenceUpdateAt
       },
       {
         kind: "custom",
-        build: (s) => s.timeline().to({}, { duration: Oe.reviewHold }),
+        build: (s) => s.timeline().to({}, { duration: We.reviewHold }),
         at: "+=0.02"
       }
     ];
   });
 }
-function wo(r, e = E.beat + 0.18, t, a = {}) {
+function zo(r, e = M.beat + 0.18, t, a = {}) {
   return {
     kind: "custom",
     build: (i) => {
-      const n = ia(i);
-      return n.call(() => i.chat.scrollDataTableFooterIntoView(r, e, a)), n.to({}, { duration: e }), a.settleDelay && (n.to({}, { duration: a.settleDelay }), n.call(() => i.chat.scrollDataTableFooterIntoView(r, e, a)), n.to({}, { duration: e })), na(n);
+      const n = fa(i);
+      return n.call(() => i.chat.scrollDataTableFooterIntoView(r, e, a)), n.to({}, { duration: e }), a.settleDelay && (n.to({}, { duration: a.settleDelay }), n.call(() => i.chat.scrollDataTableFooterIntoView(r, e, a)), n.to({}, { duration: e })), Yt(n);
     },
     at: t
   };
 }
-function Ie(r, e) {
-  const t = ia(r), a = Qc();
+function He(r, e) {
+  const t = fa(r), a = Bd();
   for (const [i, n] of e.entries())
-    zc(t, r, n, i, a);
-  return na(t);
+    Td(t, r, n, i, a);
+  return Yt(t);
 }
-function zc(r, e, t, a, i) {
+function Td(r, e, t, a, i) {
   switch (t.kind) {
     case "prompt":
-      r.add(Kc(e, t), t.at);
+      r.add(Od(e, t), t.at);
       return;
     case "status":
       r.add(e.chat.setStatus(t.text), t.at);
@@ -7259,76 +8260,88 @@ function zc(r, e, t, a, i) {
       r.add(e.chat.transitionSignupToChat(), t.at);
       return;
     case "assistant":
-      r.add(e.chat.assistantMessage(t.text), t.at), Yc(r, e, i, {
+      r.add(e.chat.assistantMessage(t.text), t.at), qd(r, e, i, {
         kind: "assistant",
         key: t.text,
         text: t.text,
-        selector: Bc,
-        label: `assistant-${Da(t.text)}`,
+        selector: Sd,
+        label: `assistant-${Qa(t.text)}`,
         stepIndex: a
       });
       return;
     case "thinking": {
-      const n = Uc(t), o = n.items.map((s) => s.label);
-      t.statusBefore && r.add(e.chat.setStatus(t.statusBefore), t.at), r.add(e.chat.thinkingState(n, t.hold), t.statusBefore ? void 0 : t.at), Wc(r, e, i, t.hold, o.length, o.join("|"), a);
+      const n = Ed(t), o = n.items.map((c) => c.label), s = Pd(n, t.hold);
+      t.statusBefore && r.add(e.chat.setStatus(t.statusBefore), t.at), r.add(
+        e.chat.thinkingState(n, t.hold, { preserveScroll: t.preserveScroll ?? !1 }),
+        t.statusBefore ? void 0 : t.at
+      ), t.cursorMotion !== !1 && Id(
+        r,
+        e,
+        i,
+        t.hold,
+        o.length,
+        o.join("|"),
+        a,
+        s
+      );
       return;
     }
     case "dataTable":
-      Ft(
+      Zt(
         r,
         e,
         e.chat.dataTable(t.config),
         t.at,
-        Ke(`[data-data-table="${ge(t.config.id)}"]`),
+        nt(`[data-data-table="${be(t.config.id)}"]`),
         `table-${t.config.id}`
       );
       return;
     case "enrichmentPanel":
-      Ft(
+      Zt(
         r,
         e,
         e.chat.enrichmentPanel(t.config),
         t.at,
-        Ke(`[data-enrichment-panel="${ge(t.config.id)}"]`),
+        nt(`[data-enrichment-panel="${be(t.config.id)}"]`),
         `enrichment-${t.config.id}`
       );
       return;
     case "strategyPlans":
       {
-        const n = Ke(`[data-strategy-plans~="${ge(t.plans[0]?.id ?? "strategy")}"]`);
-        r.add(e.chat.strategyPlans(t.plans), t.at), r.add(Vc(e, n, t.plans), "+=0.06");
+        const n = nt(`[data-strategy-plans~="${be(t.plans[0]?.id ?? "strategy")}"]`);
+        r.add(e.chat.strategyPlans(t.plans), t.at), r.add(Rd(e, n, t.plans), "+=0.06");
       }
       return;
     case "dataSourcesGrid":
-      Ft(
+      Zt(
         r,
         e,
         e.chat.dataSourcesGrid(t.config),
         t.at,
-        Ke(`[data-data-sources-grid="${ge(t.config.id)}"]`),
+        nt(`[data-data-sources-grid="${be(t.config.id)}"]`),
         `sources-${t.config.id}`
       );
       return;
     case "marketingDataSourcesGrid":
-      Ft(
+      Zt(
         r,
         e,
         e.chat.marketingDataSourcesGrid(t.config),
         t.at,
-        Ke(`[data-marketing-data-sources-grid="${ge(t.config.id)}"]`),
+        nt(`[data-marketing-data-sources-grid="${be(t.config.id)}"]`),
         `marketing-sources-${t.config.id}`
       );
       return;
     case "personalizationSwipeGame":
-      Hc(r, e, t.config, t.at);
+      Md(r, e, t.config, t.at);
       return;
     case "sequenceEngagement":
-      Ft(
+      Zt(
         r,
         e,
         e.chat.sequenceEngagement(t.config),
         t.at,
-        Ke(`[data-sequence-engagement="${ge(t.config.id)}"]`),
+        nt(`[data-sequence-engagement="${be(t.config.id)}"]`),
         `sequence-${t.config.id}`
       );
       return;
@@ -7343,27 +8356,34 @@ function zc(r, e, t, a, i) {
       return;
   }
 }
-function Uc(r) {
-  return "thinking" in r && r.thinking ? r.thinking : Array.isArray(r.steps) ? { items: r.steps.map(Un) } : { items: [Un(r.label ?? "")] };
+function Ed(r) {
+  return "thinking" in r && r.thinking ? r.thinking : Array.isArray(r.steps) ? { items: r.steps.map(or) } : { items: [or(r.label ?? "")] };
 }
-function Un(r) {
+function or(r) {
   return typeof r == "string" ? { label: r } : r;
 }
-function Ft(r, e, t, a, i, n) {
-  r.add(t, a), r.add(Gc(e, i, n), "+=0.06");
+function Pd(r, e = M.thinkingShort) {
+  const t = Math.max(1, r.items.length), a = r.items.reduce((i, n) => {
+    const o = typeof n.duration == "number" && Number.isFinite(n.duration) ? Math.max(0, n.duration) : 0;
+    return i + o;
+  }, 0);
+  return e * t + a;
 }
-function Hc(r, e, t, a) {
-  const i = Ke(
-    `[data-personalization-swipe-game="${ge(t.id)}"]`
+function Zt(r, e, t, a, i, n) {
+  r.add(t, a), r.add(Dd(e, i, n), "+=0.06");
+}
+function Md(r, e, t, a) {
+  const i = nt(
+    `[data-personalization-swipe-game="${be(t.id)}"]`
   );
   r.add(e.chat.personalizationSwipeGame(t), a), t.signals.forEach((n, o) => {
-    const s = `${i} [data-swipe-card="${ge(n.id)}"]`, l = n.decision === "use" ? 1 : -1, c = n.decision === "use" ? "right" : "left", d = N(s, c, {
-      desktop: { x: l * 154, y: o % 2 === 0 ? -18 : 16 },
-      tablet: { x: l * 132, y: o % 2 === 0 ? -14 : 14 },
-      mobile: { x: l * 86, y: o % 2 === 0 ? -10 : 10 }
+    const s = `${i} [data-swipe-card="${be(n.id)}"]`, c = n.decision === "use" ? 1 : -1, l = n.decision === "use" ? "right" : "left", d = O(s, l, {
+      desktop: { x: c * 154, y: o % 2 === 0 ? -18 : 16 },
+      tablet: { x: c * 132, y: o % 2 === 0 ? -14 : 14 },
+      mobile: { x: c * 86, y: o % 2 === 0 ? -10 : 10 }
     }, !1);
     r.add(
-      e.cursor.moveTo(N(s, "center", {}, !1), {
+      e.cursor.moveTo(O(s, "center", {}, !1), {
         intent: "hover",
         mode: "default",
         speed: o === 0 ? "normal" : "quick",
@@ -7381,7 +8401,7 @@ function Hc(r, e, t, a) {
       "-=0.02"
     ), r.add(e.chat.swipePersonalizationCard(t.id, n.id, n.decision), "<+=0.2");
   }), r.add(
-    e.cursor.moveTo(ji, {
+    e.cursor.moveTo(dn, {
       intent: "hover",
       mode: "default",
       speed: "slow",
@@ -7392,24 +8412,44 @@ function Hc(r, e, t, a) {
     "+=0.08"
   );
 }
-function Gc(r, e, t) {
-  const a = ia(r).add(r.cursor.scanAcross(e, { label: t }));
-  return na(a);
+function Dd(r, e, t) {
+  const a = fa(r).add(r.cursor.scanAcross(e, { label: t }));
+  return Yt(a);
 }
-function Vc(r, e, t) {
-  const a = ia(r), i = t.map(
-    (s) => `${e} [data-strategy-plan="${ge(s.id)}"]`
-  ), n = 0.94 + Math.max(0, t.length - 1) * 0.15, o = 0.28;
-  return a.add(r.cursor.skimThrough(i, {
-    duration: n,
-    label: `strategy-card-skim-${t.map((s) => s.id).join("-")}`
-  }), 0), i.forEach((s, l) => {
-    const c = t.length === 1 ? 0.12 : n * ((l + 0.5) / t.length), d = Math.max(0, c - o * 0.48);
-    a.add(r.chat.strategyPlanHover(s, !0), d), a.add(r.chat.strategyPlanHover(s, !1), d + o);
-  }), na(a);
+function Rd(r, e, t) {
+  const a = fa(r), i = t.map(
+    (l) => `${e} [data-strategy-plan="${be(l.id)}"]`
+  ), [n, ...o] = i, s = o.reduce(
+    (l, d, u) => l + sr(u),
+    0
+  ), c = kt.approachDuration + s + kt.followBuffer;
+  return n && (a.add(r.chat.strategyPlanCursorHover(e, r.cursor, c), 0), a.add(r.cursor.moveTo(O(n, "center", {}, !1), {
+    intent: "hover",
+    speed: "slow",
+    duration: kt.approachDuration,
+    curve: kt.curve,
+    ease: "sine.inOut",
+    overshoot: !1,
+    settle: !1,
+    label: `strategy-card-approach-${t[0]?.id ?? "first"}`
+  }), 0), o.forEach((l, d) => {
+    a.add(r.cursor.moveTo(O(l, "center", {}, !1), {
+      intent: "hover",
+      speed: "slow",
+      duration: sr(d),
+      curve: kt.curve,
+      ease: "sine.inOut",
+      overshoot: !1,
+      settle: !1,
+      label: `strategy-card-hover-${t[d + 1]?.id ?? d + 2}`
+    }), "+=0.04");
+  })), Yt(a);
 }
-function Wc(r, e, t, a = E.thinkingShort, i = 1, n = "thinking", o = 0) {
-  const s = a * Math.max(1, i), l = i >= 3 && bo(e, t, {
+function sr(r) {
+  return kt.betweenCardDuration + r * kt.betweenCardDurationStep;
+}
+function Id(r, e, t, a = M.thinkingShort, i = 1, n = "thinking", o = 0, s = a * Math.max(1, i)) {
+  const c = s, l = i >= 3 && Ho(e, t, {
     kind: "thinking",
     key: n,
     text: n,
@@ -7417,26 +8457,26 @@ function Wc(r, e, t, a = E.thinkingShort, i = 1, n = "thinking", o = 0) {
     minChars: 16
   });
   l && r.add(
-    e.cursor.scanAcross(Fc, {
-      label: `thinking-skim-${Da(n)}`,
+    e.cursor.scanAcross(Cd, {
+      label: `thinking-skim-${Qa(n)}`,
       match: "last",
       duration: 0.72
     }),
     "<+=0.58"
-  ), !(s < qc) && r.add(
-    e.cursor.moveTo(ji, {
+  ), !(c < vd) && r.add(
+    e.cursor.moveTo(dn, {
       intent: "hover",
       mode: "default",
       speed: "slow",
       overshoot: !1,
       settle: !1,
-      label: `thinking-idle-${Da(n)}`
+      label: `thinking-idle-${Qa(n)}`
     }),
     l ? "+=0.08" : "<+=0.08"
   );
 }
-function Yc(r, e, t, a) {
-  bo(e, t, a) && r.add(
+function qd(r, e, t, a) {
+  Ho(e, t, a) && r.add(
     e.cursor.scanAcross(a.selector, {
       label: `text-skim-${a.label}`,
       match: "last",
@@ -7445,22 +8485,22 @@ function Yc(r, e, t, a) {
     "+=0.04"
   );
 }
-function Qc() {
+function Bd() {
   return {
     textCandidateCount: 0,
     textSkimCount: 0,
     lastTextSkimStep: Number.NEGATIVE_INFINITY
   };
 }
-function bo(r, e, t) {
-  const a = t.text.trim(), i = t.minChars ?? Lc;
-  if (a.length < i || e.textSkimCount >= Oc) return !1;
+function Ho(r, e, t) {
+  const a = t.text.trim(), i = t.minChars ?? xd;
+  if (a.length < i || e.textSkimCount >= kd) return !1;
   const n = e.textCandidateCount;
   e.textCandidateCount += 1;
-  const o = e.textSkimCount === 0, s = t.stepIndex - e.lastTextSkimStep >= Nc, l = jc(`${r.story.id}:${t.kind}:${n}:${t.key}`), c = n > 0 && n % 3 === 0, d = o || s && (l >= 0.58 || c);
+  const o = e.textSkimCount === 0, s = t.stepIndex - e.lastTextSkimStep >= _d, c = Ld(`${r.story.id}:${t.kind}:${n}:${t.key}`), l = n > 0 && n % 3 === 0, d = o || s && (c >= 0.58 || l);
   return d && (e.textSkimCount += 1, e.lastTextSkimStep = t.stepIndex), d;
 }
-function jc(r) {
+function Ld(r) {
   let e = 2166136261;
   for (let a = 0; a < r.length; a += 1)
     e ^= r.charCodeAt(a), e = Math.imul(e, 16777619);
@@ -7468,35 +8508,41 @@ function jc(r) {
   let t = e;
   return t = Math.imul(t ^ t >>> 15, t | 1), t ^= t + Math.imul(t ^ t >>> 7, t | 61), ((t ^ t >>> 14) >>> 0) / 4294967296;
 }
-function ge(r) {
+function be(r) {
   return r.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
 }
-function Ke(r) {
-  return `${Pa} ${r}`;
+function nt(r) {
+  return `${Va} ${r}`;
 }
-function Da(r) {
+function Qa(r) {
   return r.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 36) || "state";
 }
-function Kc(r, e) {
-  const t = ia(r);
+function Od(r, e) {
+  const t = fa(r);
   return e.statusBefore && t.add(r.chat.setStatus(e.statusBefore)), t.add(r.chat.showComposer(), e.statusBefore ? "-=0.02" : void 0), e.fromEntry || t.add(
     r.cursor.moveTo(e.focusTarget ?? r.story.entry, {
       mode: "text",
       intent: "text",
       speed: "normal",
+      duration: Ie.compact,
+      curve: 0.1,
+      ...Re,
       label: `focus-${e.sendLabel}`
     }),
     "-=0.18"
-  ), t.add(r.cursor.click("text"), "-=0.02").add(r.chat.setComposerFocus(!0), "-=0.14").add(r.chat.typeComposer(e.text, e.duration ?? E.typeMedium)).add(
-    r.cursor.moveTo(Ic, {
+  ), t.add(r.cursor.click("text"), "+=0.04").add(r.chat.setComposerFocus(!0), "-=0.14").add(r.chat.typeComposer(e.text, e.duration ?? M.typeMedium)).add(
+    r.cursor.moveTo(yd, {
       mode: "pointer",
       intent: "click",
       speed: "quick",
+      duration: Ie.compact,
+      curve: 0.12,
+      ...Re,
       label: e.sendLabel
     }),
     "-=0.16"
-  ).add(r.cursor.click()).add(r.chat.setComposerFocus(!1), "-=0.08").add(r.chat.sendComposerText(), "-=0.06").add(r.chat.userMessage(e.text), "-=0.12").add(r.chat.hideComposer(), "<").add(r.chat.clearComposer()).add(
-    r.cursor.moveTo(ji, {
+  ).add(r.cursor.click()).add(r.chat.setComposerFocus(!1), "-=0.08").add(r.chat.sendComposerText(), "-=0.06").add(r.chat.userMessage(e.text), "-=0.12").add(r.chat.hideComposer(), "<").add(r.chat.clearComposer()), e.postSendCursorMotion !== !1 && t.add(
+    r.cursor.moveTo(dn, {
       intent: "hover",
       mode: "default",
       speed: "slow",
@@ -7505,28 +8551,84 @@ function Kc(r, e) {
       label: `post-interaction-${e.sendLabel}`
     }),
     "-=0.12"
-  ), e.statusAfter && t.add(r.chat.setStatus(e.statusAfter), "<"), na(t);
+  ), e.statusAfter && t.add(r.chat.setStatus(e.statusAfter), "<"), Yt(t);
 }
-function ia(r) {
+function fa(r) {
   const e = r.timeline();
   return e.pause(0), e;
 }
-function na(r) {
+function Yt(r) {
   return r.paused(!1), r;
 }
-const Xc = {
+function Vo(r) {
+  return Array.isArray(r) ? r.filter((e) => typeof e == "string").map((e) => e.trim()).filter(Boolean) : [];
+}
+function Go(r) {
+  const e = typeof r == "number" ? r : typeof r == "string" && r.trim() ? Number(r) : NaN;
+  return Number.isFinite(e) && e > 0 ? Math.floor(e) : null;
+}
+function Nd(r) {
+  const e = un(r?.[0]), t = e ? e.end - e.start + 1 : null;
+  return t !== null && Number.isFinite(t) && t > 0 ? t : null;
+}
+function Fd(r, e, t, a) {
+  const i = un(e);
+  return i ? r.slice(i.start - 1, i.end) : r.slice(t * a, (t + 1) * a);
+}
+function un(r) {
+  const e = r?.match(/^\s*(\d+)\s*[-–]\s*(\d+)(?:\s+of\s+(\d+))?/i);
+  if (!e) return null;
+  const t = Number(e[1]), a = Number(e[2]), i = e[3] ? Number(e[3]) : void 0;
+  return !Number.isFinite(t) || !Number.isFinite(a) || t <= 0 || a < t ? null : {
+    start: t,
+    end: a,
+    ...i !== void 0 && Number.isFinite(i) && i >= a ? { total: i } : {}
+  };
+}
+const Ud = {
   desktop: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 420, y: -74 }, humanOffset: !1 },
   tablet: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 360, y: -58 }, humanOffset: !1 },
   mobile: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 280, y: -42 }, humanOffset: !1 }
-}, Jc = {
-  "hit-ground-running": co,
-  "data-marketplace": Ma.dataMarketplace,
-  "research-brief": Ma.researchBrief
-}, Zc = {
-  "hit-ground-running": ho,
-  "data-marketplace": Ra,
-  "research-brief": Ra
-}, pe = {
+}, zd = {
+  mode: "pointer",
+  intent: "hover",
+  speed: "slow",
+  duration: 1,
+  ease: "sine.inOut",
+  curve: 0.72,
+  overshoot: !1,
+  label: "hover-outreach-sequence"
+}, Hd = {
+  mode: "pointer",
+  intent: "click",
+  speed: "quick",
+  duration: Ie.paginationClick,
+  curve: 0.1,
+  ...Re,
+  label: "open-visitor-page-2"
+}, lr = {
+  mode: "pointer",
+  intent: "click",
+  speed: "normal",
+  duration: Ie.previewCard,
+  curve: 0.16,
+  ...Re
+}, Vd = {
+  mode: "pointer",
+  intent: "click",
+  speed: "slow",
+  duration: Ie.sequenceEnroll,
+  curve: 0.18,
+  ...Re
+}, Gd = 96, Qd = 1.05, Yd = 0, Wd = {
+  "hit-ground-running": qo,
+  "data-marketplace": Ha.dataMarketplace,
+  "research-brief": Ha.researchBrief
+}, jd = {
+  "hit-ground-running": Lo,
+  "data-marketplace": Ga,
+  "research-brief": Ga
+}, fe = {
   emailContent: "max-content",
   foldedDefault: "minmax(130px,1fr)",
   foldedEmail: "minmax(190px,0.95fr)",
@@ -7536,99 +8638,107 @@ const Xc = {
   rawName: "110px",
   rawEmail: "250px",
   rawCompany: "minmax(120px,1fr)",
-  cleanName: "245px",
+  cleanName: "175px",
   cleanEmail: "215px",
-  cleanCompany: "minmax(110px,1fr)"
-};
-function $c(r, e) {
+  cleanCompany: "minmax(150px,1fr)"
+}, aa = "Stripe";
+function Kd(r, e) {
   const t = new Map(r.map((a) => [a.id, a]));
   return e.map((a) => {
     const i = t.get(a.id);
-    return i ? ed(i, a) : a;
+    return i ? Xd(i, a) : a;
   });
 }
-function ed(r, e) {
+function Xd(r, e) {
   return {
     ...e,
     label: r.label,
     navLabel: r.label,
     navDescription: r.summary || e.navDescription,
     summary: r.summary || e.summary,
-    assetUrls: td(r),
-    entry: ad(r.id, e),
-    entryLeadTime: id(r.id, e),
+    assetUrls: Jd(r),
+    entry: Zd(r.id, e),
+    entryLeadTime: $d(r.id, e),
     prepare: r.id === "hit-ground-running" ? (t) => t.chat.prepareSignup() : e.prepare,
-    build: (t) => nd(t, r, e)
+    build: (t) => eu(t, r, e)
   };
 }
-function td(r) {
+function Jd(r) {
   const e = /* @__PURE__ */ new Set();
   for (const t of r.steps)
     if (!(t.kind !== "component" || !t.component))
       switch (t.component.kind) {
         case "table":
-          ha(e, Ht(ea(t.component, `${r.id}-${t.id}`)));
+          Sa(e, ta(ga(t.component, `${r.id}-${t.id}`)));
           break;
         case "dataSources":
-          ha(e, oo(_o(t.component)));
+          Sa(e, hd(Ko(t.component)));
           break;
         case "proximityList":
-          ha(e, so(Co(t.component)));
+          Sa(e, Ro($o(t.component)));
           break;
         case "sequenceEngagement":
-          ha(e, lo(Ki(t.component, `${r.id}-${t.id}`)));
+          Sa(e, Io(hn(t.component, `${r.id}-${t.id}`)));
           break;
       }
   return [...e];
 }
-function ha(r, e) {
+function Sa(r, e) {
   for (const t of e) r.add(t);
 }
-function ad(r, e) {
-  return Jc[r] ?? e.entry;
+function Zd(r, e) {
+  return Wd[r] ?? e.entry;
 }
-function id(r, e) {
-  return Zc[r] ?? e.entryLeadTime;
+function $d(r, e) {
+  return jd[r] ?? e.entryLeadTime;
 }
-function nd(r, e, t) {
-  if (e.id === "hit-ground-running") return rd(r, e);
-  if (e.id === "crm-update") return od(r, e);
-  if (e.id === "research-brief") return sd(r, e);
-  if (e.id === "csv-import-cleanup") return ld(r, e);
-  const a = hd(e);
-  return a.length ? Ie(r, [...a, et(Ue.bottomRight, "+=0.18")]) : t.build(r);
+function eu(r, e, t) {
+  if (e.id === "hit-ground-running") return tu(r, e);
+  if (e.id === "crm-update") return au(r, e);
+  if (e.id === "research-brief") return iu(r, e);
+  if (e.id === "csv-import-cleanup") return nu(r, e);
+  const a = lu(e);
+  return a.length ? He(r, [...a, dt(Xe.bottomRight, "+=0.18")]) : t.build(r);
 }
-function rd(r, e) {
-  const t = He(e, "status"), a = He(e, "user"), i = He(e, "thinking"), n = He(e, "assistant"), o = ta(e, "strategyCards");
-  return Ie(r, [
+function tu(r, e) {
+  const t = Je(e, "status"), a = Je(e, "user"), i = Je(e, "thinking"), n = Je(e, "assistant"), o = ma(e, "strategyCards");
+  return He(r, [
     { kind: "status", text: t?.text || "Sign up" },
     { kind: "cursorClick", nextMode: "text", at: "-=0.04" },
-    { kind: "typeSignupEmail", email: a?.text || "joel@vercel.com", duration: E.typeShort },
+    { kind: "typeSignupEmail", email: a?.text || "joel@vercel.com", duration: M.typeShort },
     {
       kind: "cursorMove",
-      target: uo,
-      options: { mode: "pointer", intent: "click", speed: "quick", label: "signup-submit" },
+      target: Bo,
+      options: {
+        mode: "pointer",
+        intent: "click",
+        speed: "quick",
+        duration: Ie.compact,
+        curve: 0.12,
+        ...Re,
+        label: "signup-submit"
+      },
       at: "-=0.04"
     },
-    { kind: "cursorClick", nextMode: "default", at: "-=0.03" },
+    { kind: "cursorClick", nextMode: "default", at: "+=0.06" },
     { kind: "custom", build: () => r.chat.submitSignup(), at: "<" },
     { kind: "status", text: "Building workspace", at: "-=0.08" },
-    { kind: "transitionSignupToChat", at: `+=${E.beat}` },
+    { kind: "transitionSignupToChat", at: `+=${M.beat}` },
     ...i ? [{ kind: "status", text: i.text || "Researching", at: "<" }] : [],
-    ...i ? [Fa(i, { hold: 0.46, at: "<" })] : [],
+    ...i ? [Za(i, { hold: 0.46, at: "<" })] : [],
     ...n ? [{ kind: "assistant", text: n.text }] : [],
     ...o ? [{ kind: "status", text: "Game plans ready", at: "<" }] : [],
-    ...o ? [{ kind: "strategyPlans", plans: vo(o.component), at: "-=0.08" }] : [],
-    et(Ue.right, "+=0.18")
+    ...o ? [{ kind: "strategyPlans", plans: jo(o.component), at: "-=0.08" }] : [],
+    dt(Xe.right, "+=0.18")
   ]);
 }
-function od(r, e) {
-  const t = ta(e, "mailboxConnection"), a = ta(e, "uploadedFiles"), i = [];
-  if (t && ko(i, So(t.component)), a) {
-    const n = Ao(a.component), o = r.chat.prepareCsvDropArea({
+function au(r, e) {
+  const t = ma(e, "mailboxConnection"), a = ma(e, "uploadedFiles"), i = [];
+  if (t && Zo(i, Jo(t.component)), a) {
+    const n = Xo(a.component), o = r.chat.prepareCsvDropArea({
       title: a.component.title,
       detail: n.map((d) => d.name).join(", ")
-    }), s = n.length > 1 ? `${n.length} context files` : n[0]?.name ?? a.text, l = r.chat.prepareCursorFile(s, r.cursor, n[0]?.type ?? "DOC", n), c = N("[data-chat-shell]", "center", {
+    }), s = n.length > 1 ? `${n.length} context files` : n[0]?.name ?? a.text, c = r.chat.prepareCursorFile(s, r.cursor, n[0]?.type ?? "DOC", n), l = O("[data-chat-shell]", "center", {
       desktop: { x: 0, y: 74 },
       tablet: { x: 0, y: 64 },
       mobile: { x: 0, y: 56 }
@@ -7637,7 +8747,7 @@ function od(r, e) {
       { kind: "status", text: "waiting for context" },
       {
         kind: "cursorMove",
-        target: Xc,
+        target: Ud,
         options: {
           mode: "default",
           intent: "exit",
@@ -7648,11 +8758,11 @@ function od(r, e) {
         },
         at: "+=0.08"
       },
-      { kind: "custom", build: () => l.startFollow() },
+      { kind: "custom", build: () => c.startFollow() },
       { kind: "custom", build: () => o.revealWhenCursorEnters(r.cursor), at: "<" },
       {
         kind: "cursorMove",
-        target: c,
+        target: l,
         options: {
           mode: "drag",
           intent: "drag",
@@ -7666,140 +8776,134 @@ function od(r, e) {
         at: "<"
       },
       { kind: "custom", build: () => o.activate(), at: "<+=0.02" },
-      { kind: "custom", build: () => r.timeline().to({}, { duration: E.beat }) },
+      { kind: "custom", build: () => r.timeline().to({}, { duration: M.beat }) },
       { kind: "custom", build: () => o.complete() },
-      { kind: "custom", build: () => l.releaseAtDrop(), at: "<" },
-      { kind: "custom", build: () => l.landAsUploadedFiles(n), at: "<" }
+      { kind: "custom", build: () => c.releaseAtDrop(), at: "<" },
+      { kind: "custom", build: () => c.landAsUploadedFiles(n), at: "<" }
     );
   }
   for (const n of e.steps)
-    n === t || n === a || yo(i, e.id, n);
-  return i.push(et(Ue.bottomRight, "+=0.16")), Ie(r, i);
+    n === t || n === a || Qo(i, e.id, n);
+  return i.push(dt(Xe.bottomRight, "+=0.16")), He(r, i);
 }
-function sd(r, e) {
-  const t = He(e, "user"), a = ta(e, "table"), i = He(e, "thinking"), n = ta(e, "sequenceEngagement"), o = a ? ea(a.component, "website-visitors-sales") : null, s = n ? Ki(n.component, "visitor-outreach-sequences") : null, l = [];
-  if (o && (o.scrollAlign = "equal-inset"), t && l.push({
+function iu(r, e) {
+  const t = Je(e, "user"), a = ma(e, "table"), i = Je(e, "thinking"), n = ma(e, "sequenceEngagement"), o = a ? ga(a.component, "website-visitors-sales") : null, s = n ? hn(n.component, "visitor-outreach-sequences") : null, c = [];
+  if (o && (o.scrollAlign = "equal-inset"), t && c.push({
     kind: "prompt",
     text: t.text,
-    duration: To(t.text),
+    duration: es(t.text),
     sendLabel: "send-visitor-sales-list",
     statusBefore: "finding visitors",
     statusAfter: "building visitor list",
     fromEntry: !0
-  }), o && l.push(
-    { kind: "dataTable", config: o, at: "-=0.02" },
-    wo("website-visitors-sales", E.beat + 0.42, "+=0.08", {
+  }), o && c.push(
+    { kind: "custom", build: () => r.chat.dataTable(o), at: "-=0.02" },
+    zo("website-visitors-sales", Qd, "+=0.08", {
       align: "top",
-      offset: -190,
-      settleDelay: 0.32
-    }),
-    {
-      kind: "custom",
-      build: () => r.chat.scrollToLiveTimeline(E.beat + 0.42),
-      at: "+=0.08"
-    }
+      bottomClearance: Gd
+    })
   ), o?.pagination && o.pagination.pages.length > 1) {
-    const c = N(
-      '[data-data-table="website-visitors-sales"] [data-table-page-button="2"]',
+    const l = O(
+      '[data-data-table="website-visitors-sales"] [data-page-button-role="next"]',
       "center"
-    ), d = N(
-      '[data-data-table="website-visitors-sales"] [data-table-action="power-dialer"]',
-      "center",
-      { desktop: { x: 5, y: 0 }, tablet: { x: 4, y: 0 }, mobile: { x: 3, y: 0 } },
-      !1
-    ), u = N(
+    ), d = O(
       '[data-data-table="website-visitors-sales"] [data-table-action="email-sequence"]',
       "center",
       {},
       !1
     );
-    l.push(
+    c.push(
       {
         kind: "cursorMove",
-        target: c,
-        options: { mode: "pointer", intent: "click", speed: "normal", label: "open-visitor-page-2" },
-        at: "+=0.2"
+        target: l,
+        options: Hd,
+        at: `+=${Yd}`
       },
-      { kind: "cursorClick", at: "-=0.02" },
-      { kind: "custom", build: () => r.chat.dataTablePage("website-visitors-sales", 2), at: "-=0.03" },
+      { kind: "cursorClick", at: "+=0.08" },
+      { kind: "custom", build: () => r.chat.dataTablePage("website-visitors-sales", 2), at: "-=0.02" },
       { kind: "status", text: "ready to engage", at: "+=0.1" },
-      { kind: "custom", build: () => r.timeline().to({}, { duration: E.beat + 0.58 }) },
+      { kind: "custom", build: () => r.timeline().to({}, { duration: M.beat }) },
       {
         kind: "cursorMove",
         target: d,
-        options: {
-          mode: "pointer",
-          intent: "hover",
-          speed: "slow",
-          durationScale: 1.45,
-          label: "hover-power-dialer"
-        },
-        at: "+=0.42"
-      },
-      { kind: "custom", build: () => r.timeline().to({}, { duration: E.beat + 2 }), at: "+=0.12" },
-      {
-        kind: "cursorMove",
-        target: u,
-        options: { mode: "pointer", intent: "hover", speed: "slow", label: "hover-email-sequence" }
+        options: zd,
+        at: "+=0.12"
       },
       { kind: "cursorClick", at: "+=0.18" },
+      { kind: "custom", build: () => r.chat.dataTableActionSelected("website-visitors-sales", "email-sequence"), at: "<" },
       { kind: "status", text: "building outreach sequence", at: "<" }
     );
   }
-  if (i && l.push(Fa(i, { hold: E.thinkingMedium, at: "+=0.06" })), s) {
-    const [c, d] = io(s, 2), u = N(
-      `[data-sequence-person-card="visitor-outreach-sequences:${c}"]`,
+  if (i && c.push(Za(i, {
+    hold: M.thinkingMedium,
+    at: "+=0.06",
+    cursorMotion: !1
+  })), s) {
+    const [l, d] = Eo(s, 2), u = O(
+      `[data-sequence-person-card="visitor-outreach-sequences:${l}"]`,
       "center"
-    ), h = N(
+    ), h = O(
       `[data-sequence-person-card="visitor-outreach-sequences:${d}"]`,
       "center"
-    ), g = N(
+    ), g = O(
       '[data-sequence-kickoff="visitor-outreach-sequences"]',
       "center"
     );
-    l.push(
-      { kind: "sequenceEngagement", config: s, at: "-=0.02" },
-      { kind: "custom", build: () => r.timeline().to({}, { duration: E.beat + 0.24 }), at: "+=0.04" },
+    c.push(
+      { kind: "custom", build: () => r.chat.sequenceEngagement(s), at: "-=0.02" },
+      { kind: "custom", build: () => r.timeline().to({}, { duration: M.beat }), at: "+=0.04" },
+      {
+        kind: "custom",
+        build: () => r.chat.sequencePersonCardIntoView("visitor-outreach-sequences", l),
+        at: "+=0.02"
+      },
       {
         kind: "cursorMove",
         target: u,
-        options: { mode: "pointer", intent: "click", speed: "normal", label: "preview-second-sequence" }
+        options: { ...lr, label: "preview-second-sequence" },
+        at: "+=0.02"
       },
-      { kind: "cursorClick", at: "-=0.02" },
-      { kind: "custom", build: () => r.chat.sequencePerson("visitor-outreach-sequences", c), at: "-=0.03" },
-      { kind: "custom", build: () => r.timeline().to({}, { duration: E.beat + 0.24 }), at: "+=0.04" },
+      { kind: "cursorClick", at: "+=0.08" },
+      { kind: "custom", build: () => r.chat.sequencePerson("visitor-outreach-sequences", l), at: "-=0.03" },
+      { kind: "custom", build: () => r.timeline().to({}, { duration: M.beat }), at: "+=0.04" },
+      {
+        kind: "custom",
+        build: () => r.chat.sequencePersonCardIntoView("visitor-outreach-sequences", d),
+        at: "+=0.02"
+      },
       {
         kind: "cursorMove",
         target: h,
-        options: { mode: "pointer", intent: "click", speed: "normal", label: "preview-third-sequence" }
+        options: { ...lr, label: "preview-third-sequence" },
+        at: "+=0.02"
       },
-      { kind: "cursorClick", at: "-=0.02" },
+      { kind: "cursorClick", at: "+=0.08" },
       { kind: "custom", build: () => r.chat.sequencePerson("visitor-outreach-sequences", d), at: "-=0.03" },
-      { kind: "custom", build: () => r.timeline().to({}, { duration: E.beat + 0.28 }), at: "+=0.04" },
-      ...fo("visitor-outreach-sequences", [1, 2, 3], "+=0.22"),
+      { kind: "custom", build: () => r.timeline().to({}, { duration: M.beat + 0.28 }), at: "+=0.04" },
+      ...Uo("visitor-outreach-sequences", [1, 2, 3], "+=0.22"),
       {
         kind: "cursorMove",
         target: g,
-        options: { mode: "pointer", intent: "click", speed: "normal", label: "kickoff-visitor-sequence" }
+        options: { ...Vd, label: "kickoff-visitor-sequence" }
       },
-      { kind: "cursorClick", at: "-=0.02" },
-      { kind: "custom", build: () => r.chat.sequenceKickoff("visitor-outreach-sequences"), at: "-=0.04" },
+      { kind: "cursorClick", at: "+=0.12" },
+      { kind: "custom", build: () => r.chat.sequenceKickoff("visitor-outreach-sequences"), at: "-=0.02" },
       { kind: "custom", build: () => r.chat.enrollmentProgress({ total: 50 }), at: "+=0.08" }
     );
   }
-  return Ie(r, l);
+  return He(r, c);
 }
-function ld(r, e) {
-  const t = He(e, "file"), a = He(e, "thinking"), i = He(e, "assistant"), n = e.steps.filter(
-    (m) => m.kind === "component" && m.component?.kind === "table"
-  ), o = a ? e.steps.indexOf(a) : -1, s = n.find((m) => o >= 0 && e.steps.indexOf(m) < o), l = [...n].reverse().find((m) => m !== s), c = t?.text || "may_webinar_attendees.csv", d = cd(t, s?.component ?? l?.component), u = r.chat.prepareCsvDropArea(), h = r.chat.prepareCursorFile(c, r.cursor), g = N("[data-chat-shell]", "center", {
+function nu(r, e) {
+  const t = Je(e, "file"), a = Je(e, "thinking"), i = Je(e, "assistant"), n = e.steps.filter(
+    (w) => w.kind === "component" && w.component?.kind === "table"
+  ), o = a ? e.steps.indexOf(a) : -1, s = n.find((w) => o >= 0 && e.steps.indexOf(w) < o), c = [...n].reverse().find((w) => w !== s), l = t?.text || "may_webinar_attendees.csv", d = ru(t, s?.component ?? c?.component), u = r.chat.prepareCsvDropArea(), h = r.chat.prepareCursorFile(l, r.cursor), g = O("[data-chat-shell]", "center", {
     desktop: { x: 0, y: 82 },
     tablet: { x: 0, y: 72 },
     mobile: { x: 0, y: 64 }
   });
-  return Ie(r, [
+  return He(r, [
     { kind: "status", text: "waiting for CSV" },
-    { kind: "custom", build: () => h.startFollow(), at: `+=${E.fileGrab}` },
+    { kind: "custom", build: () => h.startFollow(), at: `+=${M.fileGrab}` },
     { kind: "custom", build: () => u.revealWhenCursorEnters(r.cursor), at: "<" },
     {
       kind: "cursorMove",
@@ -7817,42 +8921,53 @@ function ld(r, e) {
       at: "<"
     },
     { kind: "custom", build: () => u.activate(), at: "<+=0.02" },
-    { kind: "custom", build: () => r.timeline().to({}, { duration: E.beat }) },
+    { kind: "custom", build: () => r.timeline().to({}, { duration: M.beat }) },
     { kind: "custom", build: () => u.complete() },
     { kind: "custom", build: () => h.releaseAtDrop(), at: "<" },
-    { kind: "custom", build: () => h.landAsUploadedFile(c, d), at: "<" },
-    ...s ? [{ kind: "dataTable", config: ea(s.component, "raw-webinar-attendees"), at: "+=0.08" }] : [],
+    {
+      kind: "custom",
+      build: () => h.landAsUploadedFile(l, d, { preserveScroll: !0 }),
+      at: "<"
+    },
+    ...s ? [{
+      kind: "dataTable",
+      config: { ...ga(s.component, "raw-webinar-attendees"), preserveScroll: !0 },
+      at: `+=${M.beat}`
+    }] : [],
     { kind: "status", text: "Cleaning CSV", at: "<" },
-    ...a ? [Fa(a, { hold: 0.34, at: `+=${E.beat}` })] : [],
+    ...a ? [Za(a, {
+      hold: 0.34,
+      at: `+=${M.beat}`
+    })] : [],
     ...i ? [{ kind: "assistant", text: i.text }] : [],
-    ...l ? [{ kind: "dataTable", config: yd(ea(l.component, "cleaned-webinar-attendees")), at: "-=0.04" }] : [],
-    et(Ue.bottomRight, "+=0.18")
+    ...c ? [{ kind: "dataTable", config: mu(ga(c.component, "cleaned-webinar-attendees")), at: "-=0.04" }] : [],
+    dt(Xe.bottomRight, "+=0.18")
   ]);
 }
-function cd(r, e) {
-  const t = dd(e);
+function ru(r, e) {
+  const t = ou(e);
   if (t) return t;
   const a = r?.note?.trim();
-  return !a || ud(a) ? "CSV uploaded" : a;
+  return !a || su(a) ? "CSV uploaded" : a;
 }
-function dd(r) {
+function ou(r) {
   if (!r || r.kind !== "table") return null;
   const e = r.count?.trim();
   if (e) return e;
   const t = r.rows.length;
   return t <= 0 ? null : `${t} ${t === 1 ? "record" : "records"}`;
 }
-function ud(r) {
+function su(r) {
   return /user-side message|after release|drop overlay|appears as/i.test(r);
 }
-function hd(r) {
-  const e = [], t = r.id === "data-marketplace" ? pd(r.steps) : r.steps;
+function lu(r) {
+  const e = [], t = r.id === "data-marketplace" ? cu(r.steps) : r.steps;
   let a = 0;
   for (const i of t)
-    a += i.kind === "user" ? 1 : 0, yo(e, r.id, i, a === 1);
+    a += i.kind === "user" ? 1 : 0, Qo(e, r.id, i, a === 1);
   return e;
 }
-function pd(r) {
+function cu(r) {
   const e = [];
   let t = 0;
   for (; t < r.length; ) {
@@ -7864,11 +8979,11 @@ function pd(r) {
     const i = [];
     for (; t < r.length && r[t].kind === "thinking"; )
       i.push(r[t]), t += 1;
-    e.push(i.length > 1 ? gd(i) : a);
+    e.push(i.length > 1 ? du(i) : a);
   }
   return e;
 }
-function gd(r) {
+function du(r) {
   const e = r[0], a = r.flatMap(
     (i) => i.thinking?.items.length ? i.thinking.items : [{
       label: i.text || "Thinking",
@@ -7886,12 +9001,12 @@ function gd(r) {
     note: a[0]?.detail || e.note,
     thinking: {
       title: e.thinking?.title || "Thinking",
-      elapsed: Na(a.length),
+      elapsed: ln(a.length),
       items: a
     }
   };
 }
-function yo(r, e, t, a = !1) {
+function Qo(r, e, t, a = !1) {
   if (t.kind === "status" && t.text) {
     r.push({ kind: "status", text: t.text });
     return;
@@ -7900,11 +9015,11 @@ function yo(r, e, t, a = !1) {
     r.push({
       kind: "prompt",
       text: t.text,
-      duration: To(t.text),
-      sendLabel: `send-${ne(e)}-${r.length}`,
+      duration: es(t.text),
+      sendLabel: `send-${le(e)}-${r.length}`,
       fromEntry: a,
       statusAfter: t.note || void 0,
-      at: a ? void 0 : `+=${E.beat}`
+      at: a ? void 0 : `+=${M.beat}`
     });
     return;
   }
@@ -7913,32 +9028,32 @@ function yo(r, e, t, a = !1) {
     return;
   }
   if (t.kind === "thinking") {
-    r.push(Fa(t, { hold: E.thinkingMedium }));
+    r.push(Za(t, { hold: M.thinkingMedium }));
     return;
   }
   if (t.kind === "file" && t.text) {
     r.push({ kind: "custom", build: (i) => i.chat.uploadedFileMessage(t.text, t.note || "uploaded") });
     return;
   }
-  t.kind !== "component" || !t.component || md(r, e, t);
+  t.kind !== "component" || !t.component || uu(r, e, t);
 }
-function md(r, e, t) {
+function uu(r, e, t) {
   const a = t.component;
   if (a.kind === "table") {
-    const i = ea(a, `${e}-${t.id}`);
-    e === "data-marketplace" && xd(i), kd(e, t, i) && (i.scrollAlign = "equal-inset"), r.push({ kind: "dataTable", config: i, at: "-=0.04" });
+    const i = ga(a, `${e}-${t.id}`);
+    e === "data-marketplace" && wu(i), Au(e, t, i) && (i.scrollAlign = "equal-inset"), r.push({ kind: "dataTable", config: i, at: "-=0.04" });
     return;
   }
   if (a.kind === "strategyCards") {
-    r.push({ kind: "strategyPlans", plans: vo(a), at: "-=0.04" });
+    r.push({ kind: "strategyPlans", plans: jo(a), at: "-=0.04" });
     return;
   }
   if (a.kind === "enrichment") {
-    r.push({ kind: "enrichmentPanel", config: Ld(a), at: "+=0.12" });
+    r.push({ kind: "enrichmentPanel", config: Pu(a), at: "+=0.12" });
     return;
   }
   if (a.kind === "dataSources") {
-    const i = _o(a);
+    const i = Ko(a);
     r.push({
       kind: e === "data-marketplace" ? "marketingDataSourcesGrid" : "dataSourcesGrid",
       config: i,
@@ -7947,53 +9062,57 @@ function md(r, e, t) {
     return;
   }
   if (a.kind === "uploadedFiles") {
-    r.push({ kind: "custom", build: (i) => i.chat.uploadedFilesMessage(Ao(a)), at: "-=0.04" });
+    r.push({ kind: "custom", build: (i) => i.chat.uploadedFilesMessage(Xo(a)), at: "-=0.04" });
     return;
   }
   if (a.kind === "mailboxConnection") {
-    ko(r, So(a));
+    Zo(r, Jo(a));
     return;
   }
   if (a.kind === "styleProfile") {
-    const i = Nd(a);
+    const i = Mu(a);
     r.push({
       kind: "custom",
       build: (n) => n.chat.outreachStyleProfile(i, { scrollAlign: "equal-inset" }),
       at: "-=0.02"
-    }), e === "crm-update" && r.push(...go(i.id));
+    }), e === "crm-update" && r.push(...No(i.id));
     return;
   }
   if (a.kind === "proximityList") {
-    r.push({ kind: "custom", build: (i) => i.chat.proximityLeadList(Co(a)), at: "-=0.04" });
+    r.push({ kind: "custom", build: (i) => i.chat.proximityLeadList($o(a)), at: "-=0.04" });
     return;
   }
   if (a.kind === "personalizationSwipeGame") {
-    r.push({ kind: "personalizationSwipeGame", config: Od(a), at: "+=0.06" });
+    r.push({ kind: "personalizationSwipeGame", config: Du(a), at: "+=0.06" });
     return;
   }
   if (a.kind === "sequenceEngagement") {
-    r.push({ kind: "sequenceEngagement", config: Ki(a, `${e}-${t.id}`), at: "-=0.02" });
+    r.push({ kind: "sequenceEngagement", config: hn(a, `${e}-${t.id}`), at: "-=0.02" });
     return;
   }
   r.push({ kind: "assistant", text: [a.title, ...a.items].filter(Boolean).join(`
 `) });
 }
-function Fa(r, e = {}) {
+function Za(r, e = {}) {
   return {
     kind: "thinking",
-    thinking: fd(r.thinking, r.text, r.note),
+    thinking: hu(r.thinking, r.text, r.note),
     hold: e.hold,
+    preserveScroll: e.preserveScroll,
+    cursorMotion: e.cursorMotion,
     at: e.at
   };
 }
-function fd(r, e, t) {
+function hu(r, e, t) {
   return r?.items.length ? {
     title: r.title,
     elapsed: r.elapsed,
     items: r.items.map((a) => ({
       label: a.label,
       detail: a.detail,
-      disclosure: a.disclosure
+      disclosure: a.disclosure,
+      duration: a.duration,
+      toolCalls: a.toolCalls
     }))
   } : {
     items: [
@@ -8004,14 +9123,14 @@ function fd(r, e, t) {
     ]
   };
 }
-const wd = {
+const pu = {
   detailKey: "connectorDetail",
   avatarToneKey: "connectorAvatarTone",
   avatarUrlKey: "connectorAvatarUrl",
   avatarKey: "connectorAvatar",
   sourceKey: "connectorSource",
   companyKey: "connectorCompany"
-}, bd = {
+}, gu = {
   "dev singh": { title: "RevOps Lead @ Brex", company: "Brex" },
   "evan brooks": { title: "Growth Lead @ PayPal", company: "PayPal" },
   "jenna park": { title: "VP Marketing @ Square", company: "Square" },
@@ -8020,89 +9139,80 @@ const wd = {
   "owen lee": { title: "Principal @ Sequoia", company: "Sequoia" },
   "priya shah": { title: "VP Sales @ Plaid", company: "Plaid" },
   "rachel cho": { title: "Head of Sales @ Stripe", company: "Stripe" },
-  "sam hollis": { title: "VP Sales @ Ramp", company: "Ramp" }
+  "sam hollis": { title: "VP Sales @ Waterfall", company: "Waterfall" }
 };
-function ea(r, e) {
-  const t = Cd(r, e), a = r.rows.filter((o) => o.some((s) => s.trim())).map((o, s) => Rd(o, t, s)), i = r.pagination?.pageSize ?? Ad(r.pagination?.ranges) ?? Math.min(10, a.length || 10), n = r.pagination?.ranges.map((o, s) => ({
-    page: s + 1,
-    range: o,
-    rows: Sd(a, o, s, i)
-  })).filter((o) => o.rows.length) ?? [];
+function ga(r, e) {
+  const t = yu(r, e), a = r.rows.filter((s) => s.some((c) => c.trim())).map((s, c) => Su(s, t, c)), i = Yo(r.pagination), n = Go(r.pagination?.pageSize) ?? Nd(i) ?? Math.min(10, a.length || 10), o = i.map((s, c) => ({
+    page: c + 1,
+    range: s,
+    rows: Fd(a, s, c, n)
+  })).filter((s) => s.rows.length);
   return {
-    id: e === "website-visitors-sales" ? e : ne(r.title || e),
+    id: e === "website-visitors-sales" ? e : le(r.title || e),
     title: r.title,
     eyebrow: r.eyebrow,
     count: r.count,
-    variant: t.variant ?? Bd(r),
-    footerClearance: Pd(e),
+    variant: t.variant ?? Ru(r),
+    footerClearance: ku(e),
     columns: t.columns,
-    rows: n[0]?.rows ?? a,
-    actions: r.actions?.map(qd),
-    pagination: n.length > 1 ? {
-      pageSize: i,
-      totalRows: Fd(r, a.length),
+    rows: o[0]?.rows ?? a,
+    actions: r.actions?.map(Eu),
+    pagination: o.length > 1 ? {
+      pageSize: n,
+      totalRows: Iu(r, a.length),
       activePage: 1,
-      pages: n
+      pages: o
     } : void 0
   };
 }
-function yd(r) {
+function mu(r) {
   return {
     ...r,
     scrollAnchor: "previous-message"
   };
 }
-function xd(r) {
-  r.rows.forEach((e) => Hn(e.values)), r.pagination?.pages.forEach((e) => {
-    e.rows.forEach((t) => Hn(t.values));
+function wu(r) {
+  r.rows.forEach((e) => cr(e.values)), r.pagination?.pages.forEach((e) => {
+    e.rows.forEach((t) => cr(t.values));
   });
 }
-function Hn(r) {
-  r.name && "company" in r && (r.company = "Stripe"), r.prospectDetail && (r.prospectDetail = vd(r.prospectDetail)), r.connector && !r.connectorDetail && (r.connector = _d(r.connector));
+function cr(r) {
+  r.name && "company" in r && (r.company = aa), r.prospectDetail && (r.prospectDetail = fu(r.prospectDetail)), r.connector && !r.connectorDetail && (r.connector = bu(r.connector));
 }
-function vd(r) {
+function fu(r) {
   const e = r.trim();
   return e ? /(?:@|\bat\s+)[A-Z][A-Za-z0-9& .-]+(?:\s*\([^()]*\))?$/i.test(e) ? e.replace(
     /(?:@|\bat\s+)([A-Z][A-Za-z0-9& .-]+?)(\s*\([^()]*\))?$/i,
-    (t, a, i = "") => `at Stripe${Gn(i)}`
+    (t, a, i = "") => `at ${aa}${dr(i)}`
   ) : /,\s*[A-Z][A-Za-z0-9& .-]+(?:\s*\([^()]*\))?$/.test(e) ? e.replace(
     /,\s*([A-Z][A-Za-z0-9& .-]+?)(\s*\([^()]*\))?$/,
-    (t, a, i = "") => `, Stripe${Gn(i)}`
-  ) : /stripe/i.test(e) ? e : `${e} at Stripe` : "";
+    (t, a, i = "") => `, ${aa}${dr(i)}`
+  ) : new RegExp(aa, "i").test(e) ? e : `${e} at ${aa}` : "";
 }
-function Gn(r) {
+function dr(r) {
   const e = r.trim();
   return e ? ` ${e}` : "";
 }
-function _d(r) {
-  const e = Ci(r);
+function bu(r) {
+  const e = Ui(r);
   return !e.name || !e.title ? r : `${e.name} (${e.title})${e.context ? ` — ${e.context}` : ""}`;
 }
-function Ad(r) {
-  const t = r?.[0]?.match(/^\s*(\d+)\s*[-–]\s*(\d+)/);
-  if (!t) return null;
-  const a = Number(t[1]), n = Number(t[2]) - a + 1;
-  return Number.isFinite(n) && n > 0 ? n : null;
+function Yo(r) {
+  return Vo(r?.ranges);
 }
-function Sd(r, e, t, a) {
-  const i = e.match(/^\s*(\d+)\s*[-–]\s*(\d+)/);
-  if (!i) return r.slice(t * a, (t + 1) * a);
-  const n = Number(i[1]), o = Number(i[2]);
-  return !Number.isFinite(n) || !Number.isFinite(o) || n <= 0 || o < n ? r.slice(t * a, (t + 1) * a) : r.slice(n - 1, o);
-}
-function kd(r, e, t) {
+function Au(r, e, t) {
   if (r !== "data-marketplace") return !1;
-  const a = ne(t.title);
-  return e.id === "data-marketplace-step-3" || e.id === "data-marketplace-step-6" || a === "new-hires-at-dev-tool-companies" || a === "raised-in-the-past-three-months" || a === "warmest-paths-into-stripe-active-in-past-90-days";
+  const a = le(t.title);
+  return e.id === "data-marketplace-step-3" || e.id === "data-marketplace-step-6" || a === "best-connections-into-stripe" || a === "best-connections-into-vercel" || a === "new-hires-at-dev-tool-companies" || a === "raised-in-the-past-three-months" || a === "warmest-paths-into-vercel-active-in-past-90-days" || a === "warmest-paths-into-stripe-active-in-past-90-days";
 }
-function Cd(r, e) {
-  const t = r.columns, a = t.findIndex((d) => d.trim().toLowerCase() === "name"), i = a >= 0 ? t.findIndex((d, u) => u > a && /^role\b/i.test(d.trim())) : -1, n = a >= 0 && i >= 0, o = xo(e) ? t.findIndex((d) => d.trim().toLowerCase() === "title") : -1, s = n ? i : o >= 0 ? o : void 0, l = t.map((d, u) => u).filter((d) => d !== i && d !== o), c = l.map((d) => {
+function yu(r, e) {
+  const t = r.columns, a = t.findIndex((d) => d.trim().toLowerCase() === "name"), i = a >= 0 ? t.findIndex((d, u) => u > a && /^role\b/i.test(d.trim())) : -1, n = a >= 0 && i >= 0, o = Wo(e) ? t.findIndex((d) => d.trim().toLowerCase() === "title") : -1, s = n ? i : o >= 0 ? o : void 0, c = t.map((d, u) => u).filter((d) => d !== i && d !== o), l = c.map((d) => {
     const u = t[d] || `Column ${d + 1}`;
     if (n && d === a)
       return {
         key: "name",
         label: "Prospect",
-        width: pe.foldedName,
+        width: fe.foldedName,
         cellType: "person"
       };
     if (n && /^via\s+connector\b/i.test(u.trim()))
@@ -8112,83 +9222,82 @@ function Cd(r, e) {
         width: "minmax(0,1.3fr)",
         cellType: "mutualConnection"
       };
-    const h = Ed(e, u), g = h.key ?? ne(u || `column-${d + 1}`);
+    const h = xu(e, u), g = h.key ?? le(u || `column-${d + 1}`);
     return {
       key: g,
       label: u,
-      width: h.width ?? Td(u, n),
-      cellType: h.cellType ?? Md(e, u, g),
+      width: h.width ?? vu(u, n),
+      cellType: h.cellType ?? _u(e, u, g),
       person: h.person
     };
   });
   return {
-    columns: c,
-    sourceIndexes: l,
+    columns: l,
+    sourceIndexes: c,
     foldedRoleIndex: s,
-    mutualConnectionKey: c.some((d) => d.key === "mutualConnection") ? "mutualConnection" : void 0,
-    connectorPersonKey: c.some((d) => d.key === "connector" && d.cellType === "person") ? "connector" : void 0,
-    variant: c.some((d) => d.key === "mutualConnection") ? "connections" : void 0
+    mutualConnectionKey: l.some((d) => d.key === "mutualConnection") ? "mutualConnection" : void 0,
+    connectorPersonKey: l.some((d) => d.key === "connector" && d.cellType === "person") ? "connector" : void 0,
+    variant: l.some((d) => d.key === "mutualConnection") ? "connections" : void 0
   };
 }
-function Td(r, e) {
+function vu(r, e) {
   const t = r.toLowerCase();
   if (e)
-    return t.includes("connector") || t.includes("connection") ? pe.foldedConnector : t.includes("email") ? pe.foldedEmail : t.includes("mobile") ? pe.foldedMobile : pe.foldedDefault;
-  if (t === "email" || t === "work email") return pe.emailContent;
+    return t.includes("connector") || t.includes("connection") ? fe.foldedConnector : t.includes("email") ? fe.foldedEmail : t.includes("mobile") ? fe.foldedMobile : fe.foldedDefault;
+  if (t === "email" || t === "work email") return fe.emailContent;
 }
-function Ed(r, e) {
+function xu(r, e) {
   const t = e.trim().toLowerCase();
   if (r === "raw-webinar-attendees") {
-    if (t === "name") return { width: pe.rawName, cellType: "text" };
-    if (t === "email") return { width: pe.rawEmail };
-    if (t === "company") return { width: pe.rawCompany };
+    if (t === "name") return { width: fe.rawName, cellType: "text" };
+    if (t === "email") return { width: fe.rawEmail };
+    if (t === "company") return { width: fe.rawCompany };
   }
-  if (xo(r)) {
-    if (t === "full name") return { key: "fullName", width: pe.cleanName, cellType: "person" };
-    if (t === "work email") return { width: pe.cleanEmail };
-    if (t === "company") return { width: pe.cleanCompany };
+  if (Wo(r)) {
+    if (t === "full name") return { key: "fullName", width: fe.cleanName, cellType: "person" };
+    if (t === "work email") return { width: fe.cleanEmail };
+    if (t === "company") return { width: fe.cleanCompany };
   }
   return t === "connector" ? {
     key: "connector",
-    width: pe.foldedConnector,
+    width: fe.foldedConnector,
     cellType: "person",
-    person: wd
+    person: pu
   } : {};
 }
-function Md(r, e, t) {
+function _u(r, e, t) {
   const a = e.trim().toLowerCase();
   if (r !== "raw-webinar-attendees" && (t === "name" || t === "contact" || t === "fullName" || a === "name" || a === "prospect" || a === "contact" || a === "full name"))
     return "person";
 }
-function Pd(r) {
-  return r === "website-visitors-sales" ? 88 : void 0;
+function ku(r) {
+  return r === "website-visitors-sales" ? 28 : void 0;
 }
-function xo(r) {
+function Wo(r) {
   return r === "cleaned-webinar-attendees" || r === "clean-webinar-attendees";
 }
-function Rd(r, e, t) {
+function Su(r, e, t) {
   const a = {};
   if (e.columns.forEach((i, n) => {
     a[i.key] = r[e.sourceIndexes[n]] ?? "";
   }), e.foldedRoleIndex !== void 0 && (a.prospectDetail = r[e.foldedRoleIndex] ?? ""), e.mutualConnectionKey) {
-    const i = Ci(a[e.mutualConnectionKey] ?? ""), n = Dd(t);
+    const i = Ui(a[e.mutualConnectionKey] ?? ""), n = Cu(i.context);
     a[e.mutualConnectionKey] = i.name, a.mutualConnectionDetail = i.title, a.mutualConnectionContext = i.context, a.mutualConnectionCompany = i.company, i.name && n && (a.mutualConnectionBadge = n);
   }
   if (e.connectorPersonKey) {
-    const i = Ci(a[e.connectorPersonKey] ?? "");
+    const i = Ui(a[e.connectorPersonKey] ?? "");
     a[e.connectorPersonKey] = i.name, a.connectorDetail = i.title, a.connectorCompany = i.company;
   }
   return {
-    id: `${ne(r[0] || "row")}-${t + 1}`,
+    id: `${le(r[0] || "row")}-${t + 1}`,
     values: a
   };
 }
-function Dd(r) {
-  const e = [2, 3, 7, null, 1, 12, 4, 5, null, 8, 6, 10], t = e[r % e.length];
-  return t === null ? null : `+${t} more`;
+function Cu(r) {
+  return r.trim() || null;
 }
-function Ci(r) {
-  const [e = "", t = ""] = r.split(/\s+[—–]\s+/, 2), a = e.trim().match(/^(.+?)(?:\s*\((.+)\))?$/), i = a?.[1]?.trim() || r.trim(), n = t.trim(), o = bd[ne(i).replace(/-/g, " ")], s = Id(a?.[2]?.trim() || "", o, n);
+function Ui(r) {
+  const [e = "", t = ""] = r.split(/\s+[—–]\s+/, 2), a = e.trim().match(/^(.+?)(?:\s*\((.+)\))?$/), i = a?.[1]?.trim() || r.trim(), n = t.trim(), o = gu[le(i).replace(/-/g, " ")], s = Tu(a?.[2]?.trim() || "", o, n);
   return {
     name: i,
     title: s.title,
@@ -8196,26 +9305,26 @@ function Ci(r) {
     company: s.company
   };
 }
-function Id(r, e, t) {
-  const a = Vn(t), i = a && !/^(?:Stanford GSB|Wharton)$/i.test(a);
+function Tu(r, e, t) {
+  const a = ur(t), i = a && !/^(?:Stanford GSB|Wharton)$/i.test(a);
   return r && i && /\bUnify\b/i.test(r) ? {
     title: r.replace(/\bUnify\b/g, a),
     company: a
   } : e && (!r || /\bUnify\b/i.test(r)) ? e : r ? {
     title: r,
-    company: Vn(r) || a || ""
+    company: ur(r) || a || ""
   } : {
     title: e?.title ?? (a ? `Warm intro @ ${a}` : ""),
     company: e?.company ?? a
   };
 }
-function Vn(r) {
+function ur(r) {
   const e = r.trim();
   if (!e) return "";
   const t = e.match(/(?:@|\bat\s+|Both at |Shared investor:\s*)([A-Z][A-Za-z0-9& .-]+?)(?:\s*\(|$)/);
   return t?.[1] ? t[1].trim() : /Wharton/i.test(e) ? "Wharton" : /Stanford/i.test(e) ? "Stanford GSB" : "";
 }
-function qd(r) {
+function Eu(r) {
   const e = r.label.toLowerCase().includes("dial") ? "power-dialer" : "email-sequence";
   return {
     id: e,
@@ -8224,31 +9333,31 @@ function qd(r) {
     badge: r.badge || void 0
   };
 }
-function vo(r) {
+function jo(r) {
   return r.cards.map((e, t) => ({
-    id: ne(e.label || e.title || `strategy-${t + 1}`),
+    id: le(e.label || e.title || `strategy-${t + 1}`),
     label: e.label,
     title: e.title,
     summary: e.summary,
     bullets: e.summary.split(/\n+/).map((a) => a.trim()).filter(Boolean)
   }));
 }
-function Ld(r) {
+function Pu(r) {
   return {
-    id: ne(r.title || "enrichment"),
+    id: le(r.title || "enrichment"),
     title: r.title,
     subtitle: r.subtitle,
     modeLabel: "Balanced",
     fields: r.fields
   };
 }
-function _o(r) {
+function Ko(r) {
   return {
-    id: ne(r.title || "data-sources"),
+    id: le(r.title || "data-sources"),
     title: r.title,
     subtitle: r.subtitle,
     sources: r.sources.map((e, t) => ({
-      id: ne(e.name || `source-${t + 1}`),
+      id: le(e.name || `source-${t + 1}`),
       category: e.category,
       name: e.name,
       detail: e.detail,
@@ -8256,16 +9365,16 @@ function _o(r) {
     }))
   };
 }
-function Ao(r) {
+function Xo(r) {
   return r.files.map((e) => ({
     name: e.name,
     detail: e.detail,
     type: e.type
   }));
 }
-function So(r) {
+function Jo(r) {
   return {
-    id: ne(r.title || "mailbox-connection"),
+    id: le(r.title || "mailbox-connection"),
     title: r.title,
     subtitle: r.subtitle,
     provider: r.provider,
@@ -8280,43 +9389,43 @@ function So(r) {
     signals: r.signals
   };
 }
-function ko(r, e) {
-  r.push(...po(e));
+function Zo(r, e) {
+  r.push(...Oo(e));
 }
-function Nd(r) {
+function Mu(r) {
   return {
-    id: ne(r.title || "style-profile"),
+    id: le(r.title || "style-profile"),
     title: r.title,
     subtitle: r.subtitle,
     signals: r.signals,
     examples: r.examples
   };
 }
-function Co(r) {
+function $o(r) {
   return {
-    id: ne(r.title || "proximity-list"),
+    id: le(r.title || "proximity-list"),
     title: r.title,
     subtitle: r.subtitle,
     leads: r.leads
   };
 }
-function Od(r) {
+function Du(r) {
   return {
-    id: ne(r.title || "personalization-swipe"),
+    id: le(r.title || "personalization-swipe"),
     title: r.title,
     subtitle: r.subtitle,
     prompt: r.prompt,
     labels: { avoid: "avoid", use: "use" },
     completeLabel: "personalization rules learned",
     signals: r.signals.map((e, t) => ({
-      id: ne(e.label || `signal-${t + 1}`),
+      id: le(e.label || `signal-${t + 1}`),
       label: e.label,
       detail: e.detail,
       decision: e.decision
     }))
   };
 }
-function Ki(r, e) {
+function hn(r, e) {
   return {
     id: e,
     title: r.title,
@@ -8337,43 +9446,100 @@ function Ki(r, e) {
     }))
   };
 }
-function He(r, e) {
+function Je(r, e) {
   return r.steps.find((t) => t.kind === e);
 }
-function ta(r, e) {
+function ma(r, e) {
   return r.steps.find(
     (t) => t.kind === "component" && t.component?.kind === e
   );
 }
-function To(r) {
-  return r.length > 72 ? E.typeLong : r.length > 38 ? E.typeMedium : E.typeShort;
+function es(r) {
+  return r.length > 72 ? M.typeLong : r.length > 38 ? M.typeMedium : M.typeShort;
 }
-function Bd(r) {
+function Ru(r) {
   const e = `${r.title} ${r.eyebrow ?? ""}`.toLowerCase();
   if (e.includes("enrich")) return "enriched";
   if (e.includes("filter") || e.includes("raised")) return "filtered";
 }
-function Fd(r, e) {
-  const t = r.pagination?.ranges ?? [], i = t[t.length - 1]?.match(/of\s+(\d+)/i);
-  return i ? Number(i[1]) : e;
+function Iu(r, e) {
+  const t = Yo(r.pagination), a = t[t.length - 1];
+  return un(a)?.total ?? e;
 }
-function ne(r) {
+function le(r) {
   return r.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "item";
 }
-const zd = [
-  "Researching the company profile",
-  "Learning the ICP and buyer roles",
-  "Reading blog posts for positioning",
-  "Scanning careers pages for priorities",
-  "Mapping current GTM signals"
-], Ud = [
+const qu = {
+  mode: "pointer",
+  intent: "hover",
+  speed: "slow",
+  duration: 1,
+  ease: "sine.inOut",
+  curve: 0.72,
+  overshoot: !1,
+  label: "hover-outreach-sequence"
+}, Bu = {
+  mode: "pointer",
+  intent: "click",
+  speed: "quick",
+  duration: Ie.paginationClick,
+  curve: 0.1,
+  ...Re,
+  label: "open-visitor-page-2"
+}, Lu = 96, Ou = 1.05, Nu = 0, hr = {
+  mode: "pointer",
+  intent: "click",
+  speed: "normal",
+  duration: Ie.previewCard,
+  curve: 0.16,
+  ...Re
+}, Fu = {
+  mode: "pointer",
+  intent: "click",
+  speed: "slow",
+  duration: Ie.sequenceEnroll,
+  curve: 0.18,
+  ...Re
+}, Uu = [
+  {
+    label: "Scraping vercel.com",
+    detail: "Reviewing the website, employee social profiles, looking at customer testimonials.",
+    duration: 8,
+    toolCalls: [
+      { label: "Reading vercel.com/", vendor: "Vercel" },
+      { label: "Reading vercel.com/cdn", vendor: "Vercel" },
+      { label: "Reading v0.app/", vendor: "v0" },
+      { label: "Reading vercel.com/customers", vendor: "Vercel" },
+      { label: "Reading vercel.com/ai", vendor: "Vercel" },
+      { label: "Reading vercel.com/enterprise", vendor: "Vercel" },
+      { label: "Reading vercel.com/blog", vendor: "Vercel" },
+      { label: "Reading vercel.com/press", vendor: "Vercel" }
+    ]
+  },
+  {
+    label: "Studying who you sell to",
+    detail: "Mapping personas, buying committees, seniority, department ownership, and account-fit signals from the available evidence."
+  },
+  {
+    label: "Understanding your value proposition",
+    detail: "Reading the homepage, product pages, and recent launches to learn what you sell, who you sell to, and why they buy."
+  },
+  {
+    label: "Mapping current GTM signals",
+    detail: "Connecting signal strength, audience fit, and likely urgency to decide which outbound motion is most likely to convert."
+  },
+  {
+    label: "Distilling insights into ideas",
+    detail: "Pulling together the company profile, ICP, value prop, and live signals to land on the highest-conviction ideas to test first."
+  }
+], zu = [
   {
     id: "founder-signal",
     label: "Idea one",
     title: "Target DevOps teams outgrowing AWS complexity",
     bullets: [
-      "I'll find mid-market SaaS companies with heavy AWS footprints and hiring DevOps",
-      "I'll run a 3-step email + LinkedIn sequence using the Notion infra efficiency angle"
+      "I’ll find mid-market SaaS companies with heavy AWS footprints and hiring DevOps",
+      "I’ll run a 3-step email + LinkedIn sequence using the Notion infra efficiency angle"
     ]
   },
   {
@@ -8381,8 +9547,8 @@ const zd = [
     label: "Idea two",
     title: "Intercept AI teams burning cycles on LLM infra",
     bullets: [
-      "I'll identify companies building AI products, showing LLM/ML engineering hiring signals",
-      "I'll craft a sequence leading with AI infra complexity pain and Vercel AI SDK as the path"
+      "I’ll identify companies building AI products, showing LLM/ML engineering hiring signals",
+      "I’ll craft a sequence leading with AI infra complexity pain and Vercel AI SDK as the path"
     ]
   },
   {
@@ -8390,15 +9556,15 @@ const zd = [
     label: "Idea three",
     title: "Hit e-commerce teams before peak season",
     bullets: [
-      "I'll find ecom and DTC brands with 50+ engineers and upcoming high-traffic events",
-      "I'll lead with PAIGE's Black Friday results in a short sequence timed to pre-peak urgency"
+      "I’ll find ecom and DTC brands with 50+ engineers and upcoming high-traffic events",
+      "I’ll lead with PAIGE’s Black Friday results in a short sequence timed to pre-peak urgency"
     ]
   }
-], Eo = [
+], ts = [
   { key: "name", label: "Name", width: "1.45fr", cellType: "person" },
   { key: "company", label: "Company", width: "1fr" },
   { key: "title", label: "Title", width: "1.45fr" }
-], Hd = [
+], Hu = [
   { key: "name", label: "Prospect", width: "minmax(220px,0.95fr)", cellType: "person" },
   { key: "email", label: "Work email", width: "minmax(190px,0.95fr)" },
   { key: "number", label: "Mobile", width: "minmax(150px,0.72fr)" },
@@ -8416,13 +9582,13 @@ const zd = [
       companyKey: "connectorCompany"
     }
   }
-], Wn = {
+], pr = {
   id: "dev-tool-new-hires",
   title: "New hires at dev-tool companies",
   eyebrow: "Natural language search",
   count: "8 records",
   scrollAlign: "equal-inset",
-  columns: Eo,
+  columns: ts,
   rows: [
     {
       id: "jamie-chen",
@@ -8513,14 +9679,14 @@ const zd = [
       }
     }
   ]
-}, Yn = {
+}, gr = {
   id: "recently-funded-dev-tools",
   title: "Raised in the past three months",
   eyebrow: "Filtered results",
   count: "3 records",
   variant: "filtered",
   scrollAlign: "equal-inset",
-  columns: Eo,
+  columns: ts,
   rows: [
     {
       id: "jamie-chen",
@@ -8567,7 +9733,7 @@ const zd = [
       }
     }
   ]
-}, Gd = {
+}, Vu = {
   id: "contact-enrichment",
   title: "I’m about to run an enrichment",
   subtitle: "Up to 84 credits could be spent across 2 fields on 14 records.",
@@ -8582,215 +9748,13 @@ const zd = [
       steps: ["Unify Data", "5-Step Waterfall", "FullEnrich"]
     }
   ]
-}, Qn = {
-  id: "data-marketplace-sources",
-  title: "Ask complex questions across diverse data sets",
-  subtitle: "Unify routes each search across the right partner sources for the job.",
-  sources: [
-    {
-      id: "hubspot",
-      category: "CRM",
-      name: "HubSpot",
-      detail: "CRM, marketing, and sales engagement records.",
-      logoSrc: "/data-logos/HubSpot.svg"
-    },
-    {
-      id: "salesforce",
-      category: "CRM",
-      name: "Salesforce",
-      detail: "CRM account, contact, and activity data.",
-      logoSrc: "/data-logos/Salesforce.svg"
-    },
-    {
-      id: "5x5",
-      category: "Core Data",
-      name: "Five by Five",
-      detail: "On-premise company and contact datasets.",
-      logoSrc: "/data-logos/5x5.svg"
-    },
-    {
-      id: "mixrank",
-      category: "Core Data",
-      name: "MixRank",
-      detail: "Company, app, and advertising intelligence.",
-      logoSrc: "/data-logos/mixrank.svg"
-    },
-    {
-      id: "pdl",
-      category: "Core Data",
-      name: "People Data Labs",
-      detail: "People and company records for core B2B coverage.",
-      logoSrc: "/data-logos/People%20Data%20Labs.svg"
-    },
-    {
-      id: "adyntel",
-      category: "Ad Intelligence",
-      name: "Adyntel",
-      detail: "Ad spend, messaging, and competitive advertising signals.",
-      logoSrc: "/data-logos/Adyntel.svg"
-    },
-    {
-      id: "adbeat",
-      category: "Ad Intelligence",
-      name: "Adbeat",
-      detail: "Digital ad creatives, publishers, and campaign intelligence.",
-      logoSrc: "/data-logos/Adbeat.svg"
-    },
-    {
-      id: "upriver",
-      category: "Ad Intelligence",
-      name: "Upriver",
-      detail: "Ad strategy and competitive demand generation signals.",
-      logoSrc: "/data-logos/UpRiver.svg"
-    },
-    {
-      id: "snitcher",
-      category: "Web Intent",
-      name: "Snitcher",
-      detail: "Website visitor identification and account intent.",
-      logoSrc: "/data-logos/Snitcher.svg"
-    },
-    {
-      id: "demandbase",
-      category: "Web Intent",
-      name: "Demandbase",
-      detail: "Account identification and intent signals.",
-      logoSrc: "/data-logos/Demandbase.svg"
-    },
-    {
-      id: "posthog",
-      category: "Product Analytics",
-      name: "PostHog",
-      detail: "Product events, usage, and conversion behavior.",
-      logoSrc: "/data-logos/PostHog.svg"
-    },
-    {
-      id: "segment",
-      category: "Product Analytics",
-      name: "Segment",
-      detail: "Customer event pipelines and audience traits.",
-      logoSrc: "/data-logos/Segment.svg"
-    },
-    {
-      id: "openmart",
-      category: "SMB Data",
-      name: "OpenMart",
-      detail: "Small business discovery and merchant data.",
-      logoSrc: "/data-logos/OpenMart.svg"
-    },
-    {
-      id: "store-leads",
-      category: "Ecommerce",
-      name: "Store Leads",
-      detail: "E-commerce stores, platforms, categories, and growth signals.",
-      logoSrc: "/data-logos/Store%20Leads.svg"
-    },
-    {
-      id: "ramp",
-      category: "Enrichment",
-      name: "Ramp",
-      detail: "Financial and business context enrichment.",
-      logoSrc: "/data-logos/Ramp.svg"
-    },
-    {
-      id: "fullenrich",
-      category: "Enrichment",
-      name: "FullEnrich",
-      detail: "Email and phone enrichment across multiple providers.",
-      logoSrc: "/data-logos/FullEnrich.svg"
-    },
-    {
-      id: "ocean-io",
-      category: "Company / Fundraising",
-      name: "Ocean.io",
-      detail: "Company lookalikes, segments, and account discovery.",
-      logoSrc: "/data-logos/Oceanio.svg"
-    },
-    {
-      id: "harmonic",
-      category: "Company / Fundraising",
-      name: "Harmonic",
-      detail: "Startup company signals, growth, and fundraising data.",
-      logoSrc: "/data-logos/Harmonic.svg"
-    },
-    {
-      id: "theirstack",
-      category: "Tech Stack",
-      name: "Theirstack",
-      detail: "Technology install, job-posting, and stack signals.",
-      logoSrc: "/data-logos/TheirStack.svg"
-    },
-    {
-      id: "predictleads",
-      category: "Tech Stack",
-      name: "PredictLeads",
-      detail: "Hiring, technology, product, and business event signals.",
-      logoSrc: "/data-logos/PredictLeads.svg"
-    },
-    {
-      id: "builtwith",
-      category: "Tech Stack",
-      name: "BuiltWith",
-      detail: "Installed tools, web stack, pixels, and infrastructure data.",
-      logoSrc: "/data-logos/Built%20With.svg"
-    },
-    {
-      id: "serpstat",
-      category: "Web / SEO",
-      name: "Serpstat",
-      detail: "SEO, PPC, and content intelligence.",
-      logoSrc: "/data-logos/Serpstat.svg"
-    },
-    {
-      id: "se-ranking",
-      category: "Web / SEO",
-      name: "SE Ranking",
-      detail: "Search visibility, keyword, and competitor SEO data.",
-      logoSrc: "/data-logos/SE%20Ranking.svg"
-    },
-    {
-      id: "linkedin",
-      category: "Relationships",
-      name: "LinkedIn",
-      detail: "Professional relationship and profile context.",
-      logoSrc: "/data-logos/LinkedIn.png"
-    },
-    {
-      id: "the-swarm",
-      category: "Relationships",
-      name: "The Swarm",
-      detail: "Network, relationship, and warm-introduction context.",
-      logoSrc: "/data-logos/The%20Swarm.svg"
-    },
-    {
-      id: "trigify",
-      category: "And more",
-      name: "Trigify",
-      detail: "Social buying signals and engagement events.",
-      logoSrc: "/data-logos/Trigify.svg"
-    },
-    {
-      id: "zerobounce",
-      category: "And more",
-      name: "ZeroBounce",
-      detail: "Email validation and deliverability checks.",
-      logoSrc: "/data-logos/zerobounce.svg"
-    },
-    {
-      id: "buyercaddy",
-      category: "And more",
-      name: "BuyerCaddy",
-      detail: "Buyer tracking and sales workflow support.",
-      logoSrc: "/data-logos/BuyerCaddy.svg"
-    }
-  ]
-}, jn = {
+}, mr = {
   id: "enriched-dev-tool-contacts",
   title: "Enriched contacts",
   eyebrow: "ready to engage",
   count: "4 contacts",
   variant: "enriched",
-  columns: Hd,
+  columns: Hu,
   rows: [
     {
       id: "jamie-chen",
@@ -8853,31 +9817,31 @@ const zd = [
       }
     }
   ]
-}, Kn = [
+}, wr = [
   {
-    name: "battlecards.pdf",
-    detail: "Competitors, traps, objections, displacement plays",
+    name: "vercel-positioning.pdf",
+    detail: "Frontend Cloud narrative, buyer pains, proof points",
     type: "PDF"
   },
   {
-    name: "positioning-memo.docx",
-    detail: "Category narrative, buyer pains, proof points",
+    name: "ai-app-playbook.docx",
+    detail: "AI app workflows, Vercel AI SDK, launch patterns",
     type: "DOC"
   },
   {
-    name: "outbound-playbook.pdf",
-    detail: "Sequences, objection handling, CTA rules",
+    name: "enterprise-objections.pdf",
+    detail: "Security, scale, migration, and platform objections",
     type: "PDF"
   },
   {
     name: "icp-context.md",
-    detail: "Best-fit accounts, disqualifiers, buyer pains",
+    detail: "Best-fit teams, disqualifiers, buying triggers",
     type: "MD"
   }
-], Vd = {
+], Gu = {
   id: "gmail-mailbox-connection",
   title: "Connect a mailbox",
-  subtitle: "Unify will recent emails, replies, and meeting context to learn how you actually communicate",
+  subtitle: "Unify will analyze recent emails and replies to learn how you actually communicate",
   provider: "Gmail",
   account: "joel@unifygtm.com",
   status: "Connected",
@@ -8885,37 +9849,36 @@ const zd = [
   secondaryCtaLabel: "Outlook",
   loadingLabel: "Connecting",
   learningTitle: "Learning your style",
-  learningDetail: "Analyzing vocabulary...",
+  learningDetail: "Analyzing tone...",
   learningReadyDetail: "73 tone & tactic rules defined",
   signals: ["sent emails", "reply patterns", "calendar context", "signature and tone"]
-}, Xn = {
-  id: "pylon-business-report",
-  title: "Messaging strategy",
-  subtitle: "How to win Pylon's market from the uploaded business context.",
+}, fr = {
+  id: "vercel-business-report",
+  title: "Vercel GTM Context",
   signals: [
     {
       label: "Winning wedge",
-      value: "Sell Pylon as the revenue layer for post-sale conversations: support signals become expansion, renewal, and risk plays before competitors see them."
+      value: "Lead with Frontend Cloud: the fastest path from idea to production for teams building web and AI experiences."
     },
     {
       label: "Primary motion",
-      value: "Target VP CS, RevOps, and founders at B2B SaaS companies where Slack, tickets, and call notes hide account-level next actions."
+      value: "Target engineering leaders, platform teams, and founders with Next.js adoption, high-traffic launches, or active AI app work."
     },
     {
       label: "Displacement angle",
-      value: "Against Zendesk and Intercom, avoid ticketing arguments. Show where they break: account context, revenue handoffs, and renewal escalation."
+      value: "Against homegrown cloud and generic hosting, show where teams lose time: previews, performance, observability, and release confidence."
     },
     {
       label: "Proof to use",
-      value: "Lead with fewer missed expansion signals, faster executive escalation, cleaner CS-to-sales handoffs, and one shared customer timeline."
+      value: "Use Next.js, preview deployments, global performance, enterprise controls, and Vercel AI SDK as concrete credibility."
     }
   ],
   examples: [
-    "Open with a customer moment: repeated feature requests, renewal risk, or stalled onboarding that should have triggered a revenue play.",
-    "Package the CTA as a quick account review: show hidden risks and expansion signals pulled from recent customer conversations.",
-    "Keep the copy specific: account visibility, post-sale intelligence, executive escalation, and revenue timing beats generic AI language."
+    "Open with a launch moment: traffic spike, AI feature release, migration project, or frontend team scaling past brittle workflows.",
+    "Package the CTA as a workflow review: local dev to preview to production, including where Vercel removes handoffs.",
+    "Keep the copy specific: Next.js, AI SDK, preview links, edge performance, and enterprise governance beat generic developer-platform language."
   ]
-}, Jn = {
+}, br = {
   id: "personalized-lead-proximity",
   title: "Ranked leads with proximity fields",
   subtitle: "Each lead gets a relationship-aware reason to personalize the first touch.",
@@ -8950,14 +9913,14 @@ const zd = [
     {
       rank: "04",
       name: "Sam Hollis",
-      company: "Apollo",
+      company: "Pylon",
       title: "Growth Lead",
       proximity: "Warm signal",
       personalization: "They follow two of your customers and recently posted about data quality.",
       score: "76"
     }
   ]
-}, va = {
+}, qa = {
   id: "visitor-outreach-sequences",
   title: "Personalized sequence preview",
   subtitle: "Each visitor gets a channel plan based on company fit, page intent, and the person’s role.",
@@ -9020,7 +9983,7 @@ const zd = [
         {
           channel: "call",
           label: "reference the path",
-          body: "Hi Evan, saw the integrations research and Northstar Dev's sales expansion. Are ecosystem-led accounts already a named campaign, or still mostly rep judgment?"
+          body: "Hi Evan, saw the integrations research and Northstar Dev’s sales expansion. Are ecosystem-led accounts already a named campaign, or still mostly rep judgment?"
         }
       ]
     },
@@ -9056,11 +10019,11 @@ const zd = [
     },
     {
       name: "Andre Park",
-      company: "Ramp",
+      company: "Waterfall",
       title: "Head of Sales",
       signal: "Demo page",
-      subject: "Ramp’s demo-page visit",
-      personalization: "Andre viewed the demo page while Ramp is hiring growth roles, so the sequence ties intent to faster account prioritization.",
+      subject: "Waterfall’s demo-page visit",
+      personalization: "Andre viewed the demo page while Waterfall is hiring growth roles, so the sequence ties intent to faster account prioritization.",
       steps: [
         {
           channel: "email",
@@ -9070,7 +10033,7 @@ const zd = [
         {
           channel: "linkedin",
           label: "share the angle",
-          body: "Andre, saw Ramp checking out the demo while growth hiring is active. I work on turning those signals into researched account clusters without stitching tabs together."
+          body: "Andre, saw Waterfall checking out the demo while growth hiring is active. I work on turning those signals into researched account clusters without stitching tabs together."
         },
         {
           channel: "email",
@@ -9080,7 +10043,7 @@ const zd = [
         {
           channel: "call",
           label: "ask about timing",
-          body: "Hi Andre, saw Ramp's demo interest and growth hiring. Is this tied to an active expansion push, or are you mainly tightening account prioritization?"
+          body: "Hi Andre, saw Waterfall’s demo interest and growth hiring. Is this tied to an active expansion push, or are you mainly tightening account prioritization?"
         }
       ]
     },
@@ -9176,10 +10139,10 @@ const zd = [
     },
     {
       name: "Sam Hollis",
-      company: "Apollo",
+      company: "Pylon",
       title: "VP Sales",
       signal: "Comparison",
-      subject: "Apollo’s comparison-page visit",
+      subject: "Pylon’s comparison-page visit",
       personalization: "Sam viewed comparison content, so the outreach contrasts Unify’s unified workflow against point-tool switching.",
       steps: [
         {
@@ -9190,7 +10153,7 @@ const zd = [
         {
           channel: "linkedin",
           label: "ask what matters",
-          body: "Sam, saw Apollo reviewing comparison content. Curious whether the real criteria is coverage, workflow speed, or personalization quality."
+          body: "Sam, saw Pylon reviewing comparison content. Curious whether the real criteria is coverage, workflow speed, or personalization quality."
         },
         {
           channel: "email",
@@ -9200,7 +10163,7 @@ const zd = [
         {
           channel: "call",
           label: "qualify priority",
-          body: "Hi Sam, saw Apollo comparing workflows. Which step is pulling reps out of selling most often: data search, enrichment, or writing the sequence?"
+          body: "Hi Sam, saw Pylon comparing workflows. Which step is pulling reps out of selling most often: data search, enrichment, or writing the sequence?"
         }
       ]
     },
@@ -9230,7 +10193,7 @@ const zd = [
         {
           channel: "call",
           label: "ask about handoff",
-          body: "Hi Rachel, saw Retool's pricing interest alongside sales hiring. How are intent signals getting handed to reps today, and where does the handoff break?"
+          body: "Hi Rachel, saw Retool’s pricing interest alongside sales hiring. How are intent signals getting handed to reps today, and where does the handoff break?"
         }
       ]
     },
@@ -9250,7 +10213,7 @@ const zd = [
         {
           channel: "linkedin",
           label: "ask one thing",
-          body: "Owen, saw Linear's demo-page research. Curious if the sales team is prioritizing outbound efficiency or better personalization this quarter."
+          body: "Owen, saw Linear’s demo-page research. Curious if the sales team is prioritizing outbound efficiency or better personalization this quarter."
         },
         {
           channel: "email",
@@ -9260,7 +10223,7 @@ const zd = [
         {
           channel: "call",
           label: "connect to timing",
-          body: "Hi Owen, saw Linear's demo-page visit. Is this tied to an active evaluation window, or are you mapping what a cleaner outbound workflow could look like?"
+          body: "Hi Owen, saw Linear’s demo-page visit. Is this tied to an active evaluation window, or are you mapping what a cleaner outbound workflow could look like?"
         }
       ]
     }
@@ -9268,9 +10231,9 @@ const zd = [
   channels: []
 };
 ({
-  ...va
+  ...qa
 });
-const Wd = {
+const Qu = {
   id: "visitor-sequence-build",
   title: "building outbound sequence",
   subtitle: "Using Unify’s offering, visitor intent, and role-level context to draft the campaign.",
@@ -9289,24 +10252,24 @@ const Wd = {
       detail: "Checking role, seniority, likely ownership, and channel-specific personalization angles."
     }
   ]
-}, Yd = [
+}, Yu = [
   { key: "name", label: "Name", width: "1.2fr", cellType: "person" },
   { key: "company", label: "Company", width: "0.95fr" },
   { key: "title", label: "Title", width: "1.15fr" },
   { key: "visit", label: "Last visit", width: "0.86fr" },
   { key: "signal", label: "Signal", width: "1.18fr" }
-], Zn = [
+], Ar = [
   { id: "maya-patel-visitor", values: { name: "Maya Patel", company: "OrbitGrid", title: "VP Sales", visit: "12m ago", signal: "Pricing page", source: "signal", avatarTone: "1" } },
   { id: "evan-brooks-visitor", values: { name: "Evan Brooks", company: "Northstar Dev", title: "Head of Sales", visit: "18m ago", signal: "Integrations", source: "signal", avatarTone: "2" } },
   { id: "clara-wong-visitor", values: { name: "Clara Wong", company: "BrightLayer", title: "VP Revenue", visit: "27m ago", signal: "Case study", source: "engage", avatarTone: "3" } },
-  { id: "andre-park-visitor", values: { name: "Andre Park", company: "Ramp", title: "Head of Sales", visit: "33m ago", signal: "Demo page", source: "signal", avatarTone: "4" } },
+  { id: "andre-park-visitor", values: { name: "Andre Park", company: "Waterfall", title: "Head of Sales", visit: "33m ago", signal: "Demo page", source: "signal", avatarTone: "4" } },
   { id: "jamie-chen-visitor", values: { name: "Jamie Chen", company: "Square", title: "VP Sales", visit: "42m ago", signal: "ROI calculator", source: "signal", avatarTone: "5" } },
   { id: "nina-kapoor-visitor", values: { name: "Nina Kapoor", company: "Mercury", title: "Sales Director", visit: "51m ago", signal: "Security page", source: "database", avatarTone: "6" } },
   { id: "david-kim-visitor", values: { name: "David Kim", company: "Stripe", title: "Revenue Lead", visit: "1h ago", signal: "Docs", source: "engage", avatarTone: "7" } },
-  { id: "sam-hollis-visitor", values: { name: "Sam Hollis", company: "Apollo", title: "VP Sales", visit: "1h ago", signal: "Comparison", source: "signal", avatarTone: "8" } },
+  { id: "sam-hollis-visitor", values: { name: "Sam Hollis", company: "Pylon", title: "VP Sales", visit: "1h ago", signal: "Comparison", source: "signal", avatarTone: "8" } },
   { id: "rachel-cho-visitor", values: { name: "Rachel Cho", company: "Retool", title: "Head of Sales", visit: "2h ago", signal: "Pricing page", source: "database", avatarTone: "9" } },
   { id: "owen-lee-visitor", values: { name: "Owen Lee", company: "Linear", title: "Sales Lead", visit: "2h ago", signal: "Demo page", source: "signal", avatarTone: "1" } }
-], Qd = [
+], Wu = [
   { id: "fatima-ali-visitor", values: { name: "Fatima Ali", company: "Vercel", title: "VP Sales", visit: "2h ago", signal: "Enterprise", source: "signal", avatarTone: "2" } },
   { id: "leo-martin-visitor", values: { name: "Leo Martin", company: "Hex", title: "Head of Sales", visit: "3h ago", signal: "Blog", source: "database", avatarTone: "3" } },
   { id: "priya-rao-visitor", values: { name: "Priya Rao", company: "Census", title: "Sales Director", visit: "3h ago", signal: "Demo page", source: "engage", avatarTone: "4" } },
@@ -9317,7 +10280,7 @@ const Wd = {
   { id: "sara-nelson-visitor", values: { name: "Sara Nelson", company: "Airtable", title: "Sales Lead", visit: "6h ago", signal: "Comparison", source: "signal", avatarTone: "9" } },
   { id: "noah-singh-visitor", values: { name: "Noah Singh", company: "dbt Labs", title: "Head of Sales", visit: "6h ago", signal: "ROI calculator", source: "signal", avatarTone: "1" } },
   { id: "ava-garcia-visitor", values: { name: "Ava Garcia", company: "Gusto", title: "VP Revenue", visit: "7h ago", signal: "Demo page", source: "engage", avatarTone: "2" } }
-], $n = {
+], yr = {
   id: "website-visitors-sales",
   title: "Recent website visitors",
   eyebrow: "Visitor intent",
@@ -9325,15 +10288,15 @@ const Wd = {
   variant: "filtered",
   scrollAlign: "equal-inset",
   footerClearance: 28,
-  columns: Yd,
-  rows: Zn,
+  columns: Yu,
+  rows: Ar,
   pagination: {
     pageSize: 10,
     totalRows: 50,
     activePage: 1,
     pages: [
-      { page: 1, range: "1-10 of 50 people", rows: Zn },
-      { page: 2, range: "11-20 of 50 people", rows: Qd }
+      { page: 1, range: "1-10 of 50 people", rows: Ar },
+      { page: 2, range: "11-20 of 50 people", rows: Wu }
     ]
   },
   actions: [
@@ -9351,7 +10314,7 @@ const Wd = {
       variant: "secondary"
     }
   ]
-}, si = [
+}, vi = [
   {
     id: "raw-maya-rodriguez",
     values: {
@@ -9365,7 +10328,7 @@ const Wd = {
     values: {
       name: "Ethan Cho",
       email: "ethan.cho@gmail.com",
-      company: "Clearbit Inc."
+      company: ""
     }
   },
   {
@@ -9380,8 +10343,8 @@ const Wd = {
     id: "raw-lucas-meyer",
     values: {
       name: "Lucas",
-      email: "lucas.meyer@ramp.com",
-      company: "Ramp"
+      email: "lucas.meyer@yahoo.com",
+      company: ""
     }
   },
   {
@@ -9393,34 +10356,26 @@ const Wd = {
     }
   },
   {
-    id: "raw-sam-hollis",
-    values: {
-      name: "sam hollis",
-      email: "sam.hollis@apollo.io",
-      company: "Apollo.io"
-    }
-  },
-  {
     id: "raw-anna-li",
     values: {
       name: "Anna Li",
-      email: "",
-      company: "Linear"
+      email: "annali.work@gmail.com",
+      company: ""
     }
   },
   {
     id: "raw-devon-park",
     values: {
       name: "Devon Park",
-      email: "devon.park@brex.com",
-      company: "Brex"
+      email: "devon.park@outlook.com",
+      company: ""
     }
   },
   {
     id: "raw-rachel-cho",
     values: {
       name: "Rachel C.",
-      email: "rcho@figma.com",
+      email: "",
       company: "Figma"
     }
   },
@@ -9429,14 +10384,14 @@ const Wd = {
     values: {
       name: "Owen Lee",
       email: "owen.lee@icloud.com",
-      company: "Notion"
+      company: ""
     }
   },
   {
     id: "raw-clara-wong",
     values: {
       name: "Clara Wong",
-      email: "clara.wong@brightlayer.com",
+      email: "clara.wong@proton.me",
       company: "Bright Layer"
     }
   },
@@ -9452,98 +10407,298 @@ const Wd = {
     id: "raw-ethan-cho-duplicate",
     values: {
       name: "Ethan Cho",
-      email: "ethan.cho+events@gmail.com",
+      email: "",
       company: "Clearbit Inc."
     }
+  },
+  {
+    id: "raw-fatima-ali",
+    values: {
+      name: "Fatima Ali",
+      email: "fatima.ali@gmail.com",
+      company: ""
+    }
+  },
+  {
+    id: "raw-leo-martin",
+    values: {
+      name: "Leo Martin",
+      email: "leo.martin@hex.tech",
+      company: "Hex"
+    }
+  },
+  {
+    id: "raw-priya-rao",
+    values: {
+      name: "Priya Rao",
+      email: "priya.rao@yahoo.com",
+      company: ""
+    }
+  },
+  {
+    id: "raw-jules-meyer",
+    values: {
+      name: "Jules Meyer",
+      email: "jules@notion.so",
+      company: "Notion"
+    }
+  },
+  {
+    id: "raw-marcus-reed",
+    values: {
+      name: "Marcus Reed",
+      email: "marcus.reed@icloud.com",
+      company: ""
+    }
+  },
+  {
+    id: "raw-zoe-carter",
+    values: {
+      name: "Zoe Carter",
+      email: "zoe.carter@rippling.com",
+      company: "Rippling"
+    }
+  },
+  {
+    id: "raw-liam-price",
+    values: {
+      name: "Liam Price",
+      email: "liam.price@gmail.com",
+      company: ""
+    }
+  },
+  {
+    id: "raw-sara-nelson",
+    values: {
+      name: "Sara Nelson",
+      email: "sara.nelson@airtable.com",
+      company: "Airtable"
+    }
   }
-], jd = {
+], ju = {
   id: "raw-webinar-attendees",
   title: "Raw webinar attendees",
   eyebrow: "CSV import",
   count: "54 records",
+  preserveScroll: !0,
   columns: [
     { key: "name", label: "Name", width: "110px", cellType: "text" },
     { key: "email", label: "Email", width: "250px" },
     { key: "company", label: "Company", width: "minmax(120px,1fr)" }
   ],
-  rows: si,
+  rows: vi,
   pagination: {
-    pageSize: 6,
+    pageSize: 10,
     totalRows: 54,
     activePage: 1,
     pages: [
-      { page: 1, range: "1-6 of 54 records", rows: si.slice(0, 6) },
-      { page: 2, range: "7-13 of 54 records", rows: si.slice(6, 13) }
+      { page: 1, range: "1-10 of 54 records", rows: vi.slice(0, 10) },
+      { page: 2, range: "11-20 of 54 records", rows: vi.slice(10, 20) }
     ]
   }
-}, Kd = {
+}, xi = [
+  {
+    id: "clean-maya-rodriguez",
+    values: {
+      fullName: "Maya Rodriguez",
+      "work-email": "maya.rodriguez@northstar.ai",
+      company: "Northstar AI",
+      prospectDetail: "VP Marketing"
+    }
+  },
+  {
+    id: "clean-ethan-cho",
+    values: {
+      fullName: "Ethan Cho",
+      "work-email": "ethan.cho@clearbit.com",
+      company: "Clearbit",
+      prospectDetail: "Head of Demand Gen"
+    }
+  },
+  {
+    id: "clean-priya-shah",
+    values: {
+      fullName: "Priya Shah",
+      "work-email": "priya.shah@orbitgrid.com",
+      company: "OrbitGrid",
+      prospectDetail: "Head of Growth"
+    }
+  },
+  {
+    id: "clean-lucas-meyer",
+    values: {
+      fullName: "Lucas Meyer",
+      "work-email": "lucas.meyer@waterfall.com",
+      company: "Waterfall",
+      prospectDetail: "Revenue Operations"
+    }
+  },
+  {
+    id: "clean-nina-kapoor",
+    values: {
+      fullName: "Nina Kapoor",
+      "work-email": "nina.kapoor@mercury.com",
+      company: "Mercury",
+      prospectDetail: "Sales Director"
+    }
+  },
+  {
+    id: "clean-sam-hollis",
+    values: {
+      fullName: "Sam Hollis",
+      "work-email": "sam.hollis@usepylon.com",
+      company: "Pylon",
+      prospectDetail: "VP Sales"
+    }
+  },
+  {
+    id: "clean-anna-li",
+    values: {
+      fullName: "Anna Li",
+      "work-email": "anna.li@linear.app",
+      company: "Linear",
+      prospectDetail: "Growth Marketing"
+    }
+  },
+  {
+    id: "clean-devon-park",
+    values: {
+      fullName: "Devon Park",
+      "work-email": "devon.park@brex.com",
+      company: "Brex",
+      prospectDetail: "RevOps Manager"
+    }
+  },
+  {
+    id: "clean-rachel-cho",
+    values: {
+      fullName: "Rachel Cho",
+      "work-email": "rachel.cho@figma.com",
+      company: "Figma",
+      prospectDetail: "Product Marketing"
+    }
+  },
+  {
+    id: "clean-owen-lee",
+    values: {
+      fullName: "Owen Lee",
+      "work-email": "owen.lee@notion.so",
+      company: "Notion",
+      prospectDetail: "Revenue Lead"
+    }
+  },
+  {
+    id: "clean-clara-wong",
+    values: {
+      fullName: "Clara Wong",
+      "work-email": "clara.wong@brightlayer.com",
+      company: "BrightLayer",
+      prospectDetail: "VP Revenue"
+    }
+  },
+  {
+    id: "clean-sara-patel",
+    values: {
+      fullName: "Sara Patel",
+      "work-email": "sara.patel@northstar.ai",
+      company: "Northstar AI",
+      prospectDetail: "Demand Gen"
+    }
+  },
+  {
+    id: "clean-ethan-cho-duplicate",
+    values: {
+      fullName: "Ethan Cho",
+      "work-email": "ethan.cho@clearbit.com",
+      company: "Clearbit",
+      prospectDetail: "Head of Demand Gen"
+    }
+  },
+  {
+    id: "clean-fatima-ali",
+    values: {
+      fullName: "Fatima Ali",
+      "work-email": "fatima.ali@vercel.com",
+      company: "Vercel",
+      prospectDetail: "VP Sales"
+    }
+  },
+  {
+    id: "clean-leo-martin",
+    values: {
+      fullName: "Leo Martin",
+      "work-email": "leo.martin@hex.tech",
+      company: "Hex",
+      prospectDetail: "Head of Sales"
+    }
+  },
+  {
+    id: "clean-priya-rao",
+    values: {
+      fullName: "Priya Rao",
+      "work-email": "priya.rao@census.com",
+      company: "Census",
+      prospectDetail: "Sales Director"
+    }
+  },
+  {
+    id: "clean-jules-meyer",
+    values: {
+      fullName: "Jules Meyer",
+      "work-email": "jules.meyer@notion.so",
+      company: "Notion",
+      prospectDetail: "VP Sales"
+    }
+  },
+  {
+    id: "clean-marcus-reed",
+    values: {
+      fullName: "Marcus Reed",
+      "work-email": "marcus.reed@figma.com",
+      company: "Figma",
+      prospectDetail: "Revenue Lead"
+    }
+  },
+  {
+    id: "clean-zoe-carter",
+    values: {
+      fullName: "Zoe Carter",
+      "work-email": "zoe.carter@rippling.com",
+      company: "Rippling",
+      prospectDetail: "Head of Sales"
+    }
+  },
+  {
+    id: "clean-liam-price",
+    values: {
+      fullName: "Liam Price",
+      "work-email": "liam.price@webflow.com",
+      company: "Webflow",
+      prospectDetail: "VP Sales"
+    }
+  }
+], Ku = {
   id: "clean-webinar-attendees",
   title: "Cleaned webinar attendees",
   eyebrow: "CSV cleanup",
   count: "54 records",
   scrollAnchor: "previous-message",
   columns: [
-    { key: "fullName", label: "Full name", width: "245px", cellType: "person" },
+    { key: "fullName", label: "Full name", width: "175px", cellType: "person" },
     { key: "work-email", label: "Work email", width: "215px" },
-    { key: "company", label: "Company", width: "minmax(110px,1fr)" }
+    { key: "company", label: "Company", width: "minmax(150px,1fr)" }
   ],
-  rows: [
-    {
-      id: "maya-rodriguez",
-      values: {
-        fullName: "Maya Rodriguez",
-        "work-email": "maya.rodriguez@northstar.ai",
-        company: "Northstar AI",
-        prospectDetail: "VP Marketing"
-      }
-    },
-    {
-      id: "ethan-cho",
-      values: {
-        fullName: "Ethan Cho",
-        "work-email": "ethan.cho@clearbit.com",
-        company: "Clearbit",
-        prospectDetail: "Head of Demand Gen"
-      }
-    },
-    {
-      id: "priya-shah",
-      values: {
-        fullName: "Priya Shah",
-        "work-email": "priya.shah@orbitgrid.com",
-        company: "OrbitGrid",
-        prospectDetail: "Head of Growth"
-      }
-    },
-    {
-      id: "lucas-meyer",
-      values: {
-        fullName: "Lucas Meyer",
-        "work-email": "lucas.meyer@ramp.com",
-        company: "Ramp",
-        prospectDetail: "Revenue Operations"
-      }
-    },
-    {
-      id: "nina-kapoor",
-      values: {
-        fullName: "Nina Kapoor",
-        "work-email": "nina.kapoor@mercury.com",
-        company: "Mercury",
-        prospectDetail: "Sales Director"
-      }
-    },
-    {
-      id: "sam-hollis",
-      values: {
-        fullName: "Sam Hollis",
-        "work-email": "sam.hollis@apollo.io",
-        company: "Apollo",
-        prospectDetail: "VP Sales"
-      }
-    }
-  ]
-}, Mo = [
+  rows: xi,
+  pagination: {
+    pageSize: 10,
+    totalRows: 54,
+    activePage: 1,
+    pages: [
+      { page: 1, range: "1-10 of 54 records", rows: xi.slice(0, 10) },
+      { page: 2, range: "11-20 of 54 records", rows: xi.slice(10, 20) }
+    ]
+  }
+}, as = [
   {
     id: "hit-ground-running",
     label: "Hit the ground running",
@@ -9551,53 +10706,65 @@ const Wd = {
     navDescription: "Unify understands your business like you do. Use the latest frontier models to identify your next campaign ideas.",
     eyebrow: "Business onboarding",
     summary: "The assistant learns the company, researches public signals, and returns three GTM plays.",
-    entry: co,
-    entryLeadTime: ho,
+    entry: qo,
+    entryLeadTime: Lo,
     prepare: (r) => {
       r.chat.prepareSignup();
     },
-    build: (r) => Ie(r, [
+    build: (r) => He(r, [
       { kind: "status", text: "Sign up" },
       { kind: "cursorClick", nextMode: "text", at: "-=0.04" },
-      { kind: "typeSignupEmail", email: "joel@vercel.com", duration: E.typeShort },
+      { kind: "typeSignupEmail", email: "joel@vercel.com", duration: M.typeShort },
       {
         kind: "cursorMove",
-        target: uo,
-        options: { mode: "pointer", intent: "click", speed: "quick", label: "signup-submit" },
+        target: Bo,
+        options: {
+          mode: "pointer",
+          intent: "click",
+          speed: "quick",
+          duration: Ie.compact,
+          curve: 0.12,
+          ...Re,
+          label: "signup-submit"
+        },
         at: "-=0.04"
       },
-      { kind: "cursorClick", nextMode: "default", at: "-=0.03" },
+      { kind: "cursorClick", nextMode: "default", at: "+=0.06" },
       { kind: "custom", build: () => r.chat.submitSignup(), at: "<" },
       { kind: "status", text: "Building workspace", at: "-=0.08" },
-      { kind: "transitionSignupToChat", at: `+=${E.beat}` },
+      { kind: "transitionSignupToChat", at: `+=${M.beat}` },
       { kind: "status", text: "Researching Vercel", at: "<" },
-      { kind: "thinking", steps: zd, hold: 0.46, at: "<" },
+      { kind: "thinking", steps: Uu, hold: 0.46, at: "<" },
       { kind: "assistant", text: "Here are some ideas I can put into action for you:" },
       { kind: "status", text: "Game plans ready", at: "<" },
-      { kind: "strategyPlans", plans: Ud, at: "-=0.08" },
-      et(Ue.right, "+=0.18")
+      { kind: "strategyPlans", plans: zu, at: "-=0.08" },
+      dt(Xe.right, "+=0.18")
     ])
   },
   {
     id: "data-marketplace",
     label: "100+ data sources at your fingertips",
     navLabel: "100+ data sources at your fingertips",
-    navDescription: "A one-stop shop for your data needs, B2B contacts and companies, e-commerce, local businesses, technographics, and more in a single natural language search.",
+    navDescription: "A one-stop shop for your data needs, B2B contacts and companies, e-commerce, local businesses, technographics, and much more in a single natural language search.",
+    navDescriptionLink: {
+      text: "and much more",
+      href: "https://www.unifygtm.com/signals",
+      ariaLabel: "Explore Unify signals and data sources"
+    },
     eyebrow: "Data marketplace",
     summary: "The assistant searches, filters, and enriches B2B company and contact data.",
     assetUrls: [
-      ...Ht(Wn),
-      ...Ht(Yn),
-      ...Ht(jn),
-      ...oo(Qn)
+      ...ta(pr),
+      ...ta(gr),
+      ...ta(mr)
     ],
-    entry: Ma.dataMarketplace,
-    entryLeadTime: Ra,
-    build: (r) => Ie(r, [
+    entry: Ha.dataMarketplace,
+    entryLeadTime: Ga,
+    build: (r) => He(r, [
       {
         kind: "prompt",
         text: "Show me new hires at dev-tool companies with 50+ employees.",
-        duration: E.typeLong,
+        duration: M.typeLong,
         sendLabel: "send-data-search",
         statusBefore: "Searching data",
         statusAfter: "Searching 100+ sources",
@@ -9606,36 +10773,36 @@ const Wd = {
       {
         kind: "thinking",
         label: "Searching hiring signals, headcount, and company data",
-        hold: E.thinkingMedium
+        hold: M.thinkingMedium
       },
-      { kind: "dataTable", config: Wn, at: "-=0.04" },
+      { kind: "dataTable", config: pr, at: "-=0.04" },
       {
         kind: "prompt",
         text: "Filter to the ones that have raised in the past three months.",
-        duration: E.typeMedium,
+        duration: M.typeMedium,
         sendLabel: "send-data-filter",
         statusAfter: "Filtering by funding",
-        at: `+=${E.beat}`
+        at: `+=${M.beat}`
       },
       {
         kind: "thinking",
         label: "Checking rounds announced since February 2026",
-        hold: E.thinkingShort
+        hold: M.thinkingShort
       },
-      { kind: "dataTable", config: Yn, at: "-=0.04" },
+      { kind: "dataTable", config: gr, at: "-=0.04" },
       {
         kind: "prompt",
         text: "Okay, enrich these contacts.",
-        duration: E.typeShort,
+        duration: M.typeShort,
         sendLabel: "send-enrich-contacts",
         statusAfter: "Preparing enrichment",
-        at: `+=${E.beat}`
+        postSendCursorMotion: !1,
+        at: `+=${M.beat}`
       },
-      { kind: "enrichmentPanel", config: Gd, at: "+=0.12" },
+      { kind: "enrichmentPanel", config: Vu, at: "+=0.12" },
       { kind: "status", text: "Contacts enriched", at: "+=0.86" },
-      { kind: "dataTable", config: jn, at: "-=0.02" },
-      { kind: "marketingDataSourcesGrid", config: Qn, at: "+=1.44" },
-      et(Ue.bottomRight, "+=3")
+      { kind: "dataTable", config: mr, at: "-=0.02" },
+      dt(Xe.bottomRight, "+=1.1")
     ])
   },
   {
@@ -9643,8 +10810,8 @@ const Wd = {
     label: "Agent that knows you",
     navLabel: "An agent that knows you",
     eyebrow: "Context learning",
-    summary: "The assistant learns your sales context, protects ICP fit, and ranks leads by relationship proximity.",
-    assetUrls: so(Jn),
+    summary: "The assistant learns Vercel’s GTM context and ranks leads by relationship proximity.",
+    assetUrls: Ro(br),
     entry: {
       desktop: { target: "[data-chat-shell]", anchor: "right", offset: { x: -48, y: 168 } },
       tablet: { target: "[data-chat-shell]", anchor: "right", offset: { x: -44, y: 144 } },
@@ -9654,19 +10821,19 @@ const Wd = {
     build: (r) => {
       const e = r.chat.prepareCsvDropArea({
         title: "Drop business context files",
-        detail: "Battle cards, playbooks, ICP notes, voice docs, and messaging context."
-      }), t = r.chat.prepareCursorFile("4 context files", r.cursor, "DOC", Kn), a = {
+        detail: "Positioning, AI app playbooks, ICP notes, and enterprise objection context."
+      }), t = r.chat.prepareCursorFile("4 context files", r.cursor, "DOC", wr), a = {
         desktop: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 420, y: -74 }, humanOffset: !1 },
         tablet: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 360, y: -58 }, humanOffset: !1 },
         mobile: { target: "[data-chat-shell]", anchor: "right", outside: "right", offset: { x: 280, y: -42 }, humanOffset: !1 }
-      }, i = N("[data-chat-shell]", "center", {
+      }, i = O("[data-chat-shell]", "center", {
         desktop: { x: 0, y: 74 },
         tablet: { x: 0, y: 64 },
         mobile: { x: 0, y: 56 }
       });
-      return Ie(r, [
-        ...po(Vd),
-        { kind: "status", text: "waiting for context", at: `+=${E.beat}` },
+      return He(r, [
+        ...Oo(Gu),
+        { kind: "status", text: "waiting for context", at: `+=${M.beat}` },
         {
           kind: "cursorMove",
           target: a,
@@ -9698,52 +10865,50 @@ const Wd = {
           at: "<"
         },
         { kind: "custom", build: () => e.activate(), at: "<+=0.02" },
-        { kind: "custom", build: () => r.timeline().to({}, { duration: E.beat }) },
+        { kind: "custom", build: () => r.timeline().to({}, { duration: M.beat }) },
         { kind: "custom", build: () => e.complete() },
         { kind: "custom", build: () => t.releaseAtDrop(), at: "<" },
-        { kind: "custom", build: () => t.landAsUploadedFiles(Kn), at: "<" },
-        { kind: "status", text: "Learning Pylon's business", at: "<" },
+        { kind: "custom", build: () => t.landAsUploadedFiles(wr), at: "<" },
+        { kind: "status", text: "Learning Vercel’s business", at: "<" },
         {
           kind: "thinking",
           steps: [
-            "Reading Pylon battle cards and market notes",
-            "Mapping competitors and positioning",
-            "Extracting messaging pillars and proof points",
+            "Reading Vercel positioning and launch notes",
+            "Mapping developer personas and buying committees",
+            "Extracting AI app and frontend cloud proof points",
             "Summarizing ICP fit and GTM angles"
           ],
           hold: 0.24,
-          at: `+=${E.beat}`
+          at: `+=${M.beat}`
         },
         {
           kind: "custom",
-          build: () => r.chat.outreachStyleProfile(Xn, { scrollAlign: "equal-inset" }),
+          build: () => r.chat.outreachStyleProfile(fr, { scrollAlign: "equal-inset" }),
           at: "-=0.02"
         },
-        ...go(Xn.id),
+        ...No(fr.id),
         {
           kind: "prompt",
-          text: "Write a sequence for consumer fintech founders.",
-          duration: E.typeShort,
-          sendLabel: "send-bad-icp-request",
-          statusAfter: "Checking ICP fit",
-          at: `+=${E.beat}`
-        },
-        { kind: "assistant", text: "Are you sure? this doesn't fit your ICP", at: "+=0.08" },
-        {
-          kind: "prompt",
-          text: "Okay, generate leads ranked by how personally connected they are to us.",
-          duration: E.typeMedium,
+          text: "Generate leads ranked by how personally connected they are to me.",
+          duration: M.typeMedium,
           sendLabel: "send-proximity-list",
           statusAfter: "Ranking proximity",
-          at: `+=${E.beat}`
+          at: `+=${M.beat}`
         },
         {
           kind: "thinking",
-          label: "Scoring shared schools, fields of study, mutual contacts, and warm signals",
-          hold: E.thinkingMedium
+          thinking: {
+            title: "Ranking connected leads",
+            items: [
+              {
+                label: "Scoring shared schools, fields of study, mutual contacts, and warm signals"
+              }
+            ]
+          },
+          hold: M.thinkingMedium
         },
-        { kind: "custom", build: () => r.chat.proximityLeadList(Jn), at: "-=0.04" },
-        et(Ue.bottomRight, "+=0.16")
+        { kind: "custom", build: () => r.chat.proximityLeadList(br), at: "-=0.04" },
+        dt(Xe.bottomRight, "+=0.16")
       ]);
     }
   },
@@ -9754,116 +10919,106 @@ const Wd = {
     eyebrow: "Engagement engine",
     summary: "The assistant turns website visitor intent into a paginated list and engagement actions.",
     assetUrls: [
-      ...Ht($n),
-      ...lo(va)
+      ...ta(yr),
+      ...Io(qa)
     ],
-    entry: Ma.researchBrief,
-    entryLeadTime: Ra,
+    entry: Ha.researchBrief,
+    entryLeadTime: Ga,
     build: (r) => {
-      const e = N(
-        '[data-data-table="website-visitors-sales"] [data-table-page-button="2"]',
+      const e = O(
+        '[data-data-table="website-visitors-sales"] [data-page-button-role="next"]',
         "center"
-      ), t = N(
-        '[data-data-table="website-visitors-sales"] [data-table-action="power-dialer"]',
-        "center",
-        { desktop: { x: 5, y: 0 }, tablet: { x: 4, y: 0 }, mobile: { x: 3, y: 0 } },
-        !1
-      ), a = N(
+      ), t = O(
         '[data-data-table="website-visitors-sales"] [data-table-action="email-sequence"]',
         "center",
         {},
         !1
-      ), [i, n] = io(va, 2), o = N(
+      ), [a, i] = Eo(qa, 2), n = O(
+        `[data-sequence-person-card="visitor-outreach-sequences:${a}"]`,
+        "center"
+      ), o = O(
         `[data-sequence-person-card="visitor-outreach-sequences:${i}"]`,
         "center"
-      ), s = N(
-        `[data-sequence-person-card="visitor-outreach-sequences:${n}"]`,
-        "center"
-      ), l = N(
+      ), s = O(
         '[data-sequence-kickoff="visitor-outreach-sequences"]',
         "center"
       );
-      return Ie(r, [
+      return He(r, [
         {
           kind: "prompt",
           text: "Show me 50 sales leaders that have recently visited my website.",
-          duration: E.typeLong,
+          duration: M.typeLong,
           sendLabel: "send-visitor-sales-list",
           statusBefore: "finding visitors",
           statusAfter: "building visitor list",
           fromEntry: !0
         },
-        { kind: "dataTable", config: $n, at: "-=0.02" },
-        wo("website-visitors-sales", E.beat + 0.42, "+=0.08", {
+        { kind: "custom", build: () => r.chat.dataTable(yr), at: "-=0.02" },
+        zo("website-visitors-sales", Ou, "+=0.08", {
           align: "top",
-          offset: -190,
-          settleDelay: 0.32
+          bottomClearance: Lu
         }),
-        {
-          kind: "custom",
-          build: () => r.chat.scrollToLiveTimeline(E.beat + 0.42),
-          at: "+=0.08"
-        },
         {
           kind: "cursorMove",
           target: e,
-          options: { mode: "pointer", intent: "click", speed: "normal", label: "open-visitor-page-2" },
-          at: "+=0.2"
+          options: Bu,
+          at: `+=${Nu}`
         },
-        { kind: "cursorClick", at: "-=0.02" },
-        { kind: "custom", build: () => r.chat.dataTablePage("website-visitors-sales", 2), at: "-=0.03" },
+        { kind: "cursorClick", at: "+=0.08" },
+        { kind: "custom", build: () => r.chat.dataTablePage("website-visitors-sales", 2), at: "-=0.02" },
         { kind: "status", text: "ready to engage", at: "+=0.1" },
         {
           kind: "custom",
-          build: () => r.timeline().to({}, { duration: E.beat + 0.58 })
+          build: () => r.timeline().to({}, { duration: M.beat })
         },
         {
           kind: "cursorMove",
           target: t,
-          options: {
-            mode: "pointer",
-            intent: "hover",
-            speed: "slow",
-            durationScale: 1.45,
-            label: "hover-power-dialer"
-          },
-          at: "+=0.42"
-        },
-        { kind: "custom", build: () => r.timeline().to({}, { duration: E.beat + 2 }), at: "+=0.12" },
-        {
-          kind: "cursorMove",
-          target: a,
-          options: { mode: "pointer", intent: "hover", speed: "slow", label: "hover-email-sequence" }
+          options: qu,
+          at: "+=0.12"
         },
         { kind: "cursorClick", at: "+=0.18" },
+        { kind: "custom", build: () => r.chat.dataTableActionSelected("website-visitors-sales", "email-sequence"), at: "<" },
         { kind: "status", text: "building outreach sequence", at: "<" },
-        { kind: "custom", build: () => r.chat.sequenceBuildThinking(Wd), at: "+=0.06" },
-        { kind: "sequenceEngagement", config: va, at: "-=0.02" },
-        { kind: "custom", build: () => r.timeline().to({}, { duration: E.beat + 0.24 }), at: "+=0.04" },
+        { kind: "custom", build: () => r.chat.sequenceBuildThinking(Qu), at: "+=0.06" },
+        { kind: "custom", build: () => r.chat.sequenceEngagement(qa), at: "-=0.02" },
+        { kind: "custom", build: () => r.timeline().to({}, { duration: M.beat }), at: "+=0.04" },
+        {
+          kind: "custom",
+          build: () => r.chat.sequencePersonCardIntoView("visitor-outreach-sequences", a),
+          at: "+=0.02"
+        },
+        {
+          kind: "cursorMove",
+          target: n,
+          options: { ...hr, label: "preview-next-sequence" },
+          at: "+=0.02"
+        },
+        { kind: "cursorClick", at: "+=0.08" },
+        { kind: "custom", build: () => r.chat.sequencePerson("visitor-outreach-sequences", a), at: "-=0.03" },
+        { kind: "custom", build: () => r.timeline().to({}, { duration: M.beat }), at: "+=0.04" },
+        {
+          kind: "custom",
+          build: () => r.chat.sequencePersonCardIntoView("visitor-outreach-sequences", i),
+          at: "+=0.02"
+        },
         {
           kind: "cursorMove",
           target: o,
-          options: { mode: "pointer", intent: "click", speed: "normal", label: "preview-next-sequence" }
+          options: { ...hr, label: "preview-following-sequence" },
+          at: "+=0.02"
         },
-        { kind: "cursorClick", at: "-=0.02" },
+        { kind: "cursorClick", at: "+=0.08" },
         { kind: "custom", build: () => r.chat.sequencePerson("visitor-outreach-sequences", i), at: "-=0.03" },
-        { kind: "custom", build: () => r.timeline().to({}, { duration: E.beat + 0.24 }), at: "+=0.04" },
+        { kind: "custom", build: () => r.timeline().to({}, { duration: M.beat + 0.28 }), at: "+=0.04" },
+        ...Uo("visitor-outreach-sequences", [1, 2, 3], "+=0.22"),
         {
           kind: "cursorMove",
           target: s,
-          options: { mode: "pointer", intent: "click", speed: "normal", label: "preview-following-sequence" }
+          options: { ...Fu, label: "kickoff-visitor-sequence" }
         },
-        { kind: "cursorClick", at: "-=0.02" },
-        { kind: "custom", build: () => r.chat.sequencePerson("visitor-outreach-sequences", n), at: "-=0.03" },
-        { kind: "custom", build: () => r.timeline().to({}, { duration: E.beat + 0.28 }), at: "+=0.04" },
-        ...fo("visitor-outreach-sequences", [1, 2, 3], "+=0.22"),
-        {
-          kind: "cursorMove",
-          target: l,
-          options: { mode: "pointer", intent: "click", speed: "normal", label: "kickoff-visitor-sequence" }
-        },
-        { kind: "cursorClick", at: "-=0.02" },
-        { kind: "custom", build: () => r.chat.sequenceKickoff("visitor-outreach-sequences"), at: "-=0.04" },
+        { kind: "cursorClick", at: "+=0.12" },
+        { kind: "custom", build: () => r.chat.sequenceKickoff("visitor-outreach-sequences"), at: "-=0.02" },
         { kind: "custom", build: () => r.chat.enrollmentProgress({ total: 50 }), at: "+=0.08" }
       ]);
     }
@@ -9881,14 +11036,14 @@ const Wd = {
     },
     entryLeadTime: 0.18,
     build: (r) => {
-      const e = r.chat.prepareCsvDropArea(), t = r.chat.prepareCursorFile("may_webinar_attendees.csv", r.cursor), a = N("[data-chat-shell]", "center", {
+      const e = r.chat.prepareCsvDropArea(), t = r.chat.prepareCursorFile("may_webinar_attendees.csv", r.cursor), a = O("[data-chat-shell]", "center", {
         desktop: { x: 0, y: 82 },
         tablet: { x: 0, y: 72 },
         mobile: { x: 0, y: 64 }
       });
-      return Ie(r, [
+      return He(r, [
         { kind: "status", text: "waiting for CSV" },
-        { kind: "custom", build: () => t.startFollow(), at: `+=${E.fileGrab}` },
+        { kind: "custom", build: () => t.startFollow(), at: `+=${M.fileGrab}` },
         { kind: "custom", build: () => e.revealWhenCursorEnters(r.cursor), at: "<" },
         {
           kind: "cursorMove",
@@ -9906,11 +11061,15 @@ const Wd = {
           at: "<"
         },
         { kind: "custom", build: () => e.activate(), at: "<+=0.02" },
-        { kind: "custom", build: () => r.timeline().to({}, { duration: E.beat }) },
+        { kind: "custom", build: () => r.timeline().to({}, { duration: M.beat }) },
         { kind: "custom", build: () => e.complete() },
         { kind: "custom", build: () => t.releaseAtDrop(), at: "<" },
-        { kind: "custom", build: () => t.landAsUploadedFile("may_webinar_attendees.csv", "54 records"), at: "<" },
-        { kind: "dataTable", config: jd, at: "+=0.08" },
+        {
+          kind: "custom",
+          build: () => t.landAsUploadedFile("may_webinar_attendees.csv", "54 records", { preserveScroll: !0 }),
+          at: "<"
+        },
+        { kind: "dataTable", config: ju, at: `+=${M.beat}` },
         { kind: "status", text: "Cleaning CSV", at: "<" },
         {
           kind: "thinking",
@@ -9921,20 +11080,20 @@ const Wd = {
             "Removing duplicates and empty rows"
           ],
           hold: 0.34,
-          at: `+=${E.beat}`
+          at: `+=${M.beat}`
         },
         { kind: "assistant", text: "I cleaned the attendee list and normalized the fields that matter for routing and follow-up." },
-        { kind: "dataTable", config: Kd, at: "-=0.04" },
-        et(Ue.bottomRight, "+=0.18")
+        { kind: "dataTable", config: Ku, at: "-=0.04" },
+        dt(Xe.bottomRight, "+=0.18")
       ]);
     }
   }
-], pa = {
+], Ca = {
   radius: 48,
   sampleWindowMs: 900,
   minTravel: 34,
   minAxisReversals: 1
-}, pt = {
+}, xt = {
   sampleWindowMs: 960,
   minDurationMs: 620,
   minTravel: 480,
@@ -9942,7 +11101,7 @@ const Wd = {
   minAverageSpeed: 0.54,
   minTravelToNetRatio: 2.55,
   maxNetDistance: 165
-}, ee = {
+}, ne = {
   smoothing: 0.22,
   trailDistance: 60,
   minPointerDistance: 44,
@@ -9954,7 +11113,7 @@ const Wd = {
   reengageRadius: 84,
   maxBrowserDistance: 600,
   returnDelayMs: 320
-}, Qe = {
+}, at = {
   smoothing: 0.22,
   orbitMs: 1620,
   bobMs: 690,
@@ -9963,17 +11122,17 @@ const Wd = {
   bobY: 10,
   minPointerDistance: 56,
   viewportInset: 14
-}, ga = {
+}, Ta = {
   durationMs: 920,
   pointIntervalMs: 155,
   radius: 24,
   smoothing: 0.2
-}, li = {
+}, _i = {
   durationMs: 980,
   amplitude: 18,
   arriveDistance: 3.5
 };
-class Xd {
+class Xu {
   constructor(e, t, a = {}) {
     this.root = e, this.cursor = t, this.options = a;
   }
@@ -10031,7 +11190,7 @@ class Xd {
     }
     if (this.active) {
       const a = performance.now();
-      this.mode === "follow" ? (this.updateFollowTarget(t), this.lastMoveAt = a, this.trackDismissShake(t, a), this.hasDismissShake() && this.startReturnAfterPause(0)) : this.mode === "play" ? this.pointer && je(t, this.pointer) < 3 ? this.pointer = t : this.resumeFollowing(t) : this.mode === "sniff" && this.isPointNearStoryCursor(t, ee.reengageRadius) && this.resumeFollowing(t), this.scheduleFollow();
+      this.mode === "follow" ? (this.updateFollowTarget(t), this.lastMoveAt = a, this.trackDismissShake(t, a), this.hasDismissShake() && this.startReturnAfterPause(0)) : this.mode === "play" ? this.pointer && it(t, this.pointer) < 3 ? this.pointer = t : this.resumeFollowing(t) : this.mode === "sniff" && this.isPointNearStoryCursor(t, ne.reengageRadius) && this.resumeFollowing(t), this.scheduleFollow();
       return;
     }
     if (!this.isPointNearStoryCursor(t)) {
@@ -10060,7 +11219,7 @@ class Xd {
       return;
     }
     if (this.mode === "sniff") {
-      this.updateSniffTarget(e), this.target && this.cursor.mimicViewportPoint(this.target, ga.smoothing, this.target), e - this.sniffStartedAt >= ga.durationMs && this.startReturnAfterPause(), this.scheduleFollow();
+      this.updateSniffTarget(e), this.target && this.cursor.mimicViewportPoint(this.target, Ta.smoothing, this.target), e - this.sniffStartedAt >= Ta.durationMs && this.startReturnAfterPause(), this.scheduleFollow();
       return;
     }
     if (this.mode === "play") {
@@ -10068,12 +11227,12 @@ class Xd {
         this.startReturnAfterPause();
         return;
       }
-      this.updatePlayTarget(e), this.target && this.cursor.mimicViewportPoint(this.target, Qe.smoothing, this.pointer), this.scheduleFollow();
+      this.updatePlayTarget(e), this.target && this.cursor.mimicViewportPoint(this.target, at.smoothing, this.pointer), this.scheduleFollow();
       return;
     }
     if (this.mode === "return") {
-      const t = this.getReturnHomePoint(), a = Jd((e - this.returnStartedAt) / li.durationMs), i = this.getReturnWavePoint(a, t), n = this.getReturnWavePoint(Math.min(1, a + 0.035), t);
-      if (this.target = t, this.cursor.mimicViewportPoint(i, 1, a < 1 ? n : t), a >= 1 || je(this.getCursorViewportPoint(), t) <= li.arriveDistance) {
+      const t = this.getReturnHomePoint(), a = Ju((e - this.returnStartedAt) / _i.durationMs), i = this.getReturnWavePoint(a, t), n = this.getReturnWavePoint(Math.min(1, a + 0.035), t);
+      if (this.target = t, this.cursor.mimicViewportPoint(i, 1, a < 1 ? n : t), a >= 1 || it(this.getCursorViewportPoint(), t) <= _i.arriveDistance) {
         this.cursor.mimicViewportPoint(t, 1, t), this.completeReturn();
         return;
       }
@@ -10085,11 +11244,11 @@ class Xd {
         this.startReturnAfterPause();
         return;
       }
-      if (e - this.lastMoveAt > ee.idleTimeoutMs) {
+      if (e - this.lastMoveAt > ne.idleTimeoutMs) {
         this.startPlayfulIdle(e);
         return;
       }
-      this.applyMomentum(e), this.cursor.mimicViewportPoint(this.target, ee.smoothing, this.pointer ?? this.target), this.scheduleFollow();
+      this.applyMomentum(e), this.cursor.mimicViewportPoint(this.target, ne.smoothing, this.pointer ?? this.target), this.scheduleFollow();
     }
   };
   updateFollowTarget(e) {
@@ -10105,13 +11264,13 @@ class Xd {
       i > 1.5 && (this.trailDirection = {
         x: a.x / i,
         y: a.y / i
-      }, this.velocity = au(a, ee.maxMomentumStep));
+      }, this.velocity = ah(a, ne.maxMomentumStep));
     }
     const t = {
-      x: e.x - this.trailDirection.x * ee.trailDistance,
-      y: e.y - this.trailDirection.y * ee.trailDistance
+      x: e.x - this.trailDirection.x * ne.trailDistance,
+      y: e.y - this.trailDirection.y * ne.trailDistance
     };
-    je(e, t) < ee.minPointerDistance && (t.x = e.x - this.trailDirection.x * ee.minPointerDistance, t.y = e.y - this.trailDirection.y * ee.minPointerDistance), this.target = t, this.pointer = e, this.lastPointer = e;
+    it(e, t) < ne.minPointerDistance && (t.x = e.x - this.trailDirection.x * ne.minPointerDistance, t.y = e.y - this.trailDirection.y * ne.minPointerDistance), this.target = t, this.pointer = e, this.lastPointer = e;
   }
   startPlayfulIdle(e) {
     if (!this.active || !this.pointer) return;
@@ -10120,11 +11279,11 @@ class Xd {
   }
   updatePlayTarget(e) {
     if (!this.pointer) return;
-    const t = e - this.playStartedAt, a = this.playPhase + t / Qe.orbitMs * Math.PI * 2, i = Math.sin(t / Qe.bobMs * Math.PI * 2), n = {
-      x: this.pointer.x + Math.cos(a) * Qe.radiusX,
-      y: this.pointer.y + Math.sin(a * 1.28) * Qe.radiusY + i * Qe.bobY
+    const t = e - this.playStartedAt, a = this.playPhase + t / at.orbitMs * Math.PI * 2, i = Math.sin(t / at.bobMs * Math.PI * 2), n = {
+      x: this.pointer.x + Math.cos(a) * at.radiusX,
+      y: this.pointer.y + Math.sin(a * 1.28) * at.radiusY + i * at.bobY
     };
-    this.target = $d(n, this.pointer, Qe.minPointerDistance, Qe.viewportInset);
+    this.target = $u(n, this.pointer, at.minPointerDistance, at.viewportInset);
   }
   resumeFollowing(e) {
     this.mode = "follow", this.sniffAnchor = null, this.nextSniffAt = 0, this.sniffIndex = 0, this.playStartedAt = 0, this.playPhase = 0, this.returnAt = 0, this.lastPointer = e, this.updateFollowTarget(e), this.dismissSamples = [], this.lastMoveAt = performance.now();
@@ -10136,22 +11295,22 @@ class Xd {
   }
   updateSniffTarget(e) {
     if (this.sniffAnchor || (this.sniffAnchor = this.getCursorViewportPoint()), this.target && e < this.nextSniffAt) return;
-    const t = this.sniffIndex, a = t * 1.92, i = ga.radius * (t % 2 === 0 ? 1 : 0.58);
+    const t = this.sniffIndex, a = t * 1.92, i = Ta.radius * (t % 2 === 0 ? 1 : 0.58);
     this.target = {
       x: this.sniffAnchor.x + Math.cos(a) * i,
       y: this.sniffAnchor.y + Math.sin(a) * i * 0.62
-    }, this.sniffIndex += 1, this.nextSniffAt = e + ga.pointIntervalMs;
+    }, this.sniffIndex += 1, this.nextSniffAt = e + Ta.pointIntervalMs;
   }
   applyMomentum(e) {
-    !this.target || e - this.lastMoveAt < 48 || Math.hypot(this.velocity.x, this.velocity.y) < ee.minMomentum || (this.target = {
-      x: this.target.x + this.velocity.x * ee.momentumScale,
-      y: this.target.y + this.velocity.y * ee.momentumScale
+    !this.target || e - this.lastMoveAt < 48 || Math.hypot(this.velocity.x, this.velocity.y) < ne.minMomentum || (this.target = {
+      x: this.target.x + this.velocity.x * ne.momentumScale,
+      y: this.target.y + this.velocity.y * ne.momentumScale
     }, this.velocity = {
-      x: this.velocity.x * ee.momentumDecay,
-      y: this.velocity.y * ee.momentumDecay
+      x: this.velocity.x * ne.momentumDecay,
+      y: this.velocity.y * ne.momentumDecay
     });
   }
-  startReturnAfterPause(e = ee.returnDelayMs) {
+  startReturnAfterPause(e = ne.returnDelayMs) {
     this.active && (this.mode = "returnWait", this.target = null, this.pointer = null, this.lastPointer = null, this.returnStart = null, this.returnStartedAt = 0, this.playStartedAt = 0, this.playPhase = 0, this.velocity = { x: 0, y: 0 }, this.dismissSamples = [], window.cancelAnimationFrame(this.frame), this.frame = 0, this.returnAt = performance.now() + e, this.scheduleFollow());
   }
   beginReturn(e) {
@@ -10162,15 +11321,15 @@ class Xd {
     return this.cursor.getHistoryParkViewportPoint();
   }
   getReturnWavePoint(e, t) {
-    const a = this.returnStart ?? this.getCursorViewportPoint(), i = Zd(e), n = t.x - a.x, o = t.y - a.y, s = Math.hypot(n, o), l = {
+    const a = this.returnStart ?? this.getCursorViewportPoint(), i = Zu(e), n = t.x - a.x, o = t.y - a.y, s = Math.hypot(n, o), c = {
       x: a.x + n * i,
       y: a.y + o * i
     };
-    if (s < 1) return l;
-    const c = Math.sin(Math.PI * e), d = Math.sin(Math.PI * 2 * e) * c * li.amplitude * this.returnWaveDirection;
+    if (s < 1) return c;
+    const l = Math.sin(Math.PI * e), d = Math.sin(Math.PI * 2 * e) * l * _i.amplitude * this.returnWaveDirection;
     return {
-      x: l.x - o / s * d,
-      y: l.y + n / s * d
+      x: c.x - o / s * d,
+      y: c.y + n / s * d
     };
   }
   completeReturn() {
@@ -10183,17 +11342,17 @@ class Xd {
       x: t.left + a.x,
       y: t.top + a.y
     };
-    return tu(i, e) > ee.maxBrowserDistance;
+    return th(i, e) > ne.maxBrowserDistance;
   }
   getChatShell() {
     return this.chatShell?.isConnected ? this.chatShell : (this.chatShell = this.root.querySelector("[data-chat-shell]"), this.chatShell);
   }
-  isPointNearStoryCursor(e, t = pa.radius) {
+  isPointNearStoryCursor(e, t = Ca.radius) {
     const a = this.root.getBoundingClientRect(), i = this.cursor.readPosition(), n = {
       x: a.left + i.x,
       y: a.top + i.y
     };
-    return je(e, n) <= t;
+    return it(e, n) <= t;
   }
   isPointInsideViewport(e) {
     return e.x >= 0 && e.x <= window.innerWidth && e.y >= 0 && e.y <= window.innerHeight;
@@ -10206,10 +11365,10 @@ class Xd {
     };
   }
   pruneSamples(e) {
-    this.pruneSampleList(this.samples, e, pa.sampleWindowMs);
+    this.pruneSampleList(this.samples, e, Ca.sampleWindowMs);
   }
   trackDismissShake(e, t) {
-    this.dismissSamples.push({ ...e, time: t }), this.pruneSampleList(this.dismissSamples, t, pt.sampleWindowMs);
+    this.dismissSamples.push({ ...e, time: t }), this.pruneSampleList(this.dismissSamples, t, xt.sampleWindowMs);
   }
   pruneSampleList(e, t, a) {
     let i = 0;
@@ -10220,8 +11379,8 @@ class Xd {
   hasMimicGesture() {
     return this.samples.length < 4 ? !1 : this.samples.reduce((t, a, i) => {
       const n = this.samples[i - 1];
-      return n ? t + je(a, n) : t;
-    }, 0) >= pa.minTravel && this.countAxisReversals(this.samples) >= pa.minAxisReversals;
+      return n ? t + it(a, n) : t;
+    }, 0) >= Ca.minTravel && this.countAxisReversals(this.samples) >= Ca.minAxisReversals;
   }
   hasDismissShake() {
     if (this.dismissSamples.length < 6) return !1;
@@ -10230,82 +11389,88 @@ class Xd {
     return !1;
   }
   isDismissShakeWindow(e) {
-    const t = e[0], a = e[e.length - 1], i = Math.max(1, a.time - t.time), n = e.reduce((l, c, d) => {
+    const t = e[0], a = e[e.length - 1], i = Math.max(1, a.time - t.time), n = e.reduce((c, l, d) => {
       const u = e[d - 1];
-      return u ? l + je(c, u) : l;
-    }, 0), o = je(t, a), s = n / Math.max(o, 1);
-    return i >= pt.minDurationMs && n >= pt.minTravel && o <= pt.maxNetDistance && n / i >= pt.minAverageSpeed && s >= pt.minTravelToNetRatio && this.countAxisReversals(e) >= pt.minAxisReversals;
+      return u ? c + it(l, u) : c;
+    }, 0), o = it(t, a), s = n / Math.max(o, 1);
+    return i >= xt.minDurationMs && n >= xt.minTravel && o <= xt.maxNetDistance && n / i >= xt.minAverageSpeed && s >= xt.minTravelToNetRatio && this.countAxisReversals(e) >= xt.minAxisReversals;
   }
   countAxisReversals(e) {
     let t = 0, a = 0, i = 0;
     for (let n = 1; n < e.length; n += 1) {
-      const o = e[n - 1], s = e[n], l = ar(s.x - o.x), c = ar(s.y - o.y);
-      l && a && l !== a && (t += 1), c && i && c !== i && (t += 1), l && (a = l), c && (i = c);
+      const o = e[n - 1], s = e[n], c = _r(s.x - o.x), l = _r(s.y - o.y);
+      c && a && c !== a && (t += 1), l && i && l !== i && (t += 1), c && (a = c), l && (i = l);
     }
     return t;
   }
 }
-function je(r, e) {
+function it(r, e) {
   return Math.hypot(e.x - r.x, e.y - r.y);
 }
-function Jd(r) {
+function Ju(r) {
   return Math.min(1, Math.max(0, r));
 }
-function er(r, e, t) {
+function vr(r, e, t) {
   return Math.min(t, Math.max(e, r));
 }
-function Zd(r) {
+function Zu(r) {
   return -(Math.cos(Math.PI * r) - 1) / 2;
 }
-function tr(r, e) {
+function xr(r, e) {
   return {
-    x: er(r.x, e, window.innerWidth - e),
-    y: er(r.y, e, window.innerHeight - e)
+    x: vr(r.x, e, window.innerWidth - e),
+    y: vr(r.y, e, window.innerHeight - e)
   };
 }
-function $d(r, e, t, a) {
-  const i = tr(eu(r, e, t), a);
-  if (je(i, e) >= t * 0.86) return i;
+function $u(r, e, t, a) {
+  const i = xr(eh(r, e, t), a);
+  if (it(i, e) >= t * 0.86) return i;
   const n = {
     x: window.innerWidth / 2 - e.x,
     y: window.innerHeight / 2 - e.y
   }, o = Math.hypot(n.x, n.y) || 1;
-  return tr({
+  return xr({
     x: e.x + n.x / o * t,
     y: e.y + n.y / o * t
   }, a);
 }
-function eu(r, e, t) {
+function eh(r, e, t) {
   const a = r.x - e.x, i = r.y - e.y, n = Math.hypot(a, i);
   if (n >= t) return r;
-  const o = -Math.PI * 0.28, s = n > 0.01 ? a / n : Math.cos(o), l = n > 0.01 ? i / n : Math.sin(o);
+  const o = -Math.PI * 0.28, s = n > 0.01 ? a / n : Math.cos(o), c = n > 0.01 ? i / n : Math.sin(o);
   return {
     x: e.x + s * t,
-    y: e.y + l * t
+    y: e.y + c * t
   };
 }
-function tu(r, e) {
+function th(r, e) {
   const t = Math.max(e.left - r.x, 0, r.x - e.right), a = Math.max(e.top - r.y, 0, r.y - e.bottom);
   return Math.hypot(t, a);
 }
-function au(r, e) {
+function ah(r, e) {
   const t = Math.hypot(r.x, r.y);
   return t <= e || t === 0 ? r : {
     x: r.x / t * e,
     y: r.y / t * e
   };
 }
-function ar(r) {
+function _r(r) {
   return Math.abs(r) < 2 ? 0 : Math.sign(r);
 }
-const ir = {
+const kr = {
   minPixelDelta: 0.5
-}, iu = {
+}, ih = {
   resumeDelay: 0.08
-};
-class nu {
+}, nh = {
+  duration: 0.52,
+  curve: 0.1,
+  ease: "sine.inOut",
+  overshoot: !1,
+  settle: !1
+}, Sr = "chatbotStoriesTheme", rh = /* @__PURE__ */ new Set(["light", "dark", "system"]);
+class oh {
   constructor(e, t, a, i, n, o) {
-    this.root = e, this.stories = t, this.resolver = a, this.cursor = i, this.chat = n, this.options = o, this.storyProgress = this.stories.map(() => 0), this.pausedCursorMimic = new Xd(this.root, this.cursor, {
+    this.root = e, this.stories = t, this.resolver = a, this.cursor = i, this.chat = n, this.options = o, this.storyProgress = this.stories.map(() => 0), this.pausedCursorMimic = new Xu(this.root, this.cursor, {
       onMimicStart: () => this.cancelHistoryParkMotion()
     });
   }
@@ -10334,6 +11499,10 @@ class nu {
   scrubber = null;
   playButton = null;
   resumeButton = null;
+  themeButton = null;
+  themeLabel = null;
+  themePreference = "system";
+  systemThemeQuery = null;
   playing = !1;
   historyPaused = !1;
   storyTabListeners = [];
@@ -10343,7 +11512,7 @@ class nu {
   }
   play() {
     const e = this.historyPaused;
-    this.seekTween?.kill(), this.seekTween = null, this.setHistoryPaused(!1), this.chat.scrollToLive(), this.playing = !0, this.updatePlayButton(), !(e && this.restoreDataTablePagesBeforePlay()) && this.resumeActiveTimeline();
+    this.seekTween?.kill(), this.seekTween = null, this.setHistoryPaused(!1), this.chat.collapsePausedThinkingInteractions(), this.chat.scrollToLive(), this.playing = !0, this.updatePlayButton(), !(e && this.restoreDataTablePagesBeforePlay()) && this.resumeActiveTimeline();
   }
   pause() {
     this.setHistoryPaused(!1), this.playing = !1, this.activeTimeline?.pause(), this.autoAdvance?.kill(), this.seekTween?.kill(), this.seekTween = null, this.updatePlayButton(), this.resumeRestoreTimeline?.kill(), this.resumeRestoreTimeline = null;
@@ -10352,7 +11521,7 @@ class nu {
     if (!this.activeTimeline) return !1;
     const e = this.chat.getDataTablePageRestores();
     if (!e.length) return !1;
-    const t = f.timeline({
+    const t = m.timeline({
       onComplete: () => {
         this.resumeRestoreTimeline = null, this.playing && this.resumeActiveTimeline();
       }
@@ -10363,7 +11532,7 @@ class nu {
     }), this.resumeRestoreTimeline = t, !0;
   }
   buildDataTablePageRestore(e) {
-    const t = f.timeline();
+    const t = m.timeline();
     return t.add(
       this.cursor.moveTo(
         { target: e.target, anchor: "center" },
@@ -10371,10 +11540,11 @@ class nu {
           mode: "pointer",
           intent: "click",
           speed: "quick",
+          ...nh,
           label: `restore-${e.tableId}-page-${e.expectedPage}`
         }
       )
-    ).add(this.cursor.click(), "-=0.02").add(this.chat.dataTablePage(e.tableId, e.expectedPage, { updateExpected: !1 }), "-=0.03"), t;
+    ).add(this.cursor.click(), "+=0.04").add(this.chat.dataTablePage(e.tableId, e.expectedPage, { updateExpected: !1 }), "-=0.02"), t;
   }
   next() {
     const e = this.activeIndex + 1;
@@ -10394,12 +11564,12 @@ class nu {
   }
   updateStories(e, t = {}) {
     if (!e.length) return;
-    const a = this.stories[this.activeIndex]?.id, i = this.stories, n = new Map(this.stories.map((c, d) => [c.id, this.storyProgress[d] ?? 0])), o = this.cursor.getPosition(), s = this.playing, l = ru(i, e);
-    if (this.stories = e, this.storyProgress = this.stories.map((c) => n.get(c.id) ?? 0), this.activeIndex = Math.max(0, this.resolveStoryIndex(a ?? this.stories[0].id)), l && this.renderStoryTabs(), t.restartActive) {
+    const a = this.stories[this.activeIndex]?.id, i = this.stories, n = new Map(this.stories.map((l, d) => [l.id, this.storyProgress[d] ?? 0])), o = this.cursor.getPosition(), s = this.playing, c = sh(i, e);
+    if (this.stories = e, this.storyProgress = this.stories.map((l) => n.get(l.id) ?? 0), this.activeIndex = Math.max(0, this.resolveStoryIndex(a ?? this.stories[0].id)), c && this.renderStoryTabs(), t.restartActive) {
       this.stopTimeline(), this.setHistoryPaused(!1), this.rebuildActiveStoryTimeline(this.activeIndex, o), this.playing = s || this.options.autoplay, this.updatePlayButton(), this.playing && this.activeTimeline?.play();
       return;
     }
-    this.updateStoryMeta(), this.updateAllTabProgress(), Fn(this.stories, this.activeIndex, this.options.resolveAssetUrl);
+    this.updateStoryMeta(), this.updateAllTabProgress(), nr(this.stories, this.activeIndex, this.options.resolveAssetUrl);
   }
   goTo(e, t = {}) {
     const a = this.resolveStoryIndex(e);
@@ -10411,7 +11581,7 @@ class nu {
       this.activateStory(e, a);
       return;
     }
-    this.playing = !1, this.updatePlayButton(), this.storySwitchTimeline = f.timeline({
+    this.playing = !1, this.updatePlayButton(), this.storySwitchTimeline = m.timeline({
       onComplete: () => {
         this.storySwitchTimeline = null, this.activateStory(e, a);
       }
@@ -10442,10 +11612,10 @@ class nu {
       resolver: this.resolver,
       cursor: this.cursor,
       chat: this.chat,
-      timeline: () => f.timeline()
+      timeline: () => m.timeline()
     };
     a.prepare?.(i), this.resolver.refresh();
-    const n = f.timeline({
+    const n = m.timeline({
       paused: !0,
       onUpdate: () => this.updateProgress(),
       onComplete: () => this.handleComplete()
@@ -10454,18 +11624,18 @@ class nu {
       intent: "entry",
       speed: "normal",
       label: "story-entry"
-    }), s = a.build(i), l = a.entryLeadTime ?? 0.24;
-    return n.add(o, 0), s.pause(0), n.add(s, Math.max(0, o.duration() - l)), s.paused(!1), this.chat.prepareStoryStart(), n;
+    }), s = a.build(i), c = a.entryLeadTime ?? 0.24;
+    return n.add(o, 0), s.pause(0), n.add(s, Math.max(0, o.duration() - c)), s.paused(!1), this.chat.prepareStoryStart(), n;
   }
   rebuildActiveStoryTimeline(e, t, a = 0) {
-    this.activeIndex = e, Fn(this.stories, this.activeIndex, this.options.resolveAssetUrl), this.activeTimelineStartPoint = t, this.activeTimeline = this.buildTimeline(this.activeIndex, t), this.renderActiveTimelineProgress(a), this.updateStoryMeta();
+    this.activeIndex = e, nr(this.stories, this.activeIndex, this.options.resolveAssetUrl), this.activeTimelineStartPoint = t, this.activeTimeline = this.buildTimeline(this.activeIndex, t), this.renderActiveTimelineProgress(a), this.updateStoryMeta();
   }
   stopTimeline() {
     this.autoAdvance?.kill(), this.seekTween?.kill(), this.seekTween = null, this.resumeRestoreTimeline?.kill(), this.resumeRestoreTimeline = null, this.cancelHistoryParkMotion(), this.pausedCursorMimic?.setPaused(!1), this.activeTimeline?.kill(), this.activeTimeline = null, this.cursor.resetInteraction();
   }
   handleComplete() {
     const e = this.playing;
-    this.playing = !1, this.updatePlayButton(), !(!this.options.autoplay || !e) && (!this.options.loop && this.activeIndex === this.stories.length - 1 || (this.autoAdvance?.kill(), this.autoAdvance = f.delayedCall(this.options.autoAdvanceDelay, () => {
+    this.playing = !1, this.updatePlayButton(), !(!this.options.autoplay || !e) && (!this.options.loop && this.activeIndex === this.stories.length - 1 || (this.autoAdvance?.kill(), this.autoAdvance = m.delayedCall(this.options.autoAdvanceDelay, () => {
       const t = this.activeIndex + 1;
       if (t >= this.stories.length) {
         this.options.loop && this.resetStoryProgress(), this.goTo(this.options.loop ? 0 : this.activeIndex, { animateExit: !0 });
@@ -10477,7 +11647,7 @@ class nu {
   seekTo(e) {
     if (!this.activeTimeline) return;
     const t = this.playing;
-    this.autoAdvance?.kill(), this.seekTween?.kill(), this.seekTween = null, this.setHistoryPaused(!1), this.chat.stopScrollMotion(), this.cursor.clearTransientInteraction(), this.playing = t, this.renderActiveTimelineProgress(e), t && (this.seekTween = f.delayedCall(iu.resumeDelay, () => {
+    this.autoAdvance?.kill(), this.seekTween?.kill(), this.seekTween = null, this.setHistoryPaused(!1), this.chat.stopScrollMotion(), this.cursor.clearTransientInteraction(), this.playing = t, this.renderActiveTimelineProgress(e), t && (this.seekTween = m.delayedCall(ih.resumeDelay, () => {
       this.seekTween = null, this.playing && this.resumeActiveTimeline(), this.updatePlayButton();
     })), this.updatePlayButton();
   }
@@ -10495,41 +11665,109 @@ class nu {
   }
   updatePlayButton() {
     const e = this.playButton;
-    e && (e.textContent = this.playing ? "Pause" : "Play", e.setAttribute("aria-label", this.playing ? "Pause animation" : "Play animation"));
+    this.root.dataset.storyPaused = String(!this.playing), e && (e.textContent = this.playing ? "Pause" : "Play", e.setAttribute("aria-label", this.playing ? "Pause animation" : "Play animation"));
   }
   attachControls() {
-    this.renderStoryTabs(), this.scrubber = this.root.querySelector("[data-story-scrubber]"), this.playButton = this.root.querySelector("[data-toggle-play]"), this.resumeButton = this.root.querySelector("[data-history-resume]"), this.on("[data-prev-story]", "click", () => this.previous()), this.on("[data-next-story]", "click", () => this.next()), this.on("[data-toggle-play]", "click", () => {
+    this.renderStoryTabs(), this.scrubber = this.root.querySelector("[data-story-scrubber]"), this.playButton = this.root.querySelector("[data-toggle-play]"), this.resumeButton = this.root.querySelector("[data-history-resume]"), this.themeButton = this.root.querySelector("[data-theme-toggle]"), this.themeLabel = this.root.querySelector("[data-theme-toggle-label]"), this.attachThemeToggle(), this.on("[data-prev-story]", "click", () => this.previous()), this.on("[data-next-story]", "click", () => this.next()), this.on("[data-toggle-play]", "click", () => {
       this.playing ? this.pause() : this.play();
-    }), this.on("[data-history-resume]", "click", () => this.play()), this.on("[data-story-scrubber]", "input", (e) => {
+    }), this.on("[data-history-resume]", "click", () => this.play()), this.onRoot(Po, (e) => {
+      e.preventDefault(), this.playing && this.pauseForChatHistory();
+    }), this.on("[data-story-scrubber]", "input", (e) => {
       const t = e.currentTarget;
       this.seekTo(Number(t.value) / 1e3);
     }), this.attachChatHistoryScroll();
   }
+  attachThemeToggle() {
+    if (this.systemThemeQuery = window.matchMedia?.("(prefers-color-scheme: dark)") ?? null, this.themePreference = this.getInitialThemePreference(), this.applyThemePreference(this.themePreference), this.systemThemeQuery) {
+      const e = this.systemThemeQuery, t = () => this.applyThemePreference(this.themePreference);
+      e.addEventListener("change", t), this.listeners.push(() => e.removeEventListener("change", t));
+    }
+    this.on("[data-theme-toggle]", "click", () => {
+      const e = this.getResolvedTheme() === "dark" ? "light" : "dark";
+      this.setThemePreference(e);
+    });
+  }
+  getInitialThemePreference() {
+    return this.readStoredThemePreference() ?? this.readRootThemePreference() ?? "system";
+  }
+  readStoredThemePreference() {
+    try {
+      const e = window.localStorage?.getItem(Sr);
+      return this.normalizeThemePreference(e);
+    } catch {
+      return null;
+    }
+  }
+  readRootThemePreference() {
+    return this.normalizeThemePreference(this.root.dataset.theme);
+  }
+  normalizeThemePreference(e) {
+    return rh.has(e) ? e : null;
+  }
+  setThemePreference(e) {
+    this.themePreference = e, this.applyThemePreference(e);
+    try {
+      window.localStorage?.setItem(Sr, e);
+    } catch {
+    }
+  }
+  applyThemePreference(e) {
+    const t = this.resolveTheme(e);
+    this.root.dataset.theme = e, this.root.dataset.resolvedTheme = t, document.documentElement.style.setProperty("--wa-page-bg", t === "dark" ? "#10100d" : "#fffff9"), document.documentElement.style.colorScheme = t, this.updateThemeToggle(t);
+  }
+  resolveTheme(e) {
+    return e !== "system" ? e : this.systemThemeQuery?.matches ? "dark" : "light";
+  }
+  getResolvedTheme() {
+    return this.resolveTheme(this.themePreference);
+  }
+  updateThemeToggle(e) {
+    const t = this.themeButton, a = e === "dark";
+    this.themeLabel && (this.themeLabel.textContent = a ? "Dark" : "Light"), t && (t.setAttribute("aria-pressed", String(a)), t.setAttribute("aria-label", a ? "Switch to light mode" : "Switch to dark mode"));
+  }
   createStoryTab(e, t) {
-    const a = document.createElement("button");
-    a.className = "wa-story-tab", a.type = "button", a.dataset.storyTab = e.id, a.style.setProperty("--wa-tab-progress", "0"), a.setAttribute("aria-pressed", "false");
-    const i = (d) => {
-      if ((d.target instanceof Element ? d.target : null)?.closest(".wa-story-tab__marker")) {
-        d.preventDefault();
-        return;
+    const a = document.createElement("div");
+    a.className = "wa-story-tab", a.dataset.storyTab = e.id, a.style.setProperty("--wa-tab-progress", "0"), a.setAttribute("role", "button"), a.setAttribute("tabindex", "0"), a.setAttribute("aria-pressed", "false");
+    const i = (u) => {
+      const h = u.target instanceof Element ? u.target : null;
+      if (!h?.closest(".wa-story-tab__link")) {
+        if (h?.closest(".wa-story-tab__marker")) {
+          u.preventDefault();
+          return;
+        }
+        this.goTo(t);
       }
-      this.goTo(t);
+    }, n = (u) => {
+      (u.target instanceof Element ? u.target : null)?.closest(".wa-story-tab__link") || u.key !== "Enter" && u.key !== " " || (u.preventDefault(), this.goTo(t));
     };
-    a.addEventListener("click", i), this.storyTabListeners.push(() => a.removeEventListener("click", i));
-    const n = document.createElement("span");
-    n.className = "wa-story-tab__marker", n.setAttribute("aria-hidden", "true");
-    const o = (d) => this.beginStoryProgressScrub(d, t, n);
-    n.addEventListener("pointerdown", o), this.storyTabListeners.push(() => n.removeEventListener("pointerdown", o));
-    const s = document.createElement("span");
-    s.className = "wa-story-tab__body";
+    a.addEventListener("click", i), a.addEventListener("keydown", n), this.storyTabListeners.push(() => a.removeEventListener("click", i)), this.storyTabListeners.push(() => a.removeEventListener("keydown", n));
+    const o = document.createElement("span");
+    o.className = "wa-story-tab__marker", o.setAttribute("aria-hidden", "true");
+    const s = (u) => this.beginStoryProgressScrub(u, t, o);
+    o.addEventListener("pointerdown", s), this.storyTabListeners.push(() => o.removeEventListener("pointerdown", s));
+    const c = document.createElement("span");
+    c.className = "wa-story-tab__body";
     const l = document.createElement("span");
     l.className = "wa-story-tab__count", l.textContent = `${t + 1} / ${this.stories.length}`;
-    const c = document.createElement("span");
-    if (c.className = "wa-story-tab__title", c.textContent = e.navLabel ?? e.label, s.append(l, c), e.navDescription) {
-      const d = document.createElement("span");
-      d.className = "wa-story-tab__description", d.textContent = e.navDescription, s.append(d);
+    const d = document.createElement("span");
+    if (d.className = "wa-story-tab__title", d.textContent = e.navLabel ?? e.label, c.append(l, d), e.navDescription) {
+      const u = document.createElement("span");
+      u.className = "wa-story-tab__description", this.appendStoryDescriptionContent(u, e), c.append(u);
     }
-    return a.append(n, s), a;
+    return a.append(o, c), a;
+  }
+  appendStoryDescriptionContent(e, t) {
+    const a = t.navDescription ?? "", i = t.navDescriptionLink, n = i ? a.indexOf(i.text) : -1;
+    if (!i || n < 0) {
+      e.textContent = a;
+      return;
+    }
+    const o = document.createElement("a");
+    o.className = "wa-story-tab__link", o.href = i.href, o.target = "_blank", o.rel = "noopener noreferrer", o.textContent = i.text, o.setAttribute("aria-label", i.ariaLabel ?? i.text), e.append(
+      document.createTextNode(a.slice(0, n)),
+      o,
+      document.createTextNode(a.slice(n + i.text.length))
+    );
   }
   renderStoryTabs() {
     const e = this.root.querySelector("[data-story-tabs]");
@@ -10546,19 +11784,19 @@ class nu {
   }
   beginStoryProgressScrub(e, t, a) {
     e.preventDefault(), e.stopPropagation(), this.endStoryProgressScrub(!1);
-    const i = this.playing, n = (c) => {
-      c.pointerId === e.pointerId && (c.preventDefault(), this.scrubStoryProgress(t, a, c));
-    }, o = (c) => {
-      c.pointerId === e.pointerId && (c.preventDefault(), this.endStoryProgressScrub(!0));
+    const i = this.playing, n = (l) => {
+      l.pointerId === e.pointerId && (l.preventDefault(), this.scrubStoryProgress(t, a, l));
+    }, o = (l) => {
+      l.pointerId === e.pointerId && (l.preventDefault(), this.endStoryProgressScrub(!0));
     }, s = () => {
       window.removeEventListener("pointermove", n), window.removeEventListener("pointerup", o), window.removeEventListener("pointercancel", o);
-    }, l = this.getMarkerTrack(a);
+    }, c = this.getMarkerTrack(a);
     this.storyProgressScrub = {
       storyIndex: t,
       wasPlaying: i,
       pointerId: e.pointerId,
       marker: a,
-      ...l,
+      ...c,
       removeListeners: s
     }, a.dataset.scrubbing = "true", window.addEventListener("pointermove", n, { passive: !1 }), window.addEventListener("pointerup", o, { passive: !1 }), window.addEventListener("pointercancel", o, { passive: !1 }), this.scrubStoryProgress(t, a, e);
   }
@@ -10582,7 +11820,7 @@ class nu {
   }
   renderActiveTimelineProgress(e) {
     if (!this.activeTimeline) return;
-    const t = ci(e);
+    const t = ki(e);
     if (this.shouldRebuildTimelineForSeek(t)) {
       this.rebuildTimelineForDeterministicSeek(t);
       return;
@@ -10618,12 +11856,12 @@ class nu {
   getMarkerProgress(e, t, a = null) {
     if (a?.marker === e && a.trackLength > 0) {
       const o = a.trackAxis === "x" ? t.clientX : t.clientY;
-      return ci((o - a.trackStart) / a.trackLength);
+      return ki((o - a.trackStart) / a.trackLength);
     }
     const i = this.getMarkerTrack(e);
     if (i.trackLength <= 0) return 0;
     const n = i.trackAxis === "x" ? t.clientX : t.clientY;
-    return ci((n - i.trackStart) / i.trackLength);
+    return ki((n - i.trackStart) / i.trackLength);
   }
   getMarkerTrack(e) {
     const t = e.getBoundingClientRect(), a = t.width > t.height ? "x" : "y";
@@ -10639,13 +11877,13 @@ class nu {
     const a = (i) => {
       if (!this.activeTimeline || Math.abs(i.deltaX) > Math.abs(i.deltaY)) return;
       const n = this.getWheelPixelDelta(i);
-      if (Math.abs(n) < ir.minPixelDelta) return;
+      if (Math.abs(n) < kr.minPixelDelta) return;
       const o = this.getThreadMaxScroll(t);
       if (o <= 0 || !(n < 0 || this.historyPaused)) return;
-      const l = Po(t.scrollTop + n, 0, o);
-      if (!(Math.abs(l - t.scrollTop) >= 0.5)) return;
+      const c = is(t.scrollTop + n, 0, o);
+      if (!(Math.abs(c - t.scrollTop) >= 0.5)) return;
       const d = Math.max(0, n - (o - t.scrollTop));
-      i.preventDefault(), this.pauseForChatHistory(), t.scrollTop = l, d >= ir.minPixelDelta && window.scrollBy({ top: d, left: 0, behavior: "auto" });
+      i.preventDefault(), this.pauseForChatHistory(), t.scrollTop = c, d >= kr.minPixelDelta && window.scrollBy({ top: d, left: 0, behavior: "auto" });
     };
     e.addEventListener("wheel", a, { passive: !1 }), this.listeners.push(() => e.removeEventListener("wheel", a));
   }
@@ -10706,21 +11944,27 @@ class nu {
     const i = this.root.querySelector(e);
     i && (i.addEventListener(t, a), this.listeners.push(() => i.removeEventListener(t, a)));
   }
+  onRoot(e, t) {
+    this.root.addEventListener(e, t), this.listeners.push(() => this.root.removeEventListener(e, t));
+  }
 }
-function Po(r, e, t) {
+function is(r, e, t) {
   return Math.min(t, Math.max(e, r));
 }
-function ci(r) {
-  return Po(r, 0, 1);
+function ki(r) {
+  return is(r, 0, 1);
 }
-function ru(r, e) {
+function sh(r, e) {
   return r.length !== e.length ? !0 : e.some((t, a) => {
     const i = r[a];
-    return !i || i.id !== t.id || i.label !== t.label || i.navLabel !== t.navLabel || i.navDescription !== t.navDescription;
+    return !i || i.id !== t.id || i.label !== t.label || i.navLabel !== t.navLabel || i.navDescription !== t.navDescription || !lh(i.navDescriptionLink, t.navDescriptionLink);
   });
 }
-const ma = ["mobile", "tablet", "desktop", "wide"];
-class ou {
+function lh(r, e) {
+  return r?.text === e?.text && r?.href === e?.href && r?.ariaLabel === e?.ariaLabel;
+}
+const Ea = ["mobile", "tablet", "desktop", "wide"];
+class ch {
   constructor(e) {
     this.root = e;
   }
@@ -10749,8 +11993,8 @@ class ou {
       x: s.x - i.left,
       y: s.y - i.top
     }, a.outside && (s = this.outsidePoint(s, o, i, a.outside)), a.humanOffset) {
-      const l = ro(t), c = Math.min(o.width * 0.18, 18), d = Math.min(o.height * 0.18, 14);
-      s.x += (l() - 0.5) * c, s.y += (l() - 0.5) * d;
+      const c = Do(t), l = Math.min(o.width * 0.18, 18), d = Math.min(o.height * 0.18, 14);
+      s.x += (c() - 0.5) * l, s.y += (c() - 0.5) * d;
     }
     return {
       x: s.x + (a.offset?.x ?? 0),
@@ -10762,10 +12006,10 @@ class ou {
   }
   pickTarget(e) {
     if (this.isBreakpointMap(e)) {
-      const t = this.getBreakpoint(), a = ma.indexOf(t), i = [
+      const t = this.getBreakpoint(), a = Ea.indexOf(t), i = [
         t,
-        ...ma.slice(0, a).reverse(),
-        ...ma.slice(a + 1)
+        ...Ea.slice(0, a).reverse(),
+        ...Ea.slice(a + 1)
       ];
       for (const n of i)
         if (e[n]) return e[n];
@@ -10774,7 +12018,7 @@ class ou {
     return e;
   }
   isBreakpointMap(e) {
-    return ma.some((t) => t in e);
+    return Ea.some((t) => t in e);
   }
   findElement(e) {
     return e ? e instanceof HTMLElement ? e : this.root.querySelector(e) : this.getMotionFallbackElement();
@@ -10817,7 +12061,7 @@ class ou {
     }
   }
   outsidePoint(e, t, a, i) {
-    const n = t.left - a.left, o = t.right - a.left, s = t.top - a.top, l = t.bottom - a.top;
+    const n = t.left - a.left, o = t.right - a.left, s = t.top - a.top, c = t.bottom - a.top;
     switch (i) {
       case "left":
         return { ...e, x: n - 42 };
@@ -10826,16 +12070,16 @@ class ou {
       case "top":
         return { ...e, y: s - 42 };
       case "bottom":
-        return { ...e, y: l + 42 };
+        return { ...e, y: c + 42 };
       default:
         return e;
     }
   }
 }
-function su(r, e = {}) {
-  const t = e.stories?.length ? e.stories : Mo, a = e.builderDraftEndpoint ?? "/api/story-draft", i = Pl(e);
-  Rl(r, i);
-  const n = e.reducedMotion ?? window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? !1, o = new ou(r), s = new uc(r, { resolveAssetUrl: i }), l = new xc(r, o, { reducedMotion: n }), c = new nu(r, t, o, l, s, {
+function dh(r, e = {}) {
+  const t = e.stories?.length ? e.stories : as, a = e.builderDraftEndpoint ?? (e.showBuilder ? "/api/story-draft" : !1), i = wc(e);
+  fc(r, i);
+  const n = e.reducedMotion ?? window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? !1, o = new ch(r), s = new Jc(r, { resolveAssetUrl: i }), c = new od(r, o, { reducedMotion: n }), l = new oh(r, t, o, c, s, {
     autoplay: e.autoplay ?? !0,
     loop: e.loop ?? !0,
     autoAdvanceDelay: e.autoAdvanceDelay ?? 3.2,
@@ -10846,28 +12090,28 @@ function su(r, e = {}) {
   return {
     stories: t,
     draftEndpoint: a,
-    controller: c,
+    controller: l,
     chat: s,
-    cursor: l,
+    cursor: c,
     applyBuilderStories: (u, h = {}) => {
-      c.updateStories($c(u, t), {
+      l.updateStories(Kd(u, t), {
         restartActive: h.source === "load"
       });
     },
     toInstance: (u) => ({
-      play: c.play.bind(c),
-      pause: c.pause.bind(c),
-      next: c.next.bind(c),
-      previous: c.previous.bind(c),
-      goTo: c.goTo.bind(c),
-      getState: c.getState.bind(c),
+      play: l.play.bind(l),
+      pause: l.pause.bind(l),
+      next: l.next.bind(l),
+      previous: l.previous.bind(l),
+      goTo: l.goTo.bind(l),
+      getState: l.getState.bind(l),
       destroy: () => {
-        u?.(), c.destroy(), s.destroy(), l.destroy();
+        u?.(), l.destroy(), s.destroy(), c.destroy();
       }
     })
   };
 }
-const lu = 3, cu = /* @__PURE__ */ new Set([
+const uh = 3, hh = /* @__PURE__ */ new Set([
   "user",
   "assistant",
   "thinking",
@@ -10876,23 +12120,20 @@ const lu = 3, cu = /* @__PURE__ */ new Set([
   "status",
   "file"
 ]);
-function du(r) {
-  if (!Pt(r) || !Array.isArray(r.stories)) return null;
-  const e = typeof r.schemaVersion == "number" ? r.schemaVersion : 1, t = r.stories.map((a) => pu(a)).filter((a) => !!a);
+function ph(r) {
+  if (!et(r) || !Array.isArray(r.stories)) return null;
+  const e = typeof r.schemaVersion == "number" ? r.schemaVersion : 1, t = r.stories.map((a) => mh(a)).filter((a) => !!a);
   return t.length ? { schemaVersion: e, stories: t } : null;
 }
-function uu(r) {
-  return cu.has(r);
+function gh(r) {
+  return hh.has(r);
 }
-function hu(r) {
-  return typeof structuredClone == "function" ? structuredClone(r) : JSON.parse(JSON.stringify(r));
-}
-function Pt(r) {
+function et(r) {
   return !!(r && typeof r == "object" && !Array.isArray(r));
 }
-function pu(r) {
-  if (!Pt(r) || !Array.isArray(r.steps)) return null;
-  const e = ke(r.id), t = ke(r.label), a = ke(r.summary), i = r.steps.map((n) => gu(n)).filter((n) => !!n);
+function mh(r) {
+  if (!et(r) || !Array.isArray(r.steps)) return null;
+  const e = T(r.id), t = T(r.label), a = T(r.summary), i = r.steps.map((n) => wh(n)).filter((n) => !!n);
   return !e || !t || !i.length ? null : {
     id: e,
     label: t,
@@ -10900,66 +12141,324 @@ function pu(r) {
     steps: i
   };
 }
-function gu(r) {
-  if (!Pt(r)) return null;
-  const e = ke(r.id), t = ke(r.kind), a = ke(r.text), i = ke(r.note);
-  return !e || !t || !uu(t) ? null : {
+function wh(r) {
+  if (!et(r)) return null;
+  const e = T(r.id), t = T(r.kind), a = T(r.text), i = T(r.note);
+  return !e || !t || !gh(t) ? null : {
     id: e,
     kind: t,
     text: a ?? "",
     note: i ?? "",
-    thinking: Pt(r.thinking) ? mu(r.thinking, a ?? "", i ?? "") : t === "thinking" ? Ro(a ?? "", i ?? "") : void 0,
-    component: Pt(r.component) ? hu(r.component) : void 0
+    thinking: et(r.thinking) ? Mh(r.thinking, a ?? "", i ?? "") : t === "thinking" ? ns(a ?? "", i ?? "") : void 0,
+    component: fh(r.component)
   };
 }
-function mu(r, e, t) {
-  const i = (Array.isArray(r.items) ? r.items : []).map((n, o) => fu(n, o)).filter((n) => !!n);
-  return i.length ? {
-    title: ke(r.title) ?? Fe,
-    elapsed: ke(r.elapsed) ?? Na(i.length),
-    items: i
-  } : Ro(e, t);
+function fh(r) {
+  if (!et(r)) return;
+  const e = T(r.kind);
+  switch (e) {
+    case "table":
+      return bh(r);
+    case "strategyCards":
+      return yh(r);
+    case "enrichment":
+      return vh(r);
+    case "dataSources":
+      return xh(r);
+    case "uploadedFiles":
+      return _h(r);
+    case "mailboxConnection":
+      return kh(r);
+    case "styleProfile":
+      return Sh(r);
+    case "proximityList":
+      return Ch(r);
+    case "personalizationSwipeGame":
+      return Th(r);
+    case "sequenceEngagement":
+      return Eh(r);
+    case "generic":
+      return {
+        kind: e,
+        title: T(r.title) ?? "Items",
+        items: Wt(r.items)
+      };
+    default:
+      return;
+  }
 }
-function fu(r, e) {
-  if (!Pt(r)) return null;
-  const t = ke(r.label);
+function bh(r) {
+  const e = Wt(r.columns), t = Ih(r.rows);
+  if (!e.length || !t.length) return;
+  const a = Ah(r.pagination), i = qe(r.actions, (n) => {
+    const o = T(n.label);
+    return o ? {
+      label: o,
+      badge: T(n.badge) ?? ""
+    } : null;
+  });
+  return {
+    kind: "table",
+    title: T(r.title) ?? "Table",
+    ...Pe("eyebrow", r.eyebrow),
+    ...Pe("count", r.count),
+    columns: e,
+    rows: t,
+    ...i.length ? { actions: i } : {},
+    ...a ? { pagination: a } : {}
+  };
+}
+function Ah(r) {
+  if (!et(r)) return;
+  const e = Vo(r.ranges), t = Go(r.pageSize) ?? void 0;
+  return e.length ? {
+    ...t ? { pageSize: t } : {},
+    ranges: e
+  } : void 0;
+}
+function yh(r) {
+  return {
+    kind: "strategyCards",
+    title: T(r.title) ?? "Strategy",
+    cards: qe(r.cards, (e) => ({
+      label: T(e.label) ?? "",
+      title: T(e.title) ?? "",
+      summary: T(e.summary) ?? ""
+    })).filter((e) => e.title || e.summary)
+  };
+}
+function vh(r) {
+  return {
+    kind: "enrichment",
+    title: T(r.title) ?? "Enriching",
+    subtitle: T(r.subtitle) ?? "",
+    fields: qe(r.fields, (e) => {
+      const t = T(e.title), a = Wt(e.steps);
+      return t && a.length ? { title: t, steps: a } : null;
+    })
+  };
+}
+function xh(r) {
+  return {
+    kind: "dataSources",
+    title: T(r.title) ?? "Data sources",
+    subtitle: T(r.subtitle) ?? "",
+    sources: qe(r.sources, (e) => {
+      const t = T(e.name);
+      return t ? {
+        ...Pe("category", e.category),
+        name: t,
+        detail: T(e.detail) ?? "",
+        ...Pe("logoSrc", e.logoSrc)
+      } : null;
+    })
+  };
+}
+function _h(r) {
+  return {
+    kind: "uploadedFiles",
+    title: T(r.title) ?? "Files",
+    files: qe(r.files, (e) => {
+      const t = T(e.name);
+      return t ? {
+        name: t,
+        detail: T(e.detail) ?? "",
+        type: T(e.type) ?? ""
+      } : null;
+    })
+  };
+}
+function kh(r) {
+  return {
+    kind: "mailboxConnection",
+    title: T(r.title) ?? "Connect mailbox",
+    subtitle: T(r.subtitle) ?? "",
+    provider: T(r.provider) ?? "gmail",
+    account: T(r.account) ?? "",
+    status: T(r.status) ?? "",
+    ctaLabel: T(r.ctaLabel) ?? "Connect",
+    ...Pe("secondaryCtaLabel", r.secondaryCtaLabel),
+    loadingLabel: T(r.loadingLabel) ?? "connecting",
+    learningTitle: T(r.learningTitle) ?? "Learning your style",
+    learningDetail: T(r.learningDetail) ?? "",
+    ...Pe("learningReadyDetail", r.learningReadyDetail),
+    signals: Wt(r.signals)
+  };
+}
+function Sh(r) {
+  return {
+    kind: "styleProfile",
+    title: T(r.title) ?? "Profile",
+    subtitle: T(r.subtitle) ?? "",
+    signals: qe(r.signals, (e) => {
+      const t = T(e.label);
+      return t ? {
+        label: t,
+        value: T(e.value) ?? ""
+      } : null;
+    }),
+    examples: Wt(r.examples)
+  };
+}
+function Ch(r) {
+  return {
+    kind: "proximityList",
+    title: T(r.title) ?? "Leads",
+    subtitle: T(r.subtitle) ?? "",
+    leads: qe(r.leads, (e) => {
+      const t = T(e.name);
+      return t ? {
+        rank: T(e.rank) ?? "",
+        name: t,
+        company: T(e.company) ?? "",
+        title: T(e.title) ?? "",
+        proximity: T(e.proximity) ?? "",
+        personalization: T(e.personalization) ?? "",
+        score: T(e.score) ?? "",
+        ...Pe("avatarUrl", e.avatarUrl)
+      } : null;
+    })
+  };
+}
+function Th(r) {
+  return {
+    kind: "personalizationSwipeGame",
+    title: T(r.title) ?? "Personalization",
+    subtitle: T(r.subtitle) ?? "",
+    prompt: T(r.prompt) ?? "",
+    signals: qe(r.signals, (e) => {
+      const t = T(e.label);
+      return t ? {
+        label: t,
+        detail: T(e.detail) ?? "",
+        decision: T(e.decision) === "avoid" ? "avoid" : "use"
+      } : null;
+    })
+  };
+}
+function Eh(r) {
+  return {
+    kind: "sequenceEngagement",
+    title: T(r.title) ?? "Engagement",
+    subtitle: T(r.subtitle) ?? "",
+    peopleCount: T(r.peopleCount) ?? "",
+    ...Pe("launchLabel", r.launchLabel),
+    sequences: qe(r.sequences, Ph),
+    channels: qe(r.channels, (e) => {
+      const t = T(e.label);
+      return t ? {
+        label: t,
+        detail: T(e.detail) ?? "",
+        badge: T(e.badge) ?? ""
+      } : null;
+    })
+  };
+}
+function Ph(r) {
+  const e = T(r.name);
+  if (!e) return null;
+  const t = qe(r.steps, (a) => {
+    const i = T(a.label), n = T(a.body);
+    return i || n ? {
+      channel: T(a.channel) ?? "email",
+      label: i ?? "",
+      body: n ?? "",
+      ...Pe("waitDays", a.waitDays)
+    } : null;
+  });
+  return {
+    name: e,
+    company: T(r.company) ?? "",
+    ...Pe("title", r.title),
+    ...Pe("signal", r.signal),
+    ...Pe("avatarUrl", r.avatarUrl),
+    subject: T(r.subject) ?? "",
+    personalization: T(r.personalization) ?? "",
+    ...t.length ? { steps: t } : {}
+  };
+}
+function Mh(r, e, t) {
+  const i = (Array.isArray(r.items) ? r.items : []).map((n, o) => Dh(n, o)).filter((n) => !!n);
+  return i.length ? {
+    title: T(r.title) ?? Fe,
+    elapsed: T(r.elapsed) ?? ln(i.length),
+    items: i
+  } : ns(e, t);
+}
+function Dh(r, e) {
+  if (!et(r)) return null;
+  const t = T(r.label);
   return t ? {
     label: t,
-    detail: ke(r.detail) ?? Yi(t, e),
-    disclosure: ke(r.disclosure) ?? (e === 0 ? kt : ya)
+    detail: T(r.detail) ?? sn(t, e),
+    disclosure: T(r.disclosure) ?? (e === 0 ? Ot : It),
+    ...qh("duration", r.duration),
+    toolCalls: Rh(r.toolCalls)
   } : null;
 }
-function Ro(r, e = "") {
+function Rh(r) {
+  if (!Array.isArray(r)) return;
+  const e = [];
+  return r.forEach((t) => {
+    if (!et(t)) return;
+    const a = T(t.label), i = T(t.vendor);
+    a && e.push({
+      label: a,
+      ...i ? { vendor: i } : {}
+    });
+  }), e.length ? e : void 0;
+}
+function ns(r, e = "") {
   return {
     title: Fe,
-    elapsed: Na(1),
+    elapsed: ln(1),
     items: [
       {
         label: r || "Thinking",
-        detail: e || Yi(r || "Thinking", 0),
-        disclosure: kt
+        detail: e || sn(r || "Thinking", 0),
+        disclosure: Ot
       }
     ]
   };
 }
-function ke(r) {
+function Wt(r) {
+  return Array.isArray(r) ? r.map((e) => T(e)).filter((e) => !!e) : [];
+}
+function Ih(r) {
+  return Array.isArray(r) ? r.map((e) => Wt(e)).filter((e) => e.length) : [];
+}
+function qe(r, e) {
+  return Array.isArray(r) ? r.map((t, a) => et(t) ? e(t, a) : null).filter((t) => !!t) : [];
+}
+function Pe(r, e) {
+  const t = T(e);
+  return t ? { [r]: t } : {};
+}
+function qh(r, e) {
+  const t = Bh(e);
+  return t === null ? {} : { [r]: t };
+}
+function T(r) {
   return typeof r == "string" ? r : null;
 }
-function Xi(r) {
-  const e = du(r);
-  return !e || e.schemaVersion !== lu ? null : e.stories;
+function Bh(r) {
+  return typeof r == "number" && Number.isFinite(r) ? r : null;
 }
-function wu(r) {
+function pn(r) {
+  const e = ph(r);
+  return !e || e.schemaVersion !== uh ? null : e.stories;
+}
+function Lh(r) {
   if (!r || typeof document > "u") return null;
   const e = document.getElementById(r);
   if (!e?.textContent?.trim()) return null;
   try {
-    return Xi(JSON.parse(e.textContent));
+    return pn(JSON.parse(e.textContent));
   } catch {
     return null;
   }
 }
-async function bu(r, e) {
+async function Oh(r, e) {
   try {
     const t = await fetch(r, {
       method: "GET",
@@ -10967,15 +12466,33 @@ async function bu(r, e) {
       headers: { Accept: "application/json" }
     });
     if (!t.ok) return;
-    const a = Xi(await t.json());
+    const a = pn(await t.json());
     if (!a) return;
     e(a, { source: "load" });
   } catch {
   }
 }
-function yu(r) {
+function Nh(r) {
   r.classList.add("wa-section"), !r.querySelector("[data-chat-shell]") && (r.innerHTML = `
     <div class="wa-section__inner">
+      <button class="wa-theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode" aria-pressed="false">
+        <span class="wa-theme-toggle__track" aria-hidden="true">
+          <span class="wa-theme-toggle__icon wa-theme-toggle__icon--light">
+            <svg viewBox="0 0 16 16" focusable="false">
+              <path d="M8 2v1.4M8 12.6V14M3.8 3.8l1 1M11.2 11.2l1 1M2 8h1.4M12.6 8H14M3.8 12.2l1-1M11.2 4.8l1-1"></path>
+              <circle cx="8" cy="8" r="2.4"></circle>
+            </svg>
+          </span>
+          <span class="wa-theme-toggle__icon wa-theme-toggle__icon--dark">
+            <svg viewBox="0 0 16 16" focusable="false">
+              <path d="M10.9 12.7A5.4 5.4 0 0 1 6.5 3.1a4.8 4.8 0 1 0 6.4 6.4 5.4 5.4 0 0 1-2 3.2Z"></path>
+            </svg>
+          </span>
+          <span class="wa-theme-toggle__thumb"></span>
+        </span>
+        <span class="wa-theme-toggle__label" data-theme-toggle-label>System</span>
+      </button>
+
       <div class="wa-copy">
         <h2 class="wa-copy__title" aria-label="Escape tab hell with a unified platform for prospecting, researching, and sequencing, all backed by frontier AI models.">
           <span>Escape tab hell with a unified platform for</span>
@@ -11024,7 +12541,7 @@ function yu(r) {
 
             <div class="wa-chat-shell__body">
               <div class="wa-signup-scene" data-signup-scene>
-                <span class="wa-signup-scene__logo" data-signup-logo-target aria-hidden="true">${to}</span>
+                <span class="wa-signup-scene__logo" data-signup-logo-target aria-hidden="true">${Co}</span>
                 <h3 class="wa-signup-scene__title">Sign up</h3>
                 <div class="wa-signup-field" data-signup-field>
                   <span data-signup-email></span>
@@ -11080,48 +12597,48 @@ function yu(r) {
     </div>
   `);
 }
-function xu(r, e = {}) {
-  yu(r);
-  const t = su(r, e), a = Xi(e.builderDraft) ?? wu(e.builderDraftScriptId);
-  return a && t.applyBuilderStories(a), t.controller.mount(), t.draftEndpoint && bu(t.draftEndpoint, t.applyBuilderStories), t.toInstance();
+function Fh(r, e = {}) {
+  Nh(r);
+  const t = dh(r, e), a = pn(e.builderDraft) ?? Lh(e.builderDraftScriptId);
+  return a && t.applyBuilderStories(a), t.controller.mount(), t.draftEndpoint && Oh(t.draftEndpoint, t.applyBuilderStories), t.toInstance();
 }
-const vu = "[data-chatbot-stories]", _u = "[data-chatbot-stories][data-auto-init]";
-function Au(r, {
-  autoInitSelector: e = _u,
-  defaultTarget: t = vu,
+const Uh = "[data-chatbot-stories]", zh = "[data-chatbot-stories][data-auto-init]";
+function Hh(r, {
+  autoInitSelector: e = zh,
+  defaultTarget: t = Uh,
   injectStyles: a
 } = {}) {
   const i = /* @__PURE__ */ new WeakMap();
-  function n(l = t) {
-    if (l instanceof HTMLElement) return l;
-    const c = document.querySelector(l);
-    if (!c)
-      throw new Error(`ChatbotStories: root element not found for selector "${l}"`);
-    return c;
+  function n(c = t) {
+    if (c instanceof HTMLElement) return c;
+    const l = document.querySelector(c);
+    if (!l)
+      throw new Error(`ChatbotStories: root element not found for selector "${c}"`);
+    return l;
   }
-  function o(l = t, c = {}) {
-    const d = n(l), u = i.get(d);
+  function o(c = t, l = {}) {
+    const d = n(c), u = i.get(d);
     if (u) return u;
-    c.injectStyles !== !1 && a?.();
-    const h = r(d, c), g = h.destroy.bind(h);
-    let m = !1;
+    l.injectStyles !== !1 && a?.();
+    const h = r(d, l), g = h.destroy.bind(h);
+    let w = !1;
     const p = {
       ...h,
       destroy: () => {
-        m || (m = !0, i.delete(d), delete d.dataset.chatbotStoriesMounted, g());
+        w || (w = !0, i.delete(d), delete d.dataset.chatbotStoriesMounted, g());
       }
     };
     return i.set(d, p), d.dataset.chatbotStoriesMounted = "true", p;
   }
   function s() {
-    const l = document.querySelectorAll(e);
-    l.length && (a?.(), l.forEach((c) => o(c, { ...Su(c), injectStyles: !1 })));
+    const c = document.querySelectorAll(e);
+    c.length && (a?.(), c.forEach((l) => o(l, { ...Vh(l), injectStyles: !1 })));
   }
   return { autoInit: s, init: o };
 }
-function Su(r) {
+function Vh(r) {
   const e = {}, t = r.dataset;
-  if (e.autoplay = di(t.autoplay), e.loop = di(t.loop), e.reducedMotion = di(t.reducedMotion), t.autoAdvanceDelay) {
+  if (e.autoplay = Pa(t.autoplay), e.loop = Pa(t.loop), e.reducedMotion = Pa(t.reducedMotion), e.showBuilder = Pa(t.showBuilder), t.autoAdvanceDelay) {
     const a = Number(t.autoAdvanceDelay);
     Number.isFinite(a) && (e.autoAdvanceDelay = a);
   }
@@ -11130,18 +12647,18 @@ function Su(r) {
     e.initialStory = Number.isFinite(a) ? a : t.initialStory;
   }
   if (t.assetBaseUrl && (e.assetBaseUrl = t.assetBaseUrl), t.builderDraftScriptId && (e.builderDraftScriptId = t.builderDraftScriptId === "false" ? !1 : t.builderDraftScriptId), t.assetUrlMap) {
-    const a = ku(t.assetUrlMap);
+    const a = Gh(t.assetUrlMap);
     a && (e.assetUrlMap = a);
   }
-  return t.builderDraftEndpoint && (e.builderDraftEndpoint = t.builderDraftEndpoint === "false" ? !1 : t.builderDraftEndpoint), Cu(e);
+  return t.builderDraftEndpoint && (e.builderDraftEndpoint = t.builderDraftEndpoint === "false" ? !1 : t.builderDraftEndpoint), Qh(e);
 }
-function di(r) {
+function Pa(r) {
   if (r !== void 0) {
     if (r === "true" || r === "") return !0;
     if (r === "false") return !1;
   }
 }
-function ku(r) {
+function Gh(r) {
   try {
     const e = JSON.parse(r);
     return !e || typeof e != "object" || Array.isArray(e) ? void 0 : Object.fromEntries(
@@ -11153,10 +12670,10 @@ function ku(r) {
     return;
   }
 }
-function Cu(r) {
+function Qh(r) {
   return Object.fromEntries(Object.entries(r).filter(([, e]) => e !== void 0));
 }
-function Tu(r, e) {
+function Yh(r, e) {
   const t = document.getElementById(r);
   if (t instanceof HTMLStyleElement) {
     t.textContent !== e && (t.textContent = e);
@@ -11165,20 +12682,20 @@ function Tu(r, e) {
   const a = document.createElement("style");
   a.id = r, a.textContent = e, document.head.append(a);
 }
-const Eu = `:root{--wa-page-bg: #fffff9}html,body{margin:0;background:var(--wa-page-bg)}.wa-section,.wa-section *{box-sizing:border-box}.wa-section,.wa-section[data-theme=light]{--wa-font-sans: "Saans", "Avenir Next", Helvetica, sans-serif;--wa-font-feature: "Feature Text", Georgia, serif;--wa-bg: #fffff9;--wa-panel: #fffff9;--wa-panel-transparent: rgba(255, 255, 249, 0);--wa-ink: #252521;--wa-muted: #11110f;--wa-soft: #dcdcd4;--wa-browser-line: #d7d7cf;--wa-orange: #f23b0a;--wa-red: #f16055;--wa-yellow: #f6ba42;--wa-green: #58bd59;--wa-color-bg: var(--wa-bg);--wa-color-panel: var(--wa-panel);--wa-color-text: var(--wa-ink);--wa-color-heading: var(--wa-ink);--wa-color-heading-strong: #070707;--wa-color-copy: #171714;--wa-color-muted: #5e5c56;--wa-color-accent: var(--wa-orange);--wa-color-inverse: #fffff9;--wa-color-dark-surface: #171714;--wa-color-soft-surface: #f5f4ed;--wa-color-user-message: #ecebe5;--wa-color-input-line: #d9d8d1;--wa-color-data-table-surface: #fffffe;--wa-color-positive: #177947;--wa-color-warning: #b44927;--wa-line-08: rgba(23, 23, 20, .08);--wa-line-10: rgba(23, 23, 20, .1);--wa-line-12: rgba(23, 23, 20, .12);--wa-line-16: rgba(23, 23, 20, .16);--wa-line-20: rgba(23, 23, 20, .2);--wa-placeholder: rgba(23, 23, 20, .38);--wa-browser-bar-bg: rgba(255, 255, 249, .96);--wa-window-highlight: rgba(255, 255, 255, .86);--wa-window-hairline: rgba(0, 0, 0, .03);--wa-card-accent-bg: rgba(242, 59, 10, .13);--wa-row-bg: rgba(245, 244, 237, .82);--wa-cursor-shadow: rgba(0, 0, 0, .12);--wa-media-warm-1: rgba(255, 139, 77, .32);--wa-media-warm-2: rgba(58, 20, 18, .78);--wa-media-warm-3: rgba(8, 6, 6, .24);--wa-media-warm-4: rgba(131, 49, 38, .86);--wa-media-line: rgba(255, 255, 249, .1);--wa-media-base-1: #1a0908;--wa-media-base-2: #6b2820;--wa-media-base-3: #24100d;--wa-media-image: url(/media/chat-background.png);--wa-media-shadow: 0 44px 96px rgba(24, 20, 16, .18);--wa-window-shadow: 0 52px 42px rgba(31, 30, 26, .22);--wa-card-shadow: 0 10px 28px rgba(23, 23, 20, .08);--wa-data-table-shadow: 0 2px 6px rgba(23, 23, 20, .035);--wa-section-padding: 126px 32px 140px;--wa-content-max: 1230px;--wa-copy-max: 1100px;--wa-left-column: minmax(420px, 510px);--wa-right-column: minmax(560px, 660px);--wa-column-gap: 60px;--wa-row-gap: 82px;--wa-story-controls-x-offset: -34px;--wa-story-controls-y-offset: 0px;--wa-story-controls-width-extra: 34px;--wa-story-tabs-gap: 24px;--wa-story-tab-y-padding: 14px;--wa-story-description-gap: 24px;--wa-stage-y-offset: -120px;--wa-stage-width: 660px;--wa-stage-min-height: 650px;--wa-media-width: 418px;--wa-media-height: 720px;--wa-window-width: 590px;--wa-window-max-height: 90vh;--wa-window-height: min(530px, var(--wa-window-max-height));--wa-chat-x-padding: 24px;--wa-chat-shadow-gutter: min(24px, var(--wa-chat-x-padding));--wa-chat-thread-bleed: calc(var(--wa-chat-x-padding) + var(--wa-chat-shadow-gutter));--wa-chat-entry-gap: 16px;--wa-chat-top-fade: calc(var(--wa-chat-x-padding) + 4px);--wa-chat-bottom-clearance: 110px;--wa-chat-first-entry-offset: calc(var(--wa-chat-top-fade) + 8px);--wa-ai-message-max-width: 540px;--wa-user-message-max-width: 360px;--wa-chat-message-weight: 430;--wa-chat-thinking-header-weight: 430;--wa-chat-thinking-weight: 400;--wa-chat-detail-weight: 400;--wa-thinking-logo-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 11'%3E%3Cpath fill='black' d='M5.71835 3.84074V0H0V5.12789C0 7.97387 2.13981 10.9988 6.10463 10.9988H8.4998V5.49938L7.40298 5.48406C6.46808 5.4708 5.71706 4.7386 5.71706 3.8395L5.71835 3.84074Z'/%3E%3Cpath fill='black' d='M11.2814 7.15899V10.9997H16.9998V5.87225C16.9998 3.02586 14.86 0.000976562 10.8952 0.000976562H8.5V5.50036L9.59682 5.51568C10.5317 5.52893 11.2827 6.26113 11.2827 7.16023L11.2814 7.15899Z'/%3E%3C/svg%3E");--wa-composer-side-inset: 10px;--wa-composer-bottom-outset: 10px;--wa-composer-height: 102px;--wa-composer-send-size: 36px;--wa-history-resume-height: 42px;--wa-history-resume-y-offset: 44px;--wa-cursor-default-width: 14px;--wa-cursor-default-height: 23px;--wa-title-size: 40px;--wa-title-line-height: 1.2;--wa-feature-title-size: 28px;--wa-feature-copy-size: 16px;--wa-radius-sm: 8px;--wa-radius-window: 18px;--wa-story-progress: 0;--wa-cursor-arrow-head: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAmCAYAAADeB1slAAABP0lEQVR42t3XwXGEIBQG4NeBR49uB6QDSqAEtgPSAXvMzXTglpAOSAeWgB2wHbwMGTQq7gL6vOSfQR2HeZ+IOgiICIh4QcS3cEza/OaKf/k6A/jGZe6nANZadM6RIxPAOUfGGDmyAACAHIkAamQToESeAlTIS4ACSQJHkSzgCJIN7EWKgD1IMVCK7AJKkN1ALnIIyEEOAymEBNhAPskB33yNkMcpAPyWm0IPaK1pRmCMwURu2UBd19E5KeWzwo958SQghMBhGGArzrljX9PZVYKUMgK01mWAUmoq3rbt4mkwxkRA0zTZwPtYyU9e3/fz4h9jR8ZYhHRdlwVAeL3Xuc47+mLrcM6zAQir61sY0WXd0U9qVVURYq3NBpJNKRUB/gEgA/zVlt6m4oWUEOK8EYxzMSJ+n3rh4Izfpv8F/ADB/dNnKnKg1wAAAABJRU5ErkJggg==);--wa-cursor-arrow-tail: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAmCAYAAADeB1slAAABSUlEQVR42t3X3XGEIBAHcDrw3nw0HVAC6YASSAekA+3AdOB1wnWgHWAHXAdkljkyRPxAFvOQnXF8UP8/XHAGibWWXHmQ/wNorYkx5jqAMUYopcWRXwBUaSQCSiOrQElkEyiF7AIlkEMAiyQBGCQZyEVOATnIaeAskgWcQbKBVAQFpCBo4AgpAuwhxQAoyLgUgCoF2LWjbVv7qmcu4IKUUvagumSgruto1EKIreBnGH4IcM7JPM+r7TDG+NCPrA9NCOGvuRHv9PuRBEgpf8L7vg9vcj1fAk3ThK15S9rZKaXIOI7Lm1xRSiNkGAZ/+Y7ZOsLDLmwJMMbCyb3lAu+QAJNaVVWEaK098onZ/E6QIKWMgGDJPjAALEU32p02Wez2HfpsOedbbzBhgc7PhUfgHHxwHRa4+blYqQmzipbI3bfrFfy1Ff4nv1DfGYDdsG+uObgAAAAASUVORK5CYII=);--wa-cursor-arrow: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAmCAYAAADeB1slAAABXElEQVRIx7XWTZWDMBAA4DigN47UAeuAdYAEcEAdwHFv1AGVsA7AATgAB9RBlulL2AAhv8O8N23awnzNHy+EUkqWvC/5xdqoCS85/Y/fK4CObuN1CTCOI53nGR1ZgSRJaBzH6MgGIMtHbOQAYCNSABM5BbAQJYCBaAFfxAjwQYwBV8QKcEGsAVvECbBBnAFTxAswQbwBHYICSJAnOgAJNVi8LwHIp9wa+EBZljg9aNuWaqIyBsIwPHyXZdlZ4bdYXAukaUqnaZLCworJnR4V4r+EtmK8OyOgKIr15rquN/2GMd8DURSJl9xVwEMs1Pe9eOMPb8BG2iNN0xg97Ai7YB+5+BsU02ysmwog7HRdsR6JXf6GCjCpQRAcEDhysnjoAFUO+3mSLIbOB8j5AVkxTNQHIGycP3vjpAeDL1DxueAIvAsbrvIFbnwuJDGYrCJT5MWHixV+nhV3AazzD2y9OM7DgeyVAAAAAElFTkSuQmCC);--wa-cursor-hand: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABY2lDQ1BrQ0dDb2xvclNwYWNlRGlzcGxheVAzAAAokX2QsUvDUBDGv1aloHUQHRwcMolDlJIKuji0FURxCFXB6pS+pqmQxkeSIgU3/4GC/4EKzm4Whzo6OAiik+jm5KTgouV5L4mkInqP435877vjOCA5bnBu9wOoO75bXMorm6UtJfWMBL0gDObxnK6vSv6uP+P9PvTeTstZv///jcGK6TGqn5QZxl0fSKjE+p7PJe8Tj7m0FHFLshXyieRyyOeBZ71YIL4mVljNqBC/EKvlHt3q4brdYNEOcvu06WysyTmUE1jEDjxw2DDQhAId2T/8s4G/gF1yN+FSn4UafOrJkSInmMTLcMAwA5VYQ4ZSk3eO7ncX3U+NtYMnYKEjhLiItZUOcDZHJ2vH2tQ8MDIEXLW54RqB1EeZrFaB11NguASM3lDPtlfNauH26Tww8CjE2ySQOgS6LSE+joToHlPzA3DpfAEDp2ITpJYOWwAAAARjSUNQDA0AAW4D4+8AAACyZVhJZk1NACoAAAAIAAQBMQACAAAAGAAAAD4BMgACAAAAGgAAAFYBOwACAAAAIwAAAHCHaQAEAAAAAQAAAJQAAAAAQWRvYmUgUERGIGxpYnJhcnkgMTcuMDAAMjAyNS0wMi0xNCAwNTo0MTo0NCArMDAwMABBZG9iZSBJbGx1c3RyYXRvciAyOS4zIChNYWNpbnRvc2gpAAAAAqACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAAAljtskAAACQGlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iWE1QIENvcmUgNi4wLjAiPgogICA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgICAgICAgICB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iCiAgICAgICAgICAgIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyI+CiAgICAgICAgIDxkYzpjcmVhdG9yPgogICAgICAgICAgICA8cmRmOlNlcT4KICAgICAgICAgICAgICAgPHJkZjpsaT5BZG9iZSBJbGx1c3RyYXRvciAyOS4zIChNYWNpbnRvc2gpPC9yZGY6bGk+CiAgICAgICAgICAgIDwvcmRmOlNlcT4KICAgICAgICAgPC9kYzpjcmVhdG9yPgogICAgICAgICA8eG1wOkNyZWF0b3JUb29sPkFkb2JlIFBERiBsaWJyYXJ5IDE3LjAwPC94bXA6Q3JlYXRvclRvb2w+CiAgICAgIDwvcmRmOkRlc2NyaXB0aW9uPgogICA8L3JkZjpSREY+CjwveDp4bXBtZXRhPgp5+ZGuAAACK0lEQVRYCWNgGAWjITAaAkMwBHKBbv4ExCeBWIhS9zOTYcDuHz9+vH779u23M2fO/AHqP0OGGXAtLHAW8Qw+dnZ2Ni0trSdALXzEa8Oukgm7MP1EKXWAINCpcpQ4lyIHCAsLp4mIiJwHOqAciNWAmJVUxxDrAGWgwezohq9bt+7S7du3nzIzM7eqqKjsBcofB2JQqBANiHHALCkpqWNsbGygbIfhCA4gMDIyugt0iIyBgYEAExPTa6C6xUDMSIwriHGA8507d96vWrXqPdDACKihjJaWlkyqqqpcQAtZgG74CxIXEhL68eLFi4umpqZmQK4/VC3F1OJDhw4d+Pfv3zteXt6jQNP+A8F3EAEDQLk3IDbQoceB1MdNmzbtB6rrpdhmqAEeTk5Ol0EWdHZ2HsTmAJAcMjh16tQhoLpF1HIAqLB6+evXrwe/f/9+PHny5APIlmFjA0tIkANA6YBqYPKaNWv2Y7MMm9jevXsPAG2eQYztxCRCkDlL6+rqFID0fxCHELh79y5I3TNC6kiVv/T48eNT2HyMLgbMlreBhruRagEh9YE6Ojr3gJZ9QrcQmf/o0aMTQIMeAzEzIQPJkZ/v4+Nz4e/fvy+RLYWxgVX0BVFRUVBB5EqO4cToAfmqn4+P70Nra+uhixcvHr53797xI0eOHExISDgFLJLfAuUDiTEIpoao4hKmGInWBLKjgFgfiDmB+DkQg+qB5UD8AYhHwWgIjIYA0SEAALLUdbtDe5+9AAAAAElFTkSuQmCC);--wa-cursor-ibeam: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABcAAAAWCAYAAAArdgcFAAABY2lDQ1BrQ0dDb2xvclNwYWNlRGlzcGxheVAzAAAokX2QsUvDUBDGv1aloHUQHRwcMolDlJIKuji0FURxCFXB6pS+pqmQxkeSIgU3/4GC/4EKzm4Whzo6OAiik+jm5KTgouV5L4mkInqP435877vjOCA5bnBu9wOoO75bXMorm6UtJfWMBL0gDObxnK6vSv6uP+P9PvTeTstZv///jcGK6TGqn5QZxl0fSKjE+p7PJe8Tj7m0FHFLshXyieRyyOeBZ71YIL4mVljNqBC/EKvlHt3q4brdYNEOcvu06WysyTmUE1jEDjxw2DDQhAId2T/8s4G/gF1yN+FSn4UafOrJkSInmMTLcMAwA5VYQ4ZSk3eO7ncX3U+NtYMnYKEjhLiItZUOcDZHJ2vH2tQ8MDIEXLW54RqB1EeZrFaB11NguASM3lDPtlfNauH26Tww8CjE2ySQOgS6LSE+joToHlPzA3DpfAEDp2ITpJYOWwAAAARjSUNQDA0AAW4D4+8AAACyZVhJZk1NACoAAAAIAAQBMQACAAAAGAAAAD4BMgACAAAAGgAAAFYBOwACAAAAIwAAAHCHaQAEAAAAAQAAAJQAAAAAQWRvYmUgUERGIGxpYnJhcnkgMTcuMDAAMjAyNS0wMi0yMSAyMjo0Nzo0MyArMDAwMABBZG9iZSBJbGx1c3RyYXRvciAyOS4wIChNYWNpbnRvc2gpAAAAAqACAAQAAAABAAAAF6ADAAQAAAABAAAAFgAAAABjOXNcAAACQGlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iWE1QIENvcmUgNi4wLjAiPgogICA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgICAgICAgICB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iCiAgICAgICAgICAgIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyI+CiAgICAgICAgIDxkYzpjcmVhdG9yPgogICAgICAgICAgICA8cmRmOlNlcT4KICAgICAgICAgICAgICAgPHJkZjpsaT5BZG9iZSBJbGx1c3RyYXRvciAyOS4wIChNYWNpbnRvc2gpPC9yZGY6bGk+CiAgICAgICAgICAgIDwvcmRmOlNlcT4KICAgICAgICAgPC9kYzpjcmVhdG9yPgogICAgICAgICA8eG1wOkNyZWF0b3JUb29sPkFkb2JlIFBERiBsaWJyYXJ5IDE3LjAwPC94bXA6Q3JlYXRvclRvb2w+CiAgICAgIDwvcmRmOkRlc2NyaXB0aW9uPgogICA8L3JkZjpSREY+CjwveDp4bXBtZXRhPgpTAn2BAAABF0lEQVQ4Ee2Vu26DQBBF7QjnL2KIW+iAys7DXwRtksofB/QUPGpHiiMBFbiDmztWIjkysjBbpIiRrnZnd+bsMtLsTCZ/+QEwqAdqJveQkVpSc6V7EXDfNM0+DEN0XbejvWnbdhcEAeq63tM2Rh/A4Oc0TWGaJlzXRRzHcBwHlmUhyzJu40kFPiXgjXr3PA+apsH3fYFuqdfR4ONAgvSiKMA1lGUp8LvjfeW5EAX+PQ7i3QzyGul0hfcm7pqW/5gWVqXOsj/8elVVUqbq5U/IuYfrpTfRQxcJXydJ8uvJtW378OTmec5tPA5lnfgxeCFNIYoiaRYftKVZfIrNJtLQNk6CLlkgQKekrf20uVvOV5Ram7vkEn2+X1iD5YNPxBZmAAAAAElFTkSuQmCC);--wa-cursor-openhand: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABY2lDQ1BrQ0dDb2xvclNwYWNlRGlzcGxheVAzAAAokX2QsUvDUBDGv1aloHUQHRwcMolDlJIKuji0FURxCFXB6pS+pqmQxkeSIgU3/4GC/4EKzm4Whzo6OAiik+jm5KTgouV5L4mkInqP435877vjOCA5bnBu9wOoO75bXMorm6UtJfWMBL0gDObxnK6vSv6uP+P9PvTeTstZv///jcGK6TGqn5QZxl0fSKjE+p7PJe8Tj7m0FHFLshXyieRyyOeBZ71YIL4mVljNqBC/EKvlHt3q4brdYNEOcvu06WysyTmUE1jEDjxw2DDQhAId2T/8s4G/gF1yN+FSn4UafOrJkSInmMTLcMAwA5VYQ4ZSk3eO7ncX3U+NtYMnYKEjhLiItZUOcDZHJ2vH2tQ8MDIEXLW54RqB1EeZrFaB11NguASM3lDPtlfNauH26Tww8CjE2ySQOgS6LSE+joToHlPzA3DpfAEDp2ITpJYOWwAAAARjSUNQDA0AAW4D4+8AAACyZVhJZk1NACoAAAAIAAQBMQACAAAAGAAAAD4BMgACAAAAGgAAAFYBOwACAAAAIwAAAHCHaQAEAAAAAQAAAJQAAAAAQWRvYmUgUERGIGxpYnJhcnkgMTcuMDAAMjAyNS0wMi0yMCAxNzoyNTozNyArMDAwMABBZG9iZSBJbGx1c3RyYXRvciAyOS4zIChNYWNpbnRvc2gpAAAAAqACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAAA8V+2fAAACQGlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iWE1QIENvcmUgNi4wLjAiPgogICA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgICAgICAgICB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iCiAgICAgICAgICAgIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyI+CiAgICAgICAgIDxkYzpjcmVhdG9yPgogICAgICAgICAgICA8cmRmOlNlcT4KICAgICAgICAgICAgICAgPHJkZjpsaT5BZG9iZSBJbGx1c3RyYXRvciAyOS4zIChNYWNpbnRvc2gpPC9yZGY6bGk+CiAgICAgICAgICAgIDwvcmRmOlNlcT4KICAgICAgICAgPC9kYzpjcmVhdG9yPgogICAgICAgICA8eG1wOkNyZWF0b3JUb29sPkFkb2JlIFBERiBsaWJyYXJ5IDE3LjAwPC94bXA6Q3JlYXRvclRvb2w+CiAgICAgIDwvcmRmOkRlc2NyaXB0aW9uPgogICA8L3JkZjpSREY+CjwveDp4bXBtZXRhPgp5+ZGuAAACyElEQVRYCe2Vy2saURTG76hoxvcjLYSWLoKRarVIA6HZFUtJa3bBdFdcSFYuusqi4Lalu4p05cb2P1C6KCW07qQkCKkv3IgurNESBRPHKb5uvxlqcRGswUmh4IWDM3Ou5/vd7547Q8hiLBxYOPCfO2AH/0OE7F+tQw4hN0KDeKBWqzurq6tnOp3uHe6XEdsIA+JqBoQ+ILoQPpHJZG9CodCoXC5T3LdYlj1xOBxt5EtQV8xKcCnrOI57XK1WWY/Hox2NRj6NRsMoFArS7XZNcILN5/N6wFyD+I0rAcDqGrVajWxtbWkhcJNhGEIpFbU2NzdVw+GQnJ6eqgEWB0gDiUd/A7mUAyqVqlAsFsnGxoZYVwCAE+L1+vr6UqlUIoCQ7+zs2MPh8HWz2fxKCgAlitxGyDqdzlcAULfbTeRy+RB98McBl8tFCoWCqLe/v68ymUwEgM15AZb0en0R+3toMBhS2Otvx8fHnFKpJHa7nZ90wOl0EvTACHM7Akwmkxm22+3DeQGs2MtlWKtbW1u7g2LObDY7EIp6vV4WFhPkCcQpAEkulxsEAgFWyB8dHXGDwSAvXM8zFDheLayGoiBFE/7A/U803oUjlUrRVqsl5lZWVtoQds0jLv4Xdr/c29vjhao+n4/DQ9poNC4EGD/keZ6iP/qYq5obAAVuYdU8GpDW63UaDAZ7gsC0kU6nqVar/S6FuFgD1n+ORqOjaaKTuVgsRtG8nyQDQKFtq9V6Niky7drv9wtb9UJKAAZvt3I8Hp+mK+Z6vZ7QrF2I35USQKj1xGKxcM1mcypEJBIZAjYttbhYD8341maznVcqlQshDg4OKF7Xgv33ZgVgZp34ex6DY/ka6s93d3cH+CpqjEYjwbEkiUTiPJlMMv1+/ynmfpy17mUBxnWFb8MzWH0f512HD1ADr+kvePYe0RpPWvwuHFg4MIsDvwAylvevmzFHiwAAAABJRU5ErkJggg==);--wa-cursor-closedhand: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABY2lDQ1BrQ0dDb2xvclNwYWNlRGlzcGxheVAzAAAokX2QsUvDUBDGv1aloHUQHRwcMolDlJIKuji0FURxCFXB6pS+pqmQxkeSIgU3/4GC/4EKzm4Whzo6OAiik+jm5KTgouV5L4mkInqP435877vjOCA5bnBu9wOoO75bXMorm6UtJfWMBL0gDObxnK6vSv6uP+P9PvTeTstZv///jcGK6TGqn5QZxl0fSKjE+p7PJe8Tj7m0FHFLshXyieRyyOeBZ71YIL4mVljNqBC/EKvlHt3q4brdYNEOcvu06WysyTmUE1jEDjxw2DDQhAId2T/8s4G/gF1yN+FSn4UafOrJkSInmMTLcMAwA5VYQ4ZSk3eO7ncX3U+NtYMnYKEjhLiItZUOcDZHJ2vH2tQ8MDIEXLW54RqB1EeZrFaB11NguASM3lDPtlfNauH26Tww8CjE2ySQOgS6LSE+joToHlPzA3DpfAEDp2ITpJYOWwAAAARjSUNQDA0AAW4D4+8AAACyZVhJZk1NACoAAAAIAAQBMQACAAAAGAAAAD4BMgACAAAAGgAAAFYBOwACAAAAIwAAAHCHaQAEAAAAAQAAAJQAAAAAQWRvYmUgUERGIGxpYnJhcnkgMTcuMDAAMjAyNS0wMi0yMCAxNzoxODoxNyArMDAwMABBZG9iZSBJbGx1c3RyYXRvciAyOS4zIChNYWNpbnRvc2gpAAAAAqACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAAALcJCvAAACQGlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iWE1QIENvcmUgNi4wLjAiPgogICA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgICAgICAgICB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iCiAgICAgICAgICAgIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyI+CiAgICAgICAgIDxkYzpjcmVhdG9yPgogICAgICAgICAgICA8cmRmOlNlcT4KICAgICAgICAgICAgICAgPHJkZjpsaT5BZG9iZSBJbGx1c3RyYXRvciAyOS4zIChNYWNpbnRvc2gpPC9yZGY6bGk+CiAgICAgICAgICAgIDwvcmRmOlNlcT4KICAgICAgICAgPC9kYzpjcmVhdG9yPgogICAgICAgICA8eG1wOkNyZWF0b3JUb29sPkFkb2JlIFBERiBsaWJyYXJ5IDE3LjAwPC94bXA6Q3JlYXRvclRvb2w+CiAgICAgIDwvcmRmOkRlc2NyaXB0aW9uPgogICA8L3JkZjpSREY+CjwveDp4bXBtZXRhPgp5+ZGuAAAB5ElEQVRYCe1UP2vqUBy9Jv6NURAe2FE7CuKbpG46tltxcHhDR7+CSFf3fgChS6lTcXEUVCgoCNKxRazDez6KiLymNCYx5vakaCltaW5Ly1vuD37k5ubcc07OvQkhvHgCPAGeAE+AJ/CfExA/ob+NNQdoTyQSOQyHwxXTNIXVarWFuR30FdpEf0v5AoHATT6fv/f5fItUKqW0223q9Xr1WCympNPpO1mWz75FGaQhdBHCGkWVSiWtXC7r9jiTyejNZpP2ej0qCIIBQ4rf7z/+SiMyCH9D6BYJrIbDoa37qlqtFk0kEnq/36cwqsOA9FUm9pPJ5D9bMZfLmbVa7ZX4ywmPx2MbEJwMuJ0A6+c/UNQeVyoVMRqNvrtsPp8TURSN5XJpvQvEQ1YDs8lk8siFbXDiJIPBgGCrrjVNc8Q6RrRmuBiNRrKiKI6ENgBnwVRV9ZwJzArCIbysVqvWy71+6z4ej9tOd1m5WXH7oVBInc1mb2k+zdXrdSpJ0h+Qsm4vqz4h+L5P8XZ34/H4SfD5oNvt0mAwqIJxj5XVxQpc4wSc7iOXy1UsFApmNpuV8Ocj0+mUNBoNpdPpuA3DKAJ7wsr7UQMb3p8Y/MJJT+PPF7As6+9isehgroa+2YD4lSfAE2BJ4AH/finPJ7GZOAAAAABJRU5ErkJggg==);position:relative;isolation:isolate;min-height:100svh;overflow:hidden;padding:var(--wa-section-padding);color:var(--wa-color-text);font-family:var(--wa-font-sans);letter-spacing:0;background:var(--wa-bg)}@supports (height: 100dvh){.wa-section{--wa-window-max-height: min(90vh, 90dvh)}}.wa-section[data-theme=dark]{--wa-bg: #10100d;--wa-panel: #191914;--wa-panel-transparent: rgba(25, 25, 20, 0);--wa-ink: #f7f4ea;--wa-muted: #f7f4ea;--wa-soft: #49473f;--wa-browser-line: #3d3b34;--wa-color-bg: var(--wa-bg);--wa-color-panel: var(--wa-panel);--wa-color-text: var(--wa-ink);--wa-color-heading: var(--wa-ink);--wa-color-heading-strong: #fffdf3;--wa-color-copy: #d9d4c8;--wa-color-muted: #aaa396;--wa-color-inverse: #10100d;--wa-color-dark-surface: #f7f4ea;--wa-color-soft-surface: #25241f;--wa-color-input-line: #504d45;--wa-line-08: rgba(255, 253, 243, .08);--wa-line-10: rgba(255, 253, 243, .1);--wa-line-12: rgba(255, 253, 243, .12);--wa-line-16: rgba(255, 253, 243, .16);--wa-line-20: rgba(255, 253, 243, .2);--wa-placeholder: rgba(255, 253, 243, .38);--wa-browser-bar-bg: rgba(25, 25, 20, .96);--wa-window-highlight: rgba(255, 253, 243, .08);--wa-window-hairline: rgba(0, 0, 0, .24);--wa-card-accent-bg: rgba(242, 59, 10, .2);--wa-row-bg: rgba(255, 253, 243, .06);--wa-media-shadow: 0 44px 96px rgba(0, 0, 0, .38);--wa-window-shadow: 0 52px 42px rgba(0, 0, 0, .42);--wa-card-shadow: 0 10px 28px rgba(0, 0, 0, .24)}@media(prefers-color-scheme:dark){.wa-section[data-theme=system]{--wa-bg: #10100d;--wa-panel: #191914;--wa-panel-transparent: rgba(25, 25, 20, 0);--wa-ink: #f7f4ea;--wa-muted: #f7f4ea;--wa-soft: #49473f;--wa-browser-line: #3d3b34;--wa-color-bg: var(--wa-bg);--wa-color-panel: var(--wa-panel);--wa-color-text: var(--wa-ink);--wa-color-heading: var(--wa-ink);--wa-color-heading-strong: #fffdf3;--wa-color-copy: #d9d4c8;--wa-color-muted: #aaa396;--wa-color-inverse: #10100d;--wa-color-dark-surface: #f7f4ea;--wa-color-soft-surface: #25241f;--wa-color-user-message: #2d2b26;--wa-color-input-line: #504d45;--wa-line-08: rgba(255, 253, 243, .08);--wa-line-10: rgba(255, 253, 243, .1);--wa-line-12: rgba(255, 253, 243, .12);--wa-line-16: rgba(255, 253, 243, .16);--wa-line-20: rgba(255, 253, 243, .2);--wa-placeholder: rgba(255, 253, 243, .38);--wa-browser-bar-bg: rgba(25, 25, 20, .96);--wa-window-highlight: rgba(255, 253, 243, .08);--wa-window-hairline: rgba(0, 0, 0, .24);--wa-card-accent-bg: rgba(242, 59, 10, .2);--wa-row-bg: rgba(255, 253, 243, .06);--wa-media-shadow: 0 44px 96px rgba(0, 0, 0, .38);--wa-window-shadow: 0 52px 42px rgba(0, 0, 0, .42);--wa-card-shadow: 0 10px 28px rgba(0, 0, 0, .24)}}.wa-section button,.wa-section input,.wa-section textarea,.wa-section select{font:inherit}.wa-section textarea{resize:none}.wa-section__inner{position:relative;z-index:1;display:grid;grid-template-columns:var(--wa-left-column) var(--wa-right-column);grid-template-rows:auto auto;column-gap:var(--wa-column-gap);row-gap:var(--wa-row-gap);align-items:start;width:min(var(--wa-content-max),100%);margin:0 auto}.wa-copy{grid-column:1 / -1;max-width:var(--wa-copy-max)}.wa-copy__title{display:block;margin:0;color:var(--wa-color-heading);font-family:var(--wa-font-sans);font-size:var(--wa-title-size);line-height:var(--wa-title-line-height);font-weight:400;letter-spacing:-.02em}.wa-copy__title>span{display:block}.wa-copy__title em{color:var(--wa-orange);font-style:normal}.wa-story-controls{position:relative;z-index:4;grid-column:1;grid-row:2;display:grid;gap:22px;top:var(--wa-story-controls-y-offset);left:var(--wa-story-controls-x-offset);width:calc(100% + var(--wa-story-controls-width-extra));padding-top:4px}.wa-story-tabs{display:grid;gap:var(--wa-story-tabs-gap)}.wa-story-tab{--wa-tab-progress: 0;display:grid;grid-template-columns:4px minmax(0,1fr);gap:30px;align-items:stretch;width:100%;min-height:0;padding:var(--wa-story-tab-y-padding) 0;border:0;color:var(--wa-color-heading-strong);background:transparent;text-align:left;cursor:pointer}.wa-story-tab__marker{position:relative;display:block;align-self:stretch;width:4px;min-height:0;margin-block:calc(-1 * var(--wa-story-tab-y-padding));overflow:hidden;background:var(--wa-soft);cursor:ns-resize;touch-action:none}.wa-story-tab__marker:before{content:"";position:absolute;inset:0;background:var(--wa-soft);transform:scaleY(var(--wa-tab-progress));transform-origin:top;transition:transform .12s linear}.wa-story-tab__marker:after{content:"";position:absolute;inset:0 -8px}.wa-story-tab.is-active .wa-story-tab__marker:before{background:var(--wa-color-accent)}.wa-story-tab__marker[data-scrubbing=true]:before{transition:none}.wa-story-tab__body{display:block;padding-top:0}.wa-story-tab__title{display:block;color:var(--wa-color-heading-strong);font-size:var(--wa-feature-title-size);line-height:1.08;font-weight:400;letter-spacing:-.02em;transition:opacity .16s ease}.wa-story-tab__description{display:block;max-width:520px;max-height:120px;margin-top:var(--wa-story-description-gap);overflow:hidden;color:var(--wa-color-copy);font-size:var(--wa-feature-copy-size);line-height:1.3;font-weight:400;opacity:1;transform:translateY(0);transition:max-height .26s cubic-bezier(.2,.8,.2,1),margin-top .22s cubic-bezier(.2,.8,.2,1),opacity .16s ease,transform .22s cubic-bezier(.2,.8,.2,1);will-change:max-height,margin-top,opacity,transform}.wa-story-tab:not(.is-active) .wa-story-tab__title,.wa-story-tab:not(.is-active) .wa-story-tab__description{opacity:.6}.wa-story-tab:not(.is-active) .wa-story-tab__description{max-height:0;margin-top:0;opacity:0;transform:translateY(-5px)}.wa-story-tab__count,.wa-story-count{display:none}.wa-controls-row{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}.wa-control-button svg{display:block;width:16px;height:16px;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;fill:none}.wa-stage{--wa-window-scene-scale: 1;--wa-window-scene-width: var(--wa-window-width);--wa-window-scene-height: var(--wa-stage-min-height);--wa-window-scene-unscaled-height: var(--wa-window-height);--wa-window-scene-min-width: 0px;position:relative;grid-column:2;grid-row:2;width:var(--wa-stage-width);min-height:var(--wa-stage-min-height);top:var(--wa-stage-y-offset)}.wa-stage[data-window-content-scale]{height:var(--wa-window-scene-height);min-height:var(--wa-window-scene-height)}.wa-stage__media{position:absolute;top:-38px;right:-44px;width:var(--wa-media-width);height:var(--wa-media-height);border-radius:3px;background-image:var(--wa-media-image);background-position:center;background-size:cover;box-shadow:var(--wa-media-shadow);opacity:1;pointer-events:none}.wa-window{position:relative;z-index:2;width:var(--wa-window-width);margin:108px 0 0 70px;border-radius:var(--wa-radius-window);box-shadow:var(--wa-window-shadow);transform-origin:top left}.wa-stage[data-window-content-scale] .wa-window{position:absolute;top:0;left:50%;width:var(--wa-window-scene-width);margin:0;transform:translate(-50%) scale(var(--wa-window-scene-scale));transform-origin:top center;will-change:transform}.wa-stage[data-window-content-scale] .wa-chat-shell{height:var(--wa-window-scene-unscaled-height);max-height:none}.wa-chat-shell{position:relative;display:grid;grid-template-rows:auto minmax(0,1fr);height:var(--wa-window-height);max-height:var(--wa-window-max-height);overflow:visible;border:1px solid var(--wa-browser-line);border-radius:var(--wa-radius-window);background:var(--wa-panel);background-clip:padding-box;box-shadow:0 1px 0 var(--wa-window-highlight) inset,0 0 0 1px var(--wa-window-hairline)}.wa-chat-shell__bar{--wa-browser-tab-left: 90px;--wa-browser-tab-width: 100px;position:relative;display:flex;align-items:center;height:48px;padding:0 18px;border-bottom:0;border-radius:calc(var(--wa-radius-window) - 1px) calc(var(--wa-radius-window) - 1px) 0 0;background:var(--wa-browser-bar-bg);overflow:hidden}.wa-chat-shell__bar:after{content:"";position:absolute;right:0;bottom:0;left:0;height:1px;background:linear-gradient(to right,var(--wa-browser-line) 0,var(--wa-browser-line) var(--wa-browser-tab-left),transparent var(--wa-browser-tab-left),transparent calc(var(--wa-browser-tab-left) + var(--wa-browser-tab-width)),var(--wa-browser-line) calc(var(--wa-browser-tab-left) + var(--wa-browser-tab-width)),var(--wa-browser-line) 100%);pointer-events:none}.wa-chat-shell__lights{display:flex;gap:8px;align-items:center}.wa-chat-shell__lights span{width:12px;height:12px;border-radius:999px;background:var(--wa-red)}.wa-chat-shell__lights span:nth-child(2){background:var(--wa-yellow)}.wa-chat-shell__lights span:nth-child(3){background:var(--wa-green)}.wa-chat-shell__tab{position:absolute;left:var(--wa-browser-tab-left);bottom:-1px;display:inline-flex;align-items:center;gap:9px;height:36px;min-width:100px;padding:0 13px;border:1px solid var(--wa-browser-line);border-bottom:0;border-radius:8px 8px 0 0;background:var(--wa-panel)}.wa-chat-shell__mark{display:block;flex:0 0 auto;width:18px;height:11px}.wa-chat-shell__title{color:var(--wa-color-text);font-size:16px;line-height:1;font-weight:560}.wa-chat-shell__body{position:relative;display:grid;grid-template-rows:minmax(0,1fr);align-content:stretch;gap:0;min-height:0;padding:0 var(--wa-chat-x-padding);overflow:visible;clip-path:inset(0 calc(-1 * var(--wa-chat-shadow-gutter)) 0 calc(-1 * var(--wa-chat-shadow-gutter)) round 0 0 calc(var(--wa-radius-window) - 1px) calc(var(--wa-radius-window) - 1px));border-radius:0 0 calc(var(--wa-radius-window) - 1px) calc(var(--wa-radius-window) - 1px);background:var(--wa-panel);background-clip:padding-box}.wa-chat-shell__body:before{content:"";position:absolute;z-index:1;top:0;right:0;left:0;height:var(--wa-chat-top-fade);background:linear-gradient(to bottom,var(--wa-panel) 0,var(--wa-panel-transparent) 100%);pointer-events:none}.wa-signup-scene{position:absolute;inset:0;z-index:0;display:grid;align-content:center;justify-items:center;gap:12px;min-height:0;padding-bottom:0;color:var(--wa-ink)}.wa-signup-scene__logo{display:block;width:clamp(34px,3.2vw,42px);aspect-ratio:18 / 11;margin-bottom:-2px;color:#77736c;pointer-events:none}.wa-signup-scene__logo svg{display:block;width:100%;height:100%}.wa-signup-scene__title{margin:0 0 18px;color:#77736c;font-family:var(--wa-font-feature);font-size:clamp(26px,2.8vw,34px);line-height:1;font-weight:400;letter-spacing:0}.wa-signup-field{display:grid;grid-template-columns:minmax(0,1fr) 38px;align-items:center;gap:10px;width:min(360px,72%);min-height:56px;padding:0 9px 0 17px;overflow:hidden;border:1px solid #d5d2ca;border-radius:15px;color:var(--wa-ink);background:#fffffa;box-shadow:0 12px 24px #1717141f;font-size:16px;line-height:1.2;font-weight:410;white-space:nowrap}.wa-signup-field [data-signup-email]:empty:before{content:"email@work.com";color:#aaa89e}.wa-signup-field [data-signup-email]{transform:translateY(-1px)}.wa-signup-field [data-signup-email]:after{content:"";display:inline-block;width:1px;height:17px;margin-left:1px;background:currentColor;transform:translateY(3px);animation:wa-caret .92s steps(1,end) infinite}.wa-signup-field__submit{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;padding:0;border:0;border-radius:999px;color:#fffffa;background:#aaa89e;cursor:default}.wa-signup-scene[data-signup-filled=true] .wa-signup-field__submit,.wa-signup-scene[data-signup-submitted=true] .wa-signup-field__submit{background:#11110f}.wa-signup-field__submit-icon{display:block;width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.wa-thread{position:relative;z-index:0;display:grid;gap:var(--wa-chat-entry-gap);align-content:start;justify-self:start;box-sizing:border-box;width:calc(100% + var(--wa-chat-thread-bleed) + var(--wa-chat-thread-bleed));height:100%;min-height:0;max-height:none;margin-inline:calc(-1 * var(--wa-chat-thread-bleed));padding-inline:var(--wa-chat-thread-bleed);padding-bottom:var(--wa-chat-bottom-clearance);overflow:hidden;overscroll-behavior:auto}.wa-thread>.wa-message:first-child,.wa-message--first-active{margin-top:var(--wa-chat-first-entry-offset)}.wa-section.wa-sequence-sandbox{min-height:100svh;overflow:auto;padding:28px}.wa-sequence-sandbox .wa-section__inner{display:grid;grid-template-columns:minmax(0,1fr);gap:24px;width:min(1240px,100%)}.wa-sequence-sandbox .wa-copy,.wa-sequence-sandbox .wa-story-controls,.wa-sequence-sandbox .wa-stage__media,.wa-sequence-sandbox .wa-composer,.wa-sequence-sandbox .wa-signup-scene,.wa-sequence-sandbox .wa-history-resume,.wa-sequence-sandbox .wa-sequence-actions,.wa-sequence-sandbox .wa-sequence-kickoff{display:none!important}.wa-sequence-sandbox__header{display:flex;gap:24px;align-items:end;justify-content:space-between}.wa-sequence-sandbox__copy{display:grid;gap:6px;max-width:720px}.wa-sequence-sandbox__eyebrow{margin:0;color:var(--wa-orange);font-size:12px;line-height:1;font-weight:620}.wa-sequence-sandbox__title{margin:0;color:var(--wa-ink);font-size:clamp(30px,4vw,48px);line-height:1;font-weight:520}.wa-sequence-sandbox__note{margin:0;color:var(--wa-color-muted);font-size:14px;line-height:1.45;font-weight:410}.wa-sequence-sandbox__back{flex:0 0 auto;color:var(--wa-color-muted);font-size:13px;line-height:1;font-weight:520;text-decoration:none}.wa-sequence-sandbox__back:hover{color:var(--wa-ink)}.wa-sequence-sandbox .wa-stage{grid-column:1;grid-row:auto;justify-self:center;width:min(100%,1240px);min-height:0}.wa-sequence-sandbox .wa-window{width:100%;margin:0}.wa-sequence-sandbox .wa-chat-shell{height:auto;min-height:620px}.wa-sequence-sandbox .wa-chat-shell__body{min-height:570px;padding:0}.wa-sequence-sandbox .wa-chat-shell__body:before{content:none}.wa-sequence-sandbox .wa-thread{width:100%;height:auto;margin-inline:0;padding:34px 0 42px;overflow:visible}.wa-sequence-sandbox .wa-sequence-engagement__header{display:none}.wa-sequence-sandbox .wa-message{max-width:100%}.wa-sequence-sandbox .wa-message--component{width:100%}.wa-section[data-active-story=crm-update]{--wa-chat-first-entry-offset: calc(var(--wa-chat-top-fade) + 3px)}.wa-section[data-active-story=data-marketplace] .wa-thread{min-height:0;max-height:none}.wa-section[data-active-story=data-marketplace] .wa-result-grid{display:none}.wa-message{display:grid;grid-template-columns:minmax(0,max-content);gap:0;align-items:end;max-width:90%}.wa-message[data-message-role=user]{justify-self:end;grid-template-columns:minmax(0,max-content)}.wa-message[data-message-role=user]+.wa-message[data-message-role=assistant],.wa-message[data-message-role=assistant]+.wa-message[data-message-role=user]{margin-top:var(--wa-chat-entry-gap)}.wa-message[data-message-role=assistant]:not(.wa-message--component){width:min(100%,var(--wa-ai-message-max-width));grid-template-columns:minmax(0,1fr)}.wa-message[data-message-role=assistant]:not(.wa-message--component) .wa-message__body{padding-right:0;padding-left:0}.wa-message__avatar{display:none;width:24px;height:24px;border:1px solid var(--wa-line-10);border-radius:7px;background:var(--wa-color-dark-surface)}.wa-message[data-message-role=user] .wa-message__avatar{grid-column:2;background:var(--wa-orange)}.wa-message__body{width:100%;max-width:var(--wa-ai-message-max-width);padding:10px 12px;border:0;border-radius:8px;color:var(--wa-ink);background:transparent;font-size:16px;line-height:1.35;font-weight:var(--wa-chat-message-weight);overflow-wrap:anywhere}.wa-message[data-message-role=user] .wa-message__body{grid-column:1;grid-row:1;width:auto;max-width:var(--wa-user-message-max-width);background:var(--wa-color-user-message);color:var(--wa-ink)}.wa-message[data-message-role=assistant] .wa-message__body[data-streaming=true]:after{content:"";display:inline-block;width:1px;height:1em;margin-left:2px;background:currentColor;vertical-align:-.14em;animation:wa-caret .92s steps(1,end) infinite}.wa-message--component{grid-template-columns:minmax(0,1fr);width:100%;max-width:100%;align-items:start}.wa-message--component .wa-message__avatar{margin-top:0}.wa-message--component .wa-message__body{width:100%;max-width:none;padding:0;border:0;background:transparent;overflow:visible}.wa-message--file{width:auto;max-width:90%;justify-self:end}.wa-message--file .wa-message__body{width:auto;max-width:none;justify-self:end;padding:0;background:transparent}.wa-message[data-message-role=user].wa-message--file .wa-message__body{max-width:none;background:transparent}.wa-thinking-block{--wa-thinking-icon-column: 18px;--wa-thinking-column-gap: 8px;--wa-thinking-guide-top: -9px;--wa-thinking-rail-x-adjust: -.5px;position:relative;display:grid;align-content:start;align-items:start;justify-items:start;gap:11px;min-width:0}.wa-thinking{display:inline-grid;grid-template-columns:var(--wa-thinking-icon-column) auto auto;align-items:center;justify-content:start;gap:var(--wa-thinking-column-gap);justify-self:start;min-height:18px;padding:0;color:#57544f;background:transparent;font-size:14px;line-height:1.28;font-weight:var(--wa-chat-thinking-header-weight);overflow:visible}.wa-thinking__glyph{position:relative;display:inline-block;width:18px;height:11px;opacity:1;color:#67635f;transform-origin:center}.wa-thinking__glyph:after,.wa-thinking-logo-traveler:after{content:"";position:absolute;inset:0;display:block;width:18px;height:11px;opacity:0;background:linear-gradient(100deg,#67635f 0% 30%,#f23b0a 48%,#c8c3bb 58%,#67635f 74% 100%);background-position:120% 50%;background-size:260% 100%;pointer-events:none;-webkit-mask:var(--wa-thinking-logo-mask) center / 18px 11px no-repeat;mask:var(--wa-thinking-logo-mask) center / 18px 11px no-repeat}.wa-thinking__glyph[data-logo-role=shadow]{color:#c8c3bb;opacity:.88}.wa-thinking-logo-traveler{position:absolute;top:0;left:0;z-index:4;display:inline-block;width:18px;height:11px;color:#67635f;pointer-events:none;transform-origin:center}.wa-thinking__logo-mark{display:block;width:18px;height:11px;overflow:visible}.wa-thinking__glyph[data-logo-mode=thinking]:not([data-logo-role=shadow]) .wa-thinking__logo-mark,.wa-thinking-logo-traveler[data-logo-mode=thinking] .wa-thinking__logo-mark{opacity:0}.wa-thinking__glyph[data-logo-mode=thinking]:not([data-logo-role=shadow]):after,.wa-thinking-logo-traveler[data-logo-mode=thinking]:after{opacity:1;animation:wa-thinking-logo-gradient 1.28s linear infinite}.wa-thinking__glyph[data-logo-mode=done]:not([data-logo-role=shadow]),.wa-thinking-logo-traveler[data-logo-mode=done]{opacity:.72}.wa-thinking__title{color:#57544f;line-height:inherit;overflow:visible}.wa-thinking__elapsed{margin-left:5px;color:#8e8a83;font-size:14px;line-height:inherit;font-weight:var(--wa-chat-thinking-weight)}.wa-research-steps{--wa-thinking-guide-end: var(--wa-thinking-guide-top);position:relative;display:grid;align-content:start;gap:11px;max-height:none;overflow:visible;padding:1px 0 0}.wa-research-steps:before{content:"";position:absolute;top:var(--wa-thinking-guide-top);left:calc((var(--wa-thinking-icon-column) / 2) + var(--wa-thinking-rail-x-adjust));width:1px;height:max(0px,calc(var(--wa-thinking-guide-end) - var(--wa-thinking-guide-top)));background:#e4ded6}.wa-research-step{--wa-step-progress: 0;position:relative;display:grid;grid-template-columns:var(--wa-thinking-icon-column) minmax(0,1fr);align-content:start;gap:var(--wa-thinking-column-gap);align-items:start;min-height:0;overflow:visible;padding:0;color:#56534f;background:transparent;font-size:14px;line-height:1.24;font-weight:var(--wa-chat-thinking-weight)}.wa-research-step[data-step-state=complete]{align-items:start}.wa-research-step__marker{position:relative;z-index:1;justify-self:center;width:12px;height:12px;margin-top:2px;background:var(--wa-panel)}.wa-research-step__marker:before,.wa-research-step__marker:after{content:"";position:absolute}.wa-research-step__marker:before{top:4px;left:4px;width:4px;height:4px;border-radius:999px;background:#9d9890;opacity:0;transform:scale(.74);transition:opacity .16s ease,transform .18s ease}.wa-research-step[data-step-state=complete] .wa-research-step__marker:before{opacity:1;transform:scale(1)}.wa-research-step[data-step-state=failed] .wa-research-step__marker:before{opacity:1;background:#e1544c;transform:scale(1)}.wa-research-step__body{position:relative;z-index:1;display:grid;align-content:start;gap:4px;min-width:0}.wa-research-step__label-row{display:inline-flex;gap:var(--wa-thinking-column-gap);align-items:center;justify-self:start;max-width:100%;min-width:0}.wa-research-step__label{min-width:0;color:#55514d;font-size:14px;line-height:1.18;font-weight:var(--wa-chat-thinking-weight);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.wa-research-step__detail{display:-webkit-box;min-width:0;margin-top:2px;overflow:hidden;color:#86817a;font-size:13px;line-height:1.38;font-weight:var(--wa-chat-detail-weight);white-space:normal;-webkit-box-orient:vertical;-webkit-line-clamp:2}.wa-sequence-thinking-progress{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px;align-items:center;min-width:0;padding-top:2px}.wa-sequence-thinking-progress__count{color:#8e8a83;font-size:10px;line-height:1;font-weight:560;font-variant-numeric:tabular-nums}.wa-sequence-thinking-progress__bar{display:block;height:4px;overflow:hidden;border-radius:999px;background:#e4ded6}.wa-sequence-thinking-progress__bar span{display:block;width:100%;height:100%;border-radius:inherit;background:#57544f;transform:scaleX(.02);transform-origin:left center}.wa-thinking__title[data-thinking-active=true],.wa-thinking__title[data-streaming=true],.wa-research-step__label[data-streaming=true]{color:transparent;background:linear-gradient(105deg,#55514d 0% 30%,#9d9890 46%,#2f2e2a 58%,#55514d 74% 100%);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:wa-text-shimmer 1.35s ease-in-out infinite}.wa-thinking__title[data-streaming=true]:after,.wa-research-step__label[data-streaming=true]:after,.wa-research-step__detail[data-streaming=true]:after{content:"";display:inline-block;width:1px;height:1em;margin-left:2px;background:#55514d;vertical-align:-.12em;animation:wa-caret .92s steps(1,end) infinite}.wa-research-step__detail[data-streaming=true]:after{background:#86817a}.wa-research-step__chevron{position:relative;z-index:1;flex:0 0 8px;width:8px;height:14px;margin-top:0}.wa-research-step__chevron:before{content:"";position:absolute;top:3px;left:1px;width:5px;height:5px;border-top:1px solid #aaa59d;border-right:1px solid #aaa59d;transform:rotate(45deg);transition:top .16s ease,transform .16s ease}.wa-research-step[data-step-state=complete] .wa-research-step__chevron:before{top:2px;transform:rotate(135deg)}.wa-result-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:9px;min-height:0}.wa-result-grid.has-strategy-plans{grid-template-columns:minmax(0,1fr);gap:14px;overflow-x:visible}.wa-message--strategy,.wa-message--strategy .wa-message__body,.wa-message--style,.wa-message--style .wa-message__body{overflow-x:visible}.wa-result-grid.has-data-table,.wa-result-grid.has-enrichment-panel{grid-template-columns:minmax(0,1fr)}.wa-csv-drop{position:absolute;inset:58px 10px 10px;z-index:2;display:grid;grid-template-columns:minmax(0,1fr);place-items:center;gap:14px;padding:32px;overflow:hidden;border:1px dashed rgba(242,59,10,.48);border-radius:12px;color:#514e49;background:#fffff9e6;box-shadow:inset 0 0 0 999px #fffff938;pointer-events:none}.wa-csv-drop[data-drop-state=active]{border-color:var(--wa-orange);background-color:#fff9f2eb;box-shadow:inset 0 0 0 999px #f23b0a0d}.wa-csv-drop[data-drop-state=complete]{border-style:solid;border-color:#27944352;background:#fffff9e6}.wa-csv-drop__copy{display:grid;gap:5px;min-width:0;justify-items:center;text-align:center}.wa-csv-drop__copy strong{color:#11110f;font-size:18px;line-height:1.12;font-weight:620}.wa-csv-drop__copy span{color:#7b766f;font-size:13px;line-height:1.24;font-weight:460}.wa-cursor-file{position:absolute;top:0;left:0;z-index:19;width:max-content;pointer-events:none}.wa-file-landing-clone{box-sizing:border-box}.wa-file-landing-label{color:#716d66;font-size:10.5px;line-height:1;font-weight:520;white-space:nowrap}.wa-cursor-file__card,.wa-uploaded-file{--wa-file-color: #916135;--wa-file-bg: #fdf8f2;--wa-file-border: #dedbd3}.wa-cursor-file__card{display:inline-grid;grid-template-columns:34px minmax(0,1fr);gap:8px;align-items:center;width:292px;min-height:52px;padding:8px 12px 8px 8px;border:1px solid var(--wa-file-border, #dedbd3);border-radius:8px;color:#171714;background:#fffff9f5;box-shadow:0 16px 28px #1717142e}.wa-cursor-file--stack{width:252px;height:96px}.wa-cursor-file--stack .wa-cursor-file__card{position:absolute;top:0;left:0;width:230px;transform-origin:18px 28px}.wa-cursor-file--stack .wa-cursor-file__card:nth-child(1){z-index:4;transform:translate(1px) rotate(2deg)}.wa-cursor-file--stack .wa-cursor-file__card:nth-child(2){z-index:3;transform:translate(8px,8px) rotate(-5deg)}.wa-cursor-file--stack .wa-cursor-file__card:nth-child(3){z-index:2;transform:translate(-7px,15px) rotate(6deg)}.wa-cursor-file--stack .wa-cursor-file__card:nth-child(4){z-index:1;transform:translate(5px,23px) rotate(-8deg)}.wa-cursor-file__icon,.wa-uploaded-file__icon{display:inline-flex;align-items:center;justify-content:center;border-radius:5px;border:1px solid var(--wa-file-color, #916135);border-color:color-mix(in oklch,var(--wa-file-color, #916135) 46%,var(--wa-file-bg, #faf1e8));color:var(--wa-file-color, #916135);background:var(--wa-file-bg, #faf1e8);font-size:9px;line-height:1;font-weight:680}.wa-cursor-file__icon{width:34px;height:34px}.wa-cursor-file__card[data-file-tone=spreadsheet],.wa-uploaded-file[data-file-tone=spreadsheet]{--wa-file-color: #2a8050;--wa-file-bg: #f7fcf8}.wa-cursor-file__card[data-file-tone=pdf],.wa-uploaded-file[data-file-tone=pdf]{--wa-file-color: #c04436;--wa-file-bg: #fff7f6}.wa-cursor-file__card[data-file-tone=doc],.wa-uploaded-file[data-file-tone=doc]{--wa-file-color: #2c66d8;--wa-file-bg: #f7faff}.wa-cursor-file__card[data-file-tone=text],.wa-uploaded-file[data-file-tone=text]{--wa-file-color: #6f6a63;--wa-file-bg: #faf9f6}.wa-cursor-file__card[data-file-tone=ppt],.wa-uploaded-file[data-file-tone=ppt]{--wa-file-color: #b5671c;--wa-file-bg: #fff9f1}@supports (color: oklch(.5 .1 120)){.wa-cursor-file__card,.wa-uploaded-file{--wa-file-color: oklch(.49 .105 55);--wa-file-bg: oklch(.986 .012 65);--wa-file-border: oklch(.88 .008 80)}.wa-cursor-file__card[data-file-tone=spreadsheet],.wa-uploaded-file[data-file-tone=spreadsheet]{--wa-file-color: oklch(.51 .12 150);--wa-file-bg: oklch(.986 .014 150)}.wa-cursor-file__card[data-file-tone=pdf],.wa-uploaded-file[data-file-tone=pdf]{--wa-file-color: oklch(.52 .15 29);--wa-file-bg: oklch(.986 .014 29)}.wa-cursor-file__card[data-file-tone=doc],.wa-uploaded-file[data-file-tone=doc]{--wa-file-color: oklch(.52 .145 257);--wa-file-bg: oklch(.986 .013 257)}.wa-cursor-file__card[data-file-tone=text],.wa-uploaded-file[data-file-tone=text]{--wa-file-color: oklch(.52 .018 82);--wa-file-bg: oklch(.982 .004 82)}.wa-cursor-file__card[data-file-tone=ppt],.wa-uploaded-file[data-file-tone=ppt]{--wa-file-color: oklch(.56 .13 57);--wa-file-bg: oklch(.986 .016 64)}}.wa-cursor-file__name{min-width:0;overflow:hidden;font-size:11px;line-height:1;font-weight:560;text-overflow:ellipsis;white-space:nowrap}.wa-uploaded-file{display:inline-grid;grid-template-columns:34px minmax(0,1fr);gap:9px;align-items:center;min-width:292px;max-width:340px;min-height:52px;padding:8px 12px 8px 8px;border:1px solid var(--wa-file-border, #dedbd3);border-radius:8px;color:var(--wa-ink);background:#faf9f4}.wa-uploaded-file__icon{width:34px;height:34px}.wa-uploaded-file__body{display:grid;gap:3px;min-width:0}.wa-uploaded-file__body strong,.wa-uploaded-file__body span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.wa-uploaded-file__body strong{font-size:12px;line-height:1.1;font-weight:620}.wa-uploaded-file__body span{color:#716d66;font-size:10px;line-height:1;font-weight:460}.wa-uploaded-files{display:grid;gap:8px;justify-items:end}.wa-uploaded-files[data-uploaded-file-count="4"]{--wa-uploaded-file-target-width: 230px;--wa-story-fit-width: 467px;width:min(467px,calc(100vw - 72px));max-width:100%}.wa-uploaded-files__summary{justify-self:start;color:#716d66;font-size:10.5px;line-height:1;font-weight:520;white-space:nowrap}.wa-uploaded-files__list{display:grid;gap:7px;justify-items:end}.wa-uploaded-files[data-uploaded-file-count="4"] .wa-uploaded-files__list{width:100%;grid-template-columns:repeat(2,minmax(0,var(--wa-uploaded-file-target-width)));justify-content:end;justify-items:stretch}.wa-uploaded-files[data-uploaded-file-count="4"] .wa-uploaded-file{width:100%;min-width:0;max-width:none}.wa-data-table{--wa-data-table-scroll-width: 100%;display:grid;gap:0;min-width:0;padding:0;overflow:visible;border:0;border-radius:0;background:transparent;box-shadow:none;color:#050505}.wa-data-table[data-footer-clearance=true]{padding-bottom:var(--wa-data-table-footer-clearance, 0px)}.wa-data-table__header{display:none;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;align-items:end}.wa-data-table__meta{grid-column:1 / -1;color:var(--wa-color-accent);font-size:10px;line-height:1;font-weight:760;letter-spacing:0;text-transform:uppercase}.wa-data-table__title{min-width:0;margin:0;color:var(--wa-ink);font-size:14px;line-height:1.08;font-weight:720;letter-spacing:0}.wa-data-table__count{color:var(--wa-color-muted);font-size:10px;line-height:1;font-weight:680;white-space:nowrap}.wa-data-table__grid{position:relative;display:grid;min-width:0;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;scrollbar-width:thin;scrollbar-color:rgba(17,17,15,.22) transparent;border:1px solid #eee6df;border-radius:8px;background:var(--wa-color-data-table-surface);box-shadow:var(--wa-data-table-shadow);-webkit-overflow-scrolling:touch}.wa-data-table__grid::-webkit-scrollbar{height:6px}.wa-data-table__grid::-webkit-scrollbar-track{background:transparent}.wa-data-table__grid::-webkit-scrollbar-thumb{border-radius:999px;background:#11110f33}.wa-data-table__row{position:relative;display:grid;grid-template-columns:var(--wa-data-table-columns);width:max(100%,var(--wa-data-table-scroll-width));min-width:max(100%,var(--wa-data-table-scroll-width));min-height:27px;border-top:1px solid #eee6df;background:var(--wa-color-data-table-surface)}.wa-data-table[data-column-count="3"]{--wa-data-table-scroll-width: 560px}.wa-data-table[data-column-count="2"]{--wa-data-table-scroll-width: 620px}.wa-data-table[data-table-variant=connections]{--wa-data-table-scroll-width: 100%}.wa-data-table[data-column-count="4"]{--wa-data-table-scroll-width: 680px}.wa-data-table[data-column-count="5"]{--wa-data-table-scroll-width: 860px}.wa-data-table[data-table-variant=enriched]{--wa-data-table-scroll-width: 760px}.wa-data-table__row:first-child{border-top:0}.wa-data-table__row[data-header=true]{min-height:34px;background:var(--wa-color-data-table-surface)}.wa-data-table__cell{display:flex;align-items:center;min-width:0;padding:6px 8px;overflow:visible;border-left:0;color:#555452;font-size:14px;line-height:1.14;font-weight:500;overflow-wrap:anywhere;white-space:normal}.wa-data-table__cell[data-cell-swap-active=true]{position:relative;overflow:hidden}.wa-data-table__cell-swap-clone{position:absolute;inset:0;box-sizing:border-box;display:flex;align-items:center;min-width:0;padding:inherit;gap:inherit;color:inherit;font:inherit;line-height:inherit;pointer-events:none;opacity:0;visibility:hidden}.wa-data-table__cell:first-child{border-left:0}.wa-data-table__row[data-header=true] .wa-data-table__cell{grid-row:1;align-items:center;padding:9px 10px 8px;color:#555452;font-size:14px;line-height:1.08;font-weight:560;text-transform:none}.wa-data-table__row[data-header=true] .wa-data-table__cell:nth-of-type(1){grid-column:1}.wa-data-table__row[data-header=true] .wa-data-table__cell:nth-of-type(2){grid-column:2}.wa-data-table__row[data-header=true] .wa-data-table__cell:nth-of-type(3){grid-column:3}.wa-data-table__row[data-header=true] .wa-data-table__cell:nth-of-type(4){grid-column:4}.wa-data-table__row[data-header=true] .wa-data-table__cell:nth-of-type(5){grid-column:5}.wa-data-table__row[data-header=true] .wa-data-table__cell:nth-of-type(6){grid-column:6}.wa-data-table__row[data-header=true] .wa-data-table__cell:is([data-column-key=name],[data-column-key=contact],[data-column-key=fullName],[data-column-key=mutualConnection]){padding-left:8px}.wa-data-table__row[data-header=true] .wa-data-table__cell:last-of-type{padding-right:48px}.wa-section .wa-data-table__add{position:sticky;z-index:2;grid-column:1 / -1;grid-row:1;align-self:center;justify-self:end;right:3px;display:inline-flex;align-items:center;justify-content:center;width:28px;height:26px;padding:0 0 1px;border:1px solid #eee6df;border-radius:4px;color:#050505;background:#fffffb;box-shadow:0 1px 1px #17171405;line-height:0}.wa-data-table__add-icon{display:block;width:16px;height:16px;fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:2}.wa-data-table__cell-text{display:block;min-width:0;margin-top:0}.wa-data-table__footer{display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0;padding-top:8px}.wa-data-table__actions{display:flex;align-items:center;gap:7px;min-width:0}.wa-data-table-action{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-width:0;min-height:38px;padding:0 13px;border:1px solid #ded9d2;border-radius:6px;color:#555452;background:transparent;font:inherit;box-shadow:0 1px 1px #17171408;cursor:pointer;white-space:nowrap}.wa-data-table-action[data-action-variant=primary]{border-color:#ded9d2;color:#555452;background:transparent}.wa-data-table-action__icon{display:block;width:16px;height:16px;flex:0 0 16px;fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:2}.wa-data-table-action__label{display:inline-block;font-size:12px;line-height:1;font-weight:520}.wa-data-table-action__badge{display:inline-flex;flex:0 0 auto;align-items:center;min-height:18px;padding:0 7px 1px;border-radius:999px;color:#6d5300;background:#fff0a6;font-size:9px;line-height:1;font-weight:560;white-space:nowrap}.wa-data-table__pagination{display:inline-flex;align-items:center;justify-content:end;gap:7px;min-width:0;color:#716d66;font-size:9.5px;line-height:1;font-weight:500}.wa-data-table__range{white-space:nowrap}.wa-data-table__page-controls{display:inline-flex;align-items:center;gap:3px}.wa-data-table__page-button{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;padding:0;border:1px solid #ded9d2;border-radius:5px;color:#555452;background:#fffffb;font-size:9px;line-height:1;font-weight:560;cursor:pointer}.wa-data-table-action:hover,.wa-data-table__page-button:hover{border-color:#bdb7ae;color:#11110f}.wa-data-table__page-button[data-active=true]{border-color:#11110f;color:#fffffb;background:#11110f}.wa-data-table__cell:is([data-column-key=name],[data-column-key=contact],[data-column-key=fullName],[data-column-key=mutualConnection],[data-column-key=connector]){overflow:visible;color:#050505;font-weight:400;white-space:nowrap}.wa-data-table__cell:is([data-column-key=email],[data-column-key=number],[data-column-key=work-email],[data-column-key=mobile]){color:#565553}.wa-data-table__cell:is([data-column-key=email],[data-column-key=work-email]) .wa-data-table__cell-text{overflow-wrap:normal;white-space:nowrap}.wa-data-table__cell[data-column-key=signal] .wa-data-table__cell-text{overflow-wrap:normal;white-space:nowrap}.wa-data-table__cell[data-cell-swap-active=true][data-column-key]{overflow:hidden}.wa-data-table[data-table-variant=enriched] .wa-data-table__cell:is([data-column-key=email],[data-column-key=number],[data-column-key=work-email],[data-column-key=mobile]){color:#0c6f66}.wa-data-table[data-table-variant=enriched] .wa-data-table__cell:is([data-column-key=email],[data-column-key=number],[data-column-key=work-email],[data-column-key=mobile]) .wa-data-table__cell-text{display:inline-flex;align-items:center;width:fit-content;max-width:100%;min-height:22px;padding:2px 6px;border-radius:5px;background:#0e9c901f;color:#0c6f66}.wa-data-table[data-table-variant=enriched] .wa-data-table__row[data-header=true] .wa-data-table__cell:is([data-column-key=email],[data-column-key=number],[data-column-key=work-email],[data-column-key=mobile]){color:#147970}.wa-data-table--proximity .wa-data-table__row:not([data-header=true]){min-height:52px}.wa-data-table--proximity{--wa-data-table-scroll-width: 100%}.wa-data-table--proximity .wa-data-table__grid{overflow-x:hidden}.wa-data-table--proximity .wa-data-table__row{width:100%;min-width:0}.wa-data-table--proximity .wa-data-table__row[data-header=true] .wa-data-table__cell[data-column-key=connection]{font-size:14px;line-height:1.08;overflow-wrap:anywhere;white-space:normal}.wa-data-table--proximity .wa-data-table__row:not([data-header=true]) .wa-data-table__cell[data-column-key=connection]{align-items:center;color:var(--wa-ink);font-size:13.5px;line-height:1.18;overflow-wrap:anywhere;white-space:normal}.wa-data-table--proximity .wa-data-table__cell[data-column-key=connection] .wa-data-table__cell-text{overflow-wrap:anywhere;white-space:normal;word-break:normal}.wa-data-table-pill-detail{display:grid;align-content:center;gap:5px;min-width:0}.wa-data-table-pill-detail__pill{justify-self:start;display:inline-flex;align-items:center;min-height:0;padding:0;border:0;border-radius:0;color:#5f5b55;background:transparent;font-size:11px;line-height:1;font-weight:520;white-space:nowrap;box-shadow:none}.wa-data-table-pill-detail__detail{display:block;min-width:0;color:#252521;font-size:13.5px;line-height:1.22;font-weight:500;overflow-wrap:anywhere;white-space:normal;word-break:normal}.wa-data-table[data-table-variant=connections] .wa-data-table__grid{overflow-x:hidden}.wa-data-table[data-table-variant=connections] .wa-data-table__cell{overflow:hidden}.wa-data-table[data-table-variant=connections] .wa-data-table__cell[data-column-key=mutualConnection]:not(:empty){align-items:center;gap:8px}.wa-data-table[data-table-variant=connections] .wa-data-table__cell[data-column-key=mutualConnection] .wa-data-table-person{flex:1 1 auto;width:auto}.wa-data-table[data-table-variant=connections] .wa-data-table-person__name,.wa-data-table[data-table-variant=connections] .wa-data-table-person__detail{overflow:hidden;text-overflow:ellipsis}.wa-data-table-cell-badge{display:inline-flex;flex:0 0 auto;align-items:center;justify-content:center;min-height:20px;padding:0;border:0;border-radius:0;color:#706c66;background:transparent;font-size:12px;line-height:1;font-weight:430;white-space:nowrap}.wa-data-table__cell[data-empty=true]{color:#aaa7a2}.wa-data-table-person{display:grid;grid-template-columns:25px minmax(0,1fr);gap:7px;align-items:center;width:100%;min-width:0;overflow:visible}.wa-data-table-person__avatar-wrap{position:relative;display:block;width:25px;height:25px}.wa-data-table-person__avatar{display:inline-flex;align-items:center;justify-content:center;width:25px;height:25px;overflow:hidden;border:1px solid #d8d8d8;border-radius:999px;color:#1a1a18;background:linear-gradient(145deg,#d8dee8,#aeb7c5);font-size:8px;font-weight:700;letter-spacing:0}.wa-data-table-person__avatar img{display:block;width:100%;height:100%;object-fit:cover}.wa-data-table-person__avatar[data-avatar-tone="2"]{background:linear-gradient(145deg,#cde3d5,#7ea88f)}.wa-data-table-person__avatar[data-avatar-tone="3"]{background:linear-gradient(145deg,#9edff0,#27718b)}.wa-data-table-person__avatar[data-avatar-tone="4"]{background:linear-gradient(145deg,#f4f0eb,#b6b0a9)}.wa-data-table-person__avatar[data-avatar-tone="5"]{background:linear-gradient(145deg,#443f45,#141416);color:#fffff9}.wa-data-table-person__avatar[data-avatar-tone="6"]{background:linear-gradient(145deg,#bdeef4,#1590a8)}.wa-data-table-person__avatar[data-avatar-tone="7"]{background:linear-gradient(145deg,#f3f1dd,#a8d7f0)}.wa-data-table-person__avatar[data-avatar-tone="8"]{background:linear-gradient(145deg,#0992db,#055c9b);color:#fffff9}.wa-data-table-person__avatar[data-avatar-tone="9"]{background:linear-gradient(145deg,#cfc8b8,#39322b);color:#fffff9}.wa-data-table-person__source{position:absolute;right:0;bottom:0;display:grid;place-items:center;width:12px;height:12px;overflow:hidden;border:1.5px solid var(--wa-color-panel);border-radius:999px;background:#ddff1c;color:#4d4943;font-size:6px;line-height:1;font-weight:720;text-transform:uppercase}.wa-data-table-person__source:before,.wa-data-table-person__source:after{content:"";position:absolute;background:#050505}.wa-data-table-person__source[data-source=signal]:before{right:3px;bottom:2px;width:6px;height:2px;border-radius:999px;transform:rotate(-34deg)}.wa-data-table-person__source[data-source=signal]:after{right:2px;bottom:5px;width:2px;height:5px;border-radius:999px;transform:rotate(12deg)}.wa-data-table-person__source[data-source=database]{border-radius:4px;background:#1f1f1f}.wa-data-table-person__source[data-source=database]:before{top:3px;left:3px;width:5px;height:5px;border:1.5px solid #fffff9;border-radius:2px;background:transparent}.wa-data-table-person__source[data-source=database]:after{display:none}.wa-data-table-person__source[data-source=engage]{border-radius:4px 7px 7px 4px;background:#6043ff}.wa-data-table-person__source[data-source=engage]:before{top:4px;left:3px;width:7px;height:4px;border-radius:1px;background:#fffff9;transform:rotate(-8deg)}.wa-data-table-person__source[data-source=engage]:after{display:none}.wa-data-table-person__source[data-source=company]{border:0;border-radius:999px;background:transparent;box-shadow:0 0 0 1.5px var(--wa-panel),0 1px 2px #11110f1f}.wa-data-table-person__source[data-source=company]:before,.wa-data-table-person__source[data-source=company]:after{display:none}.wa-data-table-person__source[data-source=company][data-has-logo=false]{display:none}.wa-data-table-person__source-logo{display:block;width:100%;height:100%;border-radius:inherit;object-fit:cover}.wa-data-table-person__copy{display:grid;align-content:start;gap:2px;min-width:0;margin-top:0}.wa-data-table-person__name{min-width:0;margin-top:0;overflow:visible;color:#050505;font-size:14px;line-height:1.05;font-weight:400;overflow-wrap:normal;text-overflow:clip;white-space:nowrap}.wa-data-table-person__detail{min-width:0;overflow:hidden;color:#67635f;font-size:12px;line-height:1.12;font-weight:400;text-overflow:ellipsis;white-space:nowrap}.wa-enrichment-panel{--wa-thinking-icon-column: 18px;--wa-thinking-column-gap: 8px;--wa-thinking-rail-x-adjust: -.5px;--wa-step-progress: 0;display:grid;gap:12px;min-width:0;max-width:none;overflow:visible;border:0;border-radius:0;background:transparent;box-shadow:none;color:#11110f}.wa-enrichment-panel__header{display:inline-grid;grid-template-columns:var(--wa-thinking-icon-column) auto;gap:var(--wa-thinking-column-gap);align-items:center;justify-content:start;min-height:18px;padding:0;border:0;color:#11110f;background:transparent;font-size:14px;line-height:1;font-weight:520}.wa-enrichment-panel .wa-thinking__title{color:#11110f}.wa-waterfall-rows{position:relative;display:grid;gap:0;padding:0}.wa-waterfall-rows:before{content:"";position:absolute;top:-16px;bottom:11px;left:calc((var(--wa-thinking-icon-column) / 2) + var(--wa-thinking-rail-x-adjust));width:1px;background:#e4ded6}.wa-waterfall-row{position:relative;display:grid;grid-template-columns:var(--wa-thinking-icon-column) 100px minmax(0,1fr);gap:var(--wa-thinking-column-gap) 7px;align-items:center;width:100%;max-width:100%;min-width:0;min-height:30px;color:#11110f;font-size:14px;line-height:1;font-weight:400;white-space:nowrap}.wa-waterfall-row__status{position:relative;z-index:1;justify-self:center;width:12px;height:12px;background:var(--wa-panel)}.wa-waterfall-row__status:before{content:"";position:absolute;top:4px;left:4px;width:4px;height:4px;border-radius:999px;background:#9d9890}.wa-waterfall-row__label{min-width:0;overflow:hidden;color:#11110f;font-size:14px;font-weight:400;text-overflow:ellipsis}.wa-waterfall-row__chips{display:inline-flex;align-items:center;gap:6px;width:100%;max-width:100%;min-width:0;margin-left:-1px;padding-left:1px;overflow:hidden;-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 44px),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 44px),transparent)}.wa-waterfall-service-step{display:inline-flex;align-items:center;gap:6px;flex:0 0 auto}.wa-waterfall-arrow{display:inline-grid;place-items:center;width:16px;height:16px;color:#bbb3a9;line-height:1;font-weight:400}.wa-waterfall-arrow svg{display:block;width:16px;height:16px}.wa-waterfall-chip{position:relative;display:inline-flex;align-items:center;gap:7px;max-width:none;min-height:26px;padding:0 8px 0 6px;overflow:hidden;border:1px solid #e5ded5;border-radius:5px;color:#817b72;background:#fffffa;background-clip:padding-box;font-size:13px;line-height:1;font-weight:400;text-overflow:ellipsis;box-shadow:0 0 0 1px #5f584e05;will-change:transform}.wa-waterfall-chip__icon{position:relative;display:inline-grid;flex:0 0 16px;place-items:center;width:16px;height:16px;color:currentColor}.wa-waterfall-chip__icon svg{display:block;width:16px;height:16px}.wa-waterfall-chip__mark{display:block;width:16px;height:auto}.wa-waterfall-chip__state-icon{display:none;flex:0 0 16px;width:16px;height:16px;place-items:center;color:currentColor}.wa-waterfall-chip__state-icon svg{display:none;width:14px;height:14px}.wa-waterfall-chip__label{display:inline-block;transform:translateY(-.5px)}.wa-waterfall-chip[data-service=on-prem] .wa-waterfall-chip__icon{color:#827d75}.wa-waterfall-chip[data-service=wiza] .wa-waterfall-chip__icon{color:#9b43ff}.wa-waterfall-chip[data-service=contactout] .wa-waterfall-chip__icon{color:#009d5f}.wa-waterfall-chip[data-service=prospeo] .wa-waterfall-chip__icon{color:#ff3b30}.wa-waterfall-chip[data-service=waterfall] .wa-waterfall-chip__icon,.wa-waterfall-chip[data-service=forager] .wa-waterfall-chip__icon{color:#514bff}.wa-waterfall-chip[data-service=fullenrich] .wa-waterfall-chip__icon{color:#77736d}.wa-waterfall-chip[data-step-state=pending]{opacity:.62}.wa-waterfall-chip[data-step-state=loading]{opacity:1;color:#68635c;border-color:transparent;background:linear-gradient(#fbfaf2,#fbfaf2) padding-box,linear-gradient(108deg,#2f2e2a 0% 35%,#c9c2b8 49%,#2f2e2a 64% 100%) border-box;background-size:100% 100%,220% 100%;animation:wa-waterfall-service-poll .9s linear infinite;box-shadow:0 1px 3px #11110f1f}.wa-waterfall-chip[data-step-state=complete],.wa-waterfall-chip[data-step-state=failed]{background:#fbfaf2}.wa-waterfall-chip[data-step-state=complete]{color:#2f8f4c}.wa-waterfall-chip[data-step-state=complete] .wa-waterfall-chip__icon,.wa-waterfall-chip[data-step-state=failed] .wa-waterfall-chip__icon{display:none}.wa-waterfall-chip[data-step-state=complete] .wa-waterfall-chip__state-icon,.wa-waterfall-chip[data-step-state=failed] .wa-waterfall-chip__state-icon{display:inline-grid}.wa-waterfall-chip[data-step-state=complete] .wa-waterfall-chip__state-icon svg:first-child,.wa-waterfall-chip[data-step-state=failed] .wa-waterfall-chip__state-icon svg:last-child{display:block}.wa-waterfall-chip[data-step-state=failed]{color:#bf4941}@keyframes wa-waterfall-service-poll{0%{background-position:0 0,120% 50%}to{background-position:0 0,-120% 50%}}.wa-result-card{display:grid;gap:8px;padding:12px;border:1px solid var(--wa-line-12);border-radius:var(--wa-radius-sm);background:linear-gradient(90deg,var(--wa-card-accent-bg),transparent 42%),var(--wa-color-panel);box-shadow:var(--wa-card-shadow)}.wa-result-card__topline{color:var(--wa-color-accent);font-size:11px;line-height:1.1;font-weight:720;letter-spacing:0;text-transform:uppercase}.wa-result-card__title{margin:0;color:var(--wa-ink);font-size:16px;line-height:1.1;font-weight:700;letter-spacing:0}.wa-result-card__body{margin:0;color:var(--wa-color-muted);font-size:12px;line-height:1.32;font-weight:460}.wa-result-card__rows{display:grid;gap:6px;padding:0;margin:0;list-style:none}.wa-result-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;min-height:30px;padding:7px 9px;border:1px solid var(--wa-line-08);border-radius:var(--wa-radius-sm);color:var(--wa-color-muted);background:var(--wa-row-bg);font-size:12px}.wa-result-row strong{color:var(--wa-ink);font-weight:680;white-space:nowrap}.wa-result-row[data-tone=positive] strong{color:var(--wa-color-positive)}.wa-result-row[data-tone=warning] strong{color:var(--wa-color-warning)}.wa-result-row[data-tone=accent] strong{color:var(--wa-color-accent)}.wa-result-card__actions{display:flex;gap:8px;flex-wrap:wrap}.wa-result-action{display:inline-flex;align-items:center;justify-content:center;min-width:122px;height:34px;padding:0 11px;border:1px solid var(--wa-line-16);border-radius:var(--wa-radius-sm);color:var(--wa-color-inverse);background:var(--wa-color-dark-surface);font-size:12px;font-weight:680;cursor:default;white-space:nowrap}.wa-strategy-plan{--wa-strategy-hover-scale: 1.0175;--wa-strategy-hover-border: #c8c3bb;display:block;min-height:0;overflow:visible}.wa-strategy-plan__surface{display:grid;align-content:start;gap:10px;width:100%;min-height:0;padding:16px 18px 16px 20px;border:1px solid #dfddd5;border-radius:7px;background:#fffffa;box-shadow:0 7px 18px #1717140e;transform:scale(1) translateZ(0);transform-origin:center;transition:transform 125ms cubic-bezier(.2,.92,.18,1),border-color .12s ease,background-color .12s ease,box-shadow .14s ease}.wa-strategy-plan:hover .wa-strategy-plan__surface,.wa-strategy-plan[data-cursor-hover] .wa-strategy-plan__surface{border-color:var(--wa-strategy-hover-border);background:#fffffe;box-shadow:0 10px 24px #17171414;transform:scale(var(--wa-strategy-hover-scale)) translateZ(0)}.wa-strategy-plan__title{margin:0;color:#252521;font-family:var(--wa-font-feature);font-size:16px;line-height:1.18;font-weight:400;letter-spacing:0}.wa-strategy-plan__bullets{display:grid;gap:5px;margin:0;padding-left:14px;color:#5e5c55;font-family:var(--wa-font-sans);font-size:12px;line-height:1.34;font-weight:560;letter-spacing:0}.wa-strategy-plan__bullets li{padding-left:2px;white-space:nowrap}.wa-data-source-grid{display:grid;gap:10px;width:min(100%,520px);min-width:0;padding:2px 0}.wa-data-source-grid__header{display:grid;gap:3px}.wa-data-source-grid__title{margin:0;color:var(--wa-ink);font-size:15px;line-height:1.12;font-weight:560;letter-spacing:0}.wa-data-source-grid__subtitle{max-width:430px;margin:0;color:var(--wa-color-muted);font-size:11.5px;line-height:1.26;font-weight:410}.wa-data-source-grid__list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;min-width:0}.wa-data-source-card{display:grid;grid-template-columns:18px minmax(0,1fr);gap:8px;align-items:start;min-width:0;min-height:68px;padding:9px 10px;border:1px solid var(--wa-line-10);border-radius:var(--wa-radius-sm);background:var(--wa-panel);box-shadow:0 8px 18px #1717140a}.wa-data-source-card__icon{position:relative;width:18px;height:18px;margin-top:1px;border:1px solid var(--wa-line-16);border-radius:6px;background:var(--wa-color-soft-surface)}.wa-data-source-card__icon:before,.wa-data-source-card__icon:after{content:"";position:absolute;border-radius:999px;background:var(--wa-color-accent)}.wa-data-source-card__icon:before{top:5px;left:5px;width:6px;height:6px}.wa-data-source-card__icon:after{right:4px;bottom:4px;width:3px;height:3px}.wa-data-source-card__copy{display:grid;gap:3px;min-width:0}.wa-data-source-card__copy strong{color:var(--wa-ink);font-size:12.5px;line-height:1.12;font-weight:570}.wa-data-source-card__copy span{color:var(--wa-color-muted);font-size:10.5px;line-height:1.22;font-weight:410}.wa-data-source-grid--marketing{position:relative;z-index:0;width:100%;height:var(--wa-data-grid-scaled-height, 100%);min-height:var(--wa-data-grid-scaled-height, 0);max-width:none;padding:0;overflow:hidden;pointer-events:none}.wa-data-source-grid--marketing .wa-data-source-grid__scale{position:absolute;top:0;left:0;display:grid;grid-template-rows:auto auto;align-content:start;gap:68px;width:var(--wa-data-grid-artboard-width, 2048px);height:1280px;padding:80px var(--wa-data-grid-gutter-right, 87px) 0 var(--wa-data-grid-gutter-left, 87px);transform:scale(var(--wa-data-grid-scale, .2880859375));transform-origin:top left}.wa-data-source-grid--marketing .wa-data-source-grid__header{gap:0;max-width:none}.wa-data-source-grid--marketing .wa-data-source-grid__title{font-size:64px;line-height:1.05;font-weight:520;letter-spacing:0;white-space:nowrap}.wa-data-source-grid--marketing .wa-data-source-grid__subtitle{display:none}.wa-data-source-grid__groups{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 26px;min-height:0;min-width:0}.wa-data-source-grid--marketing .wa-data-source-grid__groups{grid-template-columns:repeat(4,438px);gap:43px;align-items:start}.wa-data-source-grid__column{display:grid;align-content:start;gap:14px;min-width:0}.wa-data-source-grid--marketing .wa-data-source-grid__column{gap:34px;width:438px}.wa-data-source-group{display:grid;align-content:start;gap:9px;min-width:0;padding:0;border:0;border-radius:0;background:transparent}.wa-data-source-group__title{margin:0;color:#5e5d59;font-size:clamp(13px,1.15vw,18px);line-height:1.05;font-weight:530;letter-spacing:0;text-align:left;text-transform:none}.wa-data-source-grid--marketing .wa-data-source-group{gap:14px}.wa-data-source-grid--marketing .wa-data-source-group__title{font-size:36px;line-height:1.05;font-weight:520}.wa-data-source-grid--marketing .wa-data-source-grid__list{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;width:438px;gap:24px;min-height:0;padding:32px 35px;border-radius:7px;background:#e9e9e9}.wa-data-source-grid--marketing .wa-data-source-grid__list--count-2{min-height:186px}.wa-data-source-grid--marketing .wa-data-source-grid__list--count-3{min-height:238px}.wa-data-vendor-logo{display:inline-flex;align-items:center;justify-content:flex-start;width:100%;min-width:0;height:auto;min-height:0;max-width:100%;color:#000;opacity:1}.wa-data-vendor-logo--image{opacity:1}.wa-data-vendor-logo__mark{display:flex;align-items:center;justify-content:center;width:100%;height:100%;max-width:100%;overflow:hidden;color:currentColor;font-size:clamp(18px,2.1vw,36px);line-height:1;font-weight:560;letter-spacing:0;text-align:center;text-overflow:ellipsis;white-space:nowrap;transform:scale(var(--wa-logo-scale, 1));transform-origin:center}.wa-data-vendor-logo__image{display:block;width:auto;height:auto;max-width:100%;max-height:34px;object-fit:contain;object-position:left center;filter:brightness(0) saturate(100%);transform:scale(var(--wa-logo-scale, 1));transform-origin:left center;-webkit-user-select:none;user-select:none}.wa-data-source-grid--marketing .wa-data-vendor-logo{width:max-content;max-width:none}.wa-data-source-grid--marketing .wa-data-vendor-logo__mark{width:max-content;max-width:none;font-size:48px;transform:none;transform-origin:left center}.wa-data-source-grid--marketing .wa-data-vendor-logo__image{width:auto!important;height:auto!important;max-width:none!important;max-height:none!important;transform:none!important}.wa-mini-game,.wa-mailbox-connection,.wa-style-profile,.wa-proximity-list,.wa-sequence-engagement{--wa-story-fit-width: 540px;display:grid;gap:10px;width:min(100%,540px);min-width:0}.wa-style-profile{gap:13px;padding:14px 16px 15px;border:1px solid var(--wa-line-10);border-radius:13px;background:#fffffa;box-shadow:0 12px 32px #25252114}.wa-sequence-engagement{--wa-sequence-tab-line-stroke: rgba(17, 17, 15, .28);--wa-story-fit-width: 712px;gap:14px;width:min(100%,712px)}.wa-mini-game__header,.wa-mailbox-connection__header,.wa-style-profile__header,.wa-proximity-list__header,.wa-sequence-engagement__header{display:grid;gap:3px}.wa-mini-game__eyebrow{color:var(--wa-color-muted);font-size:9px;line-height:1;font-weight:680;text-transform:uppercase}.wa-mini-game__title,.wa-mailbox-connection__title,.wa-style-profile__title,.wa-proximity-list__title,.wa-sequence-engagement__title{margin:0;color:var(--wa-ink);font-size:15px;line-height:1.12;font-weight:560;letter-spacing:0}.wa-mini-game__subtitle,.wa-mailbox-connection__subtitle,.wa-style-profile__subtitle,.wa-proximity-list__subtitle,.wa-sequence-engagement__subtitle{margin:0;color:var(--wa-color-muted);font-size:11.5px;line-height:1.26;font-weight:410}.wa-mailbox-connection{gap:15px}.wa-mailbox-connection__card{display:grid;grid-template-columns:minmax(0,1fr) 124px;gap:14px;align-items:center;min-width:0;padding:14px 14px 14px 16px;border:1px solid #d9d7d0;border-radius:12px;background:#f7f6f0;box-shadow:inset 0 0 0 1px #fffff96b}.wa-mailbox-connection__copy{display:grid;gap:15px;min-width:0;box-sizing:border-box;padding-left:8px}.wa-mailbox-connection__title{font-size:20px;line-height:1.08;font-weight:560}.wa-mailbox-connection__subtitle{max-width:310px;color:#11110f;font-size:14px;line-height:1.28;font-weight:400}.wa-mailbox-connection__actions{display:grid;gap:9px;justify-self:end;width:124px;min-width:0}.wa-mailbox-connection__button{position:relative;isolation:isolate;display:grid;grid-template-columns:20px max-content;align-items:center;justify-content:center;gap:8px;width:100%;min-width:0;min-height:40px;padding:0 10px;border:1px solid #d6d5cf;border-radius:5px;color:#080807;background:#fffff9;font:inherit;font-size:15.5px;line-height:1;font-weight:430;letter-spacing:0;cursor:default;overflow:visible;transform:translateZ(0)}.wa-mailbox-connection__button:before,.wa-mailbox-connection__button:after{content:"";position:absolute;pointer-events:none;opacity:0}.wa-mailbox-connection__button:before{inset:-1px;z-index:0;border-radius:inherit;background:radial-gradient(circle at 50% 50%,rgba(234,67,53,.82),transparent 34%),linear-gradient(90deg,#ea433500,#ea433566,#ea433500);background-position:0% 50%,0% 50%;background-size:220% 100%,220% 100%;filter:blur(7px)}.wa-mailbox-connection__button:after{inset:0;z-index:1;border-radius:inherit;padding:1px;background:radial-gradient(circle at 50% 50%,rgba(234,67,53,.95),rgba(234,67,53,.26) 34%,transparent 54%),linear-gradient(90deg,transparent,rgba(234,67,53,.52),transparent);background-position:0% 50%,0% 50%;background-size:220% 100%,220% 100%;-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude}.wa-mailbox-connection__button>*{position:relative;z-index:2}.wa-mailbox-connection__button:disabled{opacity:1;pointer-events:none}.wa-mailbox-connection__provider-icon{display:block;width:20px;height:20px;flex-shrink:0;object-fit:contain}.wa-mailbox-connection__button-copy{display:grid;width:max-content;min-width:0;align-items:center}.wa-mailbox-connection__provider-label,.wa-mailbox-connection__button-label{grid-area:1 / 1;display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:opacity .18s ease,transform .18s ease}.wa-mailbox-connection__button-label[data-mailbox-button-label=loading],.wa-mailbox-connection__button-label[data-mailbox-button-label=connected],.wa-mailbox-connection__spinner{display:none;opacity:0;transform:translateY(5px)}.wa-mailbox-connection[data-mailbox-state=loading] [data-mailbox-connect] .wa-mailbox-connection__button-label[data-mailbox-button-label=idle],.wa-mailbox-connection[data-mailbox-state=connected] [data-mailbox-connect] .wa-mailbox-connection__button-label[data-mailbox-button-label=idle]{display:none;opacity:0;transform:translateY(-5px)}.wa-mailbox-connection[data-mailbox-state=loading] [data-mailbox-connect] .wa-mailbox-connection__button-label[data-mailbox-button-label=loading],.wa-mailbox-connection[data-mailbox-state=connected] [data-mailbox-connect] .wa-mailbox-connection__button-label[data-mailbox-button-label=connected]{display:block;opacity:1;transform:translateY(0)}.wa-mailbox-connection[data-mailbox-state=connected] [data-mailbox-connect] .wa-mailbox-connection__button-label[data-mailbox-button-label=connected]{display:inline-flex;align-items:center;gap:4px}.wa-mailbox-connection__connected-icon{display:block;width:16px;height:16px;color:currentColor;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:0 0 16px}.wa-mailbox-connection[data-mailbox-state=loading] [data-mailbox-connect]{grid-template-columns:max-content;border-color:#ea433561}.wa-mailbox-connection[data-mailbox-state=loading] [data-mailbox-connect]:before{opacity:0;animation:none}.wa-mailbox-connection[data-mailbox-state=loading] [data-mailbox-connect]:after{opacity:1;animation:wa-mailbox-gmail-radiate 1.16s ease-in-out infinite}.wa-mailbox-connection[data-mailbox-state=loading] [data-mailbox-connect] .wa-mailbox-connection__provider-icon,.wa-mailbox-connection[data-mailbox-state=loading] [data-mailbox-connect] .wa-mailbox-connection__spinner{display:none}.wa-mailbox-connection[data-mailbox-state=connected] [data-mailbox-connect]{grid-template-columns:max-content;color:#aaa59d;border-color:#17171424;background:transparent;box-shadow:none}.wa-mailbox-connection[data-mailbox-state=connected] [data-mailbox-connect] .wa-mailbox-connection__provider-icon{display:none}.wa-mailbox-connection__spinner{position:absolute;right:9px;width:12px;height:12px;border:1.5px solid rgba(17,17,15,.18);border-top-color:currentColor;border-radius:999px;animation:wa-spin .76s linear infinite}.wa-mailbox-learning{display:none;grid-template-columns:44px max-content minmax(90px,1fr);grid-template-rows:auto auto;grid-template-areas:"thumb title progress" "thumb detail progress";align-items:center;gap:5px 14px;margin-top:8px;padding:0;color:#5f5b55;background:transparent}.wa-mailbox-learning__thumbprint{grid-area:thumb;display:grid;place-items:center;width:44px;height:44px;background:transparent}.wa-mailbox-learning__title{grid-area:title;display:inline-flex;align-items:center;gap:6px;margin:0;color:#5b5752;font-size:14px;line-height:1;font-weight:560;white-space:nowrap}.wa-mailbox-learning__ready-chevron{position:relative;top:-1px;display:inline-block;width:9px;height:9px;color:currentColor;opacity:0;transform-origin:center}.wa-mailbox-learning__ready-chevron:before{content:"";position:absolute;top:0;left:1px;width:6px;height:6px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg)}.wa-mailbox-learning[data-mailbox-learning-state=ready] .wa-mailbox-learning__title{color:#11110f}.wa-mailbox-learning[data-mailbox-learning-state=ready] .wa-mailbox-learning__progress{display:none}.wa-mailbox-learning__detail{grid-area:detail;margin:0;color:#8b867e;font-size:13px;line-height:1.15;font-weight:400}.wa-mailbox-thumbprint{width:36px;height:36px;overflow:visible;color:#11110f}.wa-mailbox-thumbprint__base path,.wa-mailbox-thumbprint__fill path{stroke-width:5.4}.wa-mailbox-thumbprint__base path{stroke:color-mix(in srgb,currentColor 14%,transparent)}.wa-mailbox-thumbprint__fill path{stroke:currentColor}.wa-mailbox-learning__progress{grid-area:progress;align-self:center;height:4px;overflow:hidden;border-radius:999px;background:#dfddd6}.wa-mailbox-learning__progress span{display:block;width:100%;height:100%;border-radius:inherit;background:#5f5b55;transform:scaleX(0);transform-origin:left center}.wa-swipe-game{gap:9px;max-width:520px}.wa-swipe-game__prompt{margin:0;color:var(--wa-ink);font-size:12px;line-height:1.28;font-weight:430}.wa-swipe-game__axis{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;color:var(--wa-color-muted);font-size:10px;line-height:1;font-weight:520}.wa-swipe-game__axis span:first-child{color:#7f1d1d94}.wa-swipe-game__axis span:nth-child(2){color:var(--wa-color-muted);font-variant-numeric:tabular-nums}.wa-swipe-game__axis span:last-child{justify-self:end;color:#1665349e}.wa-swipe-game__stack{position:relative;height:184px;overflow:visible}.wa-swipe-game__glow{position:absolute;inset:12px -18px 0;z-index:0;border-radius:999px;background:linear-gradient(90deg,rgba(127,29,29,.055),transparent 42%,transparent 58%,rgba(22,101,52,.065));filter:blur(22px);pointer-events:none}.wa-swipe-card,.wa-swipe-game__complete{position:absolute;inset:0;display:grid;align-content:center;justify-items:center;min-width:0;border:1px solid rgba(228,228,231,.82);border-radius:21px;background:#fafafa;text-align:center;box-shadow:0 18px 45px #00000014}.wa-swipe-card{gap:13px;padding:22px 26px}.wa-swipe-game[data-swipe-decision=avoid] .wa-swipe-card[data-swipe-state=active]{border-color:#d298989e;background:linear-gradient(135deg,#f8f1f1,#fafafa 68%);box-shadow:-22px 28px 70px #7f1d1d1f}.wa-swipe-game[data-swipe-decision=use] .wa-swipe-card[data-swipe-state=active]{border-color:#8eb79da3;background:linear-gradient(135deg,#fafafa 32%,#f0f7f2);box-shadow:22px 28px 70px #1665341f}.wa-swipe-card__label{max-width:360px;color:var(--wa-ink);font-size:20px;line-height:1.05;font-weight:580;letter-spacing:0}.wa-swipe-card__detail{max-width:340px;color:var(--wa-color-muted);font-size:11.5px;line-height:1.35;font-weight:410}.wa-swipe-game__actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;max-width:420px}.wa-swipe-game__action{position:relative;display:inline-flex;align-items:center;justify-content:center;min-height:38px;border:1px solid var(--wa-line-12);border-radius:999px;background:var(--wa-panel);cursor:default}.wa-swipe-game__action:before,.wa-swipe-game__action:after{content:"";position:absolute;display:block}.wa-swipe-game__action[data-swipe-action=avoid]{border-color:#d298987a;background:#f8f1f1e6}.wa-swipe-game__action[data-swipe-action=avoid]:before,.wa-swipe-game__action[data-swipe-action=avoid]:after{width:14px;height:1.5px;border-radius:999px;background:#ba4d4d}.wa-swipe-game__action[data-swipe-action=avoid]:before{transform:rotate(45deg)}.wa-swipe-game__action[data-swipe-action=avoid]:after{transform:rotate(-45deg)}.wa-swipe-game__action[data-swipe-action=use]{border-color:#8eb79d80;background:#f0f7f2f2}.wa-swipe-game__action[data-swipe-action=use]:before{width:13px;height:7px;border-bottom:1.7px solid #2f8f4d;border-left:1.7px solid #2f8f4d;transform:translateY(-1px) rotate(-45deg)}.wa-swipe-game__action[data-active=true]{border-color:var(--wa-ink)}.wa-swipe-game__complete{z-index:10;color:var(--wa-ink);font-size:17px;line-height:1.1;font-weight:560}.wa-sequence-engagement__header{grid-template-columns:minmax(0,1fr);align-items:start}.wa-sequence-engagement__subtitle{grid-column:1 / -1}.wa-style-profile__rows{display:grid;grid-template-columns:minmax(0,1fr);gap:0;border-top:1px solid var(--wa-line-08)}.wa-style-profile__row{display:grid;grid-template-columns:104px minmax(0,1fr);gap:14px;align-items:start;min-height:0;padding:10px 0;border-bottom:1px solid var(--wa-line-08);background:transparent}.wa-style-profile__row span{color:var(--wa-color-muted);font-size:11px;line-height:1.18;font-weight:560}.wa-style-profile__row strong{color:var(--wa-ink);font-size:12.5px;line-height:1.28;font-weight:430}.wa-style-profile__examples{display:grid;gap:0}.wa-style-profile__example{position:relative;margin:0;padding:6px 0 6px 16px;color:var(--wa-ink);background:transparent;font-size:12px;line-height:1.34;font-weight:430}.wa-style-profile__example:before{content:"";position:absolute;top:14px;left:2px;width:4px;height:4px;border-radius:999px;background:var(--wa-color-muted)}.wa-proximity-list__rows{display:grid;gap:7px}.wa-proximity-lead{display:grid;grid-template-columns:30px minmax(0,1fr);gap:9px;min-width:0;padding:9px 10px;border:1px solid var(--wa-line-10);border-radius:var(--wa-radius-sm);background:var(--wa-panel);box-shadow:0 8px 18px #1717140a}.wa-proximity-lead__rank{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:999px;color:var(--wa-color-inverse);background:var(--wa-color-dark-surface);font-size:11px;line-height:1;font-weight:660}.wa-proximity-lead__body{display:grid;gap:5px;min-width:0}.wa-proximity-lead__top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:start}.wa-proximity-lead__identity{display:grid;gap:2px;min-width:0}.wa-proximity-lead__identity strong{color:var(--wa-ink);font-size:12.5px;line-height:1.1;font-weight:570}.wa-proximity-lead__identity span{color:var(--wa-color-muted);font-size:10px;line-height:1.1;font-weight:410}.wa-proximity-lead__score{color:var(--wa-color-accent);font-size:11px;line-height:1;font-weight:680}.wa-proximity-lead__personalization{margin:0;color:var(--wa-ink);font-size:11px;line-height:1.22;font-weight:430}.wa-proximity-lead__proximity{color:var(--wa-color-muted);font-size:9.5px;line-height:1;font-weight:620;text-transform:uppercase}.wa-sequence-engagement__sequences{display:grid;gap:24px}.wa-sequence-people-wrap{--wa-sequence-person-card-min-width: 112px;position:relative;isolation:isolate;width:100%;min-width:0;max-width:100%;overflow:visible}.wa-sequence-people-wrap:after{content:"";position:absolute;right:0;bottom:0;left:0;z-index:0;height:1px;background:var(--wa-sequence-tab-line-stroke);pointer-events:none;-webkit-mask-image:linear-gradient(to right,transparent 0,#000 34px,#000 calc(100% - 34px),transparent 100%);mask-image:linear-gradient(to right,transparent 0,#000 34px,#000 calc(100% - 34px),transparent 100%)}.wa-sequence-people{--wa-sequence-person-card-min-width: 112px;position:relative;z-index:1;isolation:isolate;display:flex;gap:4px;align-items:end;width:100%;max-width:100%;margin:0;padding:3px max(16px,calc(50% - var(--wa-sequence-person-card-min-width) / 2)) 0;overflow-x:auto;overflow-y:visible;scroll-snap-type:none;scroll-padding-inline:max(16px,calc(50% - var(--wa-sequence-person-card-min-width) / 2));scrollbar-width:none;-webkit-mask-image:linear-gradient(to right,transparent 0,#000 34px,#000 calc(100% - 34px),transparent 100%);mask-image:linear-gradient(to right,transparent 0,#000 34px,#000 calc(100% - 34px),transparent 100%)}.wa-sequence-people::-webkit-scrollbar{display:none}.wa-sequence-people[data-sequence-centering=true]{scroll-snap-type:none}.wa-sequence-person-card{position:relative;z-index:1;display:grid;flex:0 0 auto;grid-template-columns:28px max-content;gap:8px;align-items:center;width:max-content;min-width:var(--wa-sequence-person-card-min-width);min-height:46px;padding:8px 10px 9px;border:1px solid var(--wa-line-08);border-bottom-color:transparent;border-radius:9px 9px 0 0;color:var(--wa-ink);background:color-mix(in srgb,var(--wa-panel) 82%,#f1f0eb);background-clip:padding-box;font:inherit;text-align:left;opacity:.66;cursor:pointer;scroll-snap-align:none;transform:translateZ(0);transform-origin:center;backface-visibility:hidden;will-change:transform,opacity;transition:border-color .16s ease,background .16s ease,box-shadow .16s ease,opacity .16s ease,transform .18s cubic-bezier(.2,.8,.2,1)}.wa-sequence-person-card:is(:hover,[data-active=true]){border-color:#11110f33;background:var(--wa-panel);opacity:1}.wa-sequence-person-card[data-active=true]{z-index:3;border-color:#11110f3d;border-bottom-color:var(--wa-panel);box-shadow:none;background-clip:border-box}.wa-sequence-person-card[data-active=true]:after{content:none}.wa-sequence-person-card__avatar-wrap{position:relative;display:inline-grid;width:28px;height:28px}.wa-sequence-person-card__avatar{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;overflow:hidden;border:1px solid rgba(17,17,15,.08);border-radius:999px;color:#11110f;background:#e8f3ff;font-size:10px;line-height:1;font-weight:620}.wa-sequence-person-card__company{position:absolute;right:-1px;bottom:-1px;display:grid;place-items:center;width:12px;height:12px;overflow:hidden;border:0;border-radius:999px;background:transparent;box-shadow:0 0 0 1.5px var(--wa-panel),0 1px 2px #11110f1f}.wa-sequence-person-card__company img{display:block;width:100%;height:100%;border-radius:inherit;object-fit:cover}.wa-sequence-person-card__avatar img{display:block;width:100%;height:100%;object-fit:cover}.wa-sequence-person-card__avatar[data-avatar-tone="2"]{background:#f1eadf}.wa-sequence-person-card__avatar[data-avatar-tone="3"]{background:#e9f5e6}.wa-sequence-person-card__avatar[data-avatar-tone="4"]{background:#f4e8ec}.wa-sequence-person-card__avatar[data-avatar-tone="5"]{background:#e8f1f0}.wa-sequence-person-card__avatar[data-avatar-tone="6"]{background:#f1ede7}.wa-sequence-person-card__avatar[data-avatar-tone="7"]{background:#e9edf5}.wa-sequence-person-card__avatar[data-avatar-tone="8"]{background:#f2eeee}.wa-sequence-person-card__avatar[data-avatar-tone="9"]{background:#edf3e8}.wa-sequence-person-card__copy{display:grid;gap:2px;width:max-content;min-width:0}.wa-sequence-person-card__copy strong{overflow:visible;color:var(--wa-ink);font-size:12px;line-height:1.1;font-weight:560;text-overflow:clip;white-space:nowrap}.wa-sequence-person-card__copy span{overflow:visible;color:var(--wa-color-muted);font-size:10px;line-height:1.12;font-weight:410;text-overflow:clip;white-space:nowrap}.wa-sequence-card{display:grid;grid-template-columns:minmax(0,248px) minmax(0,424px);gap:16px;align-items:start;justify-content:center;min-width:0;padding:0;border:0;background:transparent;box-shadow:none}.wa-sequence-card__top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:start}.wa-sequence-card__identity{display:grid;gap:2px;min-width:0}.wa-sequence-card__identity strong{color:var(--wa-ink);font-size:12.5px;line-height:1.1;font-weight:570}.wa-sequence-card__identity span,.wa-sequence-card__personalization{color:var(--wa-color-muted);font-size:10.5px;line-height:1.22;font-weight:410}.wa-sequence-card__label{color:var(--wa-color-accent);font-size:9.5px;line-height:1;font-weight:680;text-transform:uppercase}.wa-sequence-card__subject{margin:0;color:var(--wa-ink);font-size:12px;line-height:1.18;font-weight:540}.wa-sequence-card__personalization{margin:0}.wa-sequence-steps{--wa-sequence-dot-color: #8d8b84;--wa-sequence-dot-selected: #050505;--wa-sequence-dot-stroke: var(--wa-panel);--wa-sequence-dot-center: 8.5px;--wa-sequence-step-size: 82px;display:grid;position:relative;grid-template-columns:52px 10px minmax(0,1fr);align-content:start;column-gap:8px;row-gap:0;min-width:0;margin:14px 0 0;color:#85837b}.wa-sequence-step{position:relative;display:grid;grid-column:2 / 4;grid-template-columns:10px minmax(0,1fr);align-content:start;column-gap:12px;row-gap:8px;align-items:start;width:100%;min-height:var(--wa-sequence-step-size);padding:0;border:0;border-radius:0;color:#85837b;background:transparent;font:inherit;text-align:left;cursor:pointer}.wa-sequence-step:before{content:"";position:absolute;top:calc(var(--wa-sequence-dot-center) - 5.5px);left:-.5px;z-index:2;width:7px;height:7px;box-sizing:content-box;border:2px solid var(--wa-sequence-dot-stroke);border-radius:999px;background:var(--wa-sequence-dot-color)}.wa-sequence-step:after{content:"";position:absolute;top:var(--wa-sequence-dot-center);left:4.5px;z-index:1;width:1px;height:var(--wa-sequence-step-size);border-radius:999px;background:var(--wa-sequence-dot-color)}.wa-sequence-step:last-of-type:after{content:none}.wa-sequence-step__channel{display:inline-flex;grid-column:2;align-items:center;justify-content:start;gap:7px;min-height:0;padding:0;border-radius:0;color:#85837b;background:transparent;font-size:12px;line-height:1;font-weight:500;text-transform:none;transform:translateY(1px)}.wa-sequence-step__icon{display:inline-flex;width:14px;height:14px;align-items:center;justify-content:center;color:currentColor;transform:translateY(-1px)}.wa-sequence-step__icon svg{display:block;width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.05;stroke-linecap:round;stroke-linejoin:round}.wa-sequence-step[data-channel=linkedin] .wa-sequence-step__channel,.wa-sequence-step[data-channel=call] .wa-sequence-step__channel{color:#85837b;background:transparent}.wa-sequence-step__copy{display:grid;grid-column:2;gap:5px;min-width:0}.wa-sequence-step__copy strong{color:currentColor;font-size:14px;line-height:1.05;font-weight:520;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.wa-sequence-step__copy strong[data-sequence-content-swap-active=true],.wa-sequence-copy-panel__meta[data-sequence-content-swap-active=true],.wa-sequence-copy-panel__subject[data-sequence-content-swap-active=true],.wa-sequence-copy-panel__body[data-sequence-content-swap-active=true]{position:relative;overflow:hidden}.wa-sequence-step__copy strong[data-sequence-content-swap-active=true]{display:block}.wa-sequence-content-swap-clone{position:absolute;inset:0;box-sizing:border-box;display:block;width:100%;max-width:100%;min-width:0;padding:inherit;gap:inherit;color:inherit;font:inherit;line-height:inherit;pointer-events:none;opacity:0;visibility:hidden}.wa-sequence-step__copy strong .wa-sequence-content-swap-clone{display:block;color:inherit;font-size:inherit;font-weight:inherit;line-height:inherit;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.wa-sequence-copy-panel__meta .wa-sequence-content-swap-clone{display:flex;align-items:center}.wa-sequence-copy-panel:not([data-copy-channel=connect]):not([data-copy-channel=call]) .wa-sequence-copy-panel__subject .wa-sequence-content-swap-clone{display:flex;align-items:center}.wa-sequence-copy-panel[data-copy-channel=call] .wa-sequence-copy-panel__body .wa-sequence-content-swap-clone{display:grid;align-items:inherit;justify-items:inherit}.wa-sequence-copy-panel[data-copy-channel=call] .wa-sequence-copy-panel__subject[data-sequence-content-swap-active=true],.wa-sequence-copy-panel[data-copy-channel=call] .wa-sequence-copy-panel__body[data-sequence-content-swap-active=true]{overflow:visible}.wa-sequence-step__copy span{color:var(--wa-color-muted);font-size:10px;line-height:1.22;font-weight:410}.wa-sequence-step[data-step-open=false]{align-items:start;padding:0}.wa-sequence-step[data-step-selected=true]{color:#050505;background:transparent}.wa-sequence-step[data-step-selected=true]:before{background:var(--wa-sequence-dot-selected)}.wa-sequence-step[data-step-selected=true] .wa-sequence-step__channel{color:#050505}.wa-sequence-step[data-step-open=false] .wa-sequence-step__copy span{display:none}.wa-sequence-step[data-step-open=false] .wa-sequence-step__copy strong .wa-sequence-content-swap-clone{display:block}.wa-sequence-wait{display:grid;grid-column:1;align-items:center;justify-items:end;min-height:var(--wa-sequence-step-size);margin-top:0;padding:0 8px 0 0;color:#5f5d56;font-size:10px;line-height:1.12;font-weight:500;letter-spacing:0;text-align:right;transform:translateY(calc(var(--wa-sequence-dot-center) - var(--wa-sequence-step-size)))}.wa-sequence-wait:before{content:none}.wa-sequence-wait__label{display:grid;width:44px;justify-items:end;text-align:right;white-space:normal}.wa-sequence-wait__prefix,.wa-sequence-wait__value{display:block}.wa-sequence-wait__prefix{padding-right:1px}.wa-sequence-copy-panel{display:grid;align-content:start;gap:0;min-width:0;min-height:336px;padding:0;overflow:hidden;border:1px solid var(--wa-sequence-tab-line-stroke);border-radius:8px;background:var(--wa-panel);box-shadow:0 12px 20px #11110f0f}.wa-sequence-copy-panel[data-copy-channel=connect],.wa-sequence-copy-panel[data-copy-channel=call]{grid-template-rows:auto auto 1fr}.wa-sequence-copy-panel__meta{display:flex;gap:4px;align-items:center;min-height:36px;padding:0 12px;border-bottom:1px solid #c7c4bc;background:#f8f8f0;color:#86847d;font-size:13px;line-height:1;font-weight:410;text-transform:none}.wa-sequence-copy-panel__meta strong{color:#151513;font-weight:410}.wa-sequence-copy-panel[data-copy-channel=connect] .wa-sequence-copy-panel__meta,.wa-sequence-copy-panel[data-copy-channel=call] .wa-sequence-copy-panel__meta{color:var(--wa-ink);font-weight:410}.wa-sequence-copy-panel__subject{display:flex;align-items:center;min-height:36px;padding:0 12px;border-bottom:1px solid #c7c4bc;color:var(--wa-ink);font-size:14px;line-height:1.12;font-weight:600}.wa-sequence-copy-panel[data-copy-channel=connect] .wa-sequence-copy-panel__subject{display:block;min-height:69px;margin:14px 12px 0;padding:10px 12px;border:1px solid #8f8d85;border-radius:4px;color:#080806;font-size:13px;line-height:1.45;font-weight:500}.wa-sequence-copy-panel[data-copy-channel=call] .wa-sequence-copy-panel__subject{display:block;min-height:0;padding:14px 12px 0;border-bottom:0;color:#080806;font-size:15px;line-height:1.45;font-weight:500}.wa-sequence-copy-panel__body{margin:0;padding:13px 12px;color:var(--wa-ink);font-size:13px;line-height:1.48;font-weight:500;white-space:pre-line}.wa-sequence-copy-panel[data-copy-channel=connect] .wa-sequence-copy-panel__body{justify-self:end;margin:0;padding:8px 16px 0 0;color:#5f5d56;font-size:12px;line-height:1;font-weight:520;white-space:normal}.wa-sequence-copy-panel[data-copy-channel=call] .wa-sequence-copy-panel__body{display:grid;align-items:end;justify-items:center;min-height:0;padding:0 18px 29px;white-space:normal}.wa-sequence-call-action{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:11px;align-items:center;width:min(100%,286px);min-height:50px;padding:5px 7px 5px 6px;border:1px solid #8f8d85;border-radius:999px;background:var(--wa-panel);box-shadow:0 1px 2px #11110f1f,0 10px 20px #11110f14}.wa-sequence-call-action__avatar{display:inline-grid;place-items:center;width:34px;height:34px;overflow:hidden;border-radius:999px;background:#e8e6df;color:var(--wa-ink);font-size:10px;line-height:1;font-weight:620;filter:grayscale(1);opacity:.74}.wa-sequence-call-action__avatar img{display:block;width:100%;height:100%;object-fit:cover;filter:grayscale(1)}.wa-sequence-call-action__copy{display:grid;gap:2px;min-width:0;color:#706e67}.wa-sequence-call-action__copy strong{overflow:hidden;color:#706e67;font-size:13px;line-height:1.08;font-weight:520;text-overflow:ellipsis;white-space:nowrap}.wa-sequence-call-action__copy span{overflow:hidden;color:#85837b;font-size:12px;line-height:1.08;font-weight:410;text-overflow:ellipsis;white-space:nowrap}.wa-sequence-call-action__button{display:inline-flex;gap:5px;align-items:center;justify-content:center;min-width:74px;min-height:35px;padding:0 13px;border-radius:999px;color:#fffffa;background:#8f8d85;font-size:13px;line-height:1;font-weight:620}.wa-sequence-call-action__icon,.wa-sequence-call-action__icon svg{display:block;width:15px;height:15px}.wa-sequence-call-action__icon svg{fill:none;stroke:currentColor;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round}.wa-sequence-step__copy strong,.wa-sequence-copy-panel__meta,.wa-sequence-copy-panel__subject,.wa-sequence-copy-panel__body{backface-visibility:hidden;transform:translateZ(0);will-change:transform,opacity}.wa-engage-channels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.wa-engage-channel{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px;align-items:start;min-width:0;min-height:58px;padding:9px 10px;border:1px solid var(--wa-line-10);border-radius:var(--wa-radius-sm);color:var(--wa-ink);background:var(--wa-row-bg);font:inherit;text-align:left}.wa-engage-channel__copy{display:grid;gap:3px;min-width:0}.wa-engage-channel__copy strong{color:var(--wa-ink);font-size:11px;line-height:1.1;font-weight:570}.wa-engage-channel__copy span{color:var(--wa-color-muted);font-size:9.5px;line-height:1.16;font-weight:410}.wa-engage-channel__badge{display:inline-flex;align-items:center;min-height:17px;padding:0 6px;border-radius:999px;color:var(--wa-color-inverse);background:var(--wa-color-accent);font-size:8px;line-height:1;font-weight:740;text-transform:uppercase;white-space:nowrap}.wa-sequence-actions{display:flex;gap:8px;align-items:center;justify-content:center;justify-self:stretch;width:100%}.wa-sequence-action,.wa-sequence-kickoff{display:inline-flex;align-items:center;justify-content:center;width:auto;min-width:0;min-height:32px;padding:0 12px;border:1px solid var(--wa-ink);border-radius:var(--wa-radius-sm);font:inherit;text-align:center;cursor:pointer}.wa-sequence-action--draft{border-color:#11110f24;color:var(--wa-color-muted);background:#eeede6}.wa-sequence-kickoff{color:var(--wa-color-inverse);background:var(--wa-ink);box-shadow:0 10px 22px #1717141f}.wa-sequence-kickoff__label{font-size:11px;line-height:1.05;font-weight:580}.wa-sequence-kickoff[data-processing=true]{gap:7px;cursor:progress}.wa-sequence-kickoff[data-processing=true]:before{content:"";display:block;width:11px;height:11px;border:1.4px solid currentColor;border-right-color:transparent;border-radius:999px;opacity:.86;animation:wa-spin .72s linear infinite}.wa-composer{position:absolute;right:var(--wa-composer-side-inset);bottom:var(--wa-composer-bottom-outset);left:var(--wa-composer-side-inset);z-index:3;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto;gap:8px;align-items:stretch;height:var(--wa-composer-height);min-height:0;padding:18px 10px 10px 20px;margin:0;overflow:hidden;border:1px solid var(--wa-color-input-line);border-radius:9px;background:var(--wa-color-data-table-surface);box-shadow:0 14px 28px #0505041a,0 4px 10px #0505040f,0 1px #ffffffbd inset;transform-origin:center center;contain:layout paint style;backface-visibility:hidden;transition:border-color .14s ease,box-shadow .14s ease}.wa-composer[data-visible=false]{pointer-events:none}.wa-composer__placeholder{display:flex;grid-row:1;align-items:flex-start;align-self:start;min-width:0;min-height:20px;padding:0;overflow:hidden;border:0;border-radius:0;color:var(--wa-ink);background:transparent;font-size:16px;line-height:1.32;font-weight:400;overflow-wrap:anywhere;white-space:normal}.wa-composer__placeholder:empty:before{content:"Ask anything...";color:var(--wa-placeholder)}.wa-composer__controls{display:inline-flex;grid-row:2;align-items:center;justify-self:end;gap:12px;min-width:0}.wa-composer__select{display:inline-flex;align-items:center;gap:5px;color:#74726a;font-size:12px;line-height:1;font-weight:410;white-space:nowrap}.wa-composer__chevron{display:block;width:16px;height:16px;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.wa-composer__send{display:inline-flex;align-items:center;justify-content:center;width:var(--wa-composer-send-size);min-width:var(--wa-composer-send-size);height:var(--wa-composer-send-size);padding:0;border:0;border-radius:999px;color:var(--wa-color-inverse);background:var(--wa-color-dark-surface);line-height:1;cursor:default;white-space:nowrap}.wa-composer__send-icon{display:block;width:16px;height:16px;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.wa-composer__placeholder:empty~.wa-composer__controls .wa-composer__send{background:#aaa89e}.wa-history-resume{position:absolute;right:auto;bottom:calc(var(--wa-composer-bottom-outset) + var(--wa-composer-height) - var(--wa-history-resume-height) - var(--wa-history-resume-y-offset));left:50%;z-index:5;display:inline-flex;align-items:center;gap:10px;min-height:var(--wa-history-resume-height);padding:0 18px 0 12px;border:1px solid var(--wa-line-12);border-radius:999px;color:var(--wa-color-heading-strong);background:#fffff9f5;box-shadow:0 22px 48px #17171433,0 8px 18px #1717141a,0 1px #ffffffbd inset;font:inherit;font-size:13px;line-height:1;font-weight:520;letter-spacing:0;cursor:default;opacity:0;pointer-events:none;transform:translate(-50%,6px) scale(.98);transition:opacity .16s ease,transform .18s ease}.wa-section[data-chat-history-paused=true] .wa-history-resume{opacity:1;pointer-events:auto;transform:translate(-50%) scale(1)}.wa-history-resume__icon{position:relative;display:grid;place-items:center;width:24px;height:24px;border-radius:999px;color:var(--wa-color-inverse);background:var(--wa-color-dark-surface);font-size:0;line-height:0}.wa-history-resume__svg{display:block;width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.wa-stage__eyebrow,.wa-stage__label,.wa-stage__status{display:none}.wa-cursor{position:absolute;top:0;left:0;z-index:20;width:1px;height:1px;pointer-events:none;transform:translateZ(0);transform-origin:0 0;backface-visibility:hidden}.wa-cursor__float{position:absolute;top:0;left:0;width:1px;height:1px;transform-origin:0 0;backface-visibility:hidden}.wa-cursor__glyph{position:absolute;top:0;left:0;width:var(--wa-cursor-default-width);height:var(--wa-cursor-default-height);background-image:var(--wa-cursor-arrow);background-repeat:no-repeat;background-position:0 0;background-size:100% 100%;transform:translate(0);transform-origin:0 0;backface-visibility:hidden;filter:drop-shadow(0 2px 3px var(--wa-cursor-shadow))}.wa-cursor__glyph:before,.wa-cursor__glyph:after{content:"";position:absolute;opacity:0;top:0;left:0;width:var(--wa-cursor-default-width);height:var(--wa-cursor-default-height);background-repeat:no-repeat;background-position:0 0;background-size:100% 100%;pointer-events:none}.wa-cursor__mimic-head,.wa-cursor__mimic-tail{position:absolute;inset:0;display:none;width:100%;height:100%;background-repeat:no-repeat;background-position:0 0;background-size:100% 100%;pointer-events:none;transform-origin:6px 13.25px;backface-visibility:hidden}.wa-cursor__mimic-head{z-index:2;background-image:var(--wa-cursor-arrow-head)}.wa-cursor__mimic-tail{z-index:1;background-image:var(--wa-cursor-arrow-tail)}.wa-cursor[data-cursor-mimicking=true][data-cursor-mode=default] .wa-cursor__glyph{background-image:none}.wa-cursor[data-cursor-mimicking=true][data-cursor-mode=default] .wa-cursor__mimic-head,.wa-cursor[data-cursor-mimicking=true][data-cursor-mode=default] .wa-cursor__mimic-tail{display:block}.wa-cursor[data-cursor-mimicking=true][data-cursor-mode=default] .wa-cursor__mimic-tail{animation:wa-cursor-tail-wag 215ms infinite}.wa-cursor[data-cursor-mode=pointer] .wa-cursor__glyph,.wa-cursor[data-cursor-mode=click] .wa-cursor__glyph{width:32px;height:32px;background-image:var(--wa-cursor-hand);transform:translate(-10px,-1px)}.wa-cursor[data-cursor-mode=drag] .wa-cursor__glyph{width:32px;height:32px;background-image:var(--wa-cursor-closedhand);transform:translate(-16px,-16px)}.wa-cursor[data-cursor-mode=release] .wa-cursor__glyph{width:32px;height:32px;background-image:var(--wa-cursor-openhand);transform:translate(-16px,-16px)}.wa-cursor[data-cursor-mode=text] .wa-cursor__glyph{width:23px;height:22px;background-image:var(--wa-cursor-ibeam);transform:translate(-11px,-11px)}@keyframes wa-cursor-tail-wag{0%,to{animation-timing-function:cubic-bezier(.16,.88,.24,1);transform:translateZ(0) rotate(-1deg) skew(0)}24%{animation-timing-function:cubic-bezier(.16,0,.24,1);transform:translate3d(.32px,0,0) rotate(12deg) skew(2deg)}38%{animation-timing-function:cubic-bezier(.16,.88,.24,1);transform:translate3d(.1px,0,0) rotate(4.2deg) skew(.75deg)}64%{animation-timing-function:cubic-bezier(.2,0,.24,1);transform:translate3d(-.3px,0,0) rotate(-11deg) skew(-1.9deg)}}@keyframes wa-thinking-logo-gradient{0%{background-position:120% 50%}to{background-position:-120% 50%}}@keyframes wa-mailbox-gmail-radiate{0%{background-position:0% 50%,0% 50%}50%{background-position:100% 50%,100% 50%}to{background-position:0% 50%,0% 50%}}@keyframes wa-mailbox-gmail-pulse{0%,to{transform:scale(.98)}50%{transform:scale(1.08)}}@keyframes wa-dot{0%,80%,to{opacity:.28;transform:translateY(0)}40%{opacity:1;transform:translateY(-3px)}}@keyframes wa-spin{to{transform:rotate(360deg)}}@keyframes wa-caret{0%,45%{opacity:1}46%,to{opacity:0}}@keyframes wa-text-shimmer{0%{background-position:100% 0}62%,to{background-position:0% 0}}@media(max-width:1380px){.wa-section{--wa-title-size: clamp(48px, 4.5vw, 58px);--wa-title-line-height: 1.08;--wa-feature-title-size: clamp(36px, 3.5vw, 44px);--wa-feature-copy-size: clamp(20px, 2.1vw, 25px);--wa-window-width: min(82vw, 912px);--wa-window-height: min(820px, 74vw, var(--wa-window-max-height));--wa-chat-x-padding: 24px;--wa-story-controls-x-offset: 0px;--wa-story-controls-y-offset: 0px;--wa-story-controls-width-extra: 0px;--wa-story-tab-y-padding: 0px;--wa-story-description-gap: 20px;--wa-stage-y-offset: 0px;padding:88px clamp(56px,6vw,80px) 118px}.wa-section__inner{grid-template-columns:1fr;grid-template-rows:auto auto auto;row-gap:clamp(92px,11vw,154px);width:100%}.wa-copy{max-width:min(1160px,100%)}.wa-story-controls,.wa-stage{grid-column:1}.wa-story-controls{grid-template-columns:minmax(0,1fr) auto;align-items:start;width:min(1080px,100%);justify-self:start;gap:28px;padding-top:0}.wa-story-tabs{min-width:0;gap:0}.wa-story-tab{display:none}.wa-story-tab.is-active{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto;min-height:0;padding:0;gap:0;align-items:start}.wa-story-tab.is-active .wa-story-tab__marker{order:2;width:100%;height:4px;min-height:4px;margin-top:42px;cursor:ew-resize}.wa-story-tab.is-active .wa-story-tab__marker:before{transform:scaleX(var(--wa-tab-progress));transform-origin:left}.wa-story-tab__body{order:1;min-width:0;gap:20px;padding-top:0}.wa-story-tab__count{display:block;color:var(--wa-color-heading-strong);font-size:23px;line-height:1;font-weight:560;letter-spacing:0}.wa-story-tab__title{overflow:visible;white-space:normal;text-overflow:clip;font-size:var(--wa-feature-title-size);line-height:1.04}.wa-story-tab__description{display:block;max-width:960px;font-size:var(--wa-feature-copy-size);line-height:1.24}.wa-controls-row{position:static;display:grid;align-items:center;justify-content:end;gap:18px;width:auto;height:auto;overflow:visible;clip:auto;clip-path:none;white-space:normal;padding-top:58px}.wa-story-count,.wa-controls-row [data-toggle-play],.wa-controls-row .wa-scrubber{display:none}.wa-control-button{display:grid;place-items:center;width:54px;height:54px;padding:0;border:1px solid var(--wa-line-12);border-radius:999px;color:var(--wa-color-heading-strong);background:#dcdcd4d6;box-shadow:none;cursor:pointer}.wa-controls-row [data-prev-story] svg,.wa-controls-row [data-next-story] svg{transform:rotate(90deg)}.wa-control-button:hover{border-color:var(--wa-line-20);background:#fffff9f0}.wa-control-button:focus-visible{outline:2px solid var(--wa-color-accent);outline-offset:3px}.wa-stage{grid-row:3;width:100%;min-height:calc(var(--wa-window-height) + 132px);justify-self:center;overflow:visible}.wa-stage[data-window-content-scale]{min-height:var(--wa-window-scene-height)}.wa-stage__media{top:180px;right:auto;left:50%;width:min(100vw,1220px);height:min(540px,46vw);min-height:460px;transform:translate(-50%)}.wa-window{width:var(--wa-window-width);margin:0 auto}.wa-chat-shell{height:var(--wa-window-height)}}@media(max-width:760px){.wa-section{--wa-mobile-page-inset: clamp(24px, 7vw, 34px);--wa-chat-x-padding: 12px;--wa-composer-side-inset: 10px;--wa-composer-bottom-outset: 10px;--wa-composer-height: 88px;--wa-composer-send-size: 32px;--wa-history-resume-height: 40px;--wa-story-description-gap: 22px;--wa-window-width: 590px;--wa-window-height: min(860px, var(--wa-window-max-height));padding:38px 0 0}.wa-section__inner{row-gap:0;width:100%}.wa-copy{padding-right:var(--wa-mobile-page-inset);padding-left:var(--wa-mobile-page-inset)}.wa-copy{margin-bottom:86px}.wa-copy__title{font-size:clamp(38px,9.8vw,48px);line-height:1.14}.wa-story-controls{display:grid;grid-template-areas:"nav" "story";grid-template-columns:1fr;width:100%;gap:0;padding-right:0;padding-left:0}.wa-controls-row{grid-area:nav;display:inline-flex;justify-content:flex-start;gap:24px;padding-top:0;padding-right:var(--wa-mobile-page-inset);padding-left:var(--wa-mobile-page-inset)}.wa-story-count{display:inline-flex;align-items:center;color:var(--wa-color-heading-strong);font-size:25px;line-height:1;font-weight:560;letter-spacing:0}.wa-control-button{width:52px;height:52px}.wa-controls-row [data-prev-story] svg,.wa-controls-row [data-next-story] svg{transform:none}.wa-story-tabs{grid-area:story;gap:0;margin-top:30px}.wa-story-tab{gap:0;min-height:0}.wa-story-tab.is-active .wa-story-tab__marker{width:100%;height:2px;min-height:2px;margin-top:52px;margin-left:0}.wa-story-tab__body{gap:22px;padding-top:0;padding-right:var(--wa-mobile-page-inset);padding-left:var(--wa-mobile-page-inset)}.wa-story-tab__count{display:none}.wa-story-tab__title{font-size:clamp(31px,7.1vw,38px);line-height:1.05}.wa-story-tab__description{font-size:clamp(18px,4.2vw,22px);line-height:1.26}.wa-stage{--wa-window-scene-min-width: 590px;width:100vw;min-height:var(--wa-window-height);margin-top:0;overflow:visible}.wa-stage[data-window-content-scale]{min-height:var(--wa-window-scene-height)}.wa-stage__media{display:none}.wa-window{width:var(--wa-window-width);margin:0 auto;border-radius:0}.wa-chat-shell{height:var(--wa-window-height);border-right:0;border-left:0;border-radius:0}.wa-chat-shell__body{gap:0}.wa-thread{--wa-chat-entry-gap: 14px}.wa-thread{min-height:0;max-height:none}.wa-message{max-width:96%}.wa-message__body{max-width:min(var(--wa-ai-message-max-width),340px);font-size:13px}.wa-message[data-message-role=user] .wa-message__body{max-width:min(var(--wa-user-message-max-width),280px)}.wa-result-row{grid-template-columns:1fr;gap:4px}.wa-result-row strong{white-space:normal}.wa-signup-scene{gap:10px;padding-bottom:0}.wa-signup-scene__title{margin-bottom:16px;font-size:26px}.wa-signup-field{grid-template-columns:minmax(0,1fr) 36px;gap:9px;width:min(320px,86%);min-height:54px;padding:0 8px 0 15px;border-radius:14px;font-size:16px}.wa-signup-field__submit{width:36px;height:36px}.wa-signup-field__submit-icon{width:16px;height:16px}.wa-research-step{min-height:0;gap:8px;padding-left:0}.wa-research-step__label{font-size:14px}.wa-research-step__detail{font-size:13px}.wa-data-source-grid__column{gap:11px}.wa-data-source-grid--marketing .wa-data-source-grid__column{gap:34px}.wa-data-source-grid__list,.wa-engage-channels,.wa-style-profile__rows,.wa-swipe-game__actions,.wa-sequence-card{grid-template-columns:minmax(0,1fr)}.wa-sequence-copy-panel{min-height:140px}.wa-sequence-step{grid-template-columns:minmax(0,1fr)}.wa-sequence-step__channel{justify-self:start;padding:0}.wa-sequence-wait{grid-template-columns:minmax(0,1fr);min-height:16px;padding:0 8px}.wa-sequence-wait:before{display:none}.wa-sequence-people{--wa-sequence-person-card-min-width: 104px;padding-inline:max(14px,calc(50% - var(--wa-sequence-person-card-min-width) / 2));scroll-padding-inline:max(14px,calc(50% - var(--wa-sequence-person-card-min-width) / 2))}.wa-sequence-person-card{grid-template-columns:24px max-content;gap:7px;min-height:42px;padding:7px 9px 8px}.wa-sequence-person-card__avatar-wrap,.wa-sequence-person-card__avatar{width:24px;height:24px}.wa-sequence-person-card__company{width:10px;height:10px}.wa-data-table{gap:0;padding:0}.wa-data-table__title{font-size:12px}.wa-data-table__count{font-size:9px}.wa-data-table__row{min-height:24px}.wa-data-table__row[data-header=true]{min-height:22px}.wa-data-table__cell{padding:5px 4px;font-size:8.5px;line-height:1.12}.wa-data-table__row[data-header=true] .wa-data-table__cell{font-size:9px}.wa-data-table__row[data-header=true] .wa-data-table__cell:is([data-column-key=name],[data-column-key=contact],[data-column-key=fullName],[data-column-key=mutualConnection]){padding-left:4px}.wa-data-table__row[data-header=true] .wa-data-table__cell:last-of-type{padding-right:26px}.wa-section .wa-data-table__add{right:2px;width:22px;height:20px;border-radius:4px;font-size:15px}.wa-data-table__footer{align-items:start;gap:6px;padding-top:6px}.wa-data-table__actions{gap:5px}.wa-data-table-action{min-height:34px;padding:0 10px;border-radius:5px}.wa-data-table-action__icon{width:16px;height:16px}.wa-data-table-action__label{font-size:11px}.wa-data-table-action__badge{min-height:16px;padding:0 6px 1px;font-size:8px}.wa-data-table__pagination{gap:4px;font-size:7.5px}.wa-data-table__page-controls{gap:2px}.wa-data-table__page-button{width:17px;height:17px;border-radius:4px;font-size:7.5px}.wa-data-table-person{grid-template-columns:20px minmax(0,1fr);gap:4px}.wa-data-table-person__copy{gap:1px;margin-top:0}.wa-data-table-person__avatar-wrap,.wa-data-table-person__avatar{width:20px;height:20px}.wa-data-table-person__source{right:0;bottom:0;width:10px;height:10px}.wa-data-table-person__source[data-source=signal]:before{right:2px;bottom:2px;width:5px}.wa-data-table-person__source[data-source=signal]:after{right:1px;bottom:4px;height:4px}.wa-data-table-person__source[data-source=database]:before{top:2px;left:2px}.wa-data-table-person__source[data-source=engage]:before{top:3px;left:2px;width:6px}.wa-data-table-person__name{font-size:9px;line-height:1.03}.wa-data-table-person__detail{font-size:7.5px;line-height:1.04}.wa-data-table[data-table-variant=connections] .wa-data-table__cell[data-column-key=mutualConnection]:not(:empty){gap:4px}.wa-data-table-cell-badge{min-height:14px;padding:0;font-size:7px}.wa-mailbox-connection__card{grid-template-columns:minmax(0,1fr);gap:12px;padding:12px;border-radius:10px}.wa-mailbox-connection__copy{gap:9px}.wa-mailbox-connection__actions{justify-self:end;width:min(124px,100%)}.wa-mailbox-connection__title{font-size:16px}.wa-mailbox-connection__subtitle{max-width:none;font-size:12.5px}.wa-mailbox-connection__button{min-height:36px;font-size:12.5px;padding:0 9px}.wa-mailbox-learning{grid-template-columns:36px max-content minmax(48px,1fr);gap:4px 10px}.wa-mailbox-learning__thumbprint{width:36px;height:36px}.wa-mailbox-thumbprint{width:30px;height:30px}.wa-mailbox-learning__title{font-size:14px}.wa-mailbox-learning__detail{font-size:13px}.wa-enrichment-panel{gap:9px;max-width:100%}.wa-enrichment-panel__header{grid-template-columns:var(--wa-thinking-icon-column) auto;gap:8px;padding:0;font-size:14px}.wa-waterfall-rows{gap:0}.wa-waterfall-row{grid-template-columns:var(--wa-thinking-icon-column) 100px max-content;gap:7px;min-height:30px;font-size:14px}.wa-waterfall-chip{min-height:26px;padding:0 8px 0 6px;gap:5px;font-size:11px}.wa-waterfall-chip__icon,.wa-waterfall-chip__icon svg{width:13px;height:13px}.wa-waterfall-chip__mark{width:13px}.wa-waterfall-chip__state-icon{flex-basis:14px;width:14px;height:14px}.wa-waterfall-chip__state-icon svg{width:14px;height:14px}.wa-waterfall-arrow{width:16px;height:16px}.wa-waterfall-service-step{gap:5px}.wa-swipe-game{max-width:100%}.wa-swipe-game__stack{height:168px}.wa-swipe-card{padding:18px 16px}.wa-swipe-card__label{font-size:16px}.wa-swipe-card__detail{font-size:10.5px}.wa-composer{grid-template-columns:minmax(0,1fr);height:var(--wa-composer-height);padding:14px 9px 9px 14px;border-radius:9px}.wa-composer__placeholder{min-height:22px;font-size:16px}.wa-composer__controls{gap:10px}.wa-composer__select{gap:4px;font-size:11px}.wa-composer__send{width:var(--wa-composer-send-size);min-width:var(--wa-composer-send-size);height:var(--wa-composer-send-size);padding:0}}@media(prefers-reduced-motion:reduce){.wa-section *,.wa-section *:before,.wa-section *:after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}}`, Mu = "chatbot-stories-runtime-styles";
-function Pu() {
-  Tu(Mu, Eu);
+const Wh = `:root{--wa-page-bg: #fffff9}html,body{margin:0;background:var(--wa-page-bg)}.wa-section,.wa-section *{box-sizing:border-box}.wa-section{--wa-font-sans: "Saans", "Avenir Next", Helvetica, sans-serif;--wa-font-feature: "Feature Text", Georgia, serif;--wa-bg: #fffff9;--wa-panel: #fffff9;--wa-panel-transparent: rgba(255, 255, 249, 0);--wa-ink: #252521;--wa-muted: #11110f;--wa-soft: #dcdcd4;--wa-browser-line: #d7d7cf;--wa-orange: #f23b0a;--wa-red: #f16055;--wa-yellow: #f6ba42;--wa-green: #58bd59;--wa-color-bg: var(--wa-bg);--wa-color-panel: var(--wa-panel);--wa-color-text: var(--wa-ink);--wa-color-heading: var(--wa-ink);--wa-color-heading-strong: #070707;--wa-color-copy: #171714;--wa-color-muted: #5e5c56;--wa-color-accent: var(--wa-orange);--wa-color-inverse: #fffff9;--wa-color-dark-surface: #171714;--wa-color-soft-surface: #f5f4ed;--wa-color-user-message: #ecebe5;--wa-color-input-line: #d9d8d1;--wa-color-data-table-surface: #fffffe;--wa-color-positive: #177947;--wa-color-warning: #b44927;--wa-line-08: rgba(23, 23, 20, .08);--wa-line-10: rgba(23, 23, 20, .1);--wa-line-12: rgba(23, 23, 20, .12);--wa-line-16: rgba(23, 23, 20, .16);--wa-line-20: rgba(23, 23, 20, .2);--wa-placeholder: rgba(23, 23, 20, .38);--wa-browser-bar-bg: rgba(255, 255, 249, .96);--wa-window-highlight: rgba(255, 255, 255, .86);--wa-window-hairline: rgba(0, 0, 0, .03);--wa-card-accent-bg: rgba(242, 59, 10, .13);--wa-row-bg: rgba(245, 244, 237, .82);--wa-cursor-shadow: rgba(0, 0, 0, .12);--wa-highlight-bg: rgba(213, 255, 79, .22);--wa-signup-muted: #77736c;--wa-signup-field-bg: #fffffa;--wa-signup-field-border: #d5d2ca;--wa-signup-field-shadow: 0 12px 24px rgba(23, 23, 20, .12);--wa-signup-placeholder: #aaa89e;--wa-signup-submit-bg: #aaa89e;--wa-signup-submit-active-bg: #11110f;--wa-signup-submit-color: #fffffa;--wa-strategy-surface-bg: #fffffa;--wa-strategy-surface-hover-bg: #fffffe;--wa-strategy-surface-border: #dfddd5;--wa-strategy-surface-shadow: var(--wa-tight-shadow);--wa-strategy-surface-hover-shadow: var(--wa-tight-shadow);--wa-strategy-title-color: #252521;--wa-strategy-bullet-color: #5e5c55;--wa-thinking-text: #57544f;--wa-thinking-label: #55514d;--wa-thinking-detail: #86817a;--wa-thinking-muted: #8e8a83;--wa-thinking-line: #e4ded6;--wa-thinking-dot: #9d9890;--wa-thinking-chevron: #55514d;--wa-thinking-logo: #67635f;--wa-thinking-logo-shadow: #c8c3bb;--wa-thinking-shimmer: #9d9890;--wa-thinking-shimmer-strong: #2f2e2a;--wa-thinking-tool-shimmer: #b8b2a8;--wa-thinking-tool-shimmer-strong: #625d56;--wa-thinking-favicon-bg: #e8e1d8;--wa-thinking-favicon-text: #625d56;--wa-drop-color: #514e49;--wa-drop-bg: rgba(255, 255, 249, .9);--wa-drop-inset: rgba(255, 255, 249, .22);--wa-drop-active-bg: rgba(255, 249, 242, .92);--wa-drop-active-inset: rgba(242, 59, 10, .05);--wa-drop-complete-bg: rgba(255, 255, 249, .9);--wa-drop-title: #11110f;--wa-drop-muted: #7b766f;--wa-file-surface: #faf9f4;--wa-file-floating-surface: rgba(255, 255, 249, .96);--wa-file-text: #171714;--wa-file-muted: #716d66;--wa-file-shadow: 0 16px 28px rgba(23, 23, 20, .18);--wa-table-text: #555452;--wa-table-strong: #050505;--wa-table-muted: #716d66;--wa-table-empty: #aaa7a2;--wa-table-line: #eee6df;--wa-table-scrollbar: rgba(17, 17, 15, .22);--wa-table-scrollbar-thumb: rgba(17, 17, 15, .2);--wa-table-control-bg: #fffffb;--wa-table-control-border: #ded9d2;--wa-table-control-hover: #bdb7ae;--wa-table-selected-bg: #11110f;--wa-table-selected-shadow: 0 7px 16px rgba(17, 17, 15, .14);--wa-table-badge-text: #6d5300;--wa-table-badge-bg: #fff0a6;--wa-table-dot: #b6b2ac;--wa-table-dot-active: #171714;--wa-table-page: #6f6c66;--wa-table-page-disabled: #c9c5bd;--wa-table-enriched-text: #0c6f66;--wa-table-enriched-header: #147970;--wa-table-enriched-bg: rgba(14, 156, 144, .12);--wa-waterfall-arrow: #bbb3a9;--wa-waterfall-chip-bg: #fffffa;--wa-waterfall-chip-border: #e5ded5;--wa-waterfall-chip-text: #817b72;--wa-waterfall-loading-text: #68635c;--wa-waterfall-loading-bg: #fbfaf2;--wa-waterfall-loading-strong: #2f2e2a;--wa-waterfall-loading-glint: #c9c2b8;--wa-waterfall-complete-bg: #fbfaf2;--wa-mailbox-card-bg: #f7f6f0;--wa-mailbox-card-border: #d9d7d0;--wa-mailbox-card-inset: rgba(255, 255, 249, .42);--wa-mailbox-button-bg: #fffff9;--wa-mailbox-button-border: #d6d5cf;--wa-mailbox-button-text: #080807;--wa-mailbox-connected-text: #aaa59d;--wa-mailbox-connected-border: rgba(23, 23, 20, .14);--wa-mailbox-spinner-border: rgba(17, 17, 15, .18);--wa-mailbox-learning-title: #5b5752;--wa-mailbox-learning-ready: #11110f;--wa-mailbox-learning-detail: #8b867e;--wa-mailbox-thumbprint: #11110f;--wa-mailbox-progress-bg: #dfddd6;--wa-sequence-tab-line-stroke: rgba(17, 17, 15, .28);--wa-sequence-person-bg: color-mix(in srgb, var(--wa-panel) 82%, #f1f0eb);--wa-sequence-person-border: rgba(17, 17, 15, .2);--wa-sequence-person-active-border: rgba(17, 17, 15, .24);--wa-sequence-dot-color: #8d8b84;--wa-sequence-dot-selected: #050505;--wa-sequence-step-muted: #85837b;--wa-sequence-step-selected: #050505;--wa-sequence-wait: #5f5d56;--wa-sequence-panel-header-bg: #f8f8f0;--wa-sequence-panel-line: #c7c4bc;--wa-sequence-panel-muted: #86847d;--wa-sequence-panel-strong: #151513;--wa-sequence-field-border: #8f8d85;--wa-sequence-field-text: #080806;--wa-sequence-connect-muted: #5f5d56;--wa-sequence-call-copy: #706e67;--wa-sequence-call-muted: #85837b;--wa-sequence-call-avatar-bg: #e8e6df;--wa-sequence-call-button-bg: #8f8d85;--wa-sequence-call-button-text: #fffffa;--wa-sequence-draft-bg: #eeede6;--wa-sequence-draft-border: rgba(17, 17, 15, .14);--wa-sequence-panel-shadow: var(--wa-tight-shadow);--wa-composer-shadow: 0 14px 28px rgba(5, 5, 4, .1), 0 4px 10px rgba(5, 5, 4, .06), 0 1px 0 rgba(255, 255, 255, .74) inset;--wa-media-warm-1: rgba(255, 139, 77, .32);--wa-media-warm-2: rgba(58, 20, 18, .78);--wa-media-warm-3: rgba(8, 6, 6, .24);--wa-media-warm-4: rgba(131, 49, 38, .86);--wa-media-line: rgba(255, 255, 249, .1);--wa-media-base-1: #1a0908;--wa-media-base-2: #6b2820;--wa-media-base-3: #24100d;--wa-media-image: url(/media/chat-background.png);--wa-media-shadow: 0 44px 96px rgba(24, 20, 16, .18);--wa-window-shadow: 0 52px 42px rgba(31, 30, 26, .22);--wa-card-shadow: 0 10px 28px rgba(23, 23, 20, .08);--wa-tight-shadow: 0 2px 6px rgba(23, 23, 20, .035);--wa-data-table-shadow: var(--wa-tight-shadow);color-scheme:light;--wa-section-padding: 126px 32px 140px;--wa-content-max: 1230px;--wa-copy-max: 1100px;--wa-left-column: minmax(420px, 510px);--wa-right-column: minmax(560px, 660px);--wa-column-gap: 60px;--wa-row-gap: 82px;--wa-story-controls-x-offset: -34px;--wa-story-controls-y-offset: 0px;--wa-story-controls-width-extra: 34px;--wa-story-tabs-gap: 24px;--wa-story-tab-y-padding: 14px;--wa-story-description-gap: 24px;--wa-stage-y-offset: -120px;--wa-stage-width: 660px;--wa-stage-min-height: 650px;--wa-media-width: 418px;--wa-media-height: 720px;--wa-window-width: 590px;--wa-window-max-height: 90vh;--wa-window-height: min(530px, var(--wa-window-max-height));--wa-chat-x-padding: 24px;--wa-chat-shadow-gutter: min(24px, var(--wa-chat-x-padding));--wa-chat-thread-bleed: calc(var(--wa-chat-x-padding) + var(--wa-chat-shadow-gutter));--wa-chat-entry-gap: 16px;--wa-chat-top-fade: calc(var(--wa-chat-x-padding) + 4px);--wa-chat-bottom-clearance: 110px;--wa-thread-base-bottom-padding: var(--wa-chat-bottom-clearance);--wa-thread-growth-spacer: 0px;--wa-chat-first-entry-offset: calc(var(--wa-chat-top-fade) + 8px);--wa-ai-message-max-width: 540px;--wa-user-message-max-width: 360px;--wa-chat-message-weight: 430;--wa-chat-thinking-header-weight: 430;--wa-chat-thinking-weight: 400;--wa-chat-detail-weight: 400;--wa-thinking-logo-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 11'%3E%3Cpath fill='black' d='M5.71835 3.84074V0H0V5.12789C0 7.97387 2.13981 10.9988 6.10463 10.9988H8.4998V5.49938L7.40298 5.48406C6.46808 5.4708 5.71706 4.7386 5.71706 3.8395L5.71835 3.84074Z'/%3E%3Cpath fill='black' d='M11.2814 7.15899V10.9997H16.9998V5.87225C16.9998 3.02586 14.86 0.000976562 10.8952 0.000976562H8.5V5.50036L9.59682 5.51568C10.5317 5.52893 11.2827 6.26113 11.2827 7.16023L11.2814 7.15899Z'/%3E%3C/svg%3E");--wa-composer-side-inset: 10px;--wa-composer-bottom-outset: 10px;--wa-composer-height: 102px;--wa-composer-send-size: 36px;--wa-history-resume-height: 42px;--wa-history-resume-y-offset: 44px;--wa-cursor-default-width: 14px;--wa-cursor-default-height: 23px;--wa-title-size: 40px;--wa-title-line-height: 1.2;--wa-feature-title-size: 28px;--wa-feature-copy-size: 16px;--wa-radius-sm: 8px;--wa-radius-window: 18px;--wa-story-progress: 0;--wa-cursor-arrow-head: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAmCAYAAADeB1slAAABP0lEQVR42t3XwXGEIBQG4NeBR49uB6QDSqAEtgPSAXvMzXTglpAOSAeWgB2wHbwMGTQq7gL6vOSfQR2HeZ+IOgiICIh4QcS3cEza/OaKf/k6A/jGZe6nANZadM6RIxPAOUfGGDmyAACAHIkAamQToESeAlTIS4ACSQJHkSzgCJIN7EWKgD1IMVCK7AJKkN1ALnIIyEEOAymEBNhAPskB33yNkMcpAPyWm0IPaK1pRmCMwURu2UBd19E5KeWzwo958SQghMBhGGArzrljX9PZVYKUMgK01mWAUmoq3rbt4mkwxkRA0zTZwPtYyU9e3/fz4h9jR8ZYhHRdlwVAeL3Xuc47+mLrcM6zAQir61sY0WXd0U9qVVURYq3NBpJNKRUB/gEgA/zVlt6m4oWUEOK8EYxzMSJ+n3rh4Izfpv8F/ADB/dNnKnKg1wAAAABJRU5ErkJggg==);--wa-cursor-arrow-tail: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAmCAYAAADeB1slAAABSUlEQVR42t3X3XGEIBAHcDrw3nw0HVAC6YASSAekA+3AdOB1wnWgHWAHXAdkljkyRPxAFvOQnXF8UP8/XHAGibWWXHmQ/wNorYkx5jqAMUYopcWRXwBUaSQCSiOrQElkEyiF7AIlkEMAiyQBGCQZyEVOATnIaeAskgWcQbKBVAQFpCBo4AgpAuwhxQAoyLgUgCoF2LWjbVv7qmcu4IKUUvagumSgruto1EKIreBnGH4IcM7JPM+r7TDG+NCPrA9NCOGvuRHv9PuRBEgpf8L7vg9vcj1fAk3ThK15S9rZKaXIOI7Lm1xRSiNkGAZ/+Y7ZOsLDLmwJMMbCyb3lAu+QAJNaVVWEaK098onZ/E6QIKWMgGDJPjAALEU32p02Wez2HfpsOedbbzBhgc7PhUfgHHxwHRa4+blYqQmzipbI3bfrFfy1Ff4nv1DfGYDdsG+uObgAAAAASUVORK5CYII=);--wa-cursor-arrow: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAmCAYAAADeB1slAAABXElEQVRIx7XWTZWDMBAA4DigN47UAeuAdYAEcEAdwHFv1AGVsA7AATgAB9RBlulL2AAhv8O8N23awnzNHy+EUkqWvC/5xdqoCS85/Y/fK4CObuN1CTCOI53nGR1ZgSRJaBzH6MgGIMtHbOQAYCNSABM5BbAQJYCBaAFfxAjwQYwBV8QKcEGsAVvECbBBnAFTxAswQbwBHYICSJAnOgAJNVi8LwHIp9wa+EBZljg9aNuWaqIyBsIwPHyXZdlZ4bdYXAukaUqnaZLCworJnR4V4r+EtmK8OyOgKIr15rquN/2GMd8DURSJl9xVwEMs1Pe9eOMPb8BG2iNN0xg97Ai7YB+5+BsU02ysmwog7HRdsR6JXf6GCjCpQRAcEDhysnjoAFUO+3mSLIbOB8j5AVkxTNQHIGycP3vjpAeDL1DxueAIvAsbrvIFbnwuJDGYrCJT5MWHixV+nhV3AazzD2y9OM7DgeyVAAAAAElFTkSuQmCC);--wa-cursor-hand: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABY2lDQ1BrQ0dDb2xvclNwYWNlRGlzcGxheVAzAAAokX2QsUvDUBDGv1aloHUQHRwcMolDlJIKuji0FURxCFXB6pS+pqmQxkeSIgU3/4GC/4EKzm4Whzo6OAiik+jm5KTgouV5L4mkInqP435877vjOCA5bnBu9wOoO75bXMorm6UtJfWMBL0gDObxnK6vSv6uP+P9PvTeTstZv///jcGK6TGqn5QZxl0fSKjE+p7PJe8Tj7m0FHFLshXyieRyyOeBZ71YIL4mVljNqBC/EKvlHt3q4brdYNEOcvu06WysyTmUE1jEDjxw2DDQhAId2T/8s4G/gF1yN+FSn4UafOrJkSInmMTLcMAwA5VYQ4ZSk3eO7ncX3U+NtYMnYKEjhLiItZUOcDZHJ2vH2tQ8MDIEXLW54RqB1EeZrFaB11NguASM3lDPtlfNauH26Tww8CjE2ySQOgS6LSE+joToHlPzA3DpfAEDp2ITpJYOWwAAAARjSUNQDA0AAW4D4+8AAACyZVhJZk1NACoAAAAIAAQBMQACAAAAGAAAAD4BMgACAAAAGgAAAFYBOwACAAAAIwAAAHCHaQAEAAAAAQAAAJQAAAAAQWRvYmUgUERGIGxpYnJhcnkgMTcuMDAAMjAyNS0wMi0xNCAwNTo0MTo0NCArMDAwMABBZG9iZSBJbGx1c3RyYXRvciAyOS4zIChNYWNpbnRvc2gpAAAAAqACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAAAljtskAAACQGlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iWE1QIENvcmUgNi4wLjAiPgogICA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgICAgICAgICB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iCiAgICAgICAgICAgIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyI+CiAgICAgICAgIDxkYzpjcmVhdG9yPgogICAgICAgICAgICA8cmRmOlNlcT4KICAgICAgICAgICAgICAgPHJkZjpsaT5BZG9iZSBJbGx1c3RyYXRvciAyOS4zIChNYWNpbnRvc2gpPC9yZGY6bGk+CiAgICAgICAgICAgIDwvcmRmOlNlcT4KICAgICAgICAgPC9kYzpjcmVhdG9yPgogICAgICAgICA8eG1wOkNyZWF0b3JUb29sPkFkb2JlIFBERiBsaWJyYXJ5IDE3LjAwPC94bXA6Q3JlYXRvclRvb2w+CiAgICAgIDwvcmRmOkRlc2NyaXB0aW9uPgogICA8L3JkZjpSREY+CjwveDp4bXBtZXRhPgp5+ZGuAAACK0lEQVRYCWNgGAWjITAaAkMwBHKBbv4ExCeBWIhS9zOTYcDuHz9+vH779u23M2fO/AHqP0OGGXAtLHAW8Qw+dnZ2Ni0trSdALXzEa8Oukgm7MP1EKXWAINCpcpQ4lyIHCAsLp4mIiJwHOqAciNWAmJVUxxDrAGWgwezohq9bt+7S7du3nzIzM7eqqKjsBcofB2JQqBANiHHALCkpqWNsbGygbIfhCA4gMDIyugt0iIyBgYEAExPTa6C6xUDMSIwriHGA8507d96vWrXqPdDACKihjJaWlkyqqqpcQAtZgG74CxIXEhL68eLFi4umpqZmQK4/VC3F1OJDhw4d+Pfv3zteXt6jQNP+A8F3EAEDQLk3IDbQoceB1MdNmzbtB6rrpdhmqAEeTk5Ol0EWdHZ2HsTmAJAcMjh16tQhoLpF1HIAqLB6+evXrwe/f/9+PHny5APIlmFjA0tIkANA6YBqYPKaNWv2Y7MMm9jevXsPAG2eQYztxCRCkDlL6+rqFID0fxCHELh79y5I3TNC6kiVv/T48eNT2HyMLgbMlreBhruRagEh9YE6Ojr3gJZ9QrcQmf/o0aMTQIMeAzEzIQPJkZ/v4+Nz4e/fvy+RLYWxgVX0BVFRUVBB5EqO4cToAfmqn4+P70Nra+uhixcvHr53797xI0eOHExISDgFLJLfAuUDiTEIpoao4hKmGInWBLKjgFgfiDmB+DkQg+qB5UD8AYhHwWgIjIYA0SEAALLUdbtDe5+9AAAAAElFTkSuQmCC);--wa-cursor-ibeam: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABcAAAAWCAYAAAArdgcFAAABY2lDQ1BrQ0dDb2xvclNwYWNlRGlzcGxheVAzAAAokX2QsUvDUBDGv1aloHUQHRwcMolDlJIKuji0FURxCFXB6pS+pqmQxkeSIgU3/4GC/4EKzm4Whzo6OAiik+jm5KTgouV5L4mkInqP435877vjOCA5bnBu9wOoO75bXMorm6UtJfWMBL0gDObxnK6vSv6uP+P9PvTeTstZv///jcGK6TGqn5QZxl0fSKjE+p7PJe8Tj7m0FHFLshXyieRyyOeBZ71YIL4mVljNqBC/EKvlHt3q4brdYNEOcvu06WysyTmUE1jEDjxw2DDQhAId2T/8s4G/gF1yN+FSn4UafOrJkSInmMTLcMAwA5VYQ4ZSk3eO7ncX3U+NtYMnYKEjhLiItZUOcDZHJ2vH2tQ8MDIEXLW54RqB1EeZrFaB11NguASM3lDPtlfNauH26Tww8CjE2ySQOgS6LSE+joToHlPzA3DpfAEDp2ITpJYOWwAAAARjSUNQDA0AAW4D4+8AAACyZVhJZk1NACoAAAAIAAQBMQACAAAAGAAAAD4BMgACAAAAGgAAAFYBOwACAAAAIwAAAHCHaQAEAAAAAQAAAJQAAAAAQWRvYmUgUERGIGxpYnJhcnkgMTcuMDAAMjAyNS0wMi0yMSAyMjo0Nzo0MyArMDAwMABBZG9iZSBJbGx1c3RyYXRvciAyOS4wIChNYWNpbnRvc2gpAAAAAqACAAQAAAABAAAAF6ADAAQAAAABAAAAFgAAAABjOXNcAAACQGlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iWE1QIENvcmUgNi4wLjAiPgogICA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgICAgICAgICB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iCiAgICAgICAgICAgIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyI+CiAgICAgICAgIDxkYzpjcmVhdG9yPgogICAgICAgICAgICA8cmRmOlNlcT4KICAgICAgICAgICAgICAgPHJkZjpsaT5BZG9iZSBJbGx1c3RyYXRvciAyOS4wIChNYWNpbnRvc2gpPC9yZGY6bGk+CiAgICAgICAgICAgIDwvcmRmOlNlcT4KICAgICAgICAgPC9kYzpjcmVhdG9yPgogICAgICAgICA8eG1wOkNyZWF0b3JUb29sPkFkb2JlIFBERiBsaWJyYXJ5IDE3LjAwPC94bXA6Q3JlYXRvclRvb2w+CiAgICAgIDwvcmRmOkRlc2NyaXB0aW9uPgogICA8L3JkZjpSREY+CjwveDp4bXBtZXRhPgpTAn2BAAABF0lEQVQ4Ee2Vu26DQBBF7QjnL2KIW+iAys7DXwRtksofB/QUPGpHiiMBFbiDmztWIjkysjBbpIiRrnZnd+bsMtLsTCZ/+QEwqAdqJveQkVpSc6V7EXDfNM0+DEN0XbejvWnbdhcEAeq63tM2Rh/A4Oc0TWGaJlzXRRzHcBwHlmUhyzJu40kFPiXgjXr3PA+apsH3fYFuqdfR4ONAgvSiKMA1lGUp8LvjfeW5EAX+PQ7i3QzyGul0hfcm7pqW/5gWVqXOsj/8elVVUqbq5U/IuYfrpTfRQxcJXydJ8uvJtW378OTmec5tPA5lnfgxeCFNIYoiaRYftKVZfIrNJtLQNk6CLlkgQKekrf20uVvOV5Ram7vkEn2+X1iD5YNPxBZmAAAAAElFTkSuQmCC);--wa-cursor-openhand: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABY2lDQ1BrQ0dDb2xvclNwYWNlRGlzcGxheVAzAAAokX2QsUvDUBDGv1aloHUQHRwcMolDlJIKuji0FURxCFXB6pS+pqmQxkeSIgU3/4GC/4EKzm4Whzo6OAiik+jm5KTgouV5L4mkInqP435877vjOCA5bnBu9wOoO75bXMorm6UtJfWMBL0gDObxnK6vSv6uP+P9PvTeTstZv///jcGK6TGqn5QZxl0fSKjE+p7PJe8Tj7m0FHFLshXyieRyyOeBZ71YIL4mVljNqBC/EKvlHt3q4brdYNEOcvu06WysyTmUE1jEDjxw2DDQhAId2T/8s4G/gF1yN+FSn4UafOrJkSInmMTLcMAwA5VYQ4ZSk3eO7ncX3U+NtYMnYKEjhLiItZUOcDZHJ2vH2tQ8MDIEXLW54RqB1EeZrFaB11NguASM3lDPtlfNauH26Tww8CjE2ySQOgS6LSE+joToHlPzA3DpfAEDp2ITpJYOWwAAAARjSUNQDA0AAW4D4+8AAACyZVhJZk1NACoAAAAIAAQBMQACAAAAGAAAAD4BMgACAAAAGgAAAFYBOwACAAAAIwAAAHCHaQAEAAAAAQAAAJQAAAAAQWRvYmUgUERGIGxpYnJhcnkgMTcuMDAAMjAyNS0wMi0yMCAxNzoyNTozNyArMDAwMABBZG9iZSBJbGx1c3RyYXRvciAyOS4zIChNYWNpbnRvc2gpAAAAAqACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAAA8V+2fAAACQGlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iWE1QIENvcmUgNi4wLjAiPgogICA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgICAgICAgICB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iCiAgICAgICAgICAgIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyI+CiAgICAgICAgIDxkYzpjcmVhdG9yPgogICAgICAgICAgICA8cmRmOlNlcT4KICAgICAgICAgICAgICAgPHJkZjpsaT5BZG9iZSBJbGx1c3RyYXRvciAyOS4zIChNYWNpbnRvc2gpPC9yZGY6bGk+CiAgICAgICAgICAgIDwvcmRmOlNlcT4KICAgICAgICAgPC9kYzpjcmVhdG9yPgogICAgICAgICA8eG1wOkNyZWF0b3JUb29sPkFkb2JlIFBERiBsaWJyYXJ5IDE3LjAwPC94bXA6Q3JlYXRvclRvb2w+CiAgICAgIDwvcmRmOkRlc2NyaXB0aW9uPgogICA8L3JkZjpSREY+CjwveDp4bXBtZXRhPgp5+ZGuAAACyElEQVRYCe2Vy2saURTG76hoxvcjLYSWLoKRarVIA6HZFUtJa3bBdFdcSFYuusqi4Lalu4p05cb2P1C6KCW07qQkCKkv3IgurNESBRPHKb5uvxlqcRGswUmh4IWDM3Ou5/vd7547Q8hiLBxYOPCfO2AH/0OE7F+tQw4hN0KDeKBWqzurq6tnOp3uHe6XEdsIA+JqBoQ+ILoQPpHJZG9CodCoXC5T3LdYlj1xOBxt5EtQV8xKcCnrOI57XK1WWY/Hox2NRj6NRsMoFArS7XZNcILN5/N6wFyD+I0rAcDqGrVajWxtbWkhcJNhGEIpFbU2NzdVw+GQnJ6eqgEWB0gDiUd/A7mUAyqVqlAsFsnGxoZYVwCAE+L1+vr6UqlUIoCQ7+zs2MPh8HWz2fxKCgAlitxGyDqdzlcAULfbTeRy+RB98McBl8tFCoWCqLe/v68ymUwEgM15AZb0en0R+3toMBhS2Otvx8fHnFKpJHa7nZ90wOl0EvTACHM7Akwmkxm22+3DeQGs2MtlWKtbW1u7g2LObDY7EIp6vV4WFhPkCcQpAEkulxsEAgFWyB8dHXGDwSAvXM8zFDheLayGoiBFE/7A/U803oUjlUrRVqsl5lZWVtoQds0jLv4Xdr/c29vjhao+n4/DQ9poNC4EGD/keZ6iP/qYq5obAAVuYdU8GpDW63UaDAZ7gsC0kU6nqVar/S6FuFgD1n+ORqOjaaKTuVgsRtG8nyQDQKFtq9V6Niky7drv9wtb9UJKAAZvt3I8Hp+mK+Z6vZ7QrF2I35USQKj1xGKxcM1mcypEJBIZAjYttbhYD8341maznVcqlQshDg4OKF7Xgv33ZgVgZp34ex6DY/ka6s93d3cH+CpqjEYjwbEkiUTiPJlMMv1+/ynmfpy17mUBxnWFb8MzWH0f512HD1ADr+kvePYe0RpPWvwuHFg4MIsDvwAylvevmzFHiwAAAABJRU5ErkJggg==);--wa-cursor-closedhand: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABY2lDQ1BrQ0dDb2xvclNwYWNlRGlzcGxheVAzAAAokX2QsUvDUBDGv1aloHUQHRwcMolDlJIKuji0FURxCFXB6pS+pqmQxkeSIgU3/4GC/4EKzm4Whzo6OAiik+jm5KTgouV5L4mkInqP435877vjOCA5bnBu9wOoO75bXMorm6UtJfWMBL0gDObxnK6vSv6uP+P9PvTeTstZv///jcGK6TGqn5QZxl0fSKjE+p7PJe8Tj7m0FHFLshXyieRyyOeBZ71YIL4mVljNqBC/EKvlHt3q4brdYNEOcvu06WysyTmUE1jEDjxw2DDQhAId2T/8s4G/gF1yN+FSn4UafOrJkSInmMTLcMAwA5VYQ4ZSk3eO7ncX3U+NtYMnYKEjhLiItZUOcDZHJ2vH2tQ8MDIEXLW54RqB1EeZrFaB11NguASM3lDPtlfNauH26Tww8CjE2ySQOgS6LSE+joToHlPzA3DpfAEDp2ITpJYOWwAAAARjSUNQDA0AAW4D4+8AAACyZVhJZk1NACoAAAAIAAQBMQACAAAAGAAAAD4BMgACAAAAGgAAAFYBOwACAAAAIwAAAHCHaQAEAAAAAQAAAJQAAAAAQWRvYmUgUERGIGxpYnJhcnkgMTcuMDAAMjAyNS0wMi0yMCAxNzoxODoxNyArMDAwMABBZG9iZSBJbGx1c3RyYXRvciAyOS4zIChNYWNpbnRvc2gpAAAAAqACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAAALcJCvAAACQGlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iWE1QIENvcmUgNi4wLjAiPgogICA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgICAgICAgICB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iCiAgICAgICAgICAgIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyI+CiAgICAgICAgIDxkYzpjcmVhdG9yPgogICAgICAgICAgICA8cmRmOlNlcT4KICAgICAgICAgICAgICAgPHJkZjpsaT5BZG9iZSBJbGx1c3RyYXRvciAyOS4zIChNYWNpbnRvc2gpPC9yZGY6bGk+CiAgICAgICAgICAgIDwvcmRmOlNlcT4KICAgICAgICAgPC9kYzpjcmVhdG9yPgogICAgICAgICA8eG1wOkNyZWF0b3JUb29sPkFkb2JlIFBERiBsaWJyYXJ5IDE3LjAwPC94bXA6Q3JlYXRvclRvb2w+CiAgICAgIDwvcmRmOkRlc2NyaXB0aW9uPgogICA8L3JkZjpSREY+CjwveDp4bXBtZXRhPgp5+ZGuAAAB5ElEQVRYCe1UP2vqUBy9Jv6NURAe2FE7CuKbpG46tltxcHhDR7+CSFf3fgChS6lTcXEUVCgoCNKxRazDez6KiLymNCYx5vakaCltaW5Ly1vuD37k5ubcc07OvQkhvHgCPAGeAE+AJ/CfExA/ob+NNQdoTyQSOQyHwxXTNIXVarWFuR30FdpEf0v5AoHATT6fv/f5fItUKqW0223q9Xr1WCympNPpO1mWz75FGaQhdBHCGkWVSiWtXC7r9jiTyejNZpP2ej0qCIIBQ4rf7z/+SiMyCH9D6BYJrIbDoa37qlqtFk0kEnq/36cwqsOA9FUm9pPJ5D9bMZfLmbVa7ZX4ywmPx2MbEJwMuJ0A6+c/UNQeVyoVMRqNvrtsPp8TURSN5XJpvQvEQ1YDs8lk8siFbXDiJIPBgGCrrjVNc8Q6RrRmuBiNRrKiKI6ENgBnwVRV9ZwJzArCIbysVqvWy71+6z4ej9tOd1m5WXH7oVBInc1mb2k+zdXrdSpJ0h+Qsm4vqz4h+L5P8XZ34/H4SfD5oNvt0mAwqIJxj5XVxQpc4wSc7iOXy1UsFApmNpuV8Ocj0+mUNBoNpdPpuA3DKAJ7wsr7UQMb3p8Y/MJJT+PPF7As6+9isehgroa+2YD4lSfAE2BJ4AH/finPJ7GZOAAAAABJRU5ErkJggg==);position:relative;isolation:isolate;min-height:100svh;overflow:hidden;padding:var(--wa-section-padding);color:var(--wa-color-text);font-family:var(--wa-font-sans);letter-spacing:0;background:var(--wa-bg)}@supports (height: 100dvh){.wa-section{--wa-window-max-height: min(90vh, 90dvh)}}.wa-section[data-theme=dark]{--wa-bg: #10100d;--wa-panel: #191914;--wa-panel-transparent: rgba(25, 25, 20, 0);--wa-ink: #f7f4ea;--wa-muted: #f7f4ea;--wa-soft: #49473f;--wa-browser-line: #3d3b34;--wa-color-bg: var(--wa-bg);--wa-color-panel: var(--wa-panel);--wa-color-text: var(--wa-ink);--wa-color-heading: var(--wa-ink);--wa-color-heading-strong: #fffdf3;--wa-color-copy: #d9d4c8;--wa-color-muted: #aaa396;--wa-color-inverse: #10100d;--wa-color-dark-surface: #f7f4ea;--wa-color-soft-surface: #25241f;--wa-color-input-line: #504d45;--wa-line-08: rgba(255, 253, 243, .08);--wa-line-10: rgba(255, 253, 243, .1);--wa-line-12: rgba(255, 253, 243, .12);--wa-line-16: rgba(255, 253, 243, .16);--wa-line-20: rgba(255, 253, 243, .2);--wa-placeholder: rgba(255, 253, 243, .38);--wa-browser-bar-bg: rgba(25, 25, 20, .96);--wa-window-highlight: rgba(255, 253, 243, .08);--wa-window-hairline: rgba(0, 0, 0, .24);--wa-card-accent-bg: rgba(242, 59, 10, .2);--wa-row-bg: rgba(255, 253, 243, .06);--wa-color-user-message: #2d2b26;--wa-color-data-table-surface: #20201a;--wa-media-shadow: 0 44px 96px rgba(0, 0, 0, .38);--wa-window-shadow: 0 52px 42px rgba(0, 0, 0, .42);--wa-card-shadow: 0 10px 28px rgba(0, 0, 0, .24);--wa-tight-shadow: 0 2px 6px rgba(0, 0, 0, .18);--wa-data-table-shadow: var(--wa-tight-shadow);color-scheme:dark}@media(prefers-color-scheme:dark){.wa-section[data-theme=system]{--wa-bg: #10100d;--wa-panel: #191914;--wa-panel-transparent: rgba(25, 25, 20, 0);--wa-ink: #f7f4ea;--wa-muted: #f7f4ea;--wa-soft: #49473f;--wa-browser-line: #3d3b34;--wa-color-bg: var(--wa-bg);--wa-color-panel: var(--wa-panel);--wa-color-text: var(--wa-ink);--wa-color-heading: var(--wa-ink);--wa-color-heading-strong: #fffdf3;--wa-color-copy: #d9d4c8;--wa-color-muted: #aaa396;--wa-color-inverse: #10100d;--wa-color-dark-surface: #f7f4ea;--wa-color-soft-surface: #25241f;--wa-color-user-message: #2d2b26;--wa-color-input-line: #504d45;--wa-line-08: rgba(255, 253, 243, .08);--wa-line-10: rgba(255, 253, 243, .1);--wa-line-12: rgba(255, 253, 243, .12);--wa-line-16: rgba(255, 253, 243, .16);--wa-line-20: rgba(255, 253, 243, .2);--wa-placeholder: rgba(255, 253, 243, .38);--wa-browser-bar-bg: rgba(25, 25, 20, .96);--wa-window-highlight: rgba(255, 253, 243, .08);--wa-window-hairline: rgba(0, 0, 0, .24);--wa-card-accent-bg: rgba(242, 59, 10, .2);--wa-row-bg: rgba(255, 253, 243, .06);--wa-color-data-table-surface: #20201a;--wa-media-shadow: 0 44px 96px rgba(0, 0, 0, .38);--wa-window-shadow: 0 52px 42px rgba(0, 0, 0, .42);--wa-card-shadow: 0 10px 28px rgba(0, 0, 0, .24);--wa-tight-shadow: 0 2px 6px rgba(0, 0, 0, .18);--wa-data-table-shadow: var(--wa-tight-shadow);color-scheme:dark}}.wa-section[data-resolved-theme=dark]{--wa-signup-muted: #aaa396;--wa-signup-field-bg: #20201a;--wa-signup-field-border: #504d45;--wa-signup-field-shadow: 0 14px 28px rgba(0, 0, 0, .32);--wa-signup-placeholder: rgba(255, 253, 243, .38);--wa-signup-submit-bg: #5f5b51;--wa-signup-submit-active-bg: var(--wa-color-dark-surface);--wa-signup-submit-color: var(--wa-color-inverse);--wa-strategy-surface-bg: #20201a;--wa-strategy-surface-hover-bg: #25241f;--wa-strategy-surface-border: var(--wa-line-12);--wa-strategy-surface-shadow: var(--wa-tight-shadow);--wa-strategy-surface-hover-shadow: var(--wa-tight-shadow);--wa-strategy-title-color: var(--wa-color-heading-strong);--wa-strategy-bullet-color: var(--wa-color-muted);--wa-strategy-hover-border: rgba(255, 253, 243, .24);--wa-highlight-bg: rgba(213, 255, 79, .16);--wa-thinking-text: #d8d1c3;--wa-thinking-label: #d8d1c3;--wa-thinking-detail: #aaa396;--wa-thinking-muted: #918b7f;--wa-thinking-line: rgba(255, 253, 243, .16);--wa-thinking-dot: #aaa396;--wa-thinking-chevron: #d8d1c3;--wa-thinking-logo: #d8d1c3;--wa-thinking-logo-shadow: #6c665c;--wa-thinking-shimmer: #fffdf3;--wa-thinking-shimmer-strong: #aaa396;--wa-thinking-tool-shimmer: #d8d1c3;--wa-thinking-tool-shimmer-strong: #918b7f;--wa-thinking-favicon-bg: #343229;--wa-thinking-favicon-text: #d8d1c3;--wa-drop-color: #d8d1c3;--wa-drop-bg: rgba(32, 32, 26, .9);--wa-drop-inset: rgba(255, 253, 243, .04);--wa-drop-active-bg: rgba(42, 32, 26, .94);--wa-drop-active-inset: rgba(242, 59, 10, .1);--wa-drop-complete-bg: rgba(32, 32, 26, .9);--wa-drop-title: var(--wa-color-heading-strong);--wa-drop-muted: var(--wa-color-muted);--wa-file-surface: #20201a;--wa-file-floating-surface: rgba(32, 32, 26, .96);--wa-file-text: var(--wa-color-heading-strong);--wa-file-muted: var(--wa-color-muted);--wa-file-shadow: 0 16px 30px rgba(0, 0, 0, .36);--wa-table-text: #c7c1b6;--wa-table-strong: var(--wa-color-heading-strong);--wa-table-muted: var(--wa-color-muted);--wa-table-empty: #6f695e;--wa-table-line: var(--wa-line-12);--wa-table-scrollbar: rgba(255, 253, 243, .18);--wa-table-scrollbar-thumb: rgba(255, 253, 243, .2);--wa-table-control-bg: #25241f;--wa-table-control-border: var(--wa-line-16);--wa-table-control-hover: rgba(255, 253, 243, .28);--wa-table-selected-bg: var(--wa-color-dark-surface);--wa-table-selected-shadow: 0 7px 16px rgba(0, 0, 0, .28);--wa-table-badge-text: #e8ca6f;--wa-table-badge-bg: rgba(246, 186, 66, .2);--wa-table-dot: #6f695e;--wa-table-dot-active: var(--wa-color-heading-strong);--wa-table-page: var(--wa-color-muted);--wa-table-page-disabled: #5e584e;--wa-table-enriched-text: #65d1c3;--wa-table-enriched-header: #87ded5;--wa-table-enriched-bg: rgba(101, 209, 195, .14);--wa-waterfall-arrow: #6f695e;--wa-waterfall-chip-bg: #25241f;--wa-waterfall-chip-border: var(--wa-line-12);--wa-waterfall-chip-text: var(--wa-color-muted);--wa-waterfall-loading-text: #d8d1c3;--wa-waterfall-loading-bg: #25241f;--wa-waterfall-loading-strong: #fffdf3;--wa-waterfall-loading-glint: #918b7f;--wa-waterfall-complete-bg: #25241f;--wa-mailbox-card-bg: #20201a;--wa-mailbox-card-border: var(--wa-line-12);--wa-mailbox-card-inset: rgba(255, 253, 243, .04);--wa-mailbox-button-bg: #25241f;--wa-mailbox-button-border: var(--wa-line-16);--wa-mailbox-button-text: var(--wa-color-heading-strong);--wa-mailbox-connected-text: #918b7f;--wa-mailbox-connected-border: var(--wa-line-12);--wa-mailbox-spinner-border: rgba(255, 253, 243, .2);--wa-mailbox-learning-title: #d8d1c3;--wa-mailbox-learning-ready: var(--wa-color-heading-strong);--wa-mailbox-learning-detail: var(--wa-color-muted);--wa-mailbox-thumbprint: var(--wa-color-heading-strong);--wa-mailbox-progress-bg: var(--wa-line-16);--wa-sequence-tab-line-stroke: var(--wa-line-16);--wa-sequence-person-bg: color-mix(in srgb, var(--wa-panel) 84%, #2f2d26);--wa-sequence-person-border: rgba(255, 253, 243, .18);--wa-sequence-person-active-border: rgba(255, 253, 243, .28);--wa-sequence-dot-color: #6f695e;--wa-sequence-dot-selected: var(--wa-color-heading-strong);--wa-sequence-step-muted: var(--wa-color-muted);--wa-sequence-step-selected: var(--wa-color-heading-strong);--wa-sequence-wait: #aaa396;--wa-sequence-panel-header-bg: #25241f;--wa-sequence-panel-line: var(--wa-line-12);--wa-sequence-panel-muted: var(--wa-color-muted);--wa-sequence-panel-strong: var(--wa-color-heading-strong);--wa-sequence-field-border: var(--wa-line-20);--wa-sequence-field-text: var(--wa-color-heading-strong);--wa-sequence-connect-muted: var(--wa-color-muted);--wa-sequence-call-copy: #d8d1c3;--wa-sequence-call-muted: var(--wa-color-muted);--wa-sequence-call-avatar-bg: #343229;--wa-sequence-call-button-bg: var(--wa-color-dark-surface);--wa-sequence-call-button-text: var(--wa-color-inverse);--wa-sequence-draft-bg: #25241f;--wa-sequence-draft-border: var(--wa-line-12);--wa-sequence-panel-shadow: var(--wa-tight-shadow);--wa-composer-shadow: 0 14px 28px rgba(0, 0, 0, .32), 0 4px 10px rgba(0, 0, 0, .24), 0 1px 0 rgba(255, 253, 243, .08) inset}.wa-section button,.wa-section input,.wa-section textarea,.wa-section select{font:inherit}.wa-section textarea{resize:none}.wa-section__inner{position:relative;z-index:1;display:grid;grid-template-columns:var(--wa-left-column) var(--wa-right-column);grid-template-rows:auto auto;column-gap:var(--wa-column-gap);row-gap:var(--wa-row-gap);align-items:start;width:min(var(--wa-content-max),100%);margin:0 auto}.wa-theme-toggle{position:absolute;top:-78px;right:0;z-index:8;display:inline-flex;align-items:center;gap:8px;height:36px;padding:4px 11px 4px 4px;border:1px solid var(--wa-line-12);border-radius:999px;color:var(--wa-color-heading-strong);background:color-mix(in srgb,var(--wa-color-panel) 84%,transparent);box-shadow:0 8px 22px #17171414;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:border-color .16s ease,background-color .16s ease,box-shadow .16s ease}.wa-theme-toggle:hover{border-color:var(--wa-line-20);background:var(--wa-color-panel)}.wa-theme-toggle:focus-visible{outline:2px solid var(--wa-color-accent);outline-offset:3px}.wa-theme-toggle__track{position:relative;display:grid;grid-template-columns:1fr 1fr;align-items:center;width:45px;height:26px;padding:3px;border:1px solid var(--wa-line-10);border-radius:999px;background:var(--wa-color-soft-surface)}.wa-theme-toggle__thumb{position:absolute;top:3px;left:3px;z-index:1;width:18px;height:18px;border-radius:999px;background:var(--wa-color-dark-surface);transform:translate(0);transition:background-color .16s ease,transform .18s cubic-bezier(.2,.92,.18,1)}.wa-theme-toggle__icon{position:relative;z-index:2;display:grid;place-items:center;color:var(--wa-color-muted)}.wa-theme-toggle__icon svg{display:block;width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}.wa-theme-toggle__icon--dark svg{fill:currentColor;stroke-width:1.3}.wa-theme-toggle__label{min-width:28px;color:var(--wa-color-copy);font-size:12px;line-height:1;font-weight:650;letter-spacing:0}.wa-section[data-resolved-theme=dark] .wa-theme-toggle{box-shadow:none}.wa-section[data-resolved-theme=dark] .wa-theme-toggle__thumb{transform:translate(19px)}.wa-section[data-resolved-theme=dark] .wa-theme-toggle__icon--dark,.wa-section[data-resolved-theme=light] .wa-theme-toggle__icon--light{color:var(--wa-color-inverse)}.wa-copy{grid-column:1 / -1;max-width:var(--wa-copy-max)}.wa-copy__title{display:block;margin:0;color:var(--wa-color-heading);font-family:var(--wa-font-sans);font-size:var(--wa-title-size);line-height:var(--wa-title-line-height);font-weight:400;letter-spacing:-.02em}.wa-copy__title>span{display:block}.wa-copy__title em{color:var(--wa-orange);font-style:normal}.wa-story-controls{position:relative;z-index:4;grid-column:1;grid-row:2;display:grid;gap:22px;top:var(--wa-story-controls-y-offset);left:var(--wa-story-controls-x-offset);width:calc(100% + var(--wa-story-controls-width-extra));padding-top:4px}.wa-story-tabs{display:grid;gap:var(--wa-story-tabs-gap)}.wa-story-tab{--wa-tab-progress: 0;display:grid;grid-template-columns:4px minmax(0,1fr);gap:30px;align-items:stretch;width:100%;min-height:0;padding:var(--wa-story-tab-y-padding) 0;border:0;color:var(--wa-color-heading-strong);background:transparent;text-align:left;cursor:pointer}.wa-story-tab__marker{position:relative;display:block;align-self:stretch;width:4px;min-height:0;margin-block:calc(-1 * var(--wa-story-tab-y-padding));overflow:hidden;background:var(--wa-soft);cursor:ns-resize;touch-action:none}.wa-story-tab__marker:before{content:"";position:absolute;inset:0;background:var(--wa-soft);transform:scaleY(var(--wa-tab-progress));transform-origin:top;transition:transform .12s linear}.wa-story-tab__marker:after{content:"";position:absolute;inset:0 -8px}.wa-story-tab.is-active .wa-story-tab__marker:before{background:var(--wa-color-accent)}.wa-story-tab__marker[data-scrubbing=true]:before{transition:none}.wa-story-tab__body{display:block;padding-top:0}.wa-story-tab__title{display:block;color:var(--wa-color-heading-strong);font-size:var(--wa-feature-title-size);line-height:1.08;font-weight:400;letter-spacing:-.02em;transition:opacity .16s ease}.wa-story-tab__description{display:block;max-width:520px;max-height:150px;margin-top:var(--wa-story-description-gap);overflow:hidden;color:var(--wa-color-copy);font-size:var(--wa-feature-copy-size);line-height:1.4;font-weight:400;opacity:1;transform:translateY(0);transition:max-height .26s cubic-bezier(.2,.8,.2,1),margin-top .22s cubic-bezier(.2,.8,.2,1),opacity .16s ease,transform .22s cubic-bezier(.2,.8,.2,1);will-change:max-height,margin-top,opacity,transform}.wa-story-tab__link{color:inherit;text-decoration:underline;text-decoration-thickness:.06em;text-underline-offset:.12em;cursor:pointer}.wa-story-tab__link:hover{color:var(--wa-color-heading-strong)}.wa-story-tab__link:focus-visible{outline:2px solid currentColor;outline-offset:3px;border-radius:3px}.wa-story-tab:not(.is-active) .wa-story-tab__title,.wa-story-tab:not(.is-active) .wa-story-tab__description{opacity:.6}.wa-story-tab:not(.is-active) .wa-story-tab__description{max-height:0;margin-top:0;opacity:0;transform:translateY(-5px)}.wa-story-tab__count,.wa-story-count{display:none}.wa-controls-row{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}.wa-control-button svg{display:block;width:16px;height:16px;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;fill:none}.wa-stage{--wa-window-scene-scale: 1;--wa-window-scene-width: var(--wa-window-width);--wa-window-scene-height: var(--wa-stage-min-height);--wa-window-scene-unscaled-height: var(--wa-window-height);--wa-window-scene-min-width: 0px;position:relative;grid-column:2;grid-row:2;width:var(--wa-stage-width);min-height:var(--wa-stage-min-height);top:var(--wa-stage-y-offset)}.wa-stage[data-window-content-scale]{height:var(--wa-window-scene-height);min-height:var(--wa-window-scene-height)}.wa-stage__media{position:absolute;top:-38px;right:-44px;width:var(--wa-media-width);height:var(--wa-media-height);border-radius:3px;background-image:var(--wa-media-image);background-position:center;background-size:cover;box-shadow:var(--wa-media-shadow);opacity:1;pointer-events:none}.wa-window{position:relative;z-index:2;width:var(--wa-window-width);margin:108px 0 0 70px;border-radius:var(--wa-radius-window);box-shadow:var(--wa-window-shadow);transform-origin:top left}.wa-stage[data-window-content-scale] .wa-window{position:absolute;top:0;left:50%;width:var(--wa-window-scene-width);margin:0;transform:translate(-50%) scale(var(--wa-window-scene-scale));transform-origin:top center;will-change:transform}.wa-stage[data-window-content-scale] .wa-chat-shell{height:var(--wa-window-scene-unscaled-height);max-height:none}.wa-chat-shell{position:relative;display:grid;grid-template-rows:auto minmax(0,1fr);height:var(--wa-window-height);max-height:var(--wa-window-max-height);overflow:visible;border:1px solid var(--wa-browser-line);border-radius:var(--wa-radius-window);background:var(--wa-panel);background-clip:padding-box;box-shadow:0 1px 0 var(--wa-window-highlight) inset,0 0 0 1px var(--wa-window-hairline)}.wa-chat-shell__bar{--wa-browser-tab-left: 90px;--wa-browser-tab-width: 100px;position:relative;display:flex;align-items:center;height:48px;padding:0 18px;border-bottom:0;border-radius:calc(var(--wa-radius-window) - 1px) calc(var(--wa-radius-window) - 1px) 0 0;background:var(--wa-browser-bar-bg);overflow:hidden}.wa-chat-shell__bar:after{content:"";position:absolute;right:0;bottom:0;left:0;height:1px;background:linear-gradient(to right,var(--wa-browser-line) 0,var(--wa-browser-line) var(--wa-browser-tab-left),transparent var(--wa-browser-tab-left),transparent calc(var(--wa-browser-tab-left) + var(--wa-browser-tab-width)),var(--wa-browser-line) calc(var(--wa-browser-tab-left) + var(--wa-browser-tab-width)),var(--wa-browser-line) 100%);pointer-events:none}.wa-chat-shell__lights{display:flex;gap:8px;align-items:center}.wa-chat-shell__lights span{width:12px;height:12px;border-radius:999px;background:var(--wa-red)}.wa-chat-shell__lights span:nth-child(2){background:var(--wa-yellow)}.wa-chat-shell__lights span:nth-child(3){background:var(--wa-green)}.wa-chat-shell__tab{position:absolute;left:var(--wa-browser-tab-left);bottom:-1px;display:inline-flex;align-items:center;gap:9px;height:36px;min-width:100px;padding:0 13px;border:1px solid var(--wa-browser-line);border-bottom:0;border-radius:8px 8px 0 0;background:var(--wa-panel)}.wa-chat-shell__mark{display:block;flex:0 0 auto;width:18px;height:11px}.wa-chat-shell__title{color:var(--wa-color-text);font-size:16px;line-height:1;font-weight:560}.wa-chat-shell__body{position:relative;display:grid;grid-template-rows:minmax(0,1fr);align-content:stretch;gap:0;min-height:0;padding:0 var(--wa-chat-x-padding);overflow:visible;clip-path:inset(0 calc(-1 * var(--wa-chat-shadow-gutter)) 0 calc(-1 * var(--wa-chat-shadow-gutter)) round 0 0 calc(var(--wa-radius-window) - 1px) calc(var(--wa-radius-window) - 1px));border-radius:0 0 calc(var(--wa-radius-window) - 1px) calc(var(--wa-radius-window) - 1px);background:var(--wa-panel);background-clip:padding-box}.wa-chat-shell__body:before{content:"";position:absolute;z-index:1;top:0;right:0;left:0;height:var(--wa-chat-top-fade);background:linear-gradient(to bottom,var(--wa-panel) 0,var(--wa-panel-transparent) 100%);pointer-events:none}.wa-signup-scene{position:absolute;inset:0;z-index:0;display:grid;align-content:center;justify-items:center;gap:12px;min-height:0;padding-bottom:0;color:var(--wa-ink)}.wa-signup-scene__logo{display:block;width:42px;aspect-ratio:18 / 11;margin-bottom:-2px;color:var(--wa-signup-muted);pointer-events:none}.wa-signup-scene__logo svg{display:block;width:100%;height:100%}.wa-signup-scene__title{margin:0 0 18px;color:var(--wa-signup-muted);font-family:var(--wa-font-feature);font-size:34px;line-height:1;font-weight:400;letter-spacing:0}.wa-signup-field{display:grid;grid-template-columns:minmax(0,1fr) 38px;align-items:center;gap:10px;width:min(360px,72%);min-height:56px;padding:0 9px 0 17px;overflow:hidden;border:1px solid var(--wa-signup-field-border);border-radius:15px;color:var(--wa-ink);background:var(--wa-signup-field-bg);box-shadow:var(--wa-signup-field-shadow);font-size:16px;line-height:1.2;font-weight:410;white-space:nowrap}.wa-signup-field [data-signup-email]:empty:before{content:"email@work.com";color:var(--wa-signup-placeholder)}.wa-signup-field [data-signup-email]{transform:translateY(-1px)}.wa-signup-field [data-signup-email]:after{content:"";display:inline-block;width:1px;height:17px;margin-left:1px;background:currentColor;transform:translateY(3px);animation:wa-caret .92s steps(1,end) infinite}.wa-signup-field__submit{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;padding:0;border:0;border-radius:999px;color:var(--wa-signup-submit-color);background:var(--wa-signup-submit-bg);cursor:default}.wa-signup-scene[data-signup-filled=true] .wa-signup-field__submit,.wa-signup-scene[data-signup-submitted=true] .wa-signup-field__submit{background:var(--wa-signup-submit-active-bg)}.wa-signup-field__submit-icon{display:block;width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.wa-thread{position:relative;z-index:0;display:grid;gap:var(--wa-chat-entry-gap);align-content:start;justify-self:start;box-sizing:border-box;width:calc(100% + var(--wa-chat-thread-bleed) + var(--wa-chat-thread-bleed));height:100%;min-height:0;max-height:none;margin-inline:calc(-1 * var(--wa-chat-thread-bleed));padding-inline:var(--wa-chat-thread-bleed);padding-bottom:calc(var(--wa-thread-base-bottom-padding) + var(--wa-thread-growth-spacer));overflow:hidden;overflow-anchor:none;overscroll-behavior:auto}.wa-thread>.wa-message:first-child,.wa-message--first-active{margin-top:var(--wa-chat-first-entry-offset)}.wa-section.wa-sequence-sandbox{min-height:100svh;overflow:auto;padding:28px}.wa-sequence-sandbox .wa-section__inner{display:grid;grid-template-columns:minmax(0,1fr);gap:24px;width:min(1240px,100%)}.wa-sequence-sandbox .wa-copy,.wa-sequence-sandbox .wa-story-controls,.wa-sequence-sandbox .wa-stage__media,.wa-sequence-sandbox .wa-composer,.wa-sequence-sandbox .wa-signup-scene,.wa-sequence-sandbox .wa-history-resume,.wa-sequence-sandbox .wa-sequence-actions,.wa-sequence-sandbox .wa-sequence-kickoff{display:none!important}.wa-sequence-sandbox__header{display:flex;gap:24px;align-items:end;justify-content:space-between}.wa-sequence-sandbox__copy{display:grid;gap:6px;max-width:720px}.wa-sequence-sandbox__eyebrow{margin:0;color:var(--wa-orange);font-size:12px;line-height:1;font-weight:620}.wa-sequence-sandbox__title{margin:0;color:var(--wa-ink);font-size:48px;line-height:1;font-weight:520}.wa-sequence-sandbox__note{margin:0;color:var(--wa-color-muted);font-size:14px;line-height:1.45;font-weight:410}.wa-sequence-sandbox__back{flex:0 0 auto;color:var(--wa-color-muted);font-size:13px;line-height:1;font-weight:520;text-decoration:none}.wa-sequence-sandbox__back:hover{color:var(--wa-ink)}.wa-sequence-sandbox .wa-stage{grid-column:1;grid-row:auto;justify-self:center;width:min(100%,1240px);min-height:0}.wa-sequence-sandbox .wa-window{width:100%;margin:0}.wa-sequence-sandbox .wa-chat-shell{height:auto;min-height:620px}.wa-sequence-sandbox .wa-chat-shell__body{min-height:570px;padding:0}.wa-sequence-sandbox .wa-chat-shell__body:before{content:none}.wa-sequence-sandbox .wa-thread{width:100%;height:auto;margin-inline:0;padding:34px 0 42px;overflow:visible}.wa-sequence-sandbox .wa-sequence-engagement__header{display:none}.wa-sequence-sandbox .wa-message{max-width:calc(100% + 16px)}.wa-sequence-sandbox .wa-message--component{width:100%}.wa-section[data-active-story=crm-update]{--wa-chat-first-entry-offset: calc(var(--wa-chat-top-fade) + 3px)}.wa-section[data-active-story=data-marketplace] .wa-thread{min-height:0;max-height:none}.wa-section[data-active-story=data-marketplace] .wa-result-grid{display:none}.wa-message{display:grid;grid-template-columns:minmax(0,max-content);gap:0;align-items:end;max-width:90%}.wa-message[data-message-role=user]{justify-self:end;grid-template-columns:minmax(0,max-content)}.wa-message[data-message-role=user]+.wa-message[data-message-role=assistant],.wa-message[data-message-role=assistant]+.wa-message[data-message-role=user]{margin-top:var(--wa-chat-entry-gap)}.wa-message[data-message-role=assistant]:not(.wa-message--component){width:min(100%,var(--wa-ai-message-max-width));grid-template-columns:minmax(0,1fr)}.wa-message[data-message-role=assistant]:not(.wa-message--component) .wa-message__body{padding-right:0;padding-left:0}.wa-message__avatar{display:none;width:24px;height:24px;border:1px solid var(--wa-line-10);border-radius:7px;background:var(--wa-color-dark-surface)}.wa-message[data-message-role=user] .wa-message__avatar{grid-column:2;background:var(--wa-orange)}.wa-message__body{width:100%;max-width:var(--wa-ai-message-max-width);padding:10px 12px;border:0;border-radius:8px;color:var(--wa-ink);background:transparent;font-size:16px;line-height:1.35;font-weight:var(--wa-chat-message-weight);overflow-wrap:anywhere}.wa-message[data-message-role=user] .wa-message__body{grid-column:1;grid-row:1;width:auto;max-width:var(--wa-user-message-max-width);background:var(--wa-color-user-message);color:var(--wa-ink)}.wa-message[data-message-role=assistant] .wa-message__body[data-streaming=true]:after{content:"";display:inline-block;width:1px;height:1em;margin-left:2px;background:currentColor;vertical-align:-.14em;animation:wa-caret .92s steps(1,end) infinite}.wa-message--component{grid-template-columns:minmax(0,1fr);width:100%;max-width:calc(100% + 16px);align-items:start}.wa-message--component .wa-message__avatar{margin-top:0}.wa-message--component .wa-message__body{width:100%;max-width:none;padding:0;border:0;background:transparent;overflow:visible}.wa-message--file{width:auto;max-width:90%;justify-self:end}.wa-message--file .wa-message__body{width:auto;max-width:none;justify-self:end;padding:0;background:transparent}.wa-message[data-message-role=user].wa-message--file .wa-message__body{max-width:none;background:transparent}.wa-thinking-block{--wa-thinking-icon-column: 18px;--wa-thinking-column-gap: 8px;--wa-thinking-guide-top: -9px;--wa-thinking-rail-x-adjust: -.5px;position:relative;display:grid;align-content:start;align-items:start;justify-items:start;gap:11px;min-width:0}.wa-thinking{position:relative;display:inline-grid;grid-template-columns:var(--wa-thinking-icon-column) auto;align-items:center;justify-content:start;gap:var(--wa-thinking-column-gap);justify-self:start;min-height:18px;padding:0;color:var(--wa-thinking-text);background:transparent;font-size:14px;line-height:1.28;font-weight:var(--wa-chat-thinking-header-weight);overflow:visible}.wa-thinking__glyph{position:relative;display:inline-block;width:18px;height:11px;opacity:1;color:var(--wa-thinking-logo);transform-origin:center;transition:opacity .12s ease}.wa-thinking__glyph:after,.wa-thinking-logo-traveler:after{content:"";position:absolute;inset:0;display:block;width:18px;height:11px;opacity:0;background:linear-gradient(100deg,var(--wa-thinking-logo) 0%,var(--wa-thinking-logo) 30%,#f23b0a 48%,var(--wa-thinking-logo-shadow) 58%,var(--wa-thinking-logo) 74%,var(--wa-thinking-logo) 100%);background-position:120% 50%;background-size:260% 100%;pointer-events:none;-webkit-mask:var(--wa-thinking-logo-mask) center / 18px 11px no-repeat;mask:var(--wa-thinking-logo-mask) center / 18px 11px no-repeat}.wa-thinking__glyph[data-logo-role=shadow]{color:var(--wa-thinking-logo-shadow);opacity:.88}.wa-thinking-logo-traveler{position:absolute;top:0;left:0;z-index:4;display:inline-block;width:18px;height:11px;color:var(--wa-thinking-logo);pointer-events:none;transform-origin:center}.wa-thinking__logo-mark{display:block;width:18px;height:11px;overflow:visible}.wa-thinking__glyph[data-logo-mode=thinking]:not([data-logo-role=shadow]) .wa-thinking__logo-mark,.wa-thinking-logo-traveler[data-logo-mode=thinking] .wa-thinking__logo-mark{opacity:0}.wa-thinking__glyph[data-logo-mode=thinking]:not([data-logo-role=shadow]):after,.wa-thinking-logo-traveler[data-logo-mode=thinking]:after{opacity:1;animation:wa-thinking-logo-gradient 1.28s linear infinite}.wa-thinking__glyph[data-logo-mode=done]:not([data-logo-role=shadow]),.wa-thinking-logo-traveler[data-logo-mode=done]{opacity:.72}.wa-thinking__title{color:var(--wa-thinking-text);line-height:inherit;overflow:visible}.wa-thinking__chevron{display:none;position:absolute;top:50%;left:2px;width:14px;height:14px;opacity:0;border-radius:999px;background:var(--wa-panel);box-shadow:0 0 0 3px var(--wa-panel);pointer-events:none;transform:translateY(-50%);transition:opacity .12s ease}.wa-thinking__chevron:before{content:"";position:absolute;top:4px;left:4px;width:5px;height:5px;border-right:1px solid var(--wa-thinking-chevron);border-bottom:1px solid var(--wa-thinking-chevron);transform:rotate(-45deg);transition:top .16s ease,transform .16s ease}.wa-thinking[data-thinking-collapsed=true] .wa-thinking__chevron{display:block;opacity:0}.wa-thinking[data-thinking-expanded=true] .wa-thinking__chevron{display:block;opacity:1}.wa-thinking[data-thinking-collapsed=true]{cursor:pointer}.wa-thinking[data-thinking-collapsed=true]:hover .wa-thinking__chevron{opacity:1}.wa-thinking[data-thinking-collapsed=true]:hover .wa-thinking__glyph[data-logo-role=shadow],.wa-thinking[data-thinking-expanded=true] .wa-thinking__glyph[data-logo-role=shadow]{opacity:0}.wa-thinking-block:has(.wa-thinking[data-thinking-collapsed=true]:hover) .wa-thinking-logo-traveler,.wa-thinking-block:has(.wa-thinking[data-thinking-expanded=true]) .wa-thinking-logo-traveler{opacity:0!important;visibility:hidden!important}.wa-thinking[data-thinking-expanded=true] .wa-thinking__chevron:before{top:3px;transform:rotate(45deg)}.wa-research-steps{--wa-thinking-guide-end: var(--wa-thinking-guide-top);position:relative;display:grid;align-content:start;gap:11px;max-height:none;overflow:visible;padding:1px 0 0}.wa-research-steps:before{content:"";position:absolute;top:var(--wa-thinking-guide-top);left:calc((var(--wa-thinking-icon-column) / 2) + var(--wa-thinking-rail-x-adjust));width:1px;height:max(0px,calc(var(--wa-thinking-guide-end) - var(--wa-thinking-guide-top)));background:var(--wa-thinking-line)}.wa-research-step{--wa-step-progress: 0;position:relative;display:grid;grid-template-columns:var(--wa-thinking-icon-column) minmax(0,1fr);align-content:start;gap:var(--wa-thinking-column-gap);align-items:start;min-height:0;overflow:visible;padding:0;color:var(--wa-thinking-text);background:transparent;font-size:14px;line-height:1.24;font-weight:var(--wa-chat-thinking-weight)}.wa-research-step[data-step-state=complete]{align-items:start}.wa-research-step__marker{position:relative;z-index:1;justify-self:center;width:12px;height:12px;margin-top:2px;background:var(--wa-panel)}.wa-research-step__marker:before,.wa-research-step__marker:after{content:"";position:absolute}.wa-research-step__marker:before{top:4px;left:4px;width:4px;height:4px;border-radius:999px;background:var(--wa-thinking-dot);opacity:0;transform:scale(.74);transition:opacity .16s ease,transform .18s ease}.wa-research-step[data-step-state=complete] .wa-research-step__marker:before{opacity:1;transform:scale(1)}.wa-research-step[data-step-state=failed] .wa-research-step__marker:before{opacity:1;background:#e1544c;transform:scale(1)}.wa-research-step__body{position:relative;z-index:1;display:grid;align-content:start;gap:4px;min-width:0}.wa-research-step__label-row{position:relative;display:inline-grid;grid-template-columns:minmax(0,auto) 24px;column-gap:var(--wa-thinking-column-gap);row-gap:2px;align-items:start;justify-self:start;max-width:calc(100% + var(--wa-thinking-icon-column) + var(--wa-thinking-column-gap));margin-left:calc((var(--wa-thinking-icon-column) + var(--wa-thinking-column-gap)) * -1);min-width:0;padding-left:calc(var(--wa-thinking-icon-column) + var(--wa-thinking-column-gap))}.wa-research-step[data-step-state=complete] .wa-research-step__label-row{cursor:pointer}.wa-research-step__label{grid-column:1;grid-row:1;flex:0 1 auto;min-width:0;max-width:100%;color:var(--wa-thinking-label);font-size:14px;line-height:1.18;font-weight:var(--wa-chat-thinking-weight);overflow:visible;overflow-wrap:break-word;text-overflow:clip;white-space:normal}.wa-research-step__elapsed{grid-column:2;grid-row:1;display:none;flex:0 0 auto;align-self:start;justify-self:start;margin-top:1px;color:var(--wa-thinking-muted);font-size:13px;line-height:1.18;font-weight:var(--wa-chat-thinking-weight);white-space:nowrap}.wa-research-step__detail{display:-webkit-box;min-width:0;margin-top:2px;overflow:hidden;color:var(--wa-thinking-detail);font-size:13px;line-height:1.48;font-weight:var(--wa-chat-detail-weight);white-space:normal;-webkit-box-orient:vertical;-webkit-line-clamp:2}.wa-research-step__detail[data-has-tool-calls=true]{display:grid;gap:8px;overflow:visible;-webkit-line-clamp:initial}.wa-research-step__detail-text{display:block;min-width:0}.wa-research-step__tool-calls{display:grid;gap:6px;min-width:0}.wa-research-step__tool-call{display:grid;grid-template-columns:14px minmax(0,1fr);gap:8px;align-items:center;min-width:0}.wa-research-step__tool-icon{display:grid;place-items:center;width:14px;height:14px}.wa-research-step__tool-icon>*{grid-area:1 / 1}.wa-research-step__tool-favicon{display:grid;place-items:center;width:14px;height:14px;overflow:hidden;border-radius:4px;background:var(--wa-thinking-favicon-bg);color:var(--wa-thinking-favicon-text);font-size:8px;line-height:1;font-weight:650;text-transform:uppercase}.wa-research-step__tool-favicon[data-tool-service=salesforce]{border-radius:0;background:transparent}.wa-research-step__tool-favicon img{display:block;width:14px;height:14px;object-fit:cover}.wa-research-step__tool-call[data-tool-call-state=active] .wa-research-step__tool-favicon img{animation:wa-tool-call-favicon-shimmer 1.35s ease-in-out infinite}.wa-research-step__tool-check{display:block;width:14px;height:14px;color:var(--wa-thinking-text);transform-box:fill-box;transform-origin:center}.wa-research-step__tool-label{display:inline-block;min-width:0;max-width:100%;overflow-wrap:anywhere}.wa-sequence-thinking-progress{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px;align-items:center;min-width:0;padding-top:2px}.wa-sequence-thinking-progress[data-sequence-enrollment-progress=true]{grid-template-columns:minmax(0,1fr);width:min(220px,100%);padding-top:4px}.wa-sequence-thinking-progress[data-sequence-enrollment-progress=true] .wa-sequence-thinking-progress__count{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}.wa-sequence-thinking-progress__count{color:var(--wa-thinking-muted);font-size:10px;line-height:1;font-weight:560;font-variant-numeric:tabular-nums}.wa-sequence-thinking-progress__bar{display:block;height:4px;overflow:hidden;border-radius:999px;background:var(--wa-thinking-line)}.wa-sequence-thinking-progress__bar span{display:block;width:100%;height:100%;border-radius:inherit;background:var(--wa-thinking-text);transform:scaleX(.02);transform-origin:left center}.wa-thinking__title[data-thinking-active=true],.wa-thinking__title[data-streaming=true],.wa-research-step__label[data-streaming=true]{color:transparent;background:linear-gradient(105deg,var(--wa-thinking-label) 0%,var(--wa-thinking-label) 30%,var(--wa-thinking-shimmer) 46%,var(--wa-thinking-shimmer-strong) 58%,var(--wa-thinking-label) 74%,var(--wa-thinking-label) 100%);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:wa-text-shimmer 1.35s ease-in-out infinite}.wa-research-step__tool-call[data-tool-call-state=active] .wa-research-step__tool-label,.wa-research-step__tool-label[data-streaming=true]{color:transparent;background:linear-gradient(105deg,var(--wa-thinking-detail) 0%,var(--wa-thinking-detail) 30%,var(--wa-thinking-tool-shimmer) 46%,var(--wa-thinking-tool-shimmer-strong) 58%,var(--wa-thinking-detail) 74%,var(--wa-thinking-detail) 100%);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:wa-text-shimmer 1.35s ease-in-out infinite}.wa-thinking__title[data-streaming=true]:after,.wa-research-step__label[data-streaming=true]:after,.wa-research-step__detail[data-streaming=true]:after,.wa-research-step__detail-text[data-streaming=true]:after,.wa-research-step__tool-label[data-streaming=true]:after{content:"";display:inline-block;width:1px;height:1em;margin-left:2px;background:var(--wa-thinking-label);vertical-align:-.12em;animation:wa-caret .92s steps(1,end) infinite}.wa-research-step__detail[data-streaming=true]:after,.wa-research-step__detail-text[data-streaming=true]:after,.wa-research-step__tool-label[data-streaming=true]:after{background:var(--wa-thinking-detail)}.wa-research-step__chevron{grid-column:1;grid-row:1;display:none;position:absolute;z-index:1;flex:0 0 8px;align-self:start;justify-self:start;top:1px;left:calc((var(--wa-thinking-icon-column) + var(--wa-thinking-column-gap)) * -1 + 2px);width:14px;height:14px;margin-top:0;opacity:0;border-radius:999px;background:var(--wa-panel);box-shadow:0 0 0 3px var(--wa-panel);pointer-events:none;transition:opacity .12s ease}.wa-research-step__chevron:before{content:"";position:absolute;top:4px;left:4px;width:5px;height:5px;border-right:1px solid var(--wa-thinking-chevron);border-bottom:1px solid var(--wa-thinking-chevron);transform:rotate(-45deg);transition:top .16s ease,transform .16s ease}.wa-research-step[data-detail-collapsed=true] .wa-research-step__chevron{display:block;opacity:0}.wa-research-step[data-step-state=complete] .wa-research-step__chevron{pointer-events:none}.wa-research-step[data-step-state=complete] .wa-research-step__label-row:hover .wa-research-step__chevron{opacity:1}.wa-research-step[data-step-state=complete]:has(.wa-research-step__label-row:hover) .wa-research-step__marker:before{opacity:0;transform:scale(.74)}.wa-research-step[data-detail-collapsed=true] .wa-research-step__chevron:before{top:4px;transform:rotate(-45deg)}.wa-research-step[data-detail-expanded=true] .wa-research-step__chevron{display:block;opacity:1}.wa-research-step[data-detail-expanded=true] .wa-research-step__chevron:before{top:3px;transform:rotate(45deg)}.wa-research-step[data-detail-expanded=true] .wa-research-step__marker:before{opacity:0;transform:scale(.74)}.wa-result-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:9px;min-height:0}.wa-result-grid.has-strategy-plans{grid-template-columns:minmax(0,1fr);gap:14px;overflow-x:visible}.wa-message--strategy,.wa-message--strategy .wa-message__body,.wa-message--style,.wa-message--style .wa-message__body{overflow-x:visible}.wa-result-grid.has-data-table,.wa-result-grid.has-enrichment-panel{grid-template-columns:minmax(0,1fr)}.wa-csv-drop{position:absolute;inset:58px 10px 10px;z-index:2;display:grid;grid-template-columns:minmax(0,1fr);place-items:center;gap:14px;padding:32px;overflow:hidden;border:1px dashed rgba(242,59,10,.48);border-radius:12px;color:var(--wa-drop-color);background:var(--wa-drop-bg);box-shadow:inset 0 0 0 999px var(--wa-drop-inset);pointer-events:none}.wa-csv-drop[data-drop-state=active]{border-color:var(--wa-orange);background-color:var(--wa-drop-active-bg);box-shadow:inset 0 0 0 999px var(--wa-drop-active-inset)}.wa-csv-drop[data-drop-state=complete]{border-style:solid;border-color:#27944352;background:var(--wa-drop-complete-bg)}.wa-csv-drop__copy{display:grid;gap:5px;min-width:0;justify-items:center;text-align:center}.wa-csv-drop__copy strong{color:var(--wa-drop-title);font-size:18px;line-height:1.12;font-weight:620}.wa-csv-drop__copy span{color:var(--wa-drop-muted);font-size:13px;line-height:1.24;font-weight:460}.wa-cursor-file{position:absolute;top:0;left:0;z-index:19;width:max-content;pointer-events:none}.wa-file-landing-clone{box-sizing:border-box}.wa-file-landing-label{color:var(--wa-file-muted);font-size:10.5px;line-height:1;font-weight:520;white-space:nowrap}.wa-cursor-file__card,.wa-uploaded-file{--wa-file-color: #916135;--wa-file-bg: #fdf8f2;--wa-file-border: #dedbd3}.wa-cursor-file__card{display:inline-grid;grid-template-columns:34px minmax(0,1fr);gap:8px;align-items:center;width:292px;min-height:52px;padding:8px 12px 8px 8px;border:1px solid var(--wa-file-border, #dedbd3);border-radius:8px;color:var(--wa-file-text);background:var(--wa-file-floating-surface);box-shadow:var(--wa-file-shadow)}.wa-cursor-file--stack{width:252px;height:96px}.wa-cursor-file--stack .wa-cursor-file__card{position:absolute;top:0;left:0;width:230px;transform-origin:18px 28px}.wa-cursor-file--stack .wa-cursor-file__card:nth-child(1){z-index:4;transform:translate(1px) rotate(2deg)}.wa-cursor-file--stack .wa-cursor-file__card:nth-child(2){z-index:3;transform:translate(8px,8px) rotate(-5deg)}.wa-cursor-file--stack .wa-cursor-file__card:nth-child(3){z-index:2;transform:translate(-7px,15px) rotate(6deg)}.wa-cursor-file--stack .wa-cursor-file__card:nth-child(4){z-index:1;transform:translate(5px,23px) rotate(-8deg)}.wa-cursor-file__icon,.wa-uploaded-file__icon{display:inline-flex;align-items:center;justify-content:center;border-radius:5px;border:1px solid var(--wa-file-color, #916135);border-color:color-mix(in oklch,var(--wa-file-color, #916135) 46%,var(--wa-file-bg, #faf1e8));color:var(--wa-file-color, #916135);background:var(--wa-file-bg, #faf1e8);font-size:9px;line-height:1;font-weight:680}.wa-cursor-file__icon{width:34px;height:34px}.wa-cursor-file__card[data-file-tone=spreadsheet],.wa-uploaded-file[data-file-tone=spreadsheet]{--wa-file-color: #2a8050;--wa-file-bg: #f7fcf8}.wa-cursor-file__card[data-file-tone=pdf],.wa-uploaded-file[data-file-tone=pdf]{--wa-file-color: #c04436;--wa-file-bg: #fff7f6}.wa-cursor-file__card[data-file-tone=doc],.wa-uploaded-file[data-file-tone=doc]{--wa-file-color: #2c66d8;--wa-file-bg: #f7faff}.wa-cursor-file__card[data-file-tone=text],.wa-uploaded-file[data-file-tone=text]{--wa-file-color: #6f6a63;--wa-file-bg: #faf9f6}.wa-cursor-file__card[data-file-tone=ppt],.wa-uploaded-file[data-file-tone=ppt]{--wa-file-color: #b5671c;--wa-file-bg: #fff9f1}@supports (color: oklch(.5 .1 120)){.wa-cursor-file__card,.wa-uploaded-file{--wa-file-color: oklch(.49 .105 55);--wa-file-bg: oklch(.986 .012 65);--wa-file-border: oklch(.88 .008 80)}.wa-cursor-file__card[data-file-tone=spreadsheet],.wa-uploaded-file[data-file-tone=spreadsheet]{--wa-file-color: oklch(.51 .12 150);--wa-file-bg: oklch(.986 .014 150)}.wa-cursor-file__card[data-file-tone=pdf],.wa-uploaded-file[data-file-tone=pdf]{--wa-file-color: oklch(.52 .15 29);--wa-file-bg: oklch(.986 .014 29)}.wa-cursor-file__card[data-file-tone=doc],.wa-uploaded-file[data-file-tone=doc]{--wa-file-color: oklch(.52 .145 257);--wa-file-bg: oklch(.986 .013 257)}.wa-cursor-file__card[data-file-tone=text],.wa-uploaded-file[data-file-tone=text]{--wa-file-color: oklch(.52 .018 82);--wa-file-bg: oklch(.982 .004 82)}.wa-cursor-file__card[data-file-tone=ppt],.wa-uploaded-file[data-file-tone=ppt]{--wa-file-color: oklch(.56 .13 57);--wa-file-bg: oklch(.986 .016 64)}}.wa-section[data-resolved-theme=dark] .wa-cursor-file__card,.wa-section[data-resolved-theme=dark] .wa-uploaded-file{--wa-file-color: #d0a070;--wa-file-bg: rgba(208, 160, 112, .14);--wa-file-border: var(--wa-line-16)}.wa-section[data-resolved-theme=dark] .wa-cursor-file__card[data-file-tone=spreadsheet],.wa-section[data-resolved-theme=dark] .wa-uploaded-file[data-file-tone=spreadsheet]{--wa-file-color: #75d39c;--wa-file-bg: rgba(117, 211, 156, .13)}.wa-section[data-resolved-theme=dark] .wa-cursor-file__card[data-file-tone=pdf],.wa-section[data-resolved-theme=dark] .wa-uploaded-file[data-file-tone=pdf]{--wa-file-color: #f07c72;--wa-file-bg: rgba(240, 124, 114, .13)}.wa-section[data-resolved-theme=dark] .wa-cursor-file__card[data-file-tone=doc],.wa-section[data-resolved-theme=dark] .wa-uploaded-file[data-file-tone=doc]{--wa-file-color: #80a8ff;--wa-file-bg: rgba(128, 168, 255, .13)}.wa-section[data-resolved-theme=dark] .wa-cursor-file__card[data-file-tone=text],.wa-section[data-resolved-theme=dark] .wa-uploaded-file[data-file-tone=text]{--wa-file-color: #c6beb2;--wa-file-bg: rgba(198, 190, 178, .12)}.wa-section[data-resolved-theme=dark] .wa-cursor-file__card[data-file-tone=ppt],.wa-section[data-resolved-theme=dark] .wa-uploaded-file[data-file-tone=ppt]{--wa-file-color: #edb56e;--wa-file-bg: rgba(237, 181, 110, .13)}.wa-cursor-file__name{min-width:0;overflow:hidden;font-size:11px;line-height:1;font-weight:560;text-overflow:ellipsis;white-space:nowrap}.wa-uploaded-file{display:inline-grid;grid-template-columns:34px minmax(0,1fr);gap:9px;align-items:center;min-width:292px;max-width:340px;min-height:52px;padding:8px 12px 8px 8px;border:1px solid var(--wa-file-border, #dedbd3);border-radius:8px;color:var(--wa-ink);background:var(--wa-file-surface)}.wa-uploaded-file__icon{width:34px;height:34px}.wa-uploaded-file__body{display:grid;gap:3px;min-width:0}.wa-uploaded-file__body strong,.wa-uploaded-file__body span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.wa-uploaded-file__body strong{font-size:12px;line-height:1.1;font-weight:620}.wa-uploaded-file__body span{color:var(--wa-file-muted);font-size:10px;line-height:1;font-weight:460}.wa-uploaded-files{display:grid;gap:8px;justify-items:end}.wa-uploaded-files[data-uploaded-file-count="4"]{--wa-uploaded-file-target-width: 230px;--wa-story-fit-width: 467px;width:min(467px,calc(100vw - 72px));max-width:100%}.wa-uploaded-files__summary{justify-self:start;color:var(--wa-file-muted);font-size:10.5px;line-height:1;font-weight:520;white-space:nowrap}.wa-uploaded-files__list{display:grid;gap:7px;justify-items:end}.wa-uploaded-files[data-uploaded-file-count="4"] .wa-uploaded-files__list{width:100%;grid-template-columns:repeat(2,minmax(0,var(--wa-uploaded-file-target-width)));justify-content:end;justify-items:stretch}.wa-uploaded-files[data-uploaded-file-count="4"] .wa-uploaded-file{width:100%;min-width:0;max-width:none}.wa-data-table{--wa-data-table-scroll-width: 100%;display:grid;gap:0;min-width:0;padding:0;overflow:visible;border:0;border-radius:0;background:transparent;box-shadow:none;color:var(--wa-table-strong)}.wa-data-table[data-footer-clearance=true]{padding-bottom:var(--wa-data-table-footer-clearance, 0px)}.wa-data-table__header{display:none;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;align-items:end}.wa-data-table__meta{grid-column:1 / -1;color:var(--wa-color-accent);font-size:10px;line-height:1;font-weight:760;letter-spacing:0;text-transform:uppercase}.wa-data-table__title{min-width:0;margin:0;color:var(--wa-ink);font-size:14px;line-height:1.08;font-weight:720;letter-spacing:0}.wa-data-table__count{color:var(--wa-color-muted);font-size:10px;line-height:1;font-weight:680;white-space:nowrap}.wa-data-table__grid{position:relative;display:grid;min-width:0;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;scrollbar-width:thin;scrollbar-color:var(--wa-table-scrollbar) transparent;border:1px solid var(--wa-table-line);border-radius:8px;background:var(--wa-color-data-table-surface);box-shadow:var(--wa-data-table-shadow);-webkit-overflow-scrolling:touch}.wa-data-table__grid::-webkit-scrollbar{height:6px}.wa-data-table__grid::-webkit-scrollbar-track{background:transparent}.wa-data-table__grid::-webkit-scrollbar-thumb{border-radius:999px;background:var(--wa-table-scrollbar-thumb)}.wa-data-table__row{position:relative;display:grid;grid-template-columns:var(--wa-data-table-columns);width:max(100%,var(--wa-data-table-scroll-width));min-width:max(100%,var(--wa-data-table-scroll-width));min-height:27px;border-top:1px solid var(--wa-table-line);background:var(--wa-color-data-table-surface)}.wa-data-table[data-column-count="3"]{--wa-data-table-scroll-width: 560px}.wa-data-table[data-column-count="2"]{--wa-data-table-scroll-width: 620px}.wa-data-table[data-table-variant=connections]{--wa-data-table-scroll-width: 100%}.wa-data-table:is([data-data-table=clean-webinar-attendees],[data-data-table=cleaned-webinar-attendees]){--wa-data-table-scroll-width: 100%}.wa-data-table[data-column-count="4"]{--wa-data-table-scroll-width: 680px}.wa-data-table[data-column-count="5"]{--wa-data-table-scroll-width: 860px}.wa-data-table[data-table-variant=enriched]{--wa-data-table-scroll-width: 760px}.wa-data-table__row:first-child{border-top:0}.wa-data-table__row[data-header=true]{min-height:34px;background:var(--wa-color-data-table-surface)}.wa-data-table__cell{display:flex;align-items:center;min-width:0;padding:6px 8px;overflow:visible;border-left:0;color:var(--wa-table-text);font-size:14px;line-height:1.14;font-weight:500;overflow-wrap:anywhere;white-space:normal}.wa-data-table__cell[data-cell-swap-active=true]{position:relative;overflow:hidden}.wa-data-table__cell-swap-clone{position:absolute;inset:0;box-sizing:border-box;display:flex;align-items:center;min-width:0;padding:inherit;gap:inherit;color:inherit;font:inherit;line-height:inherit;pointer-events:none;opacity:0;visibility:hidden}.wa-data-table__cell:first-child{border-left:0}.wa-data-table__row[data-header=true] .wa-data-table__cell{grid-row:1;align-items:center;padding:9px 10px 8px;color:var(--wa-table-text);font-size:14px;line-height:1.08;font-weight:560;text-transform:none}.wa-data-table__row[data-header=true] .wa-data-table__cell:nth-of-type(1){grid-column:1}.wa-data-table__row[data-header=true] .wa-data-table__cell:nth-of-type(2){grid-column:2}.wa-data-table__row[data-header=true] .wa-data-table__cell:nth-of-type(3){grid-column:3}.wa-data-table__row[data-header=true] .wa-data-table__cell:nth-of-type(4){grid-column:4}.wa-data-table__row[data-header=true] .wa-data-table__cell:nth-of-type(5){grid-column:5}.wa-data-table__row[data-header=true] .wa-data-table__cell:nth-of-type(6){grid-column:6}.wa-data-table__row[data-header=true] .wa-data-table__cell:is([data-column-key=name],[data-column-key=contact],[data-column-key=fullName],[data-column-key=mutualConnection]){padding-left:8px}.wa-data-table__row[data-header=true] .wa-data-table__cell:last-of-type{padding-right:48px}.wa-section .wa-data-table__add{position:sticky;z-index:2;grid-column:1 / -1;grid-row:1;align-self:center;justify-self:end;right:3px;display:inline-flex;align-items:center;justify-content:center;width:28px;height:26px;padding:0 0 1px;border:1px solid var(--wa-table-line);border-radius:4px;color:var(--wa-table-strong);background:var(--wa-table-control-bg);box-shadow:0 1px 1px #17171405;line-height:0}.wa-data-table__add-icon{display:block;width:16px;height:16px;fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:2}.wa-data-table__cell-text{display:block;min-width:0;margin-top:0}.wa-data-table__footer{display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0;padding-top:8px}.wa-data-table__actions{display:flex;align-items:center;gap:7px;min-width:0}.wa-data-table-action{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-width:0;min-height:38px;padding:0 13px;border:1px solid var(--wa-table-control-border);border-radius:6px;color:var(--wa-table-text);background:transparent;font:inherit;box-shadow:0 1px 1px #17171408;cursor:pointer;white-space:nowrap;transition:border-color .16s ease,background-color .16s ease,color .16s ease,box-shadow .16s ease,transform .18s cubic-bezier(.2,.8,.2,1)}.wa-data-table-action[data-action-variant=primary]{border-color:var(--wa-table-control-border);color:var(--wa-table-text);background:transparent}.wa-data-table-action[data-selected=true]{border-color:var(--wa-table-selected-bg);color:var(--wa-color-inverse);background:var(--wa-table-selected-bg);box-shadow:var(--wa-table-selected-shadow)}.wa-data-table-action__icon{display:block;width:16px;height:16px;flex:0 0 16px;fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:2}.wa-data-table-action__label{display:inline-block;font-size:12px;line-height:1;font-weight:520}.wa-data-table-action__badge{display:inline-flex;flex:0 0 auto;align-items:center;min-height:18px;padding:0 7px 1px;border-radius:999px;color:#fffffa;background:#11110f;font-size:9px;line-height:1;font-weight:560;white-space:nowrap}.wa-data-table__pagination{display:inline-flex;align-items:center;justify-content:end;gap:0;margin-left:auto;min-width:0;color:var(--wa-table-muted);line-height:1}.wa-data-table__range{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}.wa-data-table__page-controls{display:inline-flex;align-items:center;justify-content:end;gap:5px;min-width:0}.wa-data-table__page-button{appearance:none;-webkit-appearance:none;display:inline-flex;align-items:center;justify-content:center;width:13px;height:16px;padding:0;border:0;border-radius:999px;color:var(--wa-table-page);background:transparent;font-size:0;line-height:1;cursor:pointer;transform:translateZ(0);transition:color .16s ease,opacity .16s ease,transform .22s cubic-bezier(.2,.8,.2,1)}.wa-data-table__page-button[data-page-button-role=dot]{width:5px;height:16px}.wa-data-table__page-button[data-page-button-role=dot]:before{content:"";display:block;flex:0 0 5px;width:5px;min-width:5px;max-width:5px;height:5px;min-height:5px;max-height:5px;aspect-ratio:1 / 1;border-radius:50%;background:var(--wa-table-dot);transform:scale(1);transition:background-color .18s ease,opacity .18s ease,transform .26s cubic-bezier(.2,.8,.2,1)}.wa-data-table__page-button[data-page-button-role=dot][data-active=true]:before{background:var(--wa-table-dot-active)}.wa-data-table__page-button:disabled{color:var(--wa-table-page-disabled);cursor:default}.wa-data-table__page-chevron{display:block;width:13px;height:13px;fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:3.2;transform:translateZ(0);transform-origin:center}.wa-data-table[data-pagination-motion=true] .wa-data-table__page-button[data-page-button-role=dot][data-active=true]:before{animation:wa-data-table-dot-pop .34s cubic-bezier(.16,1,.3,1) both}.wa-data-table[data-pagination-motion=true][data-pagination-direction=previous] .wa-data-table__page-button[data-page-button-role=previous] .wa-data-table__page-chevron{animation:wa-data-table-chevron-previous .3s cubic-bezier(.16,1,.3,1) both}.wa-data-table[data-pagination-motion=true][data-pagination-direction=next] .wa-data-table__page-button[data-page-button-role=next] .wa-data-table__page-chevron{animation:wa-data-table-chevron-next .3s cubic-bezier(.16,1,.3,1) both}.wa-data-table-action:hover{border-color:var(--wa-table-control-hover);color:var(--wa-table-strong)}.wa-data-table-action[data-selected=true]:hover{border-color:var(--wa-table-selected-bg);color:var(--wa-color-inverse)}.wa-data-table__page-button:not(:disabled):hover{color:var(--wa-table-strong)}.wa-data-table__cell:is([data-column-key=name],[data-column-key=contact],[data-column-key=fullName],[data-column-key=mutualConnection],[data-column-key=connector]){overflow:visible;color:var(--wa-table-strong);font-weight:400;white-space:nowrap}.wa-data-table__cell:is([data-column-key=email],[data-column-key=number],[data-column-key=work-email],[data-column-key=mobile]){color:var(--wa-table-text)}.wa-data-table__cell:is([data-column-key=email],[data-column-key=work-email]) .wa-data-table__cell-text{overflow-wrap:normal;white-space:nowrap}.wa-data-table__cell[data-column-key=signal] .wa-data-table__cell-text{overflow-wrap:normal;white-space:nowrap}.wa-data-table__cell[data-cell-swap-active=true][data-column-key]{overflow:hidden}.wa-data-table[data-table-variant=enriched] .wa-data-table__cell:is([data-column-key=email],[data-column-key=number],[data-column-key=work-email],[data-column-key=mobile]){color:var(--wa-table-enriched-text)}.wa-data-table[data-table-variant=enriched] .wa-data-table__cell:is([data-column-key=email],[data-column-key=number],[data-column-key=work-email],[data-column-key=mobile]) .wa-data-table__cell-text{display:inline-flex;align-items:center;width:fit-content;max-width:100%;min-height:22px;padding:2px 6px;border-radius:5px;background:var(--wa-table-enriched-bg);color:var(--wa-table-enriched-text)}.wa-data-table[data-table-variant=enriched] .wa-data-table__row[data-header=true] .wa-data-table__cell:is([data-column-key=email],[data-column-key=number],[data-column-key=work-email],[data-column-key=mobile]){color:var(--wa-table-enriched-header)}.wa-data-table--proximity .wa-data-table__row:not([data-header=true]){min-height:52px}.wa-data-table--proximity{--wa-data-table-scroll-width: 100%}.wa-data-table--proximity .wa-data-table__grid{overflow-x:hidden}.wa-data-table--proximity .wa-data-table__row{width:100%;min-width:0}.wa-data-table--proximity .wa-data-table__row[data-header=true] .wa-data-table__cell[data-column-key=connection]{font-size:14px;line-height:1.08;overflow-wrap:anywhere;white-space:normal}.wa-data-table--proximity .wa-data-table__row:not([data-header=true]) .wa-data-table__cell[data-column-key=connection]{align-items:center;color:var(--wa-ink);font-size:13.5px;line-height:1.18;overflow-wrap:anywhere;white-space:normal}.wa-data-table--proximity .wa-data-table__cell[data-column-key=connection] .wa-data-table__cell-text{overflow-wrap:anywhere;white-space:normal;word-break:normal}.wa-data-table-pill-detail{display:grid;align-content:center;gap:5px;min-width:0}.wa-data-table-pill-detail__pill{justify-self:start;display:inline-flex;align-items:center;min-height:0;padding:0;border:0;border-radius:0;color:var(--wa-table-muted);background:transparent;font-size:11px;line-height:1;font-weight:520;white-space:nowrap;box-shadow:none}.wa-data-table-pill-detail__detail{display:block;min-width:0;color:var(--wa-table-strong);font-size:13.5px;line-height:1.22;font-weight:500;overflow-wrap:anywhere;white-space:normal;word-break:normal}.wa-data-table[data-table-variant=connections] .wa-data-table__grid{overflow-x:hidden}.wa-data-table[data-table-variant=connections] .wa-data-table__cell{overflow:hidden}.wa-data-table[data-table-variant=connections] .wa-data-table__cell[data-column-key=mutualConnection]:not(:empty){align-items:center;gap:8px}.wa-data-table[data-table-variant=connections] .wa-data-table__cell[data-column-key=mutualConnection] .wa-data-table-person{flex:1 1 auto;width:auto}.wa-data-table[data-table-variant=connections] .wa-data-table-person__name,.wa-data-table[data-table-variant=connections] .wa-data-table-person__detail{overflow:hidden;text-overflow:ellipsis}.wa-data-table[data-table-variant=connections] .wa-data-table__cell[data-column-key=mutualConnection] .wa-data-table-cell-badge{display:block;flex:0 1 112px;max-width:112px;min-width:0;min-height:0;line-height:1.12;text-align:left;white-space:normal;overflow-wrap:normal;word-break:normal}.wa-data-table-cell-badge{display:inline-flex;flex:0 0 auto;align-items:center;justify-content:center;min-height:20px;padding:0;border:0;border-radius:0;color:var(--wa-table-muted);background:transparent;font-size:12px;line-height:1;font-weight:430;white-space:nowrap}.wa-data-table__cell[data-empty=true]{color:var(--wa-table-empty)}.wa-data-table-person{display:grid;grid-template-columns:25px minmax(0,1fr);gap:7px;align-items:center;width:100%;min-width:0;overflow:visible}.wa-data-table-person__avatar-wrap{position:relative;display:block;width:25px;height:25px}.wa-data-table-person__avatar{display:inline-flex;align-items:center;justify-content:center;width:25px;height:25px;overflow:hidden;border:1px solid #d8d8d8;border-radius:999px;color:#1a1a18;background:linear-gradient(145deg,#d8dee8,#aeb7c5);font-size:8px;font-weight:700;letter-spacing:0}.wa-data-table-person__avatar img{display:block;width:100%;height:100%;object-fit:cover}.wa-data-table-person__avatar[data-avatar-tone="2"]{background:linear-gradient(145deg,#cde3d5,#7ea88f)}.wa-data-table-person__avatar[data-avatar-tone="3"]{background:linear-gradient(145deg,#9edff0,#27718b)}.wa-data-table-person__avatar[data-avatar-tone="4"]{background:linear-gradient(145deg,#f4f0eb,#b6b0a9)}.wa-data-table-person__avatar[data-avatar-tone="5"]{background:linear-gradient(145deg,#443f45,#141416);color:#fffff9}.wa-data-table-person__avatar[data-avatar-tone="6"]{background:linear-gradient(145deg,#bdeef4,#1590a8)}.wa-data-table-person__avatar[data-avatar-tone="7"]{background:linear-gradient(145deg,#f3f1dd,#a8d7f0)}.wa-data-table-person__avatar[data-avatar-tone="8"]{background:linear-gradient(145deg,#0992db,#055c9b);color:#fffff9}.wa-data-table-person__avatar[data-avatar-tone="9"]{background:linear-gradient(145deg,#cfc8b8,#39322b);color:#fffff9}.wa-data-table-person__source{position:absolute;right:0;bottom:0;display:grid;place-items:center;width:12px;height:12px;overflow:hidden;border:1.5px solid var(--wa-color-panel);border-radius:999px;background:#ddff1c;color:#4d4943;font-size:6px;line-height:1;font-weight:720;text-transform:uppercase}.wa-data-table-person__source:before,.wa-data-table-person__source:after{content:"";position:absolute;background:#050505}.wa-data-table-person__source[data-source=signal]:before{right:3px;bottom:2px;width:6px;height:2px;border-radius:999px;transform:rotate(-34deg)}.wa-data-table-person__source[data-source=signal]:after{right:2px;bottom:5px;width:2px;height:5px;border-radius:999px;transform:rotate(12deg)}.wa-data-table-person__source[data-source=database]{border-radius:4px;background:#1f1f1f}.wa-data-table-person__source[data-source=database]:before{top:3px;left:3px;width:5px;height:5px;border:1.5px solid #fffff9;border-radius:2px;background:transparent}.wa-data-table-person__source[data-source=database]:after{display:none}.wa-data-table-person__source[data-source=engage]{border-radius:4px 7px 7px 4px;background:#6043ff}.wa-data-table-person__source[data-source=engage]:before{top:4px;left:3px;width:7px;height:4px;border-radius:1px;background:#fffff9;transform:rotate(-8deg)}.wa-data-table-person__source[data-source=engage]:after{display:none}.wa-data-table-person__source[data-source=company]{border:0;border-radius:999px;background:transparent;box-shadow:0 0 0 1.5px var(--wa-panel),0 1px 2px #11110f1f}.wa-data-table-person__source[data-source=company]:before,.wa-data-table-person__source[data-source=company]:after{display:none}.wa-data-table-person__source[data-source=company][data-has-logo=false]{display:none}.wa-data-table-person__source-logo{display:block;width:100%;height:100%;border-radius:inherit;object-fit:cover}.wa-data-table-person__copy{display:grid;align-content:start;gap:2px;min-width:0;margin-top:0}.wa-data-table-person__name{min-width:0;margin-top:0;overflow:visible;color:var(--wa-table-strong);font-size:14px;line-height:1.05;font-weight:400;overflow-wrap:normal;text-overflow:clip;white-space:nowrap}.wa-data-table-person__detail{min-width:0;overflow:hidden;color:var(--wa-table-muted);font-size:12px;line-height:1.12;font-weight:400;text-overflow:ellipsis;white-space:nowrap}.wa-enrichment-panel{--wa-thinking-icon-column: 18px;--wa-thinking-column-gap: 8px;--wa-thinking-rail-x-adjust: -.5px;--wa-step-progress: 0;display:grid;gap:12px;min-width:0;max-width:none;overflow:visible;border:0;border-radius:0;background:transparent;box-shadow:none;color:var(--wa-thinking-text)}.wa-enrichment-panel__header{display:inline-grid;grid-template-columns:var(--wa-thinking-icon-column) auto;gap:var(--wa-thinking-column-gap);align-items:center;justify-content:start;min-height:18px;padding:0;border:0;color:var(--wa-thinking-text);background:transparent;font-size:14px;line-height:1;font-weight:520}.wa-enrichment-panel .wa-thinking__title{color:var(--wa-thinking-text)}.wa-waterfall-thinking{position:relative}.wa-waterfall-thinking:after{content:"";position:absolute;z-index:3;top:0;right:0;bottom:0;width:48px;background:linear-gradient(to right,var(--wa-panel-transparent),var(--wa-panel));pointer-events:none}.wa-waterfall-rows{position:relative;display:grid;gap:0;padding:0}.wa-waterfall-rows:before{content:"";position:absolute;top:-16px;bottom:11px;left:calc((var(--wa-thinking-icon-column) / 2) + var(--wa-thinking-rail-x-adjust));width:1px;background:var(--wa-thinking-line)}.wa-waterfall-row{position:relative;display:grid;grid-template-columns:var(--wa-thinking-icon-column) 100px max-content;gap:var(--wa-thinking-column-gap) 7px;align-items:center;width:100%;max-width:100%;min-width:0;min-height:30px;color:var(--wa-thinking-text);font-size:14px;line-height:1;font-weight:400;white-space:nowrap}.wa-waterfall-row__status{position:relative;z-index:1;justify-self:center;width:12px;height:12px;background:var(--wa-panel)}.wa-waterfall-row__status:before{content:"";position:absolute;top:4px;left:4px;width:4px;height:4px;border-radius:999px;background:var(--wa-thinking-dot)}.wa-waterfall-row__label{min-width:0;overflow:hidden;color:var(--wa-thinking-label);font-size:14px;font-weight:400;text-overflow:ellipsis}.wa-waterfall-row__chips{display:inline-flex;align-items:center;gap:6px;width:max-content;max-width:none;min-width:0;margin-left:-1px;padding-left:1px;overflow:visible}.wa-waterfall-service-step{display:inline-flex;align-items:center;gap:6px;flex:0 0 auto}.wa-waterfall-arrow{display:inline-grid;place-items:center;width:16px;height:16px;color:var(--wa-waterfall-arrow);line-height:1;font-weight:400}.wa-waterfall-arrow svg{display:block;width:16px;height:16px}.wa-waterfall-chip{position:relative;display:inline-flex;align-items:center;gap:7px;max-width:none;min-height:26px;padding:0 8px 0 6px;overflow:hidden;border:1px solid var(--wa-waterfall-chip-border);border-radius:5px;color:var(--wa-waterfall-chip-text);background:var(--wa-waterfall-chip-bg);background-clip:padding-box;font-size:13px;line-height:1;font-weight:400;text-overflow:ellipsis;box-shadow:0 0 0 1px #5f584e05;will-change:transform}.wa-waterfall-chip__icon{position:relative;display:inline-grid;flex:0 0 16px;place-items:center;width:16px;height:16px;color:currentColor}.wa-waterfall-chip__icon svg{display:block;width:16px;height:16px}.wa-waterfall-chip__icon img{display:block;width:14px;height:14px;border-radius:4px;object-fit:cover}.wa-waterfall-chip__mark{display:block;width:16px;height:auto}.wa-waterfall-chip__state-icon{display:none;flex:0 0 16px;width:16px;height:16px;place-items:center;color:currentColor}.wa-waterfall-chip__state-icon svg{display:none;width:14px;height:14px}.wa-waterfall-chip__label{display:inline-block;transform:translateY(-.5px)}.wa-waterfall-chip[data-service=on-prem] .wa-waterfall-chip__icon{color:var(--wa-color-muted)}.wa-waterfall-chip[data-service=wiza] .wa-waterfall-chip__icon{color:#9b43ff}.wa-waterfall-chip[data-service=contactout] .wa-waterfall-chip__icon{color:#009d5f}.wa-waterfall-chip[data-service=prospeo] .wa-waterfall-chip__icon{color:#ff3b30}.wa-waterfall-chip[data-service=waterfall] .wa-waterfall-chip__icon,.wa-waterfall-chip[data-service=forager] .wa-waterfall-chip__icon{color:#514bff}.wa-waterfall-chip[data-service=fullenrich] .wa-waterfall-chip__icon{color:#77736d}.wa-waterfall-chip[data-step-state=pending]{opacity:.62}.wa-waterfall-chip[data-step-state=loading]{opacity:1;color:var(--wa-waterfall-loading-text);border-color:transparent;background:linear-gradient(var(--wa-waterfall-loading-bg),var(--wa-waterfall-loading-bg)) padding-box,linear-gradient(108deg,var(--wa-waterfall-loading-strong) 0%,var(--wa-waterfall-loading-strong) 35%,var(--wa-waterfall-loading-glint) 49%,var(--wa-waterfall-loading-strong) 64%,var(--wa-waterfall-loading-strong) 100%) border-box;background-size:100% 100%,220% 100%;animation:wa-waterfall-service-poll .9s linear infinite;box-shadow:0 1px 3px #11110f1f}.wa-waterfall-chip[data-step-state=complete],.wa-waterfall-chip[data-step-state=failed]{background:var(--wa-waterfall-complete-bg)}.wa-waterfall-chip[data-step-state=complete]{color:#2f8f4c}.wa-waterfall-chip[data-step-state=complete] .wa-waterfall-chip__icon,.wa-waterfall-chip[data-step-state=failed] .wa-waterfall-chip__icon{display:none}.wa-waterfall-chip[data-step-state=complete] .wa-waterfall-chip__state-icon,.wa-waterfall-chip[data-step-state=failed] .wa-waterfall-chip__state-icon{display:inline-grid}.wa-waterfall-chip[data-step-state=complete] .wa-waterfall-chip__state-icon svg:first-child,.wa-waterfall-chip[data-step-state=failed] .wa-waterfall-chip__state-icon svg:last-child{display:block}.wa-waterfall-chip[data-step-state=failed]{color:#bf4941}@keyframes wa-waterfall-service-poll{0%{background-position:0 0,120% 50%}to{background-position:0 0,-120% 50%}}.wa-result-card{display:grid;gap:8px;padding:12px;border:1px solid var(--wa-line-12);border-radius:var(--wa-radius-sm);background:linear-gradient(90deg,var(--wa-card-accent-bg),transparent 42%),var(--wa-color-panel);box-shadow:var(--wa-card-shadow)}.wa-result-card__topline{color:var(--wa-color-accent);font-size:11px;line-height:1.1;font-weight:720;letter-spacing:0;text-transform:uppercase}.wa-result-card__title{margin:0;color:var(--wa-ink);font-size:16px;line-height:1.1;font-weight:700;letter-spacing:0}.wa-result-card__body{margin:0;color:var(--wa-color-muted);font-size:12px;line-height:1.32;font-weight:460}.wa-result-card__rows{display:grid;gap:6px;padding:0;margin:0;list-style:none}.wa-result-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;min-height:30px;padding:7px 9px;border:1px solid var(--wa-line-08);border-radius:var(--wa-radius-sm);color:var(--wa-color-muted);background:var(--wa-row-bg);font-size:12px}.wa-result-row strong{color:var(--wa-ink);font-weight:680;white-space:nowrap}.wa-result-row[data-tone=positive] strong{color:var(--wa-color-positive)}.wa-result-row[data-tone=warning] strong{color:var(--wa-color-warning)}.wa-result-row[data-tone=accent] strong{color:var(--wa-color-accent)}.wa-result-card__actions{display:flex;gap:8px;flex-wrap:wrap}.wa-result-action{display:inline-flex;align-items:center;justify-content:center;min-width:122px;height:34px;padding:0 11px;border:1px solid var(--wa-line-16);border-radius:var(--wa-radius-sm);color:var(--wa-color-inverse);background:var(--wa-color-dark-surface);font-size:12px;font-weight:680;cursor:default;white-space:nowrap}.wa-strategy-plan{--wa-strategy-hover-scale: 1.0175;--wa-strategy-hover-border: #c8c3bb;display:block;min-height:0;overflow:visible}.wa-strategy-plan__surface{display:grid;align-content:start;gap:10px;width:100%;min-height:0;padding:16px 18px 16px 20px;border:1px solid var(--wa-strategy-surface-border);border-radius:7px;background:var(--wa-strategy-surface-bg);box-shadow:var(--wa-strategy-surface-shadow);transform:scale(1) translateZ(0);transform-origin:center;transition:transform 125ms cubic-bezier(.2,.92,.18,1),border-color .12s ease,background-color .12s ease,box-shadow .14s ease}.wa-strategy-plan:hover .wa-strategy-plan__surface,.wa-strategy-plan[data-cursor-hover] .wa-strategy-plan__surface{border-color:var(--wa-strategy-hover-border);background:var(--wa-strategy-surface-hover-bg);box-shadow:var(--wa-strategy-surface-hover-shadow);transform:scale(var(--wa-strategy-hover-scale)) translateZ(0)}.wa-strategy-plan__title{margin:0;color:var(--wa-strategy-title-color);font-family:var(--wa-font-feature);font-size:16px;line-height:1.18;font-weight:400;letter-spacing:0}.wa-strategy-plan__bullets{display:grid;gap:5px;margin:0;padding-left:14px;color:var(--wa-strategy-bullet-color);font-family:var(--wa-font-sans);font-size:12px;line-height:1.34;font-weight:560;letter-spacing:0}.wa-strategy-plan__bullets li{padding-left:2px;white-space:nowrap}.wa-data-source-grid{display:grid;gap:10px;width:min(100%,520px);min-width:0;padding:2px 0}.wa-data-source-grid__header{display:grid;gap:3px}.wa-data-source-grid__title{margin:0;color:var(--wa-ink);font-size:15px;line-height:1.12;font-weight:560;letter-spacing:0}.wa-data-source-grid__subtitle{max-width:430px;margin:0;color:var(--wa-color-muted);font-size:11.5px;line-height:1.26;font-weight:410}.wa-data-source-grid__list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;min-width:0}.wa-data-source-card{display:grid;grid-template-columns:18px minmax(0,1fr);gap:8px;align-items:start;min-width:0;min-height:68px;padding:9px 10px;border:1px solid var(--wa-line-10);border-radius:var(--wa-radius-sm);background:var(--wa-panel);box-shadow:var(--wa-tight-shadow)}.wa-data-source-card__icon{position:relative;width:18px;height:18px;margin-top:1px;border:1px solid var(--wa-line-16);border-radius:6px;background:var(--wa-color-soft-surface)}.wa-data-source-card__icon:before,.wa-data-source-card__icon:after{content:"";position:absolute;border-radius:999px;background:var(--wa-color-accent)}.wa-data-source-card__icon:before{top:5px;left:5px;width:6px;height:6px}.wa-data-source-card__icon:after{right:4px;bottom:4px;width:3px;height:3px}.wa-data-source-card__copy{display:grid;gap:3px;min-width:0}.wa-data-source-card__copy strong{color:var(--wa-ink);font-size:12.5px;line-height:1.12;font-weight:570}.wa-data-source-card__copy span{color:var(--wa-color-muted);font-size:10.5px;line-height:1.22;font-weight:410}.wa-data-source-grid--marketing{position:relative;z-index:0;width:100%;height:var(--wa-data-grid-scaled-height, 100%);min-height:var(--wa-data-grid-scaled-height, 0);max-width:none;padding:0;overflow:hidden;pointer-events:none}.wa-data-source-grid--marketing .wa-data-source-grid__scale{position:absolute;top:0;left:0;display:grid;grid-template-rows:auto auto;align-content:start;gap:68px;width:var(--wa-data-grid-artboard-width, 2048px);height:1280px;padding:80px var(--wa-data-grid-gutter-right, 87px) 0 var(--wa-data-grid-gutter-left, 87px);transform:scale(var(--wa-data-grid-scale, .2880859375));transform-origin:top left}.wa-data-source-grid--marketing .wa-data-source-grid__header{gap:0;max-width:none}.wa-data-source-grid--marketing .wa-data-source-grid__title{font-size:64px;line-height:1.05;font-weight:520;letter-spacing:0;white-space:nowrap}.wa-data-source-grid--marketing .wa-data-source-grid__subtitle{display:none}.wa-data-source-grid__groups{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 26px;min-height:0;min-width:0}.wa-data-source-grid--marketing .wa-data-source-grid__groups{grid-template-columns:repeat(4,438px);gap:43px;align-items:start}.wa-data-source-grid__column{display:grid;align-content:start;gap:14px;min-width:0}.wa-data-source-grid--marketing .wa-data-source-grid__column{gap:34px;width:438px}.wa-data-source-group{display:grid;align-content:start;gap:9px;min-width:0;padding:0;border:0;border-radius:0;background:transparent}.wa-data-source-group__title{margin:0;color:var(--wa-color-muted);font-size:16.5px;line-height:1.05;font-weight:530;letter-spacing:0;text-align:left;text-transform:none}.wa-data-source-grid--marketing .wa-data-source-group{gap:14px}.wa-data-source-grid--marketing .wa-data-source-group__title{font-size:36px;line-height:1.05;font-weight:520}.wa-data-source-grid--marketing .wa-data-source-grid__list{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;width:438px;gap:24px;min-height:0;padding:32px 35px;border-radius:7px;background:var(--wa-color-soft-surface)}.wa-data-source-grid--marketing .wa-data-source-grid__list--count-2{min-height:186px}.wa-data-source-grid--marketing .wa-data-source-grid__list--count-3{min-height:238px}.wa-data-vendor-logo{display:inline-flex;align-items:center;justify-content:flex-start;width:100%;min-width:0;height:auto;min-height:0;max-width:100%;color:var(--wa-color-heading-strong);opacity:1}.wa-data-vendor-logo--image{opacity:1}.wa-data-vendor-logo__mark{display:flex;align-items:center;justify-content:center;width:100%;height:100%;max-width:100%;overflow:hidden;color:currentColor;font-size:30px;line-height:1;font-weight:560;letter-spacing:0;text-align:center;text-overflow:ellipsis;white-space:nowrap;transform:scale(var(--wa-logo-scale, 1));transform-origin:center}.wa-data-vendor-logo__image{display:block;width:auto;height:auto;max-width:100%;max-height:34px;object-fit:contain;object-position:left center;filter:brightness(0) saturate(100%);transform:scale(var(--wa-logo-scale, 1));transform-origin:left center;-webkit-user-select:none;user-select:none}.wa-section[data-resolved-theme=dark] .wa-data-vendor-logo__image{filter:brightness(0) invert(1) sepia(9%) saturate(255%) hue-rotate(8deg) brightness(1.08)}.wa-data-source-grid--marketing .wa-data-vendor-logo{width:max-content;max-width:none}.wa-data-source-grid--marketing .wa-data-vendor-logo__mark{width:max-content;max-width:none;font-size:48px;transform:none;transform-origin:left center}.wa-data-source-grid--marketing .wa-data-vendor-logo__image{width:auto!important;height:auto!important;max-width:none!important;max-height:none!important;transform:none!important}.wa-mini-game,.wa-mailbox-connection,.wa-style-profile,.wa-proximity-list,.wa-sequence-engagement{--wa-story-fit-width: 540px;display:grid;gap:10px;width:min(100%,540px);min-width:0}.wa-style-profile{gap:13px;padding:14px 16px 15px;border:1px solid var(--wa-line-10);border-radius:13px;background:var(--wa-color-data-table-surface);box-shadow:var(--wa-tight-shadow)}.wa-sequence-engagement{--wa-story-fit-width: 712px;gap:14px;width:min(100%,712px)}.wa-mini-game__header,.wa-mailbox-connection__header,.wa-style-profile__header,.wa-proximity-list__header,.wa-sequence-engagement__header{display:grid;gap:3px}.wa-mini-game__eyebrow{color:var(--wa-color-muted);font-size:9px;line-height:1;font-weight:680;text-transform:uppercase}.wa-mini-game__title,.wa-mailbox-connection__title,.wa-style-profile__title,.wa-proximity-list__title,.wa-sequence-engagement__title{margin:0;color:var(--wa-ink);font-size:15px;line-height:1.12;font-weight:560;letter-spacing:0}.wa-mini-game__subtitle,.wa-mailbox-connection__subtitle,.wa-style-profile__subtitle,.wa-proximity-list__subtitle,.wa-sequence-engagement__subtitle{margin:0;color:var(--wa-color-muted);font-size:11.5px;line-height:1.26;font-weight:410}.wa-style-profile__title{font-family:var(--wa-font-feature);font-weight:400}.wa-mailbox-connection{gap:15px}.wa-mailbox-connection__card{display:grid;grid-template-columns:minmax(0,1fr) 124px;gap:14px;align-items:center;min-width:0;padding:14px 14px 14px 16px;border:1px solid var(--wa-mailbox-card-border);border-radius:12px;background:var(--wa-mailbox-card-bg);box-shadow:inset 0 0 0 1px var(--wa-mailbox-card-inset)}.wa-mailbox-connection__copy{display:grid;gap:15px;min-width:0;box-sizing:border-box;padding-left:8px}.wa-mailbox-connection__title{font-size:20px;line-height:1.08;font-weight:560}.wa-mailbox-connection__subtitle{max-width:310px;color:var(--wa-ink);font-size:14px;line-height:1.28;font-weight:400}.wa-mailbox-connection__actions{display:grid;gap:9px;justify-self:end;width:124px;min-width:0}.wa-mailbox-connection__button{position:relative;isolation:isolate;display:grid;grid-template-columns:20px max-content;align-items:center;justify-content:center;gap:8px;width:100%;min-width:0;min-height:40px;padding:0 10px;border:1px solid var(--wa-mailbox-button-border);border-radius:5px;color:var(--wa-mailbox-button-text);background:var(--wa-mailbox-button-bg);font:inherit;font-size:15.5px;line-height:1;font-weight:430;letter-spacing:0;cursor:default;overflow:visible;transform:translateZ(0)}.wa-mailbox-connection__button:before,.wa-mailbox-connection__button:after{content:"";position:absolute;pointer-events:none;opacity:0}.wa-mailbox-connection__button:before{inset:-1px;z-index:0;border-radius:inherit;background:radial-gradient(circle at 50% 50%,rgba(234,67,53,.82),transparent 34%),linear-gradient(90deg,#ea433500,#ea433566,#ea433500);background-position:0% 50%,0% 50%;background-size:220% 100%,220% 100%;filter:blur(7px)}.wa-mailbox-connection__button:after{inset:0;z-index:1;border-radius:inherit;padding:1px;background:radial-gradient(circle at 50% 50%,rgba(234,67,53,.95),rgba(234,67,53,.26) 34%,transparent 54%),linear-gradient(90deg,transparent,rgba(234,67,53,.52),transparent);background-position:0% 50%,0% 50%;background-size:220% 100%,220% 100%;-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude}.wa-mailbox-connection__button>*{position:relative;z-index:2}.wa-mailbox-connection__button:disabled{opacity:1;pointer-events:none}.wa-mailbox-connection__provider-icon{display:block;width:20px;height:20px;flex-shrink:0;object-fit:contain}.wa-mailbox-connection__button-copy{display:grid;width:max-content;min-width:0;align-items:center}.wa-mailbox-connection__provider-label,.wa-mailbox-connection__button-label{grid-area:1 / 1;display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:opacity .18s ease,transform .18s ease}.wa-mailbox-connection__button-label[data-mailbox-button-label=loading],.wa-mailbox-connection__button-label[data-mailbox-button-label=connected],.wa-mailbox-connection__spinner{display:none;opacity:0;transform:translateY(5px)}.wa-mailbox-connection[data-mailbox-state=loading] [data-mailbox-connect] .wa-mailbox-connection__button-label[data-mailbox-button-label=idle],.wa-mailbox-connection[data-mailbox-state=connected] [data-mailbox-connect] .wa-mailbox-connection__button-label[data-mailbox-button-label=idle]{display:none;opacity:0;transform:translateY(-5px)}.wa-mailbox-connection[data-mailbox-state=loading] [data-mailbox-connect] .wa-mailbox-connection__button-label[data-mailbox-button-label=loading],.wa-mailbox-connection[data-mailbox-state=connected] [data-mailbox-connect] .wa-mailbox-connection__button-label[data-mailbox-button-label=connected]{display:block;opacity:1;transform:translateY(0)}.wa-mailbox-connection[data-mailbox-state=connected] [data-mailbox-connect] .wa-mailbox-connection__button-label[data-mailbox-button-label=connected]{display:inline-flex;align-items:center;gap:4px}.wa-mailbox-connection__connected-icon{display:block;width:16px;height:16px;color:currentColor;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:0 0 16px}.wa-mailbox-connection[data-mailbox-state=loading] [data-mailbox-connect]{grid-template-columns:max-content;border-color:#ea433561}.wa-mailbox-connection[data-mailbox-state=loading] [data-mailbox-connect]:before{opacity:0;animation:none}.wa-mailbox-connection[data-mailbox-state=loading] [data-mailbox-connect]:after{opacity:1;animation:wa-mailbox-gmail-radiate 1.16s ease-in-out infinite}.wa-mailbox-connection[data-mailbox-state=loading] [data-mailbox-connect] .wa-mailbox-connection__provider-icon,.wa-mailbox-connection[data-mailbox-state=loading] [data-mailbox-connect] .wa-mailbox-connection__spinner{display:none}.wa-mailbox-connection[data-mailbox-state=connected] [data-mailbox-connect]{grid-template-columns:max-content;color:var(--wa-mailbox-connected-text);border-color:var(--wa-mailbox-connected-border);background:transparent;box-shadow:none}.wa-mailbox-connection[data-mailbox-state=connected] [data-mailbox-connect] .wa-mailbox-connection__provider-icon{display:none}.wa-mailbox-connection__spinner{position:absolute;right:9px;width:12px;height:12px;border:1.5px solid var(--wa-mailbox-spinner-border);border-top-color:currentColor;border-radius:999px;animation:wa-spin .76s linear infinite}.wa-mailbox-learning{display:none;grid-template-columns:44px max-content minmax(90px,1fr);grid-template-rows:auto auto;grid-template-areas:"thumb title progress" "thumb detail progress";align-items:center;gap:5px 14px;margin-top:8px;padding:0;color:var(--wa-color-muted);background:transparent}.wa-mailbox-learning__thumbprint{grid-area:thumb;display:grid;place-items:center;width:44px;height:44px;background:transparent}.wa-mailbox-learning__title{grid-area:title;display:inline-flex;align-items:center;gap:6px;margin:0;color:var(--wa-mailbox-learning-title);font-size:14px;line-height:1;font-weight:560;white-space:nowrap}.wa-mailbox-learning__ready-chevron{position:relative;top:-1px;display:inline-block;width:9px;height:9px;color:currentColor;opacity:0;transform-origin:center}.wa-mailbox-learning__ready-chevron:before{content:"";position:absolute;top:0;left:1px;width:6px;height:6px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg)}.wa-mailbox-learning[data-mailbox-learning-state=ready] .wa-mailbox-learning__title{color:var(--wa-mailbox-learning-ready)}.wa-mailbox-learning[data-mailbox-learning-state=ready] .wa-mailbox-learning__progress{display:none}.wa-mailbox-learning__detail{grid-area:detail;margin:0;color:var(--wa-mailbox-learning-detail);font-size:13px;line-height:1.15;font-weight:400}.wa-mailbox-thumbprint{width:36px;height:36px;overflow:visible;color:var(--wa-mailbox-thumbprint)}.wa-mailbox-thumbprint__base path,.wa-mailbox-thumbprint__fill path{stroke-width:5.4}.wa-mailbox-thumbprint__base path{stroke:color-mix(in srgb,currentColor 14%,transparent)}.wa-mailbox-thumbprint__fill path{stroke:currentColor}.wa-mailbox-learning__progress{grid-area:progress;align-self:center;height:4px;overflow:hidden;border-radius:999px;background:var(--wa-mailbox-progress-bg)}.wa-mailbox-learning__progress span{display:block;width:100%;height:100%;border-radius:inherit;background:var(--wa-mailbox-learning-title);transform:scaleX(0);transform-origin:left center}.wa-swipe-game{gap:9px;max-width:520px}.wa-swipe-game__prompt{margin:0;color:var(--wa-ink);font-size:12px;line-height:1.28;font-weight:430}.wa-swipe-game__axis{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;color:var(--wa-color-muted);font-size:10px;line-height:1;font-weight:520}.wa-swipe-game__axis span:first-child{color:#7f1d1d94}.wa-swipe-game__axis span:nth-child(2){color:var(--wa-color-muted);font-variant-numeric:tabular-nums}.wa-swipe-game__axis span:last-child{justify-self:end;color:#1665349e}.wa-swipe-game__stack{position:relative;height:184px;overflow:visible}.wa-swipe-game__glow{position:absolute;inset:12px -18px 0;z-index:0;border-radius:999px;background:linear-gradient(90deg,rgba(127,29,29,.055),transparent 42%,transparent 58%,rgba(22,101,52,.065));filter:blur(22px);pointer-events:none}.wa-swipe-card,.wa-swipe-game__complete{position:absolute;inset:0;display:grid;align-content:center;justify-items:center;min-width:0;border:1px solid rgba(228,228,231,.82);border-radius:21px;background:#fafafa;text-align:center;box-shadow:0 18px 45px #00000014}.wa-swipe-card{gap:13px;padding:22px 26px}.wa-swipe-game[data-swipe-decision=avoid] .wa-swipe-card[data-swipe-state=active]{border-color:#d298989e;background:linear-gradient(135deg,#f8f1f1,#fafafa 68%);box-shadow:-22px 28px 70px #7f1d1d1f}.wa-swipe-game[data-swipe-decision=use] .wa-swipe-card[data-swipe-state=active]{border-color:#8eb79da3;background:linear-gradient(135deg,#fafafa 32%,#f0f7f2);box-shadow:22px 28px 70px #1665341f}.wa-swipe-card__label{max-width:360px;color:var(--wa-ink);font-size:20px;line-height:1.05;font-weight:580;letter-spacing:0}.wa-swipe-card__detail{max-width:340px;color:var(--wa-color-muted);font-size:11.5px;line-height:1.35;font-weight:410}.wa-swipe-game__actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;max-width:420px}.wa-swipe-game__action{position:relative;display:inline-flex;align-items:center;justify-content:center;min-height:38px;border:1px solid var(--wa-line-12);border-radius:999px;background:var(--wa-panel);cursor:default}.wa-swipe-game__action:before,.wa-swipe-game__action:after{content:"";position:absolute;display:block}.wa-swipe-game__action[data-swipe-action=avoid]{border-color:#d298987a;background:#f8f1f1e6}.wa-swipe-game__action[data-swipe-action=avoid]:before,.wa-swipe-game__action[data-swipe-action=avoid]:after{width:14px;height:1.5px;border-radius:999px;background:#ba4d4d}.wa-swipe-game__action[data-swipe-action=avoid]:before{transform:rotate(45deg)}.wa-swipe-game__action[data-swipe-action=avoid]:after{transform:rotate(-45deg)}.wa-swipe-game__action[data-swipe-action=use]{border-color:#8eb79d80;background:#f0f7f2f2}.wa-swipe-game__action[data-swipe-action=use]:before{width:13px;height:7px;border-bottom:1.7px solid #2f8f4d;border-left:1.7px solid #2f8f4d;transform:translateY(-1px) rotate(-45deg)}.wa-swipe-game__action[data-active=true]{border-color:var(--wa-ink)}.wa-swipe-game__complete{z-index:10;color:var(--wa-ink);font-size:17px;line-height:1.1;font-weight:560}.wa-sequence-engagement__header{grid-template-columns:minmax(0,1fr);align-items:start}.wa-sequence-engagement__subtitle{grid-column:1 / -1}.wa-style-profile__rows{display:grid;grid-template-columns:minmax(0,1fr);gap:0;border-top:1px solid var(--wa-line-08)}.wa-style-profile__row{display:grid;grid-template-columns:104px minmax(0,1fr);gap:14px;align-items:start;min-height:0;padding:10px 0;border-bottom:1px solid var(--wa-line-08);background:transparent}.wa-style-profile__row span{color:var(--wa-color-muted);font-size:11px;line-height:1.18;font-weight:560}.wa-style-profile__row strong{color:var(--wa-ink);font-size:12.5px;line-height:1.28;font-weight:430}.wa-style-profile__examples{display:grid;gap:0}.wa-style-profile__example{position:relative;margin:0;padding:6px 0 6px 16px;color:var(--wa-ink);background:transparent;font-size:12px;line-height:1.34;font-weight:430}.wa-style-profile__example:before{content:"";position:absolute;top:14px;left:2px;width:4px;height:4px;border-radius:999px;background:var(--wa-color-muted)}.wa-proximity-list__rows{display:grid;gap:7px}.wa-proximity-lead{display:grid;grid-template-columns:30px minmax(0,1fr);gap:9px;min-width:0;padding:9px 10px;border:1px solid var(--wa-line-10);border-radius:var(--wa-radius-sm);background:var(--wa-panel);box-shadow:var(--wa-tight-shadow)}.wa-proximity-lead__rank{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:999px;color:var(--wa-color-inverse);background:var(--wa-color-dark-surface);font-size:11px;line-height:1;font-weight:660}.wa-proximity-lead__body{display:grid;gap:5px;min-width:0}.wa-proximity-lead__top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:start}.wa-proximity-lead__identity{display:grid;gap:2px;min-width:0}.wa-proximity-lead__identity strong{color:var(--wa-ink);font-size:12.5px;line-height:1.1;font-weight:570}.wa-proximity-lead__identity span{color:var(--wa-color-muted);font-size:10px;line-height:1.1;font-weight:410}.wa-proximity-lead__score{color:var(--wa-color-accent);font-size:11px;line-height:1;font-weight:680}.wa-proximity-lead__personalization{margin:0;color:var(--wa-ink);font-size:11px;line-height:1.22;font-weight:430}.wa-proximity-lead__proximity{color:var(--wa-color-muted);font-size:9.5px;line-height:1;font-weight:620;text-transform:uppercase}.wa-sequence-engagement__sequences{display:grid;gap:24px}.wa-sequence-people-wrap{--wa-sequence-person-card-min-width: 112px;position:relative;isolation:isolate;width:100%;min-width:0;max-width:100%;overflow:visible}.wa-sequence-people-wrap:after{content:"";position:absolute;right:0;bottom:0;left:0;z-index:0;height:1px;background:var(--wa-sequence-tab-line-stroke);pointer-events:none;-webkit-mask-image:linear-gradient(to right,transparent 0,#000 34px,#000 calc(100% - 34px),transparent 100%);mask-image:linear-gradient(to right,transparent 0,#000 34px,#000 calc(100% - 34px),transparent 100%)}.wa-sequence-people{--wa-sequence-person-card-min-width: 112px;position:relative;z-index:1;isolation:isolate;display:flex;gap:4px;align-items:end;width:100%;max-width:100%;margin:0;padding:3px max(16px,calc(50% - var(--wa-sequence-person-card-min-width) / 2)) 0;overflow-x:auto;overflow-y:visible;scroll-snap-type:none;scroll-padding-inline:max(16px,calc(50% - var(--wa-sequence-person-card-min-width) / 2));scrollbar-width:none;-webkit-mask-image:linear-gradient(to right,transparent 0,#000 34px,#000 calc(100% - 34px),transparent 100%);mask-image:linear-gradient(to right,transparent 0,#000 34px,#000 calc(100% - 34px),transparent 100%)}.wa-sequence-people::-webkit-scrollbar{display:none}.wa-sequence-people[data-sequence-centering=true]{scroll-snap-type:none}.wa-sequence-person-card{position:relative;z-index:1;display:grid;flex:0 0 auto;grid-template-columns:28px max-content;gap:8px;align-items:center;width:max-content;min-width:var(--wa-sequence-person-card-min-width);min-height:46px;padding:8px 10px 9px;border:1px solid var(--wa-line-08);border-bottom-color:transparent;border-radius:9px 9px 0 0;color:var(--wa-ink);background:var(--wa-sequence-person-bg);background-clip:padding-box;font:inherit;text-align:left;opacity:.66;cursor:pointer;scroll-snap-align:none;transform:translateZ(0);transform-origin:center;backface-visibility:hidden;will-change:transform,opacity;transition:border-color .16s ease,background .16s ease,box-shadow .16s ease,opacity .16s ease,transform .18s cubic-bezier(.2,.8,.2,1)}.wa-sequence-person-card:is(:hover,[data-active=true]){border-color:var(--wa-sequence-person-border);background:var(--wa-panel);opacity:1}.wa-sequence-person-card[data-active=true]{z-index:3;border-color:var(--wa-sequence-person-active-border);border-bottom-color:var(--wa-panel);box-shadow:none;background-clip:border-box}.wa-sequence-person-card[data-active=true]:after{content:none}.wa-sequence-person-card__avatar-wrap{position:relative;display:inline-grid;width:28px;height:28px}.wa-sequence-person-card__avatar{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;overflow:hidden;border:1px solid rgba(17,17,15,.08);border-radius:999px;color:#11110f;background:#e8f3ff;font-size:10px;line-height:1;font-weight:620}.wa-sequence-person-card__company{position:absolute;right:-1px;bottom:-1px;display:grid;place-items:center;width:12px;height:12px;overflow:hidden;border:0;border-radius:999px;background:transparent;box-shadow:0 0 0 1.5px var(--wa-panel),0 1px 2px #11110f1f}.wa-sequence-person-card__company img{display:block;width:100%;height:100%;border-radius:inherit;object-fit:cover}.wa-sequence-person-card__avatar img{display:block;width:100%;height:100%;object-fit:cover}.wa-sequence-person-card__avatar[data-avatar-tone="2"]{background:#f1eadf}.wa-sequence-person-card__avatar[data-avatar-tone="3"]{background:#e9f5e6}.wa-sequence-person-card__avatar[data-avatar-tone="4"]{background:#f4e8ec}.wa-sequence-person-card__avatar[data-avatar-tone="5"]{background:#e8f1f0}.wa-sequence-person-card__avatar[data-avatar-tone="6"]{background:#f1ede7}.wa-sequence-person-card__avatar[data-avatar-tone="7"]{background:#e9edf5}.wa-sequence-person-card__avatar[data-avatar-tone="8"]{background:#f2eeee}.wa-sequence-person-card__avatar[data-avatar-tone="9"]{background:#edf3e8}.wa-sequence-person-card__copy{display:grid;gap:2px;width:max-content;min-width:0}.wa-sequence-person-card__copy strong{overflow:visible;color:var(--wa-ink);font-size:12px;line-height:1.1;font-weight:560;text-overflow:clip;white-space:nowrap}.wa-sequence-person-card__copy span{overflow:visible;color:var(--wa-color-muted);font-size:10px;line-height:1.12;font-weight:410;text-overflow:clip;white-space:nowrap}.wa-sequence-card{display:grid;grid-template-columns:minmax(0,248px) minmax(0,424px);gap:16px;align-items:start;justify-content:center;min-width:0;padding:0;border:0;background:transparent;box-shadow:none}.wa-sequence-card__top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:start}.wa-sequence-card__identity{display:grid;gap:2px;min-width:0}.wa-sequence-card__identity strong{color:var(--wa-ink);font-size:12.5px;line-height:1.1;font-weight:570}.wa-sequence-card__identity span,.wa-sequence-card__personalization{color:var(--wa-color-muted);font-size:10.5px;line-height:1.22;font-weight:410}.wa-sequence-card__label{color:var(--wa-color-accent);font-size:9.5px;line-height:1;font-weight:680;text-transform:uppercase}.wa-sequence-card__subject{margin:0;color:var(--wa-ink);font-size:12px;line-height:1.18;font-weight:540}.wa-sequence-card__personalization{margin:0}.wa-sequence-steps{--wa-sequence-dot-stroke: var(--wa-panel);--wa-sequence-dot-center: 8.5px;--wa-sequence-step-size: 82px;display:grid;position:relative;grid-template-columns:52px 10px minmax(0,1fr);align-content:start;column-gap:8px;row-gap:0;min-width:0;margin:14px 0 0;color:var(--wa-sequence-step-muted)}.wa-sequence-step{position:relative;display:grid;grid-column:2 / 4;grid-template-columns:10px minmax(0,1fr);align-content:start;column-gap:12px;row-gap:8px;align-items:start;width:100%;min-height:var(--wa-sequence-step-size);padding:0;border:0;border-radius:0;color:var(--wa-sequence-step-muted);background:transparent;font:inherit;text-align:left;cursor:pointer}.wa-sequence-step:before{content:"";position:absolute;top:calc(var(--wa-sequence-dot-center) - 5.5px);left:-.5px;z-index:2;width:7px;height:7px;box-sizing:content-box;border:2px solid var(--wa-sequence-dot-stroke);border-radius:999px;background:var(--wa-sequence-dot-color)}.wa-sequence-step:after{content:"";position:absolute;top:var(--wa-sequence-dot-center);left:4.5px;z-index:1;width:1px;height:var(--wa-sequence-step-size);border-radius:999px;background:var(--wa-sequence-dot-color)}.wa-sequence-step:last-of-type:after{content:none}.wa-sequence-step__channel{display:inline-flex;grid-column:2;align-items:center;justify-content:start;gap:7px;min-height:0;padding:0;border-radius:0;color:var(--wa-sequence-step-muted);background:transparent;font-size:12px;line-height:1;font-weight:500;text-transform:none;transform:translateY(1px)}.wa-sequence-step__icon{display:inline-flex;width:14px;height:14px;align-items:center;justify-content:center;color:currentColor;transform:translateY(-1px)}.wa-sequence-step__icon svg{display:block;width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.05;stroke-linecap:round;stroke-linejoin:round}.wa-sequence-step[data-channel=linkedin] .wa-sequence-step__channel,.wa-sequence-step[data-channel=call] .wa-sequence-step__channel{color:var(--wa-sequence-step-muted);background:transparent}.wa-sequence-step__copy{display:grid;grid-column:2;gap:5px;min-width:0}.wa-sequence-step__copy strong{color:currentColor;font-size:14px;line-height:1.05;font-weight:520;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.wa-sequence-step__copy strong[data-sequence-content-swap-active=true],.wa-sequence-copy-panel__meta[data-sequence-content-swap-active=true],.wa-sequence-copy-panel__subject[data-sequence-content-swap-active=true],.wa-sequence-copy-panel__body[data-sequence-content-swap-active=true]{position:relative;overflow:hidden}.wa-sequence-step__copy strong[data-sequence-content-swap-active=true]{display:block}.wa-sequence-content-swap-clone{position:absolute;inset:0;box-sizing:border-box;display:block;width:100%;max-width:100%;min-width:0;padding:inherit;gap:inherit;color:inherit;font:inherit;line-height:inherit;pointer-events:none;opacity:0;visibility:hidden}.wa-sequence-step__copy strong .wa-sequence-content-swap-clone{display:block;color:inherit;font-size:inherit;font-weight:inherit;line-height:inherit;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.wa-sequence-copy-panel__meta .wa-sequence-content-swap-clone{display:flex;align-items:center}.wa-sequence-copy-panel:not([data-copy-channel=connect]):not([data-copy-channel=call]) .wa-sequence-copy-panel__subject .wa-sequence-content-swap-clone{display:flex;align-items:center}.wa-sequence-copy-panel[data-copy-channel=call] .wa-sequence-copy-panel__body .wa-sequence-content-swap-clone{display:grid;align-items:inherit;justify-items:inherit}.wa-sequence-copy-panel[data-copy-channel=call] .wa-sequence-copy-panel__subject[data-sequence-content-swap-active=true],.wa-sequence-copy-panel[data-copy-channel=call] .wa-sequence-copy-panel__body[data-sequence-content-swap-active=true]{overflow:visible}.wa-sequence-step__copy span{color:var(--wa-color-muted);font-size:10px;line-height:1.22;font-weight:410}.wa-sequence-step[data-step-open=false]{align-items:start;padding:0}.wa-sequence-step[data-step-selected=true]{color:var(--wa-sequence-step-selected);background:transparent}.wa-sequence-step[data-step-selected=true]:before{background:var(--wa-sequence-dot-selected)}.wa-sequence-step[data-step-selected=true] .wa-sequence-step__channel{color:var(--wa-sequence-step-selected)}.wa-sequence-step[data-step-open=false] .wa-sequence-step__copy span{display:none}.wa-sequence-step[data-step-open=false] .wa-sequence-step__copy strong .wa-sequence-content-swap-clone{display:block}.wa-sequence-wait{display:grid;grid-column:1;align-items:center;justify-items:end;min-height:var(--wa-sequence-step-size);margin-top:0;padding:0 8px 0 0;color:var(--wa-sequence-wait);font-size:10px;line-height:1.12;font-weight:500;letter-spacing:0;text-align:right;transform:translateY(calc(var(--wa-sequence-dot-center) - var(--wa-sequence-step-size)))}.wa-sequence-wait:before{content:none}.wa-sequence-wait__label{display:grid;width:44px;justify-items:end;text-align:right;white-space:normal}.wa-sequence-wait__prefix,.wa-sequence-wait__value{display:block}.wa-sequence-wait__prefix{padding-right:1px}.wa-sequence-copy-panel{display:grid;align-content:start;gap:0;min-width:0;min-height:336px;padding:0;overflow:hidden;border:1px solid var(--wa-sequence-tab-line-stroke);border-radius:8px;background:var(--wa-panel);box-shadow:var(--wa-sequence-panel-shadow)}.wa-sequence-copy-panel[data-copy-channel=connect],.wa-sequence-copy-panel[data-copy-channel=call]{grid-template-rows:auto auto 1fr}.wa-sequence-copy-panel__meta{display:flex;gap:4px;align-items:center;min-height:36px;padding:0 12px;border-bottom:1px solid var(--wa-sequence-panel-line);background:var(--wa-sequence-panel-header-bg);color:var(--wa-sequence-panel-muted);font-size:13px;line-height:1;font-weight:410;text-transform:none}.wa-sequence-copy-panel__meta strong{color:var(--wa-sequence-panel-strong);font-weight:410}.wa-sequence-copy-panel[data-copy-channel=connect] .wa-sequence-copy-panel__meta,.wa-sequence-copy-panel[data-copy-channel=call] .wa-sequence-copy-panel__meta{color:var(--wa-ink);font-weight:410}.wa-sequence-copy-panel__subject{display:flex;align-items:center;min-height:36px;padding:0 12px;border-bottom:1px solid var(--wa-sequence-panel-line);color:var(--wa-ink);font-size:14px;line-height:1.12;font-weight:600}.wa-sequence-copy-panel[data-copy-channel=connect] .wa-sequence-copy-panel__subject{display:block;min-height:69px;margin:14px 12px 0;padding:10px 12px;border:1px solid var(--wa-sequence-field-border);border-radius:4px;color:var(--wa-sequence-field-text);font-size:13px;line-height:1.45;font-weight:500}.wa-sequence-copy-panel[data-copy-channel=call] .wa-sequence-copy-panel__subject{display:block;min-height:0;padding:14px 12px 0;border-bottom:0;color:var(--wa-sequence-field-text);font-size:13px;line-height:1.45;font-weight:500}.wa-sequence-copy-panel__body{margin:0;padding:13px 12px;color:var(--wa-ink);font-size:13px;line-height:1.48;font-weight:500;white-space:pre-line}.wa-sequence-copy-panel[data-copy-channel=connect] .wa-sequence-copy-panel__body{justify-self:end;margin:0;padding:8px 16px 0 0;color:var(--wa-sequence-connect-muted);font-size:12px;line-height:1;font-weight:520;white-space:normal}.wa-sequence-copy-panel[data-copy-channel=call] .wa-sequence-copy-panel__body{display:grid;align-items:end;justify-items:center;min-height:0;padding:0 18px 29px;white-space:normal}.wa-sequence-call-action{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:11px;align-items:center;width:min(100%,286px);min-height:50px;padding:5px 7px 5px 6px;border:1px solid var(--wa-sequence-field-border);border-radius:999px;background:var(--wa-panel);box-shadow:0 1px 2px #11110f1f,0 10px 20px #11110f14}.wa-sequence-call-action__avatar{display:inline-grid;place-items:center;width:34px;height:34px;overflow:hidden;border-radius:999px;background:var(--wa-sequence-call-avatar-bg);color:var(--wa-ink);font-size:10px;line-height:1;font-weight:620;filter:grayscale(1);opacity:.74}.wa-sequence-call-action__avatar img{display:block;width:100%;height:100%;object-fit:cover;filter:grayscale(1)}.wa-sequence-call-action__copy{display:grid;gap:2px;min-width:0;color:var(--wa-sequence-call-copy)}.wa-sequence-call-action__copy strong{overflow:hidden;color:var(--wa-sequence-call-copy);font-size:13px;line-height:1.08;font-weight:520;text-overflow:ellipsis;white-space:nowrap}.wa-sequence-call-action__copy span{overflow:hidden;color:var(--wa-sequence-call-muted);font-size:12px;line-height:1.08;font-weight:410;text-overflow:ellipsis;white-space:nowrap}.wa-sequence-call-action__button{display:inline-flex;gap:5px;align-items:center;justify-content:center;min-width:74px;min-height:35px;padding:0 13px;border-radius:999px;color:var(--wa-sequence-call-button-text);background:var(--wa-sequence-call-button-bg);font-size:13px;line-height:1;font-weight:620}.wa-sequence-call-action__icon,.wa-sequence-call-action__icon svg{display:block;width:15px;height:15px}.wa-sequence-call-action__icon svg{fill:none;stroke:currentColor;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round}.wa-sequence-step__copy strong,.wa-sequence-copy-panel__meta,.wa-sequence-copy-panel__subject,.wa-sequence-copy-panel__body{backface-visibility:hidden;transform:translateZ(0);will-change:transform,opacity}.wa-engage-channels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.wa-engage-channel{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px;align-items:start;min-width:0;min-height:58px;padding:9px 10px;border:1px solid var(--wa-line-10);border-radius:var(--wa-radius-sm);color:var(--wa-ink);background:var(--wa-row-bg);font:inherit;text-align:left}.wa-engage-channel__copy{display:grid;gap:3px;min-width:0}.wa-engage-channel__copy strong{color:var(--wa-ink);font-size:11px;line-height:1.1;font-weight:570}.wa-engage-channel__copy span{color:var(--wa-color-muted);font-size:9.5px;line-height:1.16;font-weight:410}.wa-engage-channel__badge{display:inline-flex;align-items:center;min-height:17px;padding:0 6px;border-radius:999px;color:var(--wa-color-inverse);background:var(--wa-color-accent);font-size:8px;line-height:1;font-weight:740;text-transform:uppercase;white-space:nowrap}.wa-sequence-actions{display:flex;gap:8px;align-items:center;justify-content:center;justify-self:stretch;width:100%}.wa-sequence-action,.wa-sequence-kickoff{display:inline-flex;align-items:center;justify-content:center;width:auto;min-width:0;min-height:32px;padding:0 12px;border:1px solid var(--wa-ink);border-radius:var(--wa-radius-sm);font:inherit;text-align:center;cursor:pointer}.wa-sequence-action--draft{border-color:var(--wa-sequence-draft-border);color:var(--wa-color-muted);background:var(--wa-sequence-draft-bg)}.wa-sequence-kickoff{color:var(--wa-color-inverse);background:var(--wa-ink);box-shadow:0 10px 22px #1717141f}.wa-sequence-kickoff__label{font-size:11px;line-height:1.05;font-weight:580}.wa-sequence-kickoff[data-processing=true]{gap:7px;cursor:progress}.wa-sequence-kickoff[data-processing=true]:before{content:"";display:block;width:11px;height:11px;border:1.4px solid currentColor;border-right-color:transparent;border-radius:999px;opacity:.86;animation:wa-spin .72s linear infinite}.wa-enrollment-mail{position:absolute;z-index:6;display:grid;place-items:center;width:16px;height:16px;color:var(--wa-color-accent);pointer-events:none;will-change:transform,opacity;filter:drop-shadow(0 2px 4px rgba(23,23,20,.14));animation:wa-enrollment-mail-color-shift .24s cubic-bezier(.2,.88,.28,1) both}.wa-enrollment-mail__icon{display:block;width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}.wa-section[data-resolved-theme=dark] .wa-enrollment-mail{filter:drop-shadow(0 2px 5px rgba(0,0,0,.38))}.wa-composer{position:absolute;right:var(--wa-composer-side-inset);bottom:var(--wa-composer-bottom-outset);left:var(--wa-composer-side-inset);z-index:3;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto;gap:8px;align-items:stretch;height:var(--wa-composer-height);min-height:0;padding:18px 10px 10px 20px;margin:0;overflow:hidden;border:1px solid var(--wa-color-input-line);border-radius:9px;background:var(--wa-color-data-table-surface);box-shadow:var(--wa-composer-shadow);transform-origin:center center;contain:layout paint style;backface-visibility:hidden;transition:border-color .14s ease,box-shadow .14s ease}.wa-composer[data-visible=false]{pointer-events:none}.wa-composer__placeholder{display:flex;grid-row:1;align-items:flex-start;align-self:start;min-width:0;min-height:20px;padding:0;overflow:hidden;border:0;border-radius:0;color:var(--wa-ink);background:transparent;font-size:16px;line-height:1.32;font-weight:400;overflow-wrap:anywhere;white-space:normal}.wa-composer__placeholder:empty:before{content:"Ask anything...";color:var(--wa-placeholder)}.wa-composer__controls{display:inline-flex;grid-row:2;align-items:center;justify-self:end;gap:12px;min-width:0}.wa-composer__select{display:inline-flex;align-items:center;gap:5px;color:var(--wa-color-muted);font-size:12px;line-height:1;font-weight:410;white-space:nowrap}.wa-composer__chevron{display:block;width:16px;height:16px;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.wa-composer__send{display:inline-flex;align-items:center;justify-content:center;width:var(--wa-composer-send-size);min-width:var(--wa-composer-send-size);height:var(--wa-composer-send-size);padding:0;border:0;border-radius:999px;color:var(--wa-color-inverse);background:var(--wa-color-dark-surface);line-height:1;cursor:default;white-space:nowrap}.wa-composer__send-icon{display:block;width:16px;height:16px;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.wa-composer__placeholder:empty~.wa-composer__controls .wa-composer__send{background:var(--wa-signup-submit-bg)}.wa-history-resume{position:absolute;right:auto;bottom:calc(var(--wa-composer-bottom-outset) + var(--wa-composer-height) - var(--wa-history-resume-height) - var(--wa-history-resume-y-offset));left:50%;z-index:5;display:inline-flex;align-items:center;gap:10px;min-height:var(--wa-history-resume-height);padding:0 18px 0 12px;border:1px solid var(--wa-line-12);border-radius:999px;color:var(--wa-color-heading-strong);background:var(--wa-color-data-table-surface);box-shadow:var(--wa-card-shadow);font:inherit;font-size:13px;line-height:1;font-weight:520;letter-spacing:0;cursor:default;opacity:0;pointer-events:none;transform:translate(-50%,6px) scale(.98);transition:opacity .16s ease,transform .18s ease}.wa-section[data-chat-history-paused=true] .wa-history-resume{opacity:1;pointer-events:auto;transform:translate(-50%) scale(1)}.wa-history-resume__icon{position:relative;display:grid;place-items:center;width:24px;height:24px;border-radius:999px;color:var(--wa-color-inverse);background:var(--wa-color-dark-surface);font-size:0;line-height:0}.wa-history-resume__svg{display:block;width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.wa-stage__eyebrow,.wa-stage__label,.wa-stage__status{display:none}.wa-section[data-resolved-theme=dark] .wa-data-table-person__avatar{border-color:var(--wa-line-12);color:var(--wa-color-heading-strong);background:linear-gradient(145deg,#50545d,#25272d)}.wa-section[data-resolved-theme=dark] .wa-data-table-person__avatar[data-avatar-tone="2"]{background:linear-gradient(145deg,#355c48,#1d3329)}.wa-section[data-resolved-theme=dark] .wa-data-table-person__avatar[data-avatar-tone="3"],.wa-section[data-resolved-theme=dark] .wa-data-table-person__avatar[data-avatar-tone="6"]{background:linear-gradient(145deg,#2d6d7f,#173743)}.wa-section[data-resolved-theme=dark] .wa-data-table-person__avatar[data-avatar-tone="4"],.wa-section[data-resolved-theme=dark] .wa-data-table-person__avatar[data-avatar-tone="7"]{background:linear-gradient(145deg,#5d5349,#302b25)}.wa-section[data-resolved-theme=dark] .wa-data-table-person__avatar[data-avatar-tone="5"]{background:linear-gradient(145deg,#4b4650,#19191c)}.wa-section[data-resolved-theme=dark] .wa-data-table-person__avatar[data-avatar-tone="8"]{background:linear-gradient(145deg,#087bb9,#063f6b)}.wa-section[data-resolved-theme=dark] .wa-data-table-person__avatar[data-avatar-tone="9"]{background:linear-gradient(145deg,#625848,#2b241f)}.wa-section[data-resolved-theme=dark] .wa-sequence-person-card__avatar{border-color:var(--wa-line-12);color:var(--wa-color-heading-strong);background:#253747}.wa-section[data-resolved-theme=dark] .wa-sequence-person-card__avatar[data-avatar-tone="2"],.wa-section[data-resolved-theme=dark] .wa-sequence-person-card__avatar[data-avatar-tone="6"]{background:#3a332a}.wa-section[data-resolved-theme=dark] .wa-sequence-person-card__avatar[data-avatar-tone="3"],.wa-section[data-resolved-theme=dark] .wa-sequence-person-card__avatar[data-avatar-tone="9"]{background:#263a2b}.wa-section[data-resolved-theme=dark] .wa-sequence-person-card__avatar[data-avatar-tone="4"],.wa-section[data-resolved-theme=dark] .wa-sequence-person-card__avatar[data-avatar-tone="8"]{background:#3d2e34}.wa-section[data-resolved-theme=dark] .wa-sequence-person-card__avatar[data-avatar-tone="5"]{background:#273b3a}.wa-section[data-resolved-theme=dark] .wa-sequence-person-card__avatar[data-avatar-tone="7"]{background:#2b3140}.wa-section[data-resolved-theme=dark] .wa-data-table-person__source[data-source=company],.wa-section[data-resolved-theme=dark] .wa-sequence-person-card__company{box-shadow:0 0 0 1.5px var(--wa-panel),0 1px 2px #00000057}.wa-section[data-resolved-theme=dark] .wa-proximity-lead,.wa-section[data-resolved-theme=dark] .wa-sequence-kickoff{box-shadow:var(--wa-card-shadow)}.wa-section[data-resolved-theme=dark] .wa-swipe-card,.wa-section[data-resolved-theme=dark] .wa-swipe-game__complete{border-color:var(--wa-line-12);background:var(--wa-color-data-table-surface);box-shadow:var(--wa-card-shadow)}.wa-section[data-resolved-theme=dark] .wa-swipe-game[data-swipe-decision=avoid] .wa-swipe-card[data-swipe-state=active]{border-color:#f07c725c;background:linear-gradient(135deg,rgba(240,124,114,.14),var(--wa-color-data-table-surface) 68%);box-shadow:0 20px 48px #f07c721a}.wa-section[data-resolved-theme=dark] .wa-swipe-game[data-swipe-decision=use] .wa-swipe-card[data-swipe-state=active]{border-color:#75d39c57;background:linear-gradient(135deg,var(--wa-color-data-table-surface) 32%,rgba(117,211,156,.12));box-shadow:0 20px 48px #75d39c14}.wa-section[data-resolved-theme=dark] .wa-swipe-game__action[data-swipe-action=avoid]{border-color:#f07c7252;background:#f07c721f}.wa-section[data-resolved-theme=dark] .wa-swipe-game__action[data-swipe-action=use]{border-color:#75d39c52;background:#75d39c1f}.wa-section[data-resolved-theme=dark] .wa-sequence-call-action{box-shadow:0 1px 2px #0000003d,0 10px 20px #0000003d}.wa-cursor{position:absolute;top:0;left:0;z-index:20;width:1px;height:1px;pointer-events:none;transform:translateZ(0);transform-origin:0 0;backface-visibility:hidden}.wa-cursor__float{position:absolute;top:0;left:0;width:1px;height:1px;transform-origin:0 0;backface-visibility:hidden}.wa-cursor__glyph{position:absolute;top:0;left:0;width:var(--wa-cursor-default-width);height:var(--wa-cursor-default-height);background-image:var(--wa-cursor-arrow);background-repeat:no-repeat;background-position:0 0;background-size:100% 100%;transform:translate(0);transform-origin:0 0;backface-visibility:hidden;filter:drop-shadow(0 2px 3px var(--wa-cursor-shadow))}.wa-cursor__glyph:before,.wa-cursor__glyph:after{content:"";position:absolute;opacity:0;top:0;left:0;width:var(--wa-cursor-default-width);height:var(--wa-cursor-default-height);background-repeat:no-repeat;background-position:0 0;background-size:100% 100%;pointer-events:none}.wa-cursor__mimic-head,.wa-cursor__mimic-tail{position:absolute;inset:0;display:none;width:100%;height:100%;background-repeat:no-repeat;background-position:0 0;background-size:100% 100%;pointer-events:none;transform-origin:6px 13.25px;backface-visibility:hidden}.wa-cursor__mimic-head{z-index:2;background-image:var(--wa-cursor-arrow-head)}.wa-cursor__mimic-tail{z-index:1;background-image:var(--wa-cursor-arrow-tail)}.wa-cursor[data-cursor-mimicking=true][data-cursor-mode=default] .wa-cursor__glyph{background-image:none}.wa-cursor[data-cursor-mimicking=true][data-cursor-mode=default] .wa-cursor__mimic-head,.wa-cursor[data-cursor-mimicking=true][data-cursor-mode=default] .wa-cursor__mimic-tail{display:block}.wa-cursor[data-cursor-mimicking=true][data-cursor-mode=default] .wa-cursor__mimic-tail{animation:wa-cursor-tail-wag 215ms infinite}.wa-cursor[data-cursor-mode=pointer] .wa-cursor__glyph,.wa-cursor[data-cursor-mode=click] .wa-cursor__glyph{width:32px;height:32px;background-image:var(--wa-cursor-hand);transform:translate(-10px,-1px)}.wa-cursor[data-cursor-mode=drag] .wa-cursor__glyph{width:32px;height:32px;background-image:var(--wa-cursor-closedhand);transform:translate(-16px,-16px)}.wa-cursor[data-cursor-mode=release] .wa-cursor__glyph{width:32px;height:32px;background-image:var(--wa-cursor-openhand);transform:translate(-16px,-16px)}.wa-cursor[data-cursor-mode=text] .wa-cursor__glyph{width:23px;height:22px;background-image:var(--wa-cursor-ibeam);transform:translate(-11px,-11px)}@keyframes wa-cursor-tail-wag{0%,to{animation-timing-function:cubic-bezier(.16,.88,.24,1);transform:translateZ(0) rotate(-1deg) skew(0)}24%{animation-timing-function:cubic-bezier(.16,0,.24,1);transform:translate3d(.32px,0,0) rotate(12deg) skew(2deg)}38%{animation-timing-function:cubic-bezier(.16,.88,.24,1);transform:translate3d(.1px,0,0) rotate(4.2deg) skew(.75deg)}64%{animation-timing-function:cubic-bezier(.2,0,.24,1);transform:translate3d(-.3px,0,0) rotate(-11deg) skew(-1.9deg)}}@keyframes wa-thinking-logo-gradient{0%{background-position:120% 50%}to{background-position:-120% 50%}}@keyframes wa-mailbox-gmail-radiate{0%{background-position:0% 50%,0% 50%}50%{background-position:100% 50%,100% 50%}to{background-position:0% 50%,0% 50%}}@keyframes wa-mailbox-gmail-pulse{0%,to{transform:scale(.98)}50%{transform:scale(1.08)}}@keyframes wa-dot{0%,80%,to{opacity:.28;transform:translateY(0)}40%{opacity:1;transform:translateY(-3px)}}@keyframes wa-data-table-dot-pop{0%{transform:scale(.76)}56%{transform:scale(1.24)}to{transform:scale(1)}}@keyframes wa-data-table-chevron-previous{0%,to{transform:translateZ(0)}42%{transform:translate3d(-2px,0,0)}}@keyframes wa-data-table-chevron-next{0%,to{transform:translateZ(0)}42%{transform:translate3d(2px,0,0)}}@keyframes wa-spin{to{transform:rotate(360deg)}}@keyframes wa-caret{0%,45%{opacity:1}46%,to{opacity:0}}@keyframes wa-text-shimmer{0%{background-position:100% 0}62%,to{background-position:0% 0}}@keyframes wa-tool-call-favicon-shimmer{0%,to{filter:brightness(.96) saturate(.96);opacity:.78}46%{filter:brightness(1.22) saturate(1.12);opacity:1}}@keyframes wa-enrollment-mail-color-shift{0%{color:#11110f}to{color:var(--wa-color-accent)}}@media(max-width:1259px){.wa-section{--wa-title-size: clamp(48px, 4.5vw, 58px);--wa-title-line-height: 1.08;--wa-feature-title-size: clamp(36px, 3.5vw, 44px);--wa-feature-copy-size: clamp(20px, 2.1vw, 25px);--wa-chat-x-padding: 24px;--wa-story-controls-x-offset: 0px;--wa-story-controls-y-offset: 0px;--wa-story-controls-width-extra: 0px;--wa-story-tab-y-padding: 0px;--wa-story-description-gap: 20px;--wa-story-nav-inline-padding: 0px;--wa-story-body-inline-padding: 0px;--wa-stage-y-offset: 0px;padding:88px clamp(56px,6vw,80px) 118px}.wa-section__inner{grid-template-columns:1fr;grid-template-rows:auto auto auto;row-gap:clamp(92px,11vw,154px);width:100%}.wa-theme-toggle{top:-54px;right:0}.wa-copy{max-width:min(1160px,100%)}.wa-copy__title>span{display:inline}.wa-story-controls,.wa-stage{grid-column:1}.wa-story-controls{grid-template-areas:"nav" "story";grid-template-columns:1fr;align-items:start;width:min(1080px,100%);justify-self:start;gap:0;padding-top:0}.wa-story-tabs{grid-area:story;min-width:0;gap:0;margin-top:30px}.wa-story-tab{display:none}.wa-story-tab.is-active{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto;min-height:0;padding:0;gap:0;align-items:start}.wa-story-tab.is-active .wa-story-tab__marker{order:2;width:100%;height:4px;min-height:4px;margin-top:42px;cursor:ew-resize}.wa-story-tab.is-active .wa-story-tab__marker:before{transform:scaleX(var(--wa-tab-progress));transform-origin:left}.wa-story-tab__body{order:1;min-width:0;gap:20px;padding-top:0;padding-right:var(--wa-story-body-inline-padding);padding-left:var(--wa-story-body-inline-padding)}.wa-story-tab__count{display:none}.wa-story-tab__title{overflow:visible;white-space:normal;text-overflow:clip;font-size:clamp(31px,7.1vw,38px);line-height:1.05}.wa-story-tab__description{display:block;max-width:960px;font-size:clamp(18px,4.2vw,22px);line-height:1.34}.wa-controls-row{grid-area:nav;position:static;display:inline-flex;align-items:center;justify-content:flex-start;gap:24px;width:auto;height:auto;overflow:visible;clip:auto;clip-path:none;white-space:normal;padding-top:0;padding-right:var(--wa-story-nav-inline-padding);padding-left:var(--wa-story-nav-inline-padding)}.wa-controls-row [data-toggle-play],.wa-controls-row .wa-scrubber{display:none}.wa-story-count{display:inline-flex;align-items:center;color:var(--wa-color-heading-strong);font-size:25px;line-height:1;font-weight:500;letter-spacing:0}.wa-control-button{display:grid;place-items:center;width:54px;height:54px;padding:0;border:1px solid var(--wa-line-12);border-radius:999px;color:var(--wa-color-heading-strong);background:var(--wa-color-soft-surface);box-shadow:none;cursor:pointer}.wa-controls-row [data-prev-story] svg,.wa-controls-row [data-next-story] svg{transform:none}.wa-control-button:hover{border-color:var(--wa-line-20);background:var(--wa-color-data-table-surface)}.wa-control-button:focus-visible{outline:2px solid var(--wa-color-accent);outline-offset:3px}.wa-stage{grid-row:3;width:100%;min-height:calc(var(--wa-window-height) + 132px);justify-self:center;overflow:visible}.wa-stage[data-window-content-scale]{min-height:var(--wa-window-scene-height)}.wa-stage__media{top:180px;right:auto;left:0;width:min(1080px,100%);height:clamp(360px,36vw,440px);min-height:0;transform:none}.wa-window{width:var(--wa-window-width);margin:0 auto}.wa-chat-shell{height:var(--wa-window-height)}}@media(max-width:760px){.wa-section{--wa-mobile-page-inset: clamp(24px, 7vw, 34px);--wa-story-description-gap: 22px;--wa-story-nav-inline-padding: var(--wa-mobile-page-inset);--wa-story-body-inline-padding: var(--wa-mobile-page-inset);--wa-mobile-browser-content-width: 590px;--wa-window-width: 100vw;--wa-window-height: 530px;padding:38px 0 0}.wa-section__inner{row-gap:0;width:100%}.wa-theme-toggle{top:0;right:var(--wa-mobile-page-inset)}.wa-copy{padding-top:62px;padding-right:var(--wa-mobile-page-inset);padding-left:var(--wa-mobile-page-inset);margin-bottom:86px}.wa-copy__title{font-size:clamp(34px,8.8vw,44px);line-height:1.14}.wa-control-button{width:52px;height:52px}.wa-story-tab.is-active .wa-story-tab__marker{width:100%;height:2px;min-height:2px;margin-top:52px;margin-left:0}.wa-story-tab__body{gap:22px}.wa-stage{--wa-window-scene-min-width: var(--wa-mobile-browser-content-width);width:100vw;min-height:var(--wa-window-height);margin-top:0;overflow:visible}.wa-stage[data-window-content-scale]{min-height:var(--wa-window-scene-height)}.wa-stage__media{display:none}.wa-window{width:var(--wa-window-width);margin:0;border-radius:0}.wa-chat-shell{height:var(--wa-window-height);max-height:none;border-top:0;border-right:0;border-left:0;border-radius:0;box-shadow:none}.wa-chat-shell__body{width:calc(var(--wa-mobile-browser-content-width) - 2px);justify-self:center}.wa-composer{right:auto;left:calc(50% - (var(--wa-mobile-browser-content-width) / 2) + 1px + var(--wa-composer-side-inset));width:calc(var(--wa-mobile-browser-content-width) - 2px - (var(--wa-composer-side-inset) * 2))}}@media(prefers-reduced-motion:reduce){.wa-section *,.wa-section *:before,.wa-section *:after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}}`, jh = "chatbot-stories-runtime-styles";
+function Kh() {
+  Yh(jh, Wh);
 }
-const Ti = Au(xu, { injectStyles: Pu });
-function Ru(r = "[data-chatbot-stories]", e = {}) {
-  return Ti.init(r, e);
+const zi = Hh(Fh, { injectStyles: Kh });
+function Xh(r = "[data-chatbot-stories]", e = {}) {
+  return zi.init(r, e);
 }
-const Du = {
-  init: Ru,
-  defaultStories: Mo
+const Jh = {
+  init: Xh,
+  defaultStories: as
 };
-typeof window < "u" && (window.ChatbotStories = Du, document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", Ti.autoInit, { once: !0 }) : Ti.autoInit());
+typeof window < "u" && (window.ChatbotStories = Jh, document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", zi.autoInit, { once: !0 }) : zi.autoInit());
 export {
-  Mo as defaultStories,
-  Ru as init
+  as as defaultStories,
+  Xh as init
 };

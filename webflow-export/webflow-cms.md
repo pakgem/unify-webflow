@@ -200,7 +200,7 @@ Strategy cards:
     {
       "label": "Idea one",
       "title": "Target DevOps teams outgrowing AWS complexity",
-      "summary": "I'll find mid-market SaaS companies with heavy AWS footprints.\nI'll run a 3-step email + LinkedIn sequence."
+      "summary": "I’ll find mid-market SaaS companies with heavy AWS footprints.\nI’ll run a 3-step email + LinkedIn sequence."
     }
   ]
 }
@@ -214,7 +214,7 @@ Thinking state:
   "elapsed": "4m 20s",
   "items": [
     {
-      "label": "Mapping Stripe's people graph",
+      "label": "Mapping Stripe’s people graph",
       "detail": "Surfacing common cap-table connections.",
       "disclosure": "Show more"
     }

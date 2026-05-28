@@ -1,5 +1,5 @@
 import type {
-  DataSourceGridConfig,
+  CursorMoveOptions,
   DataTableConfig,
   EnrichmentConfig,
   MailboxConnectionConfig,
@@ -10,9 +10,9 @@ import type {
   SequenceEngagementConfig,
   StoryDefinition,
   StrategyPlanConfig,
+  ThinkingItemConfig,
 } from "../core/types";
 import {
-  collectDataSourceAssetUrls,
   collectDataTableAssetUrls,
   collectProximityAssetUrls,
   collectSequenceAssetUrls,
@@ -21,6 +21,8 @@ import { getPreviewSequenceIndexes } from "../core/sequenceSelection";
 import {
   buildStorySteps,
   CHAT_INPUT_TARGETS,
+  CURSOR_CLICK_MOVE_BASE,
+  CURSOR_CLICK_MOVE_DURATIONS,
   dataTableFooterPerusalStep,
   EXIT_TARGETS,
   exitStory,
@@ -35,6 +37,49 @@ import {
   styleProfilePerusalSteps,
 } from "./storySystem";
 
+const OUTREACH_SEQUENCE_CURSOR_MOVE = {
+  mode: "pointer",
+  intent: "hover",
+  speed: "slow",
+  duration: 1,
+  ease: "sine.inOut",
+  curve: 0.72,
+  overshoot: false,
+  label: "hover-outreach-sequence",
+} satisfies CursorMoveOptions;
+
+const VISITOR_PAGINATION_CLICK_MOVE = {
+  mode: "pointer",
+  intent: "click",
+  speed: "quick",
+  duration: CURSOR_CLICK_MOVE_DURATIONS.paginationClick,
+  curve: 0.1,
+  ...CURSOR_CLICK_MOVE_BASE,
+  label: "open-visitor-page-2",
+} satisfies CursorMoveOptions;
+
+const VISITOR_TABLE_FOOTER_BOTTOM_CLEARANCE = 96;
+const VISITOR_TABLE_FOOTER_SCROLL_DURATION = 1.05;
+const VISITOR_PAGINATION_PRE_CLICK_HOLD = 0;
+
+const SEQUENCE_PERSON_PREVIEW_MOVE = {
+  mode: "pointer",
+  intent: "click",
+  speed: "normal",
+  duration: CURSOR_CLICK_MOVE_DURATIONS.previewCard,
+  curve: 0.16,
+  ...CURSOR_CLICK_MOVE_BASE,
+} satisfies CursorMoveOptions;
+
+const SEQUENCE_KICKOFF_MOVE = {
+  mode: "pointer",
+  intent: "click",
+  speed: "slow",
+  duration: CURSOR_CLICK_MOVE_DURATIONS.sequenceEnroll,
+  curve: 0.18,
+  ...CURSOR_CLICK_MOVE_BASE,
+} satisfies CursorMoveOptions;
+
 /* --------------------------------------------------------------------------
    Story 1: sign-up -> research -> GTM strategies
 
@@ -47,12 +92,38 @@ import {
    -------------------------------------------------------------------------- */
 
 const GTM_RESEARCH_STEPS = [
-  "Researching the company profile",
-  "Learning the ICP and buyer roles",
-  "Reading blog posts for positioning",
-  "Scanning careers pages for priorities",
-  "Mapping current GTM signals",
-];
+  {
+    label: "Scraping vercel.com",
+    detail: "Reviewing the website, employee social profiles, looking at customer testimonials.",
+    duration: 8,
+    toolCalls: [
+      { label: "Reading vercel.com/", vendor: "Vercel" },
+      { label: "Reading vercel.com/cdn", vendor: "Vercel" },
+      { label: "Reading v0.app/", vendor: "v0" },
+      { label: "Reading vercel.com/customers", vendor: "Vercel" },
+      { label: "Reading vercel.com/ai", vendor: "Vercel" },
+      { label: "Reading vercel.com/enterprise", vendor: "Vercel" },
+      { label: "Reading vercel.com/blog", vendor: "Vercel" },
+      { label: "Reading vercel.com/press", vendor: "Vercel" },
+    ],
+  },
+  {
+    label: "Studying who you sell to",
+    detail: "Mapping personas, buying committees, seniority, department ownership, and account-fit signals from the available evidence.",
+  },
+  {
+    label: "Understanding your value proposition",
+    detail: "Reading the homepage, product pages, and recent launches to learn what you sell, who you sell to, and why they buy.",
+  },
+  {
+    label: "Mapping current GTM signals",
+    detail: "Connecting signal strength, audience fit, and likely urgency to decide which outbound motion is most likely to convert.",
+  },
+  {
+    label: "Distilling insights into ideas",
+    detail: "Pulling together the company profile, ICP, value prop, and live signals to land on the highest-conviction ideas to test first.",
+  },
+] satisfies ThinkingItemConfig[];
 
 const GTM_STRATEGY_PLANS = [
   {
@@ -60,8 +131,8 @@ const GTM_STRATEGY_PLANS = [
     label: "Idea one",
     title: "Target DevOps teams outgrowing AWS complexity",
     bullets: [
-      "I'll find mid-market SaaS companies with heavy AWS footprints and hiring DevOps",
-      "I'll run a 3-step email + LinkedIn sequence using the Notion infra efficiency angle",
+      "I’ll find mid-market SaaS companies with heavy AWS footprints and hiring DevOps",
+      "I’ll run a 3-step email + LinkedIn sequence using the Notion infra efficiency angle",
     ],
   },
   {
@@ -69,8 +140,8 @@ const GTM_STRATEGY_PLANS = [
     label: "Idea two",
     title: "Intercept AI teams burning cycles on LLM infra",
     bullets: [
-      "I'll identify companies building AI products, showing LLM/ML engineering hiring signals",
-      "I'll craft a sequence leading with AI infra complexity pain and Vercel AI SDK as the path",
+      "I’ll identify companies building AI products, showing LLM/ML engineering hiring signals",
+      "I’ll craft a sequence leading with AI infra complexity pain and Vercel AI SDK as the path",
     ],
   },
   {
@@ -78,8 +149,8 @@ const GTM_STRATEGY_PLANS = [
     label: "Idea three",
     title: "Hit e-commerce teams before peak season",
     bullets: [
-      "I'll find ecom and DTC brands with 50+ engineers and upcoming high-traffic events",
-      "I'll lead with PAIGE's Black Friday results in a short sequence timed to pre-peak urgency",
+      "I’ll find ecom and DTC brands with 50+ engineers and upcoming high-traffic events",
+      "I’ll lead with PAIGE’s Black Friday results in a short sequence timed to pre-peak urgency",
     ],
   },
 ] satisfies StrategyPlanConfig[];
@@ -294,210 +365,6 @@ const DATA_MARKETPLACE_ENRICHMENT = {
   ],
 } satisfies EnrichmentConfig;
 
-const DATA_MARKETPLACE_SOURCES = {
-  id: "data-marketplace-sources",
-  title: "Ask complex questions across diverse data sets",
-  subtitle: "Unify routes each search across the right partner sources for the job.",
-  sources: [
-    {
-      id: "hubspot",
-      category: "CRM",
-      name: "HubSpot",
-      detail: "CRM, marketing, and sales engagement records.",
-      logoSrc: "/data-logos/HubSpot.svg",
-    },
-    {
-      id: "salesforce",
-      category: "CRM",
-      name: "Salesforce",
-      detail: "CRM account, contact, and activity data.",
-      logoSrc: "/data-logos/Salesforce.svg",
-    },
-    {
-      id: "5x5",
-      category: "Core Data",
-      name: "Five by Five",
-      detail: "On-premise company and contact datasets.",
-      logoSrc: "/data-logos/5x5.svg",
-    },
-    {
-      id: "mixrank",
-      category: "Core Data",
-      name: "MixRank",
-      detail: "Company, app, and advertising intelligence.",
-      logoSrc: "/data-logos/mixrank.svg",
-    },
-    {
-      id: "pdl",
-      category: "Core Data",
-      name: "People Data Labs",
-      detail: "People and company records for core B2B coverage.",
-      logoSrc: "/data-logos/People%20Data%20Labs.svg",
-    },
-    {
-      id: "adyntel",
-      category: "Ad Intelligence",
-      name: "Adyntel",
-      detail: "Ad spend, messaging, and competitive advertising signals.",
-      logoSrc: "/data-logos/Adyntel.svg",
-    },
-    {
-      id: "adbeat",
-      category: "Ad Intelligence",
-      name: "Adbeat",
-      detail: "Digital ad creatives, publishers, and campaign intelligence.",
-      logoSrc: "/data-logos/Adbeat.svg",
-    },
-    {
-      id: "upriver",
-      category: "Ad Intelligence",
-      name: "Upriver",
-      detail: "Ad strategy and competitive demand generation signals.",
-      logoSrc: "/data-logos/UpRiver.svg",
-    },
-    {
-      id: "snitcher",
-      category: "Web Intent",
-      name: "Snitcher",
-      detail: "Website visitor identification and account intent.",
-      logoSrc: "/data-logos/Snitcher.svg",
-    },
-    {
-      id: "demandbase",
-      category: "Web Intent",
-      name: "Demandbase",
-      detail: "Account identification and intent signals.",
-      logoSrc: "/data-logos/Demandbase.svg",
-    },
-    {
-      id: "posthog",
-      category: "Product Analytics",
-      name: "PostHog",
-      detail: "Product events, usage, and conversion behavior.",
-      logoSrc: "/data-logos/PostHog.svg",
-    },
-    {
-      id: "segment",
-      category: "Product Analytics",
-      name: "Segment",
-      detail: "Customer event pipelines and audience traits.",
-      logoSrc: "/data-logos/Segment.svg",
-    },
-    {
-      id: "openmart",
-      category: "SMB Data",
-      name: "OpenMart",
-      detail: "Small business discovery and merchant data.",
-      logoSrc: "/data-logos/OpenMart.svg",
-    },
-    {
-      id: "store-leads",
-      category: "Ecommerce",
-      name: "Store Leads",
-      detail: "E-commerce stores, platforms, categories, and growth signals.",
-      logoSrc: "/data-logos/Store%20Leads.svg",
-    },
-    {
-      id: "ramp",
-      category: "Enrichment",
-      name: "Ramp",
-      detail: "Financial and business context enrichment.",
-      logoSrc: "/data-logos/Ramp.svg",
-    },
-    {
-      id: "fullenrich",
-      category: "Enrichment",
-      name: "FullEnrich",
-      detail: "Email and phone enrichment across multiple providers.",
-      logoSrc: "/data-logos/FullEnrich.svg",
-    },
-    {
-      id: "ocean-io",
-      category: "Company / Fundraising",
-      name: "Ocean.io",
-      detail: "Company lookalikes, segments, and account discovery.",
-      logoSrc: "/data-logos/Oceanio.svg",
-    },
-    {
-      id: "harmonic",
-      category: "Company / Fundraising",
-      name: "Harmonic",
-      detail: "Startup company signals, growth, and fundraising data.",
-      logoSrc: "/data-logos/Harmonic.svg",
-    },
-    {
-      id: "theirstack",
-      category: "Tech Stack",
-      name: "Theirstack",
-      detail: "Technology install, job-posting, and stack signals.",
-      logoSrc: "/data-logos/TheirStack.svg",
-    },
-    {
-      id: "predictleads",
-      category: "Tech Stack",
-      name: "PredictLeads",
-      detail: "Hiring, technology, product, and business event signals.",
-      logoSrc: "/data-logos/PredictLeads.svg",
-    },
-    {
-      id: "builtwith",
-      category: "Tech Stack",
-      name: "BuiltWith",
-      detail: "Installed tools, web stack, pixels, and infrastructure data.",
-      logoSrc: "/data-logos/Built%20With.svg",
-    },
-    {
-      id: "serpstat",
-      category: "Web / SEO",
-      name: "Serpstat",
-      detail: "SEO, PPC, and content intelligence.",
-      logoSrc: "/data-logos/Serpstat.svg",
-    },
-    {
-      id: "se-ranking",
-      category: "Web / SEO",
-      name: "SE Ranking",
-      detail: "Search visibility, keyword, and competitor SEO data.",
-      logoSrc: "/data-logos/SE%20Ranking.svg",
-    },
-    {
-      id: "linkedin",
-      category: "Relationships",
-      name: "LinkedIn",
-      detail: "Professional relationship and profile context.",
-      logoSrc: "/data-logos/LinkedIn.png",
-    },
-    {
-      id: "the-swarm",
-      category: "Relationships",
-      name: "The Swarm",
-      detail: "Network, relationship, and warm-introduction context.",
-      logoSrc: "/data-logos/The%20Swarm.svg",
-    },
-    {
-      id: "trigify",
-      category: "And more",
-      name: "Trigify",
-      detail: "Social buying signals and engagement events.",
-      logoSrc: "/data-logos/Trigify.svg",
-    },
-    {
-      id: "zerobounce",
-      category: "And more",
-      name: "ZeroBounce",
-      detail: "Email validation and deliverability checks.",
-      logoSrc: "/data-logos/zerobounce.svg",
-    },
-    {
-      id: "buyercaddy",
-      category: "And more",
-      name: "BuyerCaddy",
-      detail: "Buyer tracking and sales workflow support.",
-      logoSrc: "/data-logos/BuyerCaddy.svg",
-    },
-  ],
-} satisfies DataSourceGridConfig;
-
 const DATA_MARKETPLACE_ENRICHED_TABLE = {
   id: "enriched-dev-tool-contacts",
   title: "Enriched contacts",
@@ -571,23 +438,23 @@ const DATA_MARKETPLACE_ENRICHED_TABLE = {
 
 const AGENT_CONTEXT_FILES = [
   {
-    name: "battlecards.pdf",
-    detail: "Competitors, traps, objections, displacement plays",
+    name: "vercel-positioning.pdf",
+    detail: "Frontend Cloud narrative, buyer pains, proof points",
     type: "PDF",
   },
   {
-    name: "positioning-memo.docx",
-    detail: "Category narrative, buyer pains, proof points",
+    name: "ai-app-playbook.docx",
+    detail: "AI app workflows, Vercel AI SDK, launch patterns",
     type: "DOC",
   },
   {
-    name: "outbound-playbook.pdf",
-    detail: "Sequences, objection handling, CTA rules",
+    name: "enterprise-objections.pdf",
+    detail: "Security, scale, migration, and platform objections",
     type: "PDF",
   },
   {
     name: "icp-context.md",
-    detail: "Best-fit accounts, disqualifiers, buyer pains",
+    detail: "Best-fit teams, disqualifiers, buying triggers",
     type: "MD",
   },
 ];
@@ -595,7 +462,7 @@ const AGENT_CONTEXT_FILES = [
 const GMAIL_MAILBOX_CONNECTION = {
   id: "gmail-mailbox-connection",
   title: "Connect a mailbox",
-  subtitle: "Unify will recent emails, replies, and meeting context to learn how you actually communicate",
+  subtitle: "Unify will analyze recent emails and replies to learn how you actually communicate",
   provider: "Gmail",
   account: "joel@unifygtm.com",
   status: "Connected",
@@ -603,37 +470,36 @@ const GMAIL_MAILBOX_CONNECTION = {
   secondaryCtaLabel: "Outlook",
   loadingLabel: "Connecting",
   learningTitle: "Learning your style",
-  learningDetail: "Analyzing vocabulary...",
+  learningDetail: "Analyzing tone...",
   learningReadyDetail: "73 tone & tactic rules defined",
   signals: ["sent emails", "reply patterns", "calendar context", "signature and tone"],
 } satisfies MailboxConnectionConfig;
 
-const PYLON_BUSINESS_REPORT = {
-  id: "pylon-business-report",
-  title: "Messaging strategy",
-  subtitle: "How to win Pylon's market from the uploaded business context.",
+const VERCEL_BUSINESS_REPORT = {
+  id: "vercel-business-report",
+  title: "Vercel GTM Context",
   signals: [
     {
       label: "Winning wedge",
-      value: "Sell Pylon as the revenue layer for post-sale conversations: support signals become expansion, renewal, and risk plays before competitors see them.",
+      value: "Lead with Frontend Cloud: the fastest path from idea to production for teams building web and AI experiences.",
     },
     {
       label: "Primary motion",
-      value: "Target VP CS, RevOps, and founders at B2B SaaS companies where Slack, tickets, and call notes hide account-level next actions.",
+      value: "Target engineering leaders, platform teams, and founders with Next.js adoption, high-traffic launches, or active AI app work.",
     },
     {
       label: "Displacement angle",
-      value: "Against Zendesk and Intercom, avoid ticketing arguments. Show where they break: account context, revenue handoffs, and renewal escalation.",
+      value: "Against homegrown cloud and generic hosting, show where teams lose time: previews, performance, observability, and release confidence.",
     },
     {
       label: "Proof to use",
-      value: "Lead with fewer missed expansion signals, faster executive escalation, cleaner CS-to-sales handoffs, and one shared customer timeline.",
+      value: "Use Next.js, preview deployments, global performance, enterprise controls, and Vercel AI SDK as concrete credibility.",
     },
   ],
   examples: [
-    "Open with a customer moment: repeated feature requests, renewal risk, or stalled onboarding that should have triggered a revenue play.",
-    "Package the CTA as a quick account review: show hidden risks and expansion signals pulled from recent customer conversations.",
-    "Keep the copy specific: account visibility, post-sale intelligence, executive escalation, and revenue timing beats generic AI language.",
+    "Open with a launch moment: traffic spike, AI feature release, migration project, or frontend team scaling past brittle workflows.",
+    "Package the CTA as a workflow review: local dev to preview to production, including where Vercel removes handoffs.",
+    "Keep the copy specific: Next.js, AI SDK, preview links, edge performance, and enterprise governance beat generic developer-platform language.",
   ],
 } satisfies OutreachStyleProfileConfig;
 
@@ -672,7 +538,7 @@ const PROXIMITY_LEADS = {
     {
       rank: "04",
       name: "Sam Hollis",
-      company: "Apollo",
+      company: "Pylon",
       title: "Growth Lead",
       proximity: "Warm signal",
       personalization: "They follow two of your customers and recently posted about data quality.",
@@ -698,7 +564,7 @@ const ENGAGEMENT_LIST_10 = {
     { id: "maya-patel", values: { name: "Maya Patel", company: "OrbitGrid", title: "VP Revenue", fit: "High", source: "signal" } },
     { id: "evan-brooks", values: { name: "Evan Brooks", company: "Northstar Dev", title: "Head of Growth", fit: "High", source: "signal" } },
     { id: "clara-wong", values: { name: "Clara Wong", company: "BrightLayer", title: "RevOps Lead", fit: "Med", source: "database" } },
-    { id: "sam-hollis", values: { name: "Sam Hollis", company: "Apollo", title: "Growth Lead", fit: "Med", source: "database" } },
+    { id: "sam-hollis", values: { name: "Sam Hollis", company: "Pylon", title: "Growth Lead", fit: "Med", source: "database" } },
     { id: "nina-kapoor", values: { name: "Nina Kapoor", company: "Mercury", title: "Sales Ops", fit: "High", source: "engage" } },
   ],
 } satisfies DataTableConfig;
@@ -712,7 +578,7 @@ const ENGAGEMENT_LIST_50 = {
   columns: ENGAGEMENT_LIST_COLUMNS,
   rows: [
     ...ENGAGEMENT_LIST_10.rows,
-    { id: "andre-park", values: { name: "Andre Park", company: "Ramp", title: "Head of Growth", fit: "High", source: "signal" } },
+    { id: "andre-park", values: { name: "Andre Park", company: "Waterfall", title: "Head of Growth", fit: "High", source: "signal" } },
     { id: "jamie-chen", values: { name: "Jamie Chen", company: "Square", title: "VP Sales", fit: "High", source: "signal" } },
     { id: "david-kim", values: { name: "David Kim", company: "Stripe", title: "Revenue Lead", fit: "Med", source: "database" } },
   ],
@@ -781,7 +647,7 @@ const ENGAGEMENT_SEQUENCE_LAUNCH = {
         {
           channel: "call",
           label: "reference the path",
-          body: "Hi Evan, saw the integrations research and Northstar Dev's sales expansion. Are ecosystem-led accounts already a named campaign, or still mostly rep judgment?",
+          body: "Hi Evan, saw the integrations research and Northstar Dev’s sales expansion. Are ecosystem-led accounts already a named campaign, or still mostly rep judgment?",
         },
       ],
     },
@@ -817,11 +683,11 @@ const ENGAGEMENT_SEQUENCE_LAUNCH = {
     },
     {
       name: "Andre Park",
-      company: "Ramp",
+      company: "Waterfall",
       title: "Head of Sales",
       signal: "Demo page",
-      subject: "Ramp’s demo-page visit",
-      personalization: "Andre viewed the demo page while Ramp is hiring growth roles, so the sequence ties intent to faster account prioritization.",
+      subject: "Waterfall’s demo-page visit",
+      personalization: "Andre viewed the demo page while Waterfall is hiring growth roles, so the sequence ties intent to faster account prioritization.",
       steps: [
         {
           channel: "email",
@@ -831,7 +697,7 @@ const ENGAGEMENT_SEQUENCE_LAUNCH = {
         {
           channel: "linkedin",
           label: "share the angle",
-          body: "Andre, saw Ramp checking out the demo while growth hiring is active. I work on turning those signals into researched account clusters without stitching tabs together.",
+          body: "Andre, saw Waterfall checking out the demo while growth hiring is active. I work on turning those signals into researched account clusters without stitching tabs together.",
         },
         {
           channel: "email",
@@ -841,7 +707,7 @@ const ENGAGEMENT_SEQUENCE_LAUNCH = {
         {
           channel: "call",
           label: "ask about timing",
-          body: "Hi Andre, saw Ramp's demo interest and growth hiring. Is this tied to an active expansion push, or are you mainly tightening account prioritization?",
+          body: "Hi Andre, saw Waterfall’s demo interest and growth hiring. Is this tied to an active expansion push, or are you mainly tightening account prioritization?",
         },
       ],
     },
@@ -937,10 +803,10 @@ const ENGAGEMENT_SEQUENCE_LAUNCH = {
     },
     {
       name: "Sam Hollis",
-      company: "Apollo",
+      company: "Pylon",
       title: "VP Sales",
       signal: "Comparison",
-      subject: "Apollo’s comparison-page visit",
+      subject: "Pylon’s comparison-page visit",
       personalization: "Sam viewed comparison content, so the outreach contrasts Unify’s unified workflow against point-tool switching.",
       steps: [
         {
@@ -951,7 +817,7 @@ const ENGAGEMENT_SEQUENCE_LAUNCH = {
         {
           channel: "linkedin",
           label: "ask what matters",
-          body: "Sam, saw Apollo reviewing comparison content. Curious whether the real criteria is coverage, workflow speed, or personalization quality.",
+          body: "Sam, saw Pylon reviewing comparison content. Curious whether the real criteria is coverage, workflow speed, or personalization quality.",
         },
         {
           channel: "email",
@@ -961,7 +827,7 @@ const ENGAGEMENT_SEQUENCE_LAUNCH = {
         {
           channel: "call",
           label: "qualify priority",
-          body: "Hi Sam, saw Apollo comparing workflows. Which step is pulling reps out of selling most often: data search, enrichment, or writing the sequence?",
+          body: "Hi Sam, saw Pylon comparing workflows. Which step is pulling reps out of selling most often: data search, enrichment, or writing the sequence?",
         },
       ],
     },
@@ -991,7 +857,7 @@ const ENGAGEMENT_SEQUENCE_LAUNCH = {
         {
           channel: "call",
           label: "ask about handoff",
-          body: "Hi Rachel, saw Retool's pricing interest alongside sales hiring. How are intent signals getting handed to reps today, and where does the handoff break?",
+          body: "Hi Rachel, saw Retool’s pricing interest alongside sales hiring. How are intent signals getting handed to reps today, and where does the handoff break?",
         },
       ],
     },
@@ -1011,7 +877,7 @@ const ENGAGEMENT_SEQUENCE_LAUNCH = {
         {
           channel: "linkedin",
           label: "ask one thing",
-          body: "Owen, saw Linear's demo-page research. Curious if the sales team is prioritizing outbound efficiency or better personalization this quarter.",
+          body: "Owen, saw Linear’s demo-page research. Curious if the sales team is prioritizing outbound efficiency or better personalization this quarter.",
         },
         {
           channel: "email",
@@ -1021,7 +887,7 @@ const ENGAGEMENT_SEQUENCE_LAUNCH = {
         {
           channel: "call",
           label: "connect to timing",
-          body: "Hi Owen, saw Linear's demo-page visit. Is this tied to an active evaluation window, or are you mapping what a cleaner outbound workflow could look like?",
+          body: "Hi Owen, saw Linear’s demo-page visit. Is this tied to an active evaluation window, or are you mapping what a cleaner outbound workflow could look like?",
         },
       ],
     },
@@ -1067,11 +933,11 @@ const WEBSITE_VISITOR_SALES_PAGE_ONE = [
   { id: "maya-patel-visitor", values: { name: "Maya Patel", company: "OrbitGrid", title: "VP Sales", visit: "12m ago", signal: "Pricing page", source: "signal", avatarTone: "1" } },
   { id: "evan-brooks-visitor", values: { name: "Evan Brooks", company: "Northstar Dev", title: "Head of Sales", visit: "18m ago", signal: "Integrations", source: "signal", avatarTone: "2" } },
   { id: "clara-wong-visitor", values: { name: "Clara Wong", company: "BrightLayer", title: "VP Revenue", visit: "27m ago", signal: "Case study", source: "engage", avatarTone: "3" } },
-  { id: "andre-park-visitor", values: { name: "Andre Park", company: "Ramp", title: "Head of Sales", visit: "33m ago", signal: "Demo page", source: "signal", avatarTone: "4" } },
+  { id: "andre-park-visitor", values: { name: "Andre Park", company: "Waterfall", title: "Head of Sales", visit: "33m ago", signal: "Demo page", source: "signal", avatarTone: "4" } },
   { id: "jamie-chen-visitor", values: { name: "Jamie Chen", company: "Square", title: "VP Sales", visit: "42m ago", signal: "ROI calculator", source: "signal", avatarTone: "5" } },
   { id: "nina-kapoor-visitor", values: { name: "Nina Kapoor", company: "Mercury", title: "Sales Director", visit: "51m ago", signal: "Security page", source: "database", avatarTone: "6" } },
   { id: "david-kim-visitor", values: { name: "David Kim", company: "Stripe", title: "Revenue Lead", visit: "1h ago", signal: "Docs", source: "engage", avatarTone: "7" } },
-  { id: "sam-hollis-visitor", values: { name: "Sam Hollis", company: "Apollo", title: "VP Sales", visit: "1h ago", signal: "Comparison", source: "signal", avatarTone: "8" } },
+  { id: "sam-hollis-visitor", values: { name: "Sam Hollis", company: "Pylon", title: "VP Sales", visit: "1h ago", signal: "Comparison", source: "signal", avatarTone: "8" } },
   { id: "rachel-cho-visitor", values: { name: "Rachel Cho", company: "Retool", title: "Head of Sales", visit: "2h ago", signal: "Pricing page", source: "database", avatarTone: "9" } },
   { id: "owen-lee-visitor", values: { name: "Owen Lee", company: "Linear", title: "Sales Lead", visit: "2h ago", signal: "Demo page", source: "signal", avatarTone: "1" } },
 ];
@@ -1149,7 +1015,7 @@ const CSV_RAW_ROWS = [
     values: {
       name: "Ethan Cho",
       email: "ethan.cho@gmail.com",
-      company: "Clearbit Inc.",
+      company: "",
     },
   },
   {
@@ -1164,8 +1030,8 @@ const CSV_RAW_ROWS = [
     id: "raw-lucas-meyer",
     values: {
       name: "Lucas",
-      email: "lucas.meyer@ramp.com",
-      company: "Ramp",
+      email: "lucas.meyer@yahoo.com",
+      company: "",
     },
   },
   {
@@ -1177,34 +1043,26 @@ const CSV_RAW_ROWS = [
     },
   },
   {
-    id: "raw-sam-hollis",
-    values: {
-      name: "sam hollis",
-      email: "sam.hollis@apollo.io",
-      company: "Apollo.io",
-    },
-  },
-  {
     id: "raw-anna-li",
     values: {
       name: "Anna Li",
-      email: "",
-      company: "Linear",
+      email: "annali.work@gmail.com",
+      company: "",
     },
   },
   {
     id: "raw-devon-park",
     values: {
       name: "Devon Park",
-      email: "devon.park@brex.com",
-      company: "Brex",
+      email: "devon.park@outlook.com",
+      company: "",
     },
   },
   {
     id: "raw-rachel-cho",
     values: {
       name: "Rachel C.",
-      email: "rcho@figma.com",
+      email: "",
       company: "Figma",
     },
   },
@@ -1213,14 +1071,14 @@ const CSV_RAW_ROWS = [
     values: {
       name: "Owen Lee",
       email: "owen.lee@icloud.com",
-      company: "Notion",
+      company: "",
     },
   },
   {
     id: "raw-clara-wong",
     values: {
       name: "Clara Wong",
-      email: "clara.wong@brightlayer.com",
+      email: "clara.wong@proton.me",
       company: "Bright Layer",
     },
   },
@@ -1236,8 +1094,72 @@ const CSV_RAW_ROWS = [
     id: "raw-ethan-cho-duplicate",
     values: {
       name: "Ethan Cho",
-      email: "ethan.cho+events@gmail.com",
+      email: "",
       company: "Clearbit Inc.",
+    },
+  },
+  {
+    id: "raw-fatima-ali",
+    values: {
+      name: "Fatima Ali",
+      email: "fatima.ali@gmail.com",
+      company: "",
+    },
+  },
+  {
+    id: "raw-leo-martin",
+    values: {
+      name: "Leo Martin",
+      email: "leo.martin@hex.tech",
+      company: "Hex",
+    },
+  },
+  {
+    id: "raw-priya-rao",
+    values: {
+      name: "Priya Rao",
+      email: "priya.rao@yahoo.com",
+      company: "",
+    },
+  },
+  {
+    id: "raw-jules-meyer",
+    values: {
+      name: "Jules Meyer",
+      email: "jules@notion.so",
+      company: "Notion",
+    },
+  },
+  {
+    id: "raw-marcus-reed",
+    values: {
+      name: "Marcus Reed",
+      email: "marcus.reed@icloud.com",
+      company: "",
+    },
+  },
+  {
+    id: "raw-zoe-carter",
+    values: {
+      name: "Zoe Carter",
+      email: "zoe.carter@rippling.com",
+      company: "Rippling",
+    },
+  },
+  {
+    id: "raw-liam-price",
+    values: {
+      name: "Liam Price",
+      email: "liam.price@gmail.com",
+      company: "",
+    },
+  },
+  {
+    id: "raw-sara-nelson",
+    values: {
+      name: "Sara Nelson",
+      email: "sara.nelson@airtable.com",
+      company: "Airtable",
     },
   },
 ];
@@ -1247,6 +1169,7 @@ const CSV_RAW_TABLE = {
   title: "Raw webinar attendees",
   eyebrow: "CSV import",
   count: "54 records",
+  preserveScroll: true,
   columns: [
     { key: "name", label: "Name", width: "110px", cellType: "text" },
     { key: "email", label: "Email", width: "250px" },
@@ -1254,15 +1177,198 @@ const CSV_RAW_TABLE = {
   ],
   rows: CSV_RAW_ROWS,
   pagination: {
-    pageSize: 6,
+    pageSize: 10,
     totalRows: 54,
     activePage: 1,
     pages: [
-      { page: 1, range: "1-6 of 54 records", rows: CSV_RAW_ROWS.slice(0, 6) },
-      { page: 2, range: "7-13 of 54 records", rows: CSV_RAW_ROWS.slice(6, 13) },
+      { page: 1, range: "1-10 of 54 records", rows: CSV_RAW_ROWS.slice(0, 10) },
+      { page: 2, range: "11-20 of 54 records", rows: CSV_RAW_ROWS.slice(10, 20) },
     ],
   },
 } satisfies DataTableConfig;
+
+const CSV_CLEAN_ROWS = [
+  {
+    id: "clean-maya-rodriguez",
+    values: {
+      fullName: "Maya Rodriguez",
+      "work-email": "maya.rodriguez@northstar.ai",
+      company: "Northstar AI",
+      prospectDetail: "VP Marketing",
+    },
+  },
+  {
+    id: "clean-ethan-cho",
+    values: {
+      fullName: "Ethan Cho",
+      "work-email": "ethan.cho@clearbit.com",
+      company: "Clearbit",
+      prospectDetail: "Head of Demand Gen",
+    },
+  },
+  {
+    id: "clean-priya-shah",
+    values: {
+      fullName: "Priya Shah",
+      "work-email": "priya.shah@orbitgrid.com",
+      company: "OrbitGrid",
+      prospectDetail: "Head of Growth",
+    },
+  },
+  {
+    id: "clean-lucas-meyer",
+    values: {
+      fullName: "Lucas Meyer",
+      "work-email": "lucas.meyer@waterfall.com",
+      company: "Waterfall",
+      prospectDetail: "Revenue Operations",
+    },
+  },
+  {
+    id: "clean-nina-kapoor",
+    values: {
+      fullName: "Nina Kapoor",
+      "work-email": "nina.kapoor@mercury.com",
+      company: "Mercury",
+      prospectDetail: "Sales Director",
+    },
+  },
+  {
+    id: "clean-sam-hollis",
+    values: {
+      fullName: "Sam Hollis",
+      "work-email": "sam.hollis@usepylon.com",
+      company: "Pylon",
+      prospectDetail: "VP Sales",
+    },
+  },
+  {
+    id: "clean-anna-li",
+    values: {
+      fullName: "Anna Li",
+      "work-email": "anna.li@linear.app",
+      company: "Linear",
+      prospectDetail: "Growth Marketing",
+    },
+  },
+  {
+    id: "clean-devon-park",
+    values: {
+      fullName: "Devon Park",
+      "work-email": "devon.park@brex.com",
+      company: "Brex",
+      prospectDetail: "RevOps Manager",
+    },
+  },
+  {
+    id: "clean-rachel-cho",
+    values: {
+      fullName: "Rachel Cho",
+      "work-email": "rachel.cho@figma.com",
+      company: "Figma",
+      prospectDetail: "Product Marketing",
+    },
+  },
+  {
+    id: "clean-owen-lee",
+    values: {
+      fullName: "Owen Lee",
+      "work-email": "owen.lee@notion.so",
+      company: "Notion",
+      prospectDetail: "Revenue Lead",
+    },
+  },
+  {
+    id: "clean-clara-wong",
+    values: {
+      fullName: "Clara Wong",
+      "work-email": "clara.wong@brightlayer.com",
+      company: "BrightLayer",
+      prospectDetail: "VP Revenue",
+    },
+  },
+  {
+    id: "clean-sara-patel",
+    values: {
+      fullName: "Sara Patel",
+      "work-email": "sara.patel@northstar.ai",
+      company: "Northstar AI",
+      prospectDetail: "Demand Gen",
+    },
+  },
+  {
+    id: "clean-ethan-cho-duplicate",
+    values: {
+      fullName: "Ethan Cho",
+      "work-email": "ethan.cho@clearbit.com",
+      company: "Clearbit",
+      prospectDetail: "Head of Demand Gen",
+    },
+  },
+  {
+    id: "clean-fatima-ali",
+    values: {
+      fullName: "Fatima Ali",
+      "work-email": "fatima.ali@vercel.com",
+      company: "Vercel",
+      prospectDetail: "VP Sales",
+    },
+  },
+  {
+    id: "clean-leo-martin",
+    values: {
+      fullName: "Leo Martin",
+      "work-email": "leo.martin@hex.tech",
+      company: "Hex",
+      prospectDetail: "Head of Sales",
+    },
+  },
+  {
+    id: "clean-priya-rao",
+    values: {
+      fullName: "Priya Rao",
+      "work-email": "priya.rao@census.com",
+      company: "Census",
+      prospectDetail: "Sales Director",
+    },
+  },
+  {
+    id: "clean-jules-meyer",
+    values: {
+      fullName: "Jules Meyer",
+      "work-email": "jules.meyer@notion.so",
+      company: "Notion",
+      prospectDetail: "VP Sales",
+    },
+  },
+  {
+    id: "clean-marcus-reed",
+    values: {
+      fullName: "Marcus Reed",
+      "work-email": "marcus.reed@figma.com",
+      company: "Figma",
+      prospectDetail: "Revenue Lead",
+    },
+  },
+  {
+    id: "clean-zoe-carter",
+    values: {
+      fullName: "Zoe Carter",
+      "work-email": "zoe.carter@rippling.com",
+      company: "Rippling",
+      prospectDetail: "Head of Sales",
+    },
+  },
+  {
+    id: "clean-liam-price",
+    values: {
+      fullName: "Liam Price",
+      "work-email": "liam.price@webflow.com",
+      company: "Webflow",
+      prospectDetail: "VP Sales",
+    },
+  },
+];
 
 const CSV_CLEAN_TABLE = {
   id: "clean-webinar-attendees",
@@ -1271,66 +1377,20 @@ const CSV_CLEAN_TABLE = {
   count: "54 records",
   scrollAnchor: "previous-message",
   columns: [
-    { key: "fullName", label: "Full name", width: "245px", cellType: "person" },
+    { key: "fullName", label: "Full name", width: "175px", cellType: "person" },
     { key: "work-email", label: "Work email", width: "215px" },
-    { key: "company", label: "Company", width: "minmax(110px,1fr)" },
+    { key: "company", label: "Company", width: "minmax(150px,1fr)" },
   ],
-  rows: [
-    {
-      id: "maya-rodriguez",
-      values: {
-        fullName: "Maya Rodriguez",
-        "work-email": "maya.rodriguez@northstar.ai",
-        company: "Northstar AI",
-        prospectDetail: "VP Marketing",
-      },
-    },
-    {
-      id: "ethan-cho",
-      values: {
-        fullName: "Ethan Cho",
-        "work-email": "ethan.cho@clearbit.com",
-        company: "Clearbit",
-        prospectDetail: "Head of Demand Gen",
-      },
-    },
-    {
-      id: "priya-shah",
-      values: {
-        fullName: "Priya Shah",
-        "work-email": "priya.shah@orbitgrid.com",
-        company: "OrbitGrid",
-        prospectDetail: "Head of Growth",
-      },
-    },
-    {
-      id: "lucas-meyer",
-      values: {
-        fullName: "Lucas Meyer",
-        "work-email": "lucas.meyer@ramp.com",
-        company: "Ramp",
-        prospectDetail: "Revenue Operations",
-      },
-    },
-    {
-      id: "nina-kapoor",
-      values: {
-        fullName: "Nina Kapoor",
-        "work-email": "nina.kapoor@mercury.com",
-        company: "Mercury",
-        prospectDetail: "Sales Director",
-      },
-    },
-    {
-      id: "sam-hollis",
-      values: {
-        fullName: "Sam Hollis",
-        "work-email": "sam.hollis@apollo.io",
-        company: "Apollo",
-        prospectDetail: "VP Sales",
-      },
-    },
-  ],
+  rows: CSV_CLEAN_ROWS,
+  pagination: {
+    pageSize: 10,
+    totalRows: 54,
+    activePage: 1,
+    pages: [
+      { page: 1, range: "1-10 of 54 records", rows: CSV_CLEAN_ROWS.slice(0, 10) },
+      { page: 2, range: "11-20 of 54 records", rows: CSV_CLEAN_ROWS.slice(10, 20) },
+    ],
+  },
 } satisfies DataTableConfig;
 
 export const defaultStories: StoryDefinition[] = [
@@ -1354,10 +1414,18 @@ export const defaultStories: StoryDefinition[] = [
         {
           kind: "cursorMove",
           target: SIGNUP_SUBMIT_TARGET,
-          options: { mode: "pointer", intent: "click", speed: "quick", label: "signup-submit" },
+          options: {
+            mode: "pointer",
+            intent: "click",
+            speed: "quick",
+            duration: CURSOR_CLICK_MOVE_DURATIONS.compact,
+            curve: 0.12,
+            ...CURSOR_CLICK_MOVE_BASE,
+            label: "signup-submit",
+          },
           at: "-=0.04",
         },
-        { kind: "cursorClick", nextMode: "default", at: "-=0.03" },
+        { kind: "cursorClick", nextMode: "default", at: "+=0.06" },
         { kind: "custom", build: () => ctx.chat.submitSignup(), at: "<" },
         { kind: "status", text: "Building workspace", at: "-=0.08" },
         { kind: "transitionSignupToChat", at: `+=${STORY_TIMING.beat}` },
@@ -1375,14 +1443,18 @@ export const defaultStories: StoryDefinition[] = [
     label: "100+ data sources at your fingertips",
     navLabel: "100+ data sources at your fingertips",
     navDescription:
-      "A one-stop shop for your data needs, B2B contacts and companies, e-commerce, local businesses, technographics, and more in a single natural language search.",
+      "A one-stop shop for your data needs, B2B contacts and companies, e-commerce, local businesses, technographics, and much more in a single natural language search.",
+    navDescriptionLink: {
+      text: "and much more",
+      href: "https://www.unifygtm.com/signals",
+      ariaLabel: "Explore Unify signals and data sources",
+    },
     eyebrow: "Data marketplace",
     summary: "The assistant searches, filters, and enriches B2B company and contact data.",
     assetUrls: [
       ...collectDataTableAssetUrls(DATA_MARKETPLACE_INITIAL_TABLE),
       ...collectDataTableAssetUrls(DATA_MARKETPLACE_FUNDED_TABLE),
       ...collectDataTableAssetUrls(DATA_MARKETPLACE_ENRICHED_TABLE),
-      ...collectDataSourceAssetUrls(DATA_MARKETPLACE_SOURCES),
     ],
     entry: CHAT_INPUT_TARGETS.dataMarketplace,
     entryLeadTime: INPUT_ENTRY_LEAD_TIME,
@@ -1423,13 +1495,13 @@ export const defaultStories: StoryDefinition[] = [
           duration: STORY_TIMING.typeShort,
           sendLabel: "send-enrich-contacts",
           statusAfter: "Preparing enrichment",
+          postSendCursorMotion: false,
           at: `+=${STORY_TIMING.beat}`,
         },
         { kind: "enrichmentPanel", config: DATA_MARKETPLACE_ENRICHMENT, at: "+=0.12" },
         { kind: "status", text: "Contacts enriched", at: "+=0.86" },
         { kind: "dataTable", config: DATA_MARKETPLACE_ENRICHED_TABLE, at: "-=0.02" },
-        { kind: "marketingDataSourcesGrid", config: DATA_MARKETPLACE_SOURCES, at: "+=1.44" },
-        exitStory(EXIT_TARGETS.bottomRight, "+=3"),
+        exitStory(EXIT_TARGETS.bottomRight, "+=1.1"),
       ]);
     },
   },
@@ -1438,7 +1510,7 @@ export const defaultStories: StoryDefinition[] = [
     label: "Agent that knows you",
     navLabel: "An agent that knows you",
     eyebrow: "Context learning",
-    summary: "The assistant learns your sales context, protects ICP fit, and ranks leads by relationship proximity.",
+    summary: "The assistant learns Vercel’s GTM context and ranks leads by relationship proximity.",
     assetUrls: collectProximityAssetUrls(PROXIMITY_LEADS),
     entry: {
       desktop: { target: "[data-chat-shell]", anchor: "right", offset: { x: -48, y: 168 } },
@@ -1449,7 +1521,7 @@ export const defaultStories: StoryDefinition[] = [
     build: (ctx) => {
       const dropArea = ctx.chat.prepareCsvDropArea({
         title: "Drop business context files",
-        detail: "Battle cards, playbooks, ICP notes, voice docs, and messaging context.",
+        detail: "Positioning, AI app playbooks, ICP notes, and enterprise objection context.",
       });
       const cursorFile = ctx.chat.prepareCursorFile("4 context files", ctx.cursor, "DOC", AGENT_CONTEXT_FILES);
       const contextFilePickupTarget = {
@@ -1501,13 +1573,13 @@ export const defaultStories: StoryDefinition[] = [
         { kind: "custom", build: () => dropArea.complete() },
         { kind: "custom", build: () => cursorFile.releaseAtDrop(), at: "<" },
         { kind: "custom", build: () => cursorFile.landAsUploadedFiles(AGENT_CONTEXT_FILES), at: "<" },
-        { kind: "status", text: "Learning Pylon's business", at: "<" },
+        { kind: "status", text: "Learning Vercel’s business", at: "<" },
         {
           kind: "thinking",
           steps: [
-            "Reading Pylon battle cards and market notes",
-            "Mapping competitors and positioning",
-            "Extracting messaging pillars and proof points",
+            "Reading Vercel positioning and launch notes",
+            "Mapping developer personas and buying committees",
+            "Extracting AI app and frontend cloud proof points",
             "Summarizing ICP fit and GTM angles",
           ],
           hold: 0.24,
@@ -1515,22 +1587,13 @@ export const defaultStories: StoryDefinition[] = [
         },
         {
           kind: "custom",
-          build: () => ctx.chat.outreachStyleProfile(PYLON_BUSINESS_REPORT, { scrollAlign: "equal-inset" }),
+          build: () => ctx.chat.outreachStyleProfile(VERCEL_BUSINESS_REPORT, { scrollAlign: "equal-inset" }),
           at: "-=0.02",
         },
-        ...styleProfilePerusalSteps(PYLON_BUSINESS_REPORT.id),
+        ...styleProfilePerusalSteps(VERCEL_BUSINESS_REPORT.id),
         {
           kind: "prompt",
-          text: "Write a sequence for consumer fintech founders.",
-          duration: STORY_TIMING.typeShort,
-          sendLabel: "send-bad-icp-request",
-          statusAfter: "Checking ICP fit",
-          at: `+=${STORY_TIMING.beat}`,
-        },
-        { kind: "assistant", text: "Are you sure? this doesn't fit your ICP", at: "+=0.08" },
-        {
-          kind: "prompt",
-          text: "Okay, generate leads ranked by how personally connected they are to us.",
+          text: "Generate leads ranked by how personally connected they are to me.",
           duration: STORY_TIMING.typeMedium,
           sendLabel: "send-proximity-list",
           statusAfter: "Ranking proximity",
@@ -1538,7 +1601,14 @@ export const defaultStories: StoryDefinition[] = [
         },
         {
           kind: "thinking",
-          label: "Scoring shared schools, fields of study, mutual contacts, and warm signals",
+          thinking: {
+            title: "Ranking connected leads",
+            items: [
+              {
+                label: "Scoring shared schools, fields of study, mutual contacts, and warm signals",
+              },
+            ],
+          },
           hold: STORY_TIMING.thinkingMedium,
         },
         { kind: "custom", build: () => ctx.chat.proximityLeadList(PROXIMITY_LEADS), at: "-=0.04" },
@@ -1560,16 +1630,10 @@ export const defaultStories: StoryDefinition[] = [
     entryLeadTime: INPUT_ENTRY_LEAD_TIME,
     build: (ctx) => {
       const pageTwoTarget = responsiveElementTarget(
-        '[data-data-table="website-visitors-sales"] [data-table-page-button="2"]',
+        '[data-data-table="website-visitors-sales"] [data-page-button-role="next"]',
         "center",
       );
-      const powerDialerTarget = responsiveElementTarget(
-        '[data-data-table="website-visitors-sales"] [data-table-action="power-dialer"]',
-        "center",
-        { desktop: { x: 5, y: 0 }, tablet: { x: 4, y: 0 }, mobile: { x: 3, y: 0 } },
-        false,
-      );
-      const emailSequenceTarget = responsiveElementTarget(
+      const outreachSequenceTarget = responsiveElementTarget(
         '[data-data-table="website-visitors-sales"] [data-table-action="email-sequence"]',
         "center",
         {},
@@ -1599,77 +1663,72 @@ export const defaultStories: StoryDefinition[] = [
           statusAfter: "building visitor list",
           fromEntry: true,
         },
-        { kind: "dataTable", config: WEBSITE_VISITOR_SALES_TABLE, at: "-=0.02" },
-        dataTableFooterPerusalStep("website-visitors-sales", STORY_TIMING.beat + 0.42, "+=0.08", {
+        { kind: "custom", build: () => ctx.chat.dataTable(WEBSITE_VISITOR_SALES_TABLE), at: "-=0.02" },
+        dataTableFooterPerusalStep("website-visitors-sales", VISITOR_TABLE_FOOTER_SCROLL_DURATION, "+=0.08", {
           align: "top",
-          offset: -190,
-          settleDelay: 0.32,
+          bottomClearance: VISITOR_TABLE_FOOTER_BOTTOM_CLEARANCE,
         }),
-        {
-          kind: "custom",
-          build: () => ctx.chat.scrollToLiveTimeline(STORY_TIMING.beat + 0.42),
-          at: "+=0.08",
-        },
         {
           kind: "cursorMove",
           target: pageTwoTarget,
-          options: { mode: "pointer", intent: "click", speed: "normal", label: "open-visitor-page-2" },
-          at: "+=0.2",
+          options: VISITOR_PAGINATION_CLICK_MOVE,
+          at: `+=${VISITOR_PAGINATION_PRE_CLICK_HOLD}`,
         },
-        { kind: "cursorClick", at: "-=0.02" },
-        { kind: "custom", build: () => ctx.chat.dataTablePage("website-visitors-sales", 2), at: "-=0.03" },
+        { kind: "cursorClick", at: "+=0.08" },
+        { kind: "custom", build: () => ctx.chat.dataTablePage("website-visitors-sales", 2), at: "-=0.02" },
         { kind: "status", text: "ready to engage", at: "+=0.1" },
         {
           kind: "custom",
-          build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat + 0.58 }),
+          build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat }),
         },
         {
           kind: "cursorMove",
-          target: powerDialerTarget,
-          options: {
-            mode: "pointer",
-            intent: "hover",
-            speed: "slow",
-            durationScale: 1.45,
-            label: "hover-power-dialer",
-          },
-          at: "+=0.42",
-        },
-        { kind: "custom", build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat + 2 }), at: "+=0.12" },
-        {
-          kind: "cursorMove",
-          target: emailSequenceTarget,
-          options: { mode: "pointer", intent: "hover", speed: "slow", label: "hover-email-sequence" },
+          target: outreachSequenceTarget,
+          options: OUTREACH_SEQUENCE_CURSOR_MOVE,
+          at: "+=0.12",
         },
         { kind: "cursorClick", at: "+=0.18" },
+        { kind: "custom", build: () => ctx.chat.dataTableActionSelected("website-visitors-sales", "email-sequence"), at: "<" },
         { kind: "status", text: "building outreach sequence", at: "<" },
         { kind: "custom", build: () => ctx.chat.sequenceBuildThinking(ENGAGEMENT_SEQUENCE_THINKING), at: "+=0.06" },
-        { kind: "sequenceEngagement", config: ENGAGEMENT_SEQUENCE_LAUNCH, at: "-=0.02" },
-        { kind: "custom", build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat + 0.24 }), at: "+=0.04" },
+        { kind: "custom", build: () => ctx.chat.sequenceEngagement(ENGAGEMENT_SEQUENCE_LAUNCH), at: "-=0.02" },
+        { kind: "custom", build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat }), at: "+=0.04" },
+        {
+          kind: "custom",
+          build: () => ctx.chat.sequencePersonCardIntoView("visitor-outreach-sequences", sequenceSecondPersonIndex),
+          at: "+=0.02",
+        },
         {
           kind: "cursorMove",
           target: sequenceSecondPersonTarget,
-          options: { mode: "pointer", intent: "click", speed: "normal", label: "preview-next-sequence" },
+          options: { ...SEQUENCE_PERSON_PREVIEW_MOVE, label: "preview-next-sequence" },
+          at: "+=0.02",
         },
-        { kind: "cursorClick", at: "-=0.02" },
+        { kind: "cursorClick", at: "+=0.08" },
         { kind: "custom", build: () => ctx.chat.sequencePerson("visitor-outreach-sequences", sequenceSecondPersonIndex), at: "-=0.03" },
-        { kind: "custom", build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat + 0.24 }), at: "+=0.04" },
+        { kind: "custom", build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat }), at: "+=0.04" },
+        {
+          kind: "custom",
+          build: () => ctx.chat.sequencePersonCardIntoView("visitor-outreach-sequences", sequenceThirdPersonIndex),
+          at: "+=0.02",
+        },
         {
           kind: "cursorMove",
           target: sequenceThirdPersonTarget,
-          options: { mode: "pointer", intent: "click", speed: "normal", label: "preview-following-sequence" },
+          options: { ...SEQUENCE_PERSON_PREVIEW_MOVE, label: "preview-following-sequence" },
+          at: "+=0.02",
         },
-        { kind: "cursorClick", at: "-=0.02" },
+        { kind: "cursorClick", at: "+=0.08" },
         { kind: "custom", build: () => ctx.chat.sequencePerson("visitor-outreach-sequences", sequenceThirdPersonIndex), at: "-=0.03" },
         { kind: "custom", build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat + 0.28 }), at: "+=0.04" },
         ...sequenceStepClickSteps("visitor-outreach-sequences", [1, 2, 3], "+=0.22"),
         {
           kind: "cursorMove",
           target: sequenceKickoffTarget,
-          options: { mode: "pointer", intent: "click", speed: "normal", label: "kickoff-visitor-sequence" },
+          options: { ...SEQUENCE_KICKOFF_MOVE, label: "kickoff-visitor-sequence" },
         },
-        { kind: "cursorClick", at: "-=0.02" },
-        { kind: "custom", build: () => ctx.chat.sequenceKickoff("visitor-outreach-sequences"), at: "-=0.04" },
+        { kind: "cursorClick", at: "+=0.12" },
+        { kind: "custom", build: () => ctx.chat.sequenceKickoff("visitor-outreach-sequences"), at: "-=0.02" },
         { kind: "custom", build: () => ctx.chat.enrollmentProgress({ total: 50 }), at: "+=0.08" },
       ]);
     },
@@ -1718,8 +1777,12 @@ export const defaultStories: StoryDefinition[] = [
         { kind: "custom", build: () => ctx.timeline().to({}, { duration: STORY_TIMING.beat }) },
         { kind: "custom", build: () => dropArea.complete() },
         { kind: "custom", build: () => cursorFile.releaseAtDrop(), at: "<" },
-        { kind: "custom", build: () => cursorFile.landAsUploadedFile("may_webinar_attendees.csv", "54 records"), at: "<" },
-        { kind: "dataTable", config: CSV_RAW_TABLE, at: "+=0.08" },
+        {
+          kind: "custom",
+          build: () => cursorFile.landAsUploadedFile("may_webinar_attendees.csv", "54 records", { preserveScroll: true }),
+          at: "<",
+        },
+        { kind: "dataTable", config: CSV_RAW_TABLE, at: `+=${STORY_TIMING.beat}` },
         { kind: "status", text: "Cleaning CSV", at: "<" },
         {
           kind: "thinking",

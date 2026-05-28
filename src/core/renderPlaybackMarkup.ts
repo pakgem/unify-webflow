@@ -7,6 +7,24 @@ export function renderPlaybackMarkup(root: HTMLElement): void {
 
   root.innerHTML = `
     <div class="wa-section__inner">
+      <button class="wa-theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode" aria-pressed="false">
+        <span class="wa-theme-toggle__track" aria-hidden="true">
+          <span class="wa-theme-toggle__icon wa-theme-toggle__icon--light">
+            <svg viewBox="0 0 16 16" focusable="false">
+              <path d="M8 2v1.4M8 12.6V14M3.8 3.8l1 1M11.2 11.2l1 1M2 8h1.4M12.6 8H14M3.8 12.2l1-1M11.2 4.8l1-1"></path>
+              <circle cx="8" cy="8" r="2.4"></circle>
+            </svg>
+          </span>
+          <span class="wa-theme-toggle__icon wa-theme-toggle__icon--dark">
+            <svg viewBox="0 0 16 16" focusable="false">
+              <path d="M10.9 12.7A5.4 5.4 0 0 1 6.5 3.1a4.8 4.8 0 1 0 6.4 6.4 5.4 5.4 0 0 1-2 3.2Z"></path>
+            </svg>
+          </span>
+          <span class="wa-theme-toggle__thumb"></span>
+        </span>
+        <span class="wa-theme-toggle__label" data-theme-toggle-label>System</span>
+      </button>
+
       <div class="wa-copy">
         <h2 class="wa-copy__title" aria-label="Escape tab hell with a unified platform for prospecting, researching, and sequencing, all backed by frontier AI models.">
           <span>Escape tab hell with a unified platform for</span>

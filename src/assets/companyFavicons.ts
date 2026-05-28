@@ -1,6 +1,5 @@
 import adyen from "./company-favicons/Adyen.png";
 import airtable from "./company-favicons/Airtable.png";
-import apollo from "./company-favicons/Apollo.png";
 import brex from "./company-favicons/Brex.png";
 import brightLayer from "./company-favicons/BrightLayer.png";
 import census from "./company-favicons/Census.png";
@@ -17,7 +16,6 @@ import notion from "./company-favicons/Notion.png";
 import orbitGrid from "./company-favicons/OrbitGrid.png";
 import paypal from "./company-favicons/PayPal.png";
 import plaid from "./company-favicons/Plaid.png";
-import ramp from "./company-favicons/Ramp.png";
 import retool from "./company-favicons/Retool.png";
 import rippling from "./company-favicons/Rippling.png";
 import sequoia from "./company-favicons/Sequoia.png";
@@ -33,9 +31,6 @@ import wharton from "./company-favicons/Wharton.png";
 export const COMPANY_FAVICON_URLS: Record<string, string> = {
   adyen,
   airtable,
-  apollo,
-  "apollo io": apollo,
-  apolloio: apollo,
   brex,
   "bright layer": brightLayer,
   brightlayer: brightLayer,
@@ -54,7 +49,6 @@ export const COMPANY_FAVICON_URLS: Record<string, string> = {
   orbitgrid: orbitGrid,
   paypal,
   plaid,
-  ramp,
   retool,
   rippling,
   sequoia,

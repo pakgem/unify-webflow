@@ -23,10 +23,10 @@ import {
   DEFAULT_THINKING_DISCLOSURE,
   DEFAULT_THINKING_TITLE,
   getDefaultThinkingDetail,
-  getThinkingElapsedLabel,
 } from "../stories/thinkingText";
-import { addTimelineElapsedTimer } from "../motion/elapsedTimer";
+import { formatElapsedSeconds } from "../motion/elapsedTimer";
 import { COMPANY_FAVICON_URLS } from "../assets/companyFavicons";
+import { getToolFallbackInitial, getToolFaviconUrl, getToolServiceKey } from "../assets/toolFavicons";
 import { getProfilePhotoUrl } from "../assets/profilePhotos";
 import { createUnifyMarkSvg } from "../assets/unifyMark";
 import type { AssetUrlResolver } from "../core/assetUrls";
@@ -56,8 +56,15 @@ type PreparedCursorFile = {
   startFollow: () => gsap.core.Timeline;
   stopFollow: () => gsap.core.Timeline;
   releaseAtDrop: () => gsap.core.Timeline;
-  landAsUploadedFile: (fileName: string, detail?: string) => gsap.core.Timeline;
+  landAsUploadedFile: (fileName: string, detail?: string, options?: UploadedFileLandingOptions) => gsap.core.Timeline;
   landAsUploadedFiles: (files: UploadedFileConfig[]) => gsap.core.Timeline;
+};
+type UploadedFileLandingOptions = {
+  preserveScroll?: boolean;
+};
+type ComponentScrollRevealOptions = {
+  preserveScroll?: boolean;
+  scrollOffset?: number;
 };
 type ComponentRevealOptions = {
   scrollAlign?: "equal-inset";
@@ -70,6 +77,7 @@ type ChatElementScrollOptions = {
   offset?: number;
   match?: "first" | "last";
   align?: "top" | "bottom";
+  bottomClearance?: number;
 };
 type ChatScrollTargetOptions = Required<Pick<ChatElementScrollOptions, "align" | "duration">> &
   Pick<ChatElementScrollOptions, "offset"> & {
@@ -129,6 +137,7 @@ type DataTablePageTransitionState = {
   buttons: HTMLElement[];
   targetButton?: HTMLElement;
   range: HTMLElement | null;
+  paginationDirection: "previous" | "next" | null;
   cellSwaps: DataTablePageCellSwap[];
 };
 type DataTablePageRuntime = {
@@ -144,6 +153,7 @@ type DataTablePageButtonRuntime = {
   table: HTMLElement;
   tableId: string;
   page: number;
+  pageRange: string | null;
   initialPage: number | null;
   initialRangeText: string | null;
 };
@@ -161,6 +171,24 @@ type EnrollmentProgressConfig = {
   duration?: number;
   label?: string;
   detail?: string;
+};
+type EnrollmentMailFlight = {
+  startX: number;
+  startY: number;
+  launchX: number;
+  driftX: number;
+  apexY: number;
+  fadeStartY: number;
+  exitY: number;
+  scale: number;
+  startRotation: number;
+  endRotation: number;
+  duration: number;
+};
+type EnrollmentMailParticleState = {
+  progress: number;
+  icon: HTMLElement | null;
+  flight: EnrollmentMailFlight | null;
 };
 type ComposerFrame = {
   left: number;
@@ -198,9 +226,13 @@ type ThinkingSequenceOptions = {
   headerDuration: number;
   afterStepHold: number;
   finalHold: number;
+  preserveScroll?: boolean;
 };
 type ThinkingInput = string | ThinkingItemConfig | Array<string | ThinkingItemConfig> | ThinkingStateConfig;
-type NormalizedThinkingItem = Required<ThinkingItemConfig>;
+type NormalizedThinkingItem = Required<Pick<ThinkingItemConfig, "label" | "detail" | "disclosure">> & {
+  duration?: number;
+  toolCalls: NonNullable<ThinkingItemConfig["toolCalls"]>;
+};
 type NormalizedThinkingState = {
   title: string;
   elapsed?: string;
@@ -210,16 +242,22 @@ type ClaimedThinkingMessage = {
   message: HTMLElement;
   header: HTMLElement;
   headerGlyph: HTMLElement;
+  headerChevron: HTMLElement;
   title: HTMLElement;
   traveler: HTMLElement;
-  elapsed: HTMLElement;
   steps: HTMLElement;
+};
+type ThreadScrollAnchor = {
+  element: HTMLElement;
+  top: number;
 };
 type StreamTiming = {
   charsPerSecond: number;
   minDuration: number;
   maxDuration: number;
 };
+
+export const THINKING_INTERACTION_PAUSE_EVENT = "chatbot-stories:pause-for-thinking-interaction";
 type ChildRevealPreset = {
   from: gsap.TweenVars;
   to: gsap.TweenVars;
@@ -231,6 +269,11 @@ type WaterfallServiceConfig = {
   label: string;
   service: string;
   state: WaterfallStepState;
+};
+type WaterfallRowConfig = {
+  label: string;
+  state: WaterfallStepState;
+  chips: WaterfallServiceConfig[];
 };
 export type DataTablePageRestore = {
   tableId: string;
@@ -283,7 +326,7 @@ const MAILBOX_LEARNING_TITLE = "Learning your style";
 const MAILBOX_LEARNING_READY_TITLE = "Voice calibrated";
 const MAILBOX_LEARNING_READY_DETAIL = "73 tone & tactic rules defined";
 const MAILBOX_LEARNING_STAGES = [
-  { detail: "Analyzing vocabulary", progress: 31, duration: 1.05, hold: 0.38 },
+  { detail: "Analyzing tone", progress: 31, duration: 1.05, hold: 0.38 },
   { detail: "Investigating wins", progress: 64, duration: 1.2, hold: 0.46 },
   { detail: "Figuring out your voice", progress: 100, duration: 1.15, hold: 0.76 },
 ] as const;
@@ -378,23 +421,58 @@ const THINKING_HEADER_STREAM = {
   minDuration: 0.18,
   maxDuration: 0.42,
 };
+const THINKING_TOOL_CALLS = {
+  entranceStagger: motionDuration(0.055),
+  minActiveHold: motionDuration(0.34),
+  singleActiveHold: motionDuration(1.55),
+  defaultActiveWindow: motionDuration(1.36),
+  configuredStepActiveRatio: 0.56,
+  maxActiveWindow: motionDuration(4.6),
+  finishFactors: [0.46, 0.82, 0.58, 1, 0.7, 0.52, 0.94, 0.76, 0.64, 0.88],
+};
+
+/* --------------------------------------------------------------------------
+   Tool Call Complete Icon Storyboard
+
+      0ms  active favicon finishes shimmering in place
+      0ms  favicon pops down and fades out of the 14px icon slot
+     55ms  Tabler checkmark springs into the same slot
+    255ms  checkmark settles back to exact 14px size
+   -------------------------------------------------------------------------- */
+
+const THINKING_TOOL_COMPLETE_ICON = {
+  faviconDropY: 5,
+  faviconDropScale: 0.78,
+  faviconDropDuration: motionDuration(0.12),
+  checkStartY: -4,
+  checkStartScale: 0.66,
+  checkPopScale: 1.16,
+  checkPopDuration: motionDuration(0.2),
+  checkSettleDuration: motionDuration(0.1),
+  checkOverlap: "-=0.065",
+};
 
 const THINKING_STEP_FOLD = {
   detailOffsetY: 0,
   duration: motionDuration(0.24),
 };
-const THINKING_LAYOUT_RESERVATION_CLEAR_PROPS = "height,minHeight,overflow,opacity,visibility,y,transform";
+const THINKING_LAYOUT_RESERVATION_CLEAR_PROPS = "display,height,marginTop,minHeight,overflow,opacity,visibility,y,transform";
 
 const THINKING_LOGO_TRAVEL = {
   duration: motionDuration(0.34),
   returnDuration: motionDuration(0.38),
   ease: "power2.inOut",
 };
+const THINKING_STEP_REVEAL_DELAY = motionDuration(0.08);
 
 const THINKING_BLOCK_COLLAPSE = {
   y: 0,
   duration: motionDuration(0.26),
   ease: "power2.inOut",
+};
+const THINKING_INTERACTION_TOGGLE = {
+  duration: motionDuration(0.18),
+  ease: "power2.out",
 };
 
 const SEQUENCE_THINKING_LOGO = {
@@ -406,9 +484,44 @@ const SEQUENCE_THINKING_LOGO = {
 const SEQUENCE_ENROLLMENT_PROGRESS = {
   duration: motionDuration(2.2),
   finalHold: motionDuration(0.48),
-  title: (count: number, total: number) => `Enrolling ${count} / ${total}`,
-  label: "Queuing personalized sequences",
-  detail: "Scheduling email, social, and call steps for every selected visitor.",
+  title: "Enrolling list in sequence",
+  completeTitle: "Enrolled list in sequence",
+  queueHold: motionDuration(0.44),
+  mailboxHold: motionDuration(0.5),
+  progressDelay: motionDuration(0.04),
+  queueLabel: "Queuing personalized sequences",
+  queueDetail: "Scheduling email, social, and call steps for every selected visitor.",
+  mailboxLabel: "Selecting the best mailboxes for deliverability.",
+  mailboxDetail: "Switching out recently used mailboxes.",
+  sendLabel: (count: number, total: number) => `Sending the first email to ${count}/${total}`,
+};
+
+/* --------------------------------------------------------------------------
+   Sequence Enrollment Mail Burst
+
+      0ms   one mail icon emits for each enrolled person across progress
+      0ms   icon pops from the enrolling text and shoots upward
+    230ms   gravity takes over and the icon falls through thread content
+   1260ms   icon fades as it leaves the chat viewport
+   -------------------------------------------------------------------------- */
+
+const SEQUENCE_ENROLLMENT_MAIL = {
+  iconSize: 16,
+  launchSplit: 0.18,
+  launchDuration: motionDuration(0.18),
+  fallDurationMin: motionDuration(0.78),
+  fallDurationRange: motionDuration(0.34),
+  apexYMin: 42,
+  apexYRange: 58,
+  launchXRange: 24,
+  driftXRange: 132,
+  fadeMargin: 24,
+  exitOvershootMin: 56,
+  exitOvershootRange: 64,
+  minExitY: 170,
+  minFadeStartY: 112,
+  scaleRange: 0.22,
+  rotationRange: 18,
 };
 
 /* --------------------------------------------------------------------------
@@ -529,7 +642,7 @@ const MARKETING_DATA_GRID_ARTBOARD = {
 
 const STREAM_SCROLL_INTERVAL_MS = 96;
 const TRANSIENT_ELEMENT_SELECTOR =
-  ".wa-cursor-file, .wa-file-landing-clone, .wa-file-landing-label, .wa-csv-drop";
+  ".wa-cursor-file, .wa-file-landing-clone, .wa-file-landing-label, .wa-csv-drop, .wa-enrollment-mail";
 const MARKETING_PANEL_SELECTOR = "[data-marketing-data-sources-grid]";
 const DATA_TABLE_SELECTOR = "[data-data-table]";
 const DATA_TABLE_PAGE_BUTTON_SELECTOR = "[data-table-page-button]";
@@ -577,9 +690,6 @@ const COMPANY_LOGO_ICON_SLUGS: Record<string, string> = {
 const COMPANY_LOGO_DOMAINS: Record<string, string> = {
   "adyen": "adyen.com",
   "airtable": "airtable.com",
-  "apollo": "apollo.io",
-  "apollo io": "apollo.io",
-  "apolloio": "apollo.io",
   "brex": "brex.com",
   "bright layer": "brightlayer.com",
   "brightlayer": "brightlayer.com",
@@ -601,8 +711,8 @@ const COMPANY_LOGO_DOMAINS: Record<string, string> = {
   "orbitgrid": "orbitgrid.com",
   "paypal": "paypal.com",
   "plaid": "plaid.com",
+  "pylon": "usepylon.com",
   "posthog": "posthog.com",
-  "ramp": "ramp.com",
   "retool": "retool.com",
   "rippling": "rippling.com",
   "salesforce": "salesforce.com",
@@ -614,6 +724,7 @@ const COMPANY_LOGO_DOMAINS: Record<string, string> = {
   "unify": "unifygtm.com",
   "unify gtm": "unifygtm.com",
   "vercel": "vercel.com",
+  "waterfall": "waterfall.com",
   "webflow": "webflow.com",
 };
 const CURSOR_FILE_ENTRY = {
@@ -640,6 +751,52 @@ const ENRICHMENT_WATERFALL_MOTION = {
   serviceSettleDuration: motionDuration(0.28),
   rowCompleteHold: motionDuration(0.32),
   rowOffsets: [0, motionDuration(0.16), motionDuration(0.28)],
+};
+const DEFAULT_ENRICHMENT_WATERFALL_ROWS: WaterfallRowConfig[] = [
+  {
+    label: "Work email",
+    state: "complete",
+    chips: [
+      { label: "Unify", service: "on-prem", state: "complete" },
+      { label: "Wiza", service: "wiza", state: "pending" },
+      { label: "ContactOut", service: "contactout", state: "pending" },
+      { label: "Prospeo", service: "prospeo", state: "pending" },
+      { label: "Waterfall", service: "waterfall", state: "pending" },
+      { label: "FullEnrich", service: "fullenrich", state: "pending" },
+    ],
+  },
+  {
+    label: "Phone number",
+    state: "complete",
+    chips: [
+      { label: "Unify", service: "on-prem", state: "complete" },
+      { label: "ContactOut", service: "contactout", state: "pending" },
+      { label: "Forager", service: "forager", state: "pending" },
+      { label: "Wiza", service: "wiza", state: "pending" },
+      { label: "Prospeo", service: "prospeo", state: "pending" },
+      { label: "FullEnrich", service: "fullenrich", state: "pending" },
+    ],
+  },
+  {
+    label: "Social profile",
+    state: "complete",
+    chips: [
+      { label: "Unify", service: "on-prem", state: "failed" },
+      { label: "ContactOut", service: "contactout", state: "complete" },
+      { label: "Prospeo", service: "prospeo", state: "pending" },
+      { label: "Wiza", service: "wiza", state: "pending" },
+      { label: "Forager", service: "forager", state: "pending" },
+    ],
+  },
+];
+
+const WATERFALL_SERVICE_GLYPH_PATHS: Record<string, string> = {
+  contactout: "M4.2 10.7V5.3h7.6v5.4H4.2Zm1.2-6.8h1.2m2.8 0h1.2M6 7.9h.1m3.8 0h.1",
+  default: "M3.3 4.2 8 2l4.7 2.2M3.3 7.1 8 4.9l4.7 2.2M3.3 10 8 7.8l4.7 2.2M8 7.8v5.4",
+  fullenrich: "M3.1 9.9a5 5 0 1 1 9.8 0M5.2 8.6a2.8 2.8 0 1 1 5.6 0M2.9 11.8h10.2",
+  prospeo: "m8 2.7 4.4 2.5v5.6L8 13.3l-4.4-2.5V5.2L8 2.7Zm0 0v5.2m4.4-2.7L8 7.9 3.6 5.2",
+  waterfall: "m3.2 6.2 3.1 3 1.7-1.6 1.7 1.6 3.1-3",
+  wiza: "M8 2.4 5.2 11.8h5.6L8 2.4Zm-3.8 9.4h7.6",
 };
 
 const COMPONENT_CHILD_REVEAL = {
@@ -763,9 +920,20 @@ export class ChatActor {
   private threadContentFitFrame: number | null = null;
   private threadContentResizeObserver: ResizeObserver | null = null;
   private threadContentMutationObserver: MutationObserver | null = null;
+  private maxVisibleThreadContentHeight = 0;
   private windowSceneMeasure: HTMLElement | null = null;
 
-  private readonly handleDataTableControlClick = (event: MouseEvent): void => {
+  private readonly handleChatShellClick = (event: MouseEvent): void => {
+    if (this.handleThinkingToggleClick(event)) return;
+
+    const actionButton = this.findDataTableActionButton(event.target);
+
+    if (actionButton) {
+      event.preventDefault();
+      this.selectDataTableActionButton(actionButton, { animate: true });
+      return;
+    }
+
     const pageButton = this.findDataTablePageButton(event.target);
 
     if (!pageButton) return;
@@ -776,7 +944,7 @@ export class ChatActor {
 
     event.preventDefault();
 
-    this.updateDataTablePageControlsForTable(pageRuntime.table, pageRuntime.page, pageButton.dataset.pageRange ?? null);
+    this.updateDataTablePageControlsForTable(pageRuntime.table, pageRuntime.page, pageRuntime.pageRange);
     this.activeTablePageTimelines.get(pageRuntime.tableId)?.kill();
     const timeline = this.dataTablePage(pageRuntime.tableId, pageRuntime.page, {
       updateExpected: false,
@@ -792,6 +960,80 @@ export class ChatActor {
     });
   };
 
+  private handleThinkingToggleClick(event: MouseEvent): boolean {
+    if (!(event.target instanceof Element)) return false;
+
+    const headerChevron = event.target.closest<HTMLElement>(".wa-thinking__chevron");
+
+    if (headerChevron) {
+      const header = headerChevron.closest<HTMLElement>(".wa-thinking");
+
+      if (!header?.dataset.thinkingCollapsed) return false;
+      if (!this.ensurePausedForThinkingInteraction()) return false;
+
+      event.preventDefault();
+      event.stopPropagation();
+      this.toggleThinkingSteps(header);
+      return true;
+    }
+
+    const header = event.target.closest<HTMLElement>(".wa-thinking");
+
+    if (header?.dataset.thinkingCollapsed) {
+      if (!this.ensurePausedForThinkingInteraction()) return false;
+
+      event.preventDefault();
+      event.stopPropagation();
+      this.toggleThinkingSteps(header);
+      return true;
+    }
+
+    const stepChevron = event.target.closest<HTMLElement>(".wa-research-step__chevron");
+
+    if (stepChevron) {
+      const step = stepChevron.closest<HTMLElement>(".wa-research-step");
+
+      if (!step || step.dataset.stepState !== "complete") return false;
+      if (!this.ensurePausedForThinkingInteraction()) return false;
+
+      event.preventDefault();
+      event.stopPropagation();
+      this.toggleThinkingStepDetail(step);
+      return true;
+    }
+
+    const stepLabel = event.target.closest<HTMLElement>(".wa-research-step__label-row");
+
+    if (stepLabel) {
+      const step = stepLabel.closest<HTMLElement>(".wa-research-step");
+
+      if (!step || step.dataset.stepState !== "complete") return false;
+      if (!this.ensurePausedForThinkingInteraction()) return false;
+
+      event.preventDefault();
+      event.stopPropagation();
+      this.toggleThinkingStepDetail(step);
+      return true;
+    }
+
+    return false;
+  }
+
+  private isPausedForThinkingInteraction(): boolean {
+    return this.root.dataset.storyPaused === "true" || this.root.dataset.chatHistoryPaused === "true";
+  }
+
+  private ensurePausedForThinkingInteraction(): boolean {
+    if (this.isPausedForThinkingInteraction()) return true;
+
+    this.root.dispatchEvent(new CustomEvent(THINKING_INTERACTION_PAUSE_EVENT, {
+      bubbles: true,
+      cancelable: true,
+    }));
+
+    return this.isPausedForThinkingInteraction();
+  }
+
   constructor(private root: HTMLElement, options: ChatActorOptions = {}) {
     this.resolveAssetUrl = options.resolveAssetUrl ?? identityAssetUrlResolver;
     this.stage = this.required(".wa-stage");
@@ -804,7 +1046,7 @@ export class ChatActor {
     this.composerContents = Array.from(this.composer.children).filter(
       (child): child is HTMLElement => child instanceof HTMLElement,
     );
-    this.chatShell.addEventListener("click", this.handleDataTableControlClick);
+    this.chatShell.addEventListener("click", this.handleChatShellClick);
     this.signupScene = this.required("[data-signup-scene]");
     this.signupLogo = this.required("[data-signup-logo-target]");
     this.signupEmail = this.required("[data-signup-email]");
@@ -860,7 +1102,7 @@ export class ChatActor {
   }
 
   destroy(): void {
-    this.chatShell.removeEventListener("click", this.handleDataTableControlClick);
+    this.chatShell.removeEventListener("click", this.handleChatShellClick);
     if (this.threadContentFitFrame !== null) {
       cancelAnimationFrame(this.threadContentFitFrame);
       this.threadContentFitFrame = null;
@@ -871,6 +1113,15 @@ export class ChatActor {
     this.windowSceneMeasure = null;
     this.clearDataTableState();
     this.clearSequencePersonTimelines();
+  }
+
+  collapsePausedThinkingInteractions(): void {
+    this.queryElements(this.chatShell, ".wa-thinking[data-thinking-expanded=\"true\"]").forEach((header) => {
+      this.setThinkingStepsExpanded(header, false, { animate: false });
+    });
+    this.queryElements(this.chatShell, ".wa-research-step[data-detail-expanded=\"true\"]").forEach((step) => {
+      this.setThinkingStepDetailExpanded(step, false, { animate: false });
+    });
   }
 
   prepareStoryStart(): void {
@@ -1046,8 +1297,9 @@ export class ChatActor {
       })
       .call(() => this.setComposerVisibleState(true))
       .set(this.thread, {
-        paddingBottom: () => Math.max(CHAT_BOTTOM_CLEARANCE, this.getComposerThreadInsetForFrame(fullFrame)),
-      }, 0)
+        "--wa-thread-base-bottom-padding": () =>
+          `${Math.max(CHAT_BOTTOM_CLEARANCE, this.getComposerThreadInsetForFrame(fullFrame))}px`,
+      } as gsap.TweenVars, 0)
       .add(this.tweenThreadToBottom(COMPOSER_MOTION.threadPushDuration, COMPOSER_MOTION.threadPushEase), 0)
       .to(this.composer, {
         left: fullFrame.left,
@@ -1128,7 +1380,8 @@ export class ChatActor {
           gsap.set(this.composer, {
             visibility: "hidden",
           });
-          gsap.set(this.thread, { paddingBottom: CHAT_BOTTOM_CLEARANCE });
+          this.thread.style.removeProperty("--wa-thread-base-bottom-padding");
+          this.updateThreadContentFitState();
           this.pinThreadToBottom();
         },
       }, 0);
@@ -1361,12 +1614,13 @@ export class ChatActor {
   }
 
   prepareForChatHistoryPause(): void {
+    this.syncPausedThinkingLayouts();
   }
 
   scrollToLive(duration = CHAT_SCROLL_MOTION.followDuration): void {
     this.stopScrollMotion();
 
-    const target = this.getThreadBottomScrollTarget();
+    const target = this.getThreadLiveScrollTarget();
 
     if (this.prefersReducedMotion || Math.abs(this.thread.scrollTop - target) < 1) {
       this.thread.scrollTop = target;
@@ -1414,7 +1668,11 @@ export class ChatActor {
     );
   }
 
-  thinkingState(input: ThinkingInput, hold = 1.1): gsap.core.Timeline {
+  thinkingState(
+    input: ThinkingInput,
+    hold = 1.1,
+    scrollOptions: ComponentScrollRevealOptions = {},
+  ): gsap.core.Timeline {
     const thinking = this.normalizeThinkingInput(input);
     const isSequence = thinking.items.length > 1;
 
@@ -1424,6 +1682,7 @@ export class ChatActor {
       headerDuration: isSequence ? 0.24 : 0.28,
       afterStepHold: isSequence ? hold * 0.45 : hold,
       finalHold: isSequence ? hold * 0.35 : 0,
+      preserveScroll: scrollOptions.preserveScroll ?? false,
     });
   }
 
@@ -1441,40 +1700,61 @@ export class ChatActor {
     const table = this.createDataTable(config);
     const scrollAnchor = config.scrollAnchor === "previous-message" ? this.getLastMessageBody() : null;
 
-    return this.revealComponentItems("table", table, ".wa-data-table__row", COMPONENT_CHILD_REVEAL.tableRow, scrollAnchor);
+    return this.revealComponentItems("table", table, ".wa-data-table__row", COMPONENT_CHILD_REVEAL.tableRow, scrollAnchor, {
+      preserveScroll: config.preserveScroll ?? false,
+    });
   }
 
   scrollDataTableFooterIntoView(
     tableId: string,
     duration = CHAT_SCROLL_MOTION.revealDuration,
-    options: Pick<ChatElementScrollOptions, "align" | "offset"> = {},
+    options: Pick<ChatElementScrollOptions, "align" | "offset" | "bottomClearance"> = {},
   ): void {
     const table = this.findDataTable(tableId);
+    const shouldTargetFooter = options.align === "top" || typeof options.bottomClearance === "number";
     const targetElement =
-      options.align === "top"
+      shouldTargetFooter
         ? table?.querySelector<HTMLElement>(".wa-data-table__footer") ?? table
         : table;
 
     if (!targetElement) return;
 
     this.stopScrollMotion();
+    this.updateThreadContentFitState();
 
-    const target = this.getElementScrollTarget(targetElement, {
-      align: options.align ?? "bottom",
-      offset: options.offset ?? 0,
-    });
+    const shouldKeepMeasuring = typeof options.bottomClearance === "number";
+    const resolveTarget = () => {
+      this.updateThreadContentFitState();
 
-    if (this.prefersReducedMotion || Math.abs(this.thread.scrollTop - target) < 1) {
+      return typeof options.bottomClearance === "number"
+        ? this.getElementBottomClearanceScrollTarget(targetElement, options.bottomClearance, options.offset ?? 0)
+        : this.getElementScrollTarget(targetElement, {
+          align: options.align ?? "bottom",
+          offset: options.offset ?? 0,
+        });
+    };
+    const target = resolveTarget();
+
+    if (this.prefersReducedMotion || (!shouldKeepMeasuring && Math.abs(this.thread.scrollTop - target) < 1)) {
       this.thread.scrollTop = target;
       return;
     }
 
-    this.scrollTween = gsap.to(this.thread, {
-      scrollTop: target,
+    const startScrollTop = this.thread.scrollTop;
+    const progress = { value: 0 };
+
+    this.scrollTween = gsap.to(progress, {
+      value: 1,
       duration,
       ease: CHAT_SCROLL_MOTION.revealEase,
       overwrite: "auto",
+      onUpdate: () => {
+        const nextTarget = shouldKeepMeasuring ? resolveTarget() : target;
+
+        this.thread.scrollTop = startScrollTop + ((nextTarget - startScrollTop) * progress.value);
+      },
       onComplete: () => {
+        this.thread.scrollTop = shouldKeepMeasuring ? resolveTarget() : target;
         this.scrollTween = null;
       },
     });
@@ -1545,6 +1825,21 @@ export class ChatActor {
       : this.getAlignedElementScrollTarget(element, options.offset ?? 0);
   }
 
+  private getElementBottomClearanceScrollTarget(element: HTMLElement, clearance: number, extraScroll = 0): number {
+    const rect = element.getBoundingClientRect();
+    const threadRect = this.thread.getBoundingClientRect();
+    const windowBottom = window.visualViewport
+      ? window.visualViewport.offsetTop + window.visualViewport.height
+      : window.innerHeight;
+    const viewportBottom = Math.min(threadRect.bottom, windowBottom);
+    const scale = this.getThreadContentScale();
+    const bottomGap = viewportBottom - rect.bottom;
+    const delta = Math.max(0, clearance - bottomGap) / scale;
+    const target = this.thread.scrollTop + delta + (extraScroll / scale);
+
+    return Math.min(this.getThreadBottomScrollTarget(), Math.max(0, target));
+  }
+
   private getMissingScrollTarget(fallback: NonNullable<ChatScrollTargetOptions["fallback"]>): number {
     return fallback === "bottom" ? this.getThreadBottomScrollTarget() : this.thread.scrollTop;
   }
@@ -1567,6 +1862,7 @@ export class ChatActor {
       targetRows: [],
       buttons: [],
       range: null,
+      paginationDirection: null,
       cellSwaps: [],
     };
 
@@ -1596,6 +1892,7 @@ export class ChatActor {
           gsap.set(state.currentRows, { autoAlpha: 1, y: 0 });
           state.cellSwaps = this.prepareDataTablePageCellSwaps(state.currentRows, state.targetRows);
           this.updateDataTablePageControls(state, page);
+          this.startDataTablePaginationMotion(state, page);
           this.setMotionHints(this.getDataTablePageMotionTargets(state));
         }
       },
@@ -1752,10 +2049,26 @@ export class ChatActor {
       }
     }
     state.cellSwaps = [];
+    if (state.table) {
+      delete state.table.dataset.paginationMotion;
+      delete state.table.dataset.paginationDirection;
+    }
   }
 
   private getDataTablePageMotionTargets(state: DataTablePageTransitionState): HTMLElement[] {
     return state.cellSwaps.flatMap((swap) => [...swap.currentContent, swap.clone]);
+  }
+
+  private startDataTablePaginationMotion(state: DataTablePageTransitionState, page: number): void {
+    if (!state.table) return;
+
+    state.paginationDirection = this.getDataTablePaginationDirection(page, state.initialPage);
+    state.table.dataset.paginationDirection = state.paginationDirection;
+    state.table.dataset.paginationMotion = "true";
+  }
+
+  private getDataTablePaginationDirection(page: number, initialPage: number | null): "previous" | "next" {
+    return initialPage !== null && page < initialPage ? "previous" : "next";
   }
 
   private getElementChildren(element: HTMLElement): HTMLElement[] {
@@ -1792,9 +2105,22 @@ export class ChatActor {
   }
 
   private updateDataTablePageButton(button: HTMLElement, page: number): void {
-    const active = this.parseFiniteNumber(button.dataset.tablePageButton) === page;
+    const role = button.dataset.pageButtonRole ?? "dot";
+    const pageCount = this.parseFiniteNumber(button.dataset.pageCount);
+    const resolvedPageCount = pageCount ?? page;
+    const targetPage = role === "previous"
+      ? Math.max(1, page - 1)
+      : role === "next"
+        ? Math.min(resolvedPageCount, page + 1)
+        : this.parseFiniteNumber(button.dataset.tablePageButton);
+    const active = role === "dot" && targetPage === page;
+    const disabled = (role === "previous" && page <= 1) || (role === "next" && page >= resolvedPageCount);
+
+    if (targetPage !== null) button.dataset.tablePageButton = String(targetPage);
 
     button.dataset.active = String(active);
+    button.toggleAttribute("disabled", disabled);
+    button.setAttribute("aria-disabled", String(disabled));
     button.setAttribute("aria-current", active ? "page" : "false");
   }
 
@@ -1804,7 +2130,7 @@ export class ChatActor {
     this.expectedDataTablePages.forEach((expectedPage, tableId) => {
       const table = this.findDataTable(tableId);
       const currentPage = this.parseFiniteNumber(table?.dataset.activePage);
-      const target = table?.querySelector<HTMLElement>(`[data-table-page-button="${expectedPage}"]`);
+      const target = table ? this.findDataTablePageDotButton(table, expectedPage) : null;
 
       if (!table || !target || currentPage === null || currentPage === expectedPage) return;
 
@@ -1884,6 +2210,87 @@ export class ChatActor {
 
       cards.forEach((candidate) => candidate.toggleAttribute("data-cursor-hover", visible && candidate === card));
     });
+  }
+
+  strategyPlanCursorHover(selector: string, cursor: CursorActor, duration: number): gsap.core.Timeline {
+    const tl = gsap.timeline();
+    let cards: HTMLElement[] = [];
+    let activeCard: HTMLElement | null = null;
+    let stopDelay: gsap.core.Tween | null = null;
+    let tracking = false;
+
+    const setActiveCard = (nextCard: HTMLElement | null): void => {
+      if (nextCard === activeCard) return;
+
+      activeCard?.removeAttribute("data-cursor-hover");
+      activeCard = nextCard;
+      activeCard?.setAttribute("data-cursor-hover", "");
+    };
+
+    const clearActiveCard = (): void => {
+      setActiveCard(null);
+      cards.forEach((card) => card.removeAttribute("data-cursor-hover"));
+    };
+
+    const findHoveredCard = (): HTMLElement | null => {
+      const rootRect = this.root.getBoundingClientRect();
+      const point = cursor.readPosition();
+      const viewportPoint = {
+        x: rootRect.left + point.x,
+        y: rootRect.top + point.y,
+      };
+
+      for (const card of cards) {
+        const rect = card.getBoundingClientRect();
+
+        if (
+          viewportPoint.x >= rect.left &&
+          viewportPoint.x <= rect.right &&
+          viewportPoint.y >= rect.top &&
+          viewportPoint.y <= rect.bottom
+        ) {
+          return card;
+        }
+      }
+
+      return null;
+    };
+
+    const updateHover = (): void => {
+      setActiveCard(findHoveredCard());
+    };
+
+    const stopTracking = (): void => {
+      stopDelay?.kill();
+      stopDelay = null;
+
+      if (tracking) {
+        gsap.ticker.remove(updateHover);
+        tracking = false;
+      }
+
+      clearActiveCard();
+    };
+
+    const startTracking = (): void => {
+      const target = this.root.querySelector<HTMLElement>(selector);
+      const container = target?.matches("[data-strategy-plans]")
+        ? target
+        : target?.closest<HTMLElement>("[data-strategy-plans]");
+
+      cards = container ? this.queryElements(container, ".wa-strategy-plan") : [];
+      clearActiveCard();
+
+      if (!cards.length) return;
+
+      updateHover();
+      gsap.ticker.add(updateHover);
+      tracking = true;
+      stopDelay = gsap.delayedCall(duration, stopTracking);
+    };
+
+    tl.eventCallback("onInterrupt", stopTracking);
+    return tl.call(startTracking);
   }
 
   dataSourcesGrid(config: DataSourceGridConfig): gsap.core.Timeline {
@@ -2327,14 +2734,19 @@ export class ChatActor {
           ease: "power2.out",
           stagger: 0,
         },
+        position: "+=0.02",
       }
       : COMPONENT_CHILD_REVEAL.stackCard;
+    const scrollAnchor = hasSequenceSteps
+      ? panel.querySelector<HTMLElement>(".wa-sequence-people-wrap")
+      : null;
 
     return this.revealComponentItems(
       "sequence",
       panel,
       revealTargets,
       revealPreset,
+      scrollAnchor,
     )
       .call(() => this.setSequencePersonRailPosition(panel, initialIndex), undefined, 0.01)
       .call(() => this.setSequencePersonRailPosition(panel, initialIndex), undefined, 0.12)
@@ -2347,8 +2759,7 @@ export class ChatActor {
       this.createSequenceThinkingStep(track.label, track.detail, index + 1, config.total),
     );
     const allItems = [templateItem, ...trackItems];
-    const elapsedLabel = this.getThinkingElapsed(3);
-    const thinking = this.claimThinkingMessage(allItems, elapsedLabel);
+    const thinking = this.claimThinkingMessage(allItems);
     const progress = { value: 1 };
     const progressTracks = trackItems.map((item) => ({
       label: item.querySelector<HTMLElement>(".wa-sequence-thinking-progress__count"),
@@ -2370,18 +2781,23 @@ export class ChatActor {
       .add(this.revealThinkingHeader(thinking, 0.24))
       .call(() => {
         templateItem.dataset.stepState = "current";
+        this.showThinkingStepTimer(templateItem);
         gsap.set(templateItem, { display: "grid" });
       })
       .add(this.moveThinkingLogoToStep(thinking, templateItem), "<");
 
-    this.addThinkingStepReveal(tl, templateItem, { position: "<" });
+    const templateReveal = this.createThinkingStepReveal(templateItem);
+    const templateActiveDuration = templateReveal.duration() + SEQUENCE_THINKING_LOGO.templateHold;
 
     tl
+      .add(templateReveal, "<")
       .to({}, { duration: SEQUENCE_THINKING_LOGO.templateHold })
-      .add(this.foldThinkingStep(templateItem))
+      .add(this.createThinkingStepElapsedTimer(templateItem, templateActiveDuration), `-=${templateActiveDuration}`)
+      .add(this.foldThinkingStep(templateItem, thinking.message))
       .call(() => {
         trackItems.forEach((item) => {
           item.dataset.stepState = "current";
+          this.showThinkingStepTimer(item);
           gsap.set(item, { display: "grid" });
         });
       }, undefined, "+=0.1")
@@ -2392,9 +2808,14 @@ export class ChatActor {
         duration: motionDuration(0.3),
         ease: "power2.out",
         stagger: 0.04,
-      }, "<");
+      }, `<+=${THINKING_STEP_REVEAL_DELAY}`);
 
-    this.addThinkingStepStreams(tl, trackItems);
+    const trackStreams = gsap.timeline();
+
+    this.addThinkingStepStreams(trackStreams, trackItems);
+    tl.add(trackStreams);
+
+    const trackActiveDuration = trackStreams.duration() + 0.14 + SEQUENCE_THINKING_LOGO.progressDuration;
 
     tl.to(progress, {
       value: config.total,
@@ -2411,14 +2832,16 @@ export class ChatActor {
         this.requestMessageScroll(thinking.message);
       },
     }, "+=0.14")
+      .add(trackItems.map((item) =>
+        this.createThinkingStepElapsedTimer(item, trackActiveDuration),
+      ), `-=${trackActiveDuration}`)
       .to({}, { duration: SEQUENCE_THINKING_LOGO.finalHold });
 
     trackItems.forEach((item, index) => {
-      tl.add(this.foldThinkingStep(item), index === 0 ? undefined : "<");
+      tl.add(this.foldThinkingStep(item, thinking.message), index === 0 ? undefined : "<");
     });
 
     tl.add(this.collapseThinkingToHeader(thinking, allItems));
-    this.addThinkingElapsedTimer(tl, thinking.elapsed, elapsedLabel);
     return tl;
   }
 
@@ -2468,6 +2891,145 @@ export class ChatActor {
     return tl;
   }
 
+  sequencePersonCardIntoView(
+    sequenceId: string,
+    index: number,
+    options: { duration?: number; offset?: number } = {},
+  ): gsap.core.Timeline {
+    const duration = options.duration ?? motionDuration(0.28);
+    const offset = options.offset ?? 20;
+    const tl = gsap.timeline();
+
+    tl.add(this.scrollChatTargetToThreadTop(() => {
+      const section = this.findSequenceEngagement(sequenceId);
+
+      return section?.querySelector<HTMLElement>(".wa-sequence-people-wrap") ?? section;
+    }, {
+      duration,
+      offset,
+    }), 0);
+    tl.add(this.scrollSequenceRailToPerson(sequenceId, index, duration), 0);
+    tl.call(() => {
+      this.forceSequencePersonCardIntoView(sequenceId, index, offset);
+    });
+
+    return tl;
+  }
+
+  private forceSequencePersonCardIntoView(sequenceId: string, index: number, offset: number): void {
+    const section = this.findSequenceEngagement(sequenceId);
+    const target = section?.querySelector<HTMLElement>(".wa-sequence-people-wrap") ?? section;
+
+    if (target) {
+      this.stopScrollMotion();
+      this.updateThreadContentFitState();
+      this.thread.scrollTop = this.getElementThreadTopScrollTarget(target, offset);
+    }
+
+    if (section) this.setSequencePersonRailPosition(section, index);
+  }
+
+  private scrollChatTargetToThreadTop(
+    resolveElement: () => HTMLElement | null,
+    options: { duration: number; offset: number },
+  ): gsap.core.Timeline {
+    const tl = gsap.timeline();
+    let scrollTarget = this.thread.scrollTop;
+    let resolvedElement: HTMLElement | null = null;
+
+    tl.call(() => {
+      resolvedElement = resolveElement();
+
+      this.stopScrollMotion();
+      this.updateThreadContentFitState();
+      scrollTarget = resolvedElement
+        ? this.getElementThreadTopScrollTarget(resolvedElement, options.offset)
+        : this.thread.scrollTop;
+    });
+
+    tl.to(this.thread, {
+      scrollTop: () => scrollTarget,
+      duration: options.duration,
+      ease: CHAT_SCROLL_MOTION.revealEase,
+      overwrite: "auto",
+      onComplete: () => {
+        this.scrollTween = null;
+      },
+    });
+
+    tl.call(() => {
+      scrollTarget = resolvedElement
+        ? this.getElementThreadTopScrollTarget(resolvedElement, options.offset)
+        : this.thread.scrollTop;
+    });
+
+    tl.to(this.thread, {
+      scrollTop: () => scrollTarget,
+      duration: motionDuration(0.12),
+      ease: "power2.out",
+      overwrite: "auto",
+    });
+
+    return tl;
+  }
+
+  private getElementThreadTopScrollTarget(element: HTMLElement, offset = 0): number {
+    const scale = this.getThreadContentScale();
+    const threadRect = this.thread.getBoundingClientRect();
+    const elementRect = element.getBoundingClientRect();
+    const target = this.thread.scrollTop + ((elementRect.top - threadRect.top - offset) / scale);
+
+    return Math.min(this.getThreadBottomScrollTarget(), Math.max(0, target));
+  }
+
+  private scrollSequenceRailToPerson(sequenceId: string, index: number, duration: number): gsap.core.Timeline {
+    const progress = { value: 0 };
+    const state: {
+      rail: HTMLElement | null;
+      start: number;
+      target: number;
+    } = {
+      rail: null,
+      start: 0,
+      target: 0,
+    };
+
+    return gsap.timeline()
+      .call(() => {
+        const section = this.findSequenceEngagement(sequenceId);
+        const runtime = section ? this.getSequenceRailRuntime(section, index) : null;
+
+        progress.value = 0;
+        state.rail = runtime?.rail ?? null;
+        state.start = state.rail?.scrollLeft ?? 0;
+        state.target = runtime ? this.getSequencePersonRailScrollTarget(runtime.rail, runtime.card) : state.start;
+
+        if (!state.rail) return;
+
+        gsap.killTweensOf(state.rail, "scrollLeft");
+        state.rail.dataset.sequenceCentering = "true";
+      })
+      .to(progress, {
+        value: 1,
+        duration: this.prefersReducedMotion ? 0.001 : duration,
+        ease: SEQUENCE_PERSON_SWITCH.railCenterEase,
+        onUpdate: () => {
+          if (!state.rail) return;
+
+          state.rail.scrollLeft = state.start + ((state.target - state.start) * progress.value);
+        },
+        onComplete: () => {
+          if (!state.rail) return;
+
+          state.rail.scrollLeft = state.target;
+          delete state.rail.dataset.sequenceCentering;
+        },
+        onInterrupt: () => {
+          if (state.rail) delete state.rail.dataset.sequenceCentering;
+        },
+      });
+  }
+
   sequenceStep(sequenceId: string, stepIndex: number): gsap.core.Timeline {
     const section = this.findSequenceEngagement(sequenceId);
     const tl = gsap.timeline();
@@ -2487,46 +3049,336 @@ export class ChatActor {
   enrollmentProgress(config: EnrollmentProgressConfig = {}): gsap.core.Timeline {
     const total = Math.max(1, Math.round(config.total ?? 50));
     const progress = { value: 0 };
-    const item = this.createThinkingStep(
+    const queueItem = this.createThinkingStep(
       {
-        label: config.label ?? SEQUENCE_ENROLLMENT_PROGRESS.label,
-        detail: config.detail ?? SEQUENCE_ENROLLMENT_PROGRESS.detail,
+        label: config.label ?? SEQUENCE_ENROLLMENT_PROGRESS.queueLabel,
+        detail: config.detail ?? SEQUENCE_ENROLLMENT_PROGRESS.queueDetail,
         disclosure: DEFAULT_THINKING_DISCLOSURE,
+        toolCalls: [],
       },
       0,
     );
+    const mailboxItem = this.createThinkingStep(
+      {
+        label: SEQUENCE_ENROLLMENT_PROGRESS.mailboxLabel,
+        detail: SEQUENCE_ENROLLMENT_PROGRESS.mailboxDetail,
+        disclosure: DEFAULT_THINKING_COLLAPSED_DISCLOSURE,
+        toolCalls: [],
+      },
+      1,
+    );
+    const sendItem = this.createThinkingStep(
+      {
+        label: SEQUENCE_ENROLLMENT_PROGRESS.sendLabel(0, total),
+        detail: "",
+        disclosure: DEFAULT_THINKING_COLLAPSED_DISCLOSURE,
+        toolCalls: [],
+      },
+      2,
+    );
+    const sendProgress = this.createSequenceEnrollmentProgress(total);
+    const sendProgressCount = sendProgress.querySelector<HTMLElement>("[data-sequence-enrollment-count]");
+    const sendProgressFill = sendProgress.querySelector<HTMLElement>("[data-sequence-enrollment-fill]");
+    const sendBody = sendItem.querySelector<HTMLElement>(".wa-research-step__body");
+    const items = [queueItem, mailboxItem, sendItem];
     const thinking = this.claimThinkingMessage(
-      [item],
-      "",
-      SEQUENCE_ENROLLMENT_PROGRESS.title(0, total),
+      items,
+      SEQUENCE_ENROLLMENT_PROGRESS.title,
+      SEQUENCE_ENROLLMENT_PROGRESS.completeTitle,
     );
     const duration = config.duration ?? SEQUENCE_ENROLLMENT_PROGRESS.duration;
+    const queueReveal = this.createThinkingStepReveal(queueItem);
+    const mailboxReveal = this.createThinkingStepReveal(mailboxItem);
+    const sendReveal = this.createThinkingStepReveal(sendItem);
+    const mailBurst = this.createSequenceEnrollmentMailBurst(sendProgress, total, duration);
+    const queueActiveDuration = queueReveal.duration() + SEQUENCE_ENROLLMENT_PROGRESS.queueHold;
+    const mailboxActiveDuration = mailboxReveal.duration() + SEQUENCE_ENROLLMENT_PROGRESS.mailboxHold;
+    const sendActiveDuration =
+      sendReveal.duration() +
+      SEQUENCE_ENROLLMENT_PROGRESS.progressDelay +
+      Math.max(duration, mailBurst.duration());
+    const tl = gsap.timeline();
 
-    return gsap.timeline()
+    if (sendBody) sendBody.append(sendProgress);
+
+    return tl
       .call(() => {
-        this.prepareThinkingMessage(thinking, [item], 6);
-        gsap.set(thinking.elapsed, { display: "none", autoAlpha: 0 });
+        this.prepareThinkingMessage(thinking, items, 6);
+        gsap.set(sendProgress, { autoAlpha: 0, y: 3 });
+        gsap.set(sendProgressFill, { scaleX: 0, transformOrigin: "left center" });
       })
       .add(this.revealMessage(thinking.message))
       .add(this.revealThinkingHeader(thinking, 0.24))
-      .call(() => {
-        gsap.set(thinking.elapsed, { display: "none", autoAlpha: 0 });
-      })
-      .call(() => this.activateThinkingStep([item], 0))
-      .add(this.moveThinkingLogoToStep(thinking, item), "<")
-      .add(this.createThinkingStepReveal(item), "<")
+      .call(() => this.activateThinkingStep(items, 0))
+      .add(this.moveThinkingLogoToStep(thinking, queueItem), "<")
+      .add(queueReveal, "<")
+      .to({}, { duration: SEQUENCE_ENROLLMENT_PROGRESS.queueHold })
+      .add(this.createThinkingStepElapsedTimer(queueItem, queueActiveDuration), `-=${queueActiveDuration}`)
+      .add(this.foldThinkingStep(queueItem, thinking.message))
+      .call(() => this.activateThinkingStep(items, 1), undefined, "+=0.1")
+      .add(this.moveThinkingLogoToStep(thinking, mailboxItem), "<")
+      .add(mailboxReveal, "<")
+      .to({}, { duration: SEQUENCE_ENROLLMENT_PROGRESS.mailboxHold })
+      .add(this.createThinkingStepElapsedTimer(mailboxItem, mailboxActiveDuration), `-=${mailboxActiveDuration}`)
+      .add(this.foldThinkingStep(mailboxItem, thinking.message))
+      .call(() => this.activateThinkingStep(items, 2), undefined, "+=0.1")
+      .add(this.moveThinkingLogoToStep(thinking, sendItem), "<")
+      .add(sendReveal, "<")
+      .addLabel("enrollment-progress", `+=${SEQUENCE_ENROLLMENT_PROGRESS.progressDelay}`)
+      .to(sendProgress, {
+        autoAlpha: 1,
+        y: 0,
+        duration: motionDuration(0.18),
+        ease: "power2.out",
+      }, "enrollment-progress-=0.02")
       .to(progress, {
         value: total,
         duration,
         ease: "power1.inOut",
         onUpdate: () => {
           const count = Math.min(total, Math.max(0, Math.round(progress.value)));
-          this.setThinkingTitle(thinking, SEQUENCE_ENROLLMENT_PROGRESS.title(count, total));
+          const label = SEQUENCE_ENROLLMENT_PROGRESS.sendLabel(count, total);
+          const ratio = count / total;
+
+          this.setThinkingStepLabel(sendItem, label);
+          if (sendProgressCount) sendProgressCount.textContent = `${count}/${total}`;
+          if (sendProgressFill) gsap.set(sendProgressFill, { scaleX: ratio });
           this.requestMessageScroll(thinking.message);
         },
-      }, "+=0.04")
-      .add(this.completeProgressThinking(thinking, [item], SEQUENCE_ENROLLMENT_PROGRESS.title(total, total)))
+      }, "enrollment-progress")
+      .add(mailBurst, "enrollment-progress")
+      .add(this.createThinkingStepElapsedTimer(sendItem, sendActiveDuration), `-=${sendActiveDuration}`)
+      .add(this.completeProgressThinking(thinking, items, SEQUENCE_ENROLLMENT_PROGRESS.completeTitle))
       .to({}, { duration: SEQUENCE_ENROLLMENT_PROGRESS.finalHold });
+  }
+
+  private createSequenceEnrollmentProgress(total: number): HTMLElement {
+    const progress = document.createElement("span");
+    const count = document.createElement("span");
+    const bar = document.createElement("span");
+    const fill = document.createElement("span");
+
+    progress.className = "wa-sequence-thinking-progress";
+    progress.dataset.sequenceEnrollmentProgress = "true";
+    count.className = "wa-sequence-thinking-progress__count";
+    count.dataset.sequenceEnrollmentCount = "";
+    count.textContent = `0/${total}`;
+    bar.className = "wa-sequence-thinking-progress__bar";
+    fill.dataset.sequenceEnrollmentFill = "";
+    fill.setAttribute("aria-hidden", "true");
+    bar.append(fill);
+    progress.append(count, bar);
+    return progress;
+  }
+
+  private setThinkingStepLabel(item: HTMLElement, text: string): void {
+    const label = item.querySelector<HTMLElement>(".wa-research-step__label");
+
+    if (!label) return;
+
+    label.dataset.activeText = text;
+    label.dataset.collapsedText = this.getPastTenseThinkingTitle(text);
+    label.dataset.fullText = text;
+    label.textContent = text;
+    delete label.dataset.streaming;
+  }
+
+  private createSequenceEnrollmentMailBurst(source: HTMLElement, total: number, duration: number): gsap.core.Timeline {
+    const burst = gsap.timeline();
+
+    if (this.prefersReducedMotion) return burst;
+
+    const iconCount = Math.max(1, Math.round(total));
+    const interval = duration / iconCount;
+
+    for (let index = 0; index < iconCount; index += 1) {
+      burst.add(this.createSequenceEnrollmentMailParticle(source, index, iconCount), index * interval);
+    }
+
+    return burst;
+  }
+
+  private createSequenceEnrollmentMailParticle(
+    source: HTMLElement,
+    index: number,
+    total: number,
+  ): gsap.core.Timeline {
+    const state: EnrollmentMailParticleState = {
+      progress: 0,
+      icon: null,
+      flight: null,
+    };
+    const cleanup = () => {
+      if (!state.icon) return;
+
+      gsap.killTweensOf(state.icon);
+      state.icon.remove();
+      state.icon = null;
+      state.flight = null;
+    };
+
+    return gsap.timeline({
+      onInterrupt: cleanup,
+      onReverseComplete: cleanup,
+    })
+      .call(() => {
+        cleanup();
+
+        const flight = this.getSequenceEnrollmentMailFlight(source, index);
+
+        if (!flight) return;
+
+        const icon = this.createSequenceEnrollmentMailIcon(index + 1, total);
+
+        state.progress = 0;
+        state.flight = flight;
+        state.icon = icon;
+        this.stage.append(icon);
+        gsap.set(icon, {
+          left: flight.startX,
+          top: flight.startY,
+          x: 0,
+          y: 0,
+          rotation: flight.startRotation,
+          scale: flight.scale * 0.72,
+          autoAlpha: 0,
+        });
+      })
+      .to(state, {
+        progress: 1,
+        duration: this.getSequenceEnrollmentMailParticleDuration(index),
+        ease: "none",
+        onUpdate: () => this.renderSequenceEnrollmentMailParticle(state),
+      }, 0)
+      .call(cleanup);
+  }
+
+  private createSequenceEnrollmentMailIcon(index: number, total: number): HTMLElement {
+    const icon = document.createElement("span");
+
+    icon.className = "wa-enrollment-mail";
+    icon.dataset.enrollmentMail = String(index);
+    icon.setAttribute("aria-hidden", "true");
+    icon.append(this.createSvgIcon("wa-enrollment-mail__icon", [
+      "M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z",
+      "M3 7l9 6l9 -6",
+    ], { size: SEQUENCE_ENROLLMENT_MAIL.iconSize }));
+    icon.style.setProperty("--wa-enrollment-mail-index", String(index));
+    icon.style.setProperty("--wa-enrollment-mail-total", String(total));
+
+    return icon;
+  }
+
+  private getSequenceEnrollmentMailFlight(source: HTMLElement, index: number): EnrollmentMailFlight | null {
+    if (!source.isConnected) return null;
+
+    const sourceRect = source.getBoundingClientRect();
+    const stageRect = this.stage.getBoundingClientRect();
+
+    if (!sourceRect.width || !sourceRect.height || !stageRect.width || !stageRect.height) return null;
+
+    const randomA = this.sequenceEnrollmentMailRandom(index, 1);
+    const randomB = this.sequenceEnrollmentMailRandom(index, 2);
+    const randomC = this.sequenceEnrollmentMailRandom(index, 3);
+    const randomD = this.sequenceEnrollmentMailRandom(index, 4);
+    const randomE = this.sequenceEnrollmentMailRandom(index, 5);
+    const randomF = this.sequenceEnrollmentMailRandom(index, 6);
+    const iconSize = SEQUENCE_ENROLLMENT_MAIL.iconSize;
+    const sourceX = sourceRect.left + Math.min(sourceRect.width - 6, sourceRect.width * (0.55 + (randomA * 0.34)));
+    const sourceY = sourceRect.top + (sourceRect.height * (0.42 + (randomB * 0.16)));
+    const unclampedStartX = sourceX - stageRect.left - (iconSize / 2);
+    const startX = Math.min(
+      Math.max(iconSize * -1, unclampedStartX),
+      Math.max(iconSize * -1, stageRect.width - iconSize),
+    );
+    const startY = sourceY - stageRect.top - (iconSize / 2);
+    const visibleBottom = window.visualViewport
+      ? window.visualViewport.offsetTop + window.visualViewport.height
+      : window.innerHeight;
+    const exitY = Math.max(
+      SEQUENCE_ENROLLMENT_MAIL.minExitY,
+      visibleBottom - sourceY + SEQUENCE_ENROLLMENT_MAIL.exitOvershootMin +
+        (randomC * SEQUENCE_ENROLLMENT_MAIL.exitOvershootRange),
+    );
+    const fadeStartY = Math.max(
+      SEQUENCE_ENROLLMENT_MAIL.minFadeStartY,
+      visibleBottom - sourceY - iconSize - SEQUENCE_ENROLLMENT_MAIL.fadeMargin,
+    );
+
+    return {
+      startX,
+      startY,
+      launchX: (randomA - 0.5) * SEQUENCE_ENROLLMENT_MAIL.launchXRange,
+      driftX: (randomD - 0.5) * SEQUENCE_ENROLLMENT_MAIL.driftXRange,
+      apexY: -1 * (SEQUENCE_ENROLLMENT_MAIL.apexYMin + (randomB * SEQUENCE_ENROLLMENT_MAIL.apexYRange)),
+      fadeStartY: Math.min(fadeStartY, exitY - 12),
+      exitY,
+      scale: 1 - (SEQUENCE_ENROLLMENT_MAIL.scaleRange / 2) + (randomE * SEQUENCE_ENROLLMENT_MAIL.scaleRange),
+      startRotation: (randomF - 0.5) * SEQUENCE_ENROLLMENT_MAIL.rotationRange,
+      endRotation: ((randomC - 0.5) * 130) + ((index % 2 === 0 ? 1 : -1) * 48),
+      duration: this.getSequenceEnrollmentMailParticleDuration(index),
+    };
+  }
+
+  private getSequenceEnrollmentMailParticleDuration(index: number): number {
+    return SEQUENCE_ENROLLMENT_MAIL.launchDuration +
+      SEQUENCE_ENROLLMENT_MAIL.fallDurationMin +
+      (this.sequenceEnrollmentMailRandom(index, 4) * SEQUENCE_ENROLLMENT_MAIL.fallDurationRange);
+  }
+
+  private renderSequenceEnrollmentMailParticle(state: EnrollmentMailParticleState): void {
+    const { icon, flight } = state;
+
+    if (!icon || !flight) return;
+
+    const progress = this.clampUnit(state.progress);
+    const launchSplit = SEQUENCE_ENROLLMENT_MAIL.launchSplit;
+    const launchProgress = this.clampUnit(progress / launchSplit);
+    const fallProgress = this.clampUnit((progress - launchSplit) / (1 - launchSplit));
+    const launchEase = this.easeOutQuad(launchProgress);
+    const fallEase = fallProgress * fallProgress;
+    const x = progress <= launchSplit
+      ? flight.launchX * launchEase
+      : flight.launchX + (flight.driftX * this.easeOutQuad(fallProgress));
+    const y = progress <= launchSplit
+      ? flight.apexY * launchEase
+      : flight.apexY + ((flight.exitY - flight.apexY) * fallEase);
+    const fadeProgress = this.clampUnit((y - flight.fadeStartY) / Math.max(1, flight.exitY - flight.fadeStartY));
+    const fadeIn = this.clampUnit(progress / 0.08);
+    const opacity = fadeIn * (1 - fadeProgress);
+    const rotation = flight.startRotation + ((flight.endRotation - flight.startRotation) * this.easeOutQuad(progress));
+    const particleScale = flight.scale * (0.72 + (0.28 * this.easeOutBack(Math.min(1, launchProgress * 1.2))));
+
+    gsap.set(icon, {
+      x,
+      y,
+      rotation,
+      scale: particleScale,
+      autoAlpha: opacity,
+    });
+  }
+
+  private sequenceEnrollmentMailRandom(index: number, salt: number): number {
+    const value = Math.sin(((index + 1) * 12.9898) + (salt * 78.233)) * 43758.5453;
+
+    return value - Math.floor(value);
+  }
+
+  private clampUnit(value: number): number {
+    if (!Number.isFinite(value)) return 0;
+
+    return Math.min(1, Math.max(0, value));
+  }
+
+  private easeOutQuad(value: number): number {
+    return 1 - ((1 - value) * (1 - value));
+  }
+
+  private easeOutBack(value: number): number {
+    const overshoot = 1.70158;
+    const shifted = value - 1;
+
+    return 1 + (((overshoot + 1) * shifted * shifted * shifted) + (overshoot * shifted * shifted));
   }
 
   private playSequencePersonInteraction(sequenceId: string, index: number): void {
@@ -2645,11 +3497,11 @@ export class ChatActor {
           .timeline()
           .call(stopFollowing)
           .add(cursor.releaseDragPayload(), 0),
-      landAsUploadedFile: (landedFileName, detail = "CSV uploaded") =>
+      landAsUploadedFile: (landedFileName, detail = "CSV uploaded", options = {}) =>
         gsap
           .timeline()
           .call(stopFollowing)
-          .add(this.uploadedFileMessageFromCursorFile(file, landedFileName, detail), 0),
+          .add(this.uploadedFileMessageFromCursorFile(file, landedFileName, detail, options), 0),
       landAsUploadedFiles: (files) =>
         gsap
           .timeline()
@@ -2679,11 +3531,12 @@ export class ChatActor {
     cursorFile: HTMLElement,
     fileName: string,
     detail = "CSV uploaded",
+    options: UploadedFileLandingOptions = {},
   ): gsap.core.Timeline {
     const content = this.createUploadedFile(fileName, detail);
     const message = this.claimUserComponentMessage("file", content);
 
-    return this.revealDroppedFilesMessage(cursorFile, message, [content]);
+    return this.revealDroppedFilesMessage(cursorFile, message, [content], [], options);
   }
 
   uploadedFilesMessage(files: UploadedFileConfig[]): gsap.core.Timeline {
@@ -2741,13 +3594,15 @@ export class ChatActor {
     message: HTMLElement,
     targets: HTMLElement[],
     extras: HTMLElement[] = [],
-    options: { landingLabel?: string } = {},
+    options: UploadedFileLandingOptions & { landingLabel?: string } = {},
   ): gsap.core.Timeline {
     const revealTargets = [...targets, ...extras];
     let clones: FileLandingClone[] = [];
     let label: FileLandingLabel | null = null;
     const progress = { value: 0 };
     let scrollTarget = 0;
+    let initialScrollTop = 0;
+    const preserveScroll = options.preserveScroll ?? false;
 
     if (!targets.length || !cursorFile.isConnected) {
       return this.revealMessageWithChildren(message, revealTargets, {
@@ -2762,11 +3617,10 @@ export class ChatActor {
 
     gsap.set(revealTargets, { autoAlpha: 0, y: 0, scale: 1 });
 
-    return gsap
+    const tl = gsap
       .timeline()
       .call(() => {
-        const initialScrollTop = this.thread.scrollTop;
-
+        initialScrollTop = this.thread.scrollTop;
         this.scrollTween?.kill();
         this.scrollTween = null;
         message.style.display = "grid";
@@ -2777,14 +3631,16 @@ export class ChatActor {
           scale: 1,
           transformOrigin: "right center",
         });
-        scrollTarget = this.getMessageScrollTarget(message);
-        this.thread.scrollTop = scrollTarget;
+        scrollTarget = preserveScroll ? initialScrollTop : this.getMessageScrollTarget(message);
+        if (!preserveScroll) this.thread.scrollTop = scrollTarget;
         clones = this.createFileLandingClones(cursorFile, targets);
         label = this.createFileLandingLabel(options.landingLabel, clones, extras[0] ?? null);
         this.thread.scrollTop = initialScrollTop;
         gsap.set(cursorFile, { autoAlpha: 0 });
-      })
-      .to(
+      });
+
+    if (!preserveScroll) {
+      tl.to(
         this.thread,
         {
           scrollTop: () => scrollTarget,
@@ -2793,7 +3649,10 @@ export class ChatActor {
           overwrite: "auto",
         },
         0,
-      )
+      );
+    }
+
+    return tl
       .to(
         progress,
         {
@@ -2822,7 +3681,7 @@ export class ChatActor {
       .call(() => {
         this.renderFileLandingClones(clones, 1);
         this.renderFileLandingLabel(label, 1);
-        this.thread.scrollTop = scrollTarget;
+        this.thread.scrollTop = preserveScroll ? initialScrollTop : scrollTarget;
         gsap.set(revealTargets, { autoAlpha: 1, y: 0, scale: 1 });
         gsap.set(message, { opacity: 1, visibility: "visible" });
         clones.forEach((clone) => clone.el.remove());
@@ -3017,10 +3876,11 @@ export class ChatActor {
     position: string | number = "-=0.22",
     scrollAnchor: HTMLElement | null = null,
     scrollOffset = 0,
+    scrollOptions: ComponentScrollRevealOptions = {},
   ): gsap.core.Timeline {
     return gsap
       .timeline()
-      .add(this.revealMessage(message, scrollAnchor, scrollOffset))
+      .add(this.revealMessage(message, scrollAnchor, scrollOffset, scrollOptions))
       .call(() => this.setMotionHints(targets), undefined, position)
       .to(targets, vars, position)
       .call(() => this.clearMotionHints(targets));
@@ -3052,10 +3912,11 @@ export class ChatActor {
     targets: string | HTMLElement[],
     preset: ChildRevealPreset,
     scrollAnchor: HTMLElement | null = null,
+    scrollOptions: ComponentScrollRevealOptions = {},
   ): gsap.core.Timeline {
     const message = this.claimComponentMessage(kind, content);
 
-    return this.revealPreparedItems(message, this.resolveRevealTargets(content, targets), preset, scrollAnchor);
+    return this.revealPreparedItems(message, this.resolveRevealTargets(content, targets), preset, scrollAnchor, scrollOptions);
   }
 
   private revealUserComponentItems(
@@ -3080,10 +3941,12 @@ export class ChatActor {
     targets: HTMLElement[],
     preset: ChildRevealPreset,
     scrollAnchor: HTMLElement | null = null,
-    scrollOffset = 0,
+    scrollOptions: ComponentScrollRevealOptions = {},
   ): gsap.core.Timeline {
     if (targets.length) gsap.set(targets, { ...preset.from });
 
+    const scrollOffset = scrollOptions.scrollOffset ?? 0;
+    const preserveScroll = scrollOptions.preserveScroll ?? false;
     const tl = this.revealMessageWithChildren(
       message,
       targets,
@@ -3091,7 +3954,10 @@ export class ChatActor {
       preset.position,
       scrollAnchor,
       scrollOffset,
+      { preserveScroll },
     );
+
+    if (preserveScroll) return tl;
 
     tl.call(
       () => this.animateMessageScrollIntoView(message, CHAT_SCROLL_MOTION.followDuration, scrollAnchor, scrollOffset),
@@ -3106,25 +3972,39 @@ export class ChatActor {
     );
   }
 
-  private revealMessage(message: HTMLElement, scrollAnchor: HTMLElement | null = null, scrollOffset = 0): gsap.core.Timeline {
+  private revealMessage(
+    message: HTMLElement,
+    scrollAnchor: HTMLElement | null = null,
+    scrollOffset = 0,
+    scrollOptions: ComponentScrollRevealOptions = {},
+  ): gsap.core.Timeline {
     let scrollTarget = 0;
+    let preservedScrollTop = 0;
+    const preserveScroll = scrollOptions.preserveScroll ?? false;
     const revealAt = message.classList.contains("wa-message--component")
       ? CHAT_SCROLL_MOTION.componentRevealDelay
       : 0.04;
 
-    return gsap
+    const tl = gsap
       .timeline()
       .call(() => {
+        preservedScrollTop = this.thread.scrollTop;
         this.scrollTween?.kill();
         this.scrollTween = null;
         message.style.display = "grid";
         this.setMotionHints(message);
         this.forceThreadLayout(message);
         this.updateThreadContentFitState();
-        if (this.composerVisible) this.pinThreadToBottom();
-        scrollTarget = this.getMessageScrollTarget(message, scrollAnchor, scrollOffset);
-      })
-      .to(
+        if (preserveScroll) message.dataset.preserveMessageScroll = "true";
+        if (this.composerVisible && !preserveScroll) this.pinThreadToBottom();
+        scrollTarget = preserveScroll
+          ? preservedScrollTop
+          : this.getMessageScrollTarget(message, scrollAnchor, scrollOffset);
+        if (preserveScroll) this.thread.scrollTop = preservedScrollTop;
+      });
+
+    if (!preserveScroll) {
+      tl.to(
         this.thread,
         {
           scrollTop: () => scrollTarget,
@@ -3133,12 +4013,21 @@ export class ChatActor {
           overwrite: "auto",
         },
         0,
-      )
+      );
+    }
+
+    return tl
       .to(message, {
         autoAlpha: 1,
         y: 0,
         scale: 1,
         ...MESSAGE_SPRING,
+        onUpdate: preserveScroll ? () => {
+          this.thread.scrollTop = preservedScrollTop;
+        } : undefined,
+        onComplete: preserveScroll ? () => {
+          this.thread.scrollTop = preservedScrollTop;
+        } : undefined,
       }, revealAt)
       .call(() => this.clearMotionHints(message));
   }
@@ -3188,11 +4077,31 @@ export class ChatActor {
   }
 
   private shouldIgnoreThreadContentFitMutations(records: MutationRecord[]): boolean {
-    return records.length > 0 && records.every((record) =>
-      record.type === "attributes" &&
-      record.target === this.thread &&
-      record.attributeName === "style",
-    );
+    return records.length > 0 && records.every((record) => {
+      if (
+        record.type === "attributes" &&
+        record.target === this.thread &&
+        record.attributeName === "style"
+      ) {
+        return true;
+      }
+
+      if (
+        record.type === "attributes" &&
+        record.target instanceof Element &&
+        record.target.closest(".wa-enrollment-mail")
+      ) {
+        return true;
+      }
+
+      if (record.type !== "childList") return false;
+
+      const changedNodes = [...Array.from(record.addedNodes), ...Array.from(record.removedNodes)];
+
+      return changedNodes.length > 0 && changedNodes.every((node) =>
+        node instanceof HTMLElement && node.classList.contains("wa-enrollment-mail"),
+      );
+    });
   }
 
   private updateThreadContentFitState(): void {
@@ -3202,23 +4111,33 @@ export class ChatActor {
 
     const contentHeight = this.getVisibleThreadContentHeight();
     const availableHeight = Math.max(this.thread.clientHeight, this.chatBody.clientHeight);
-    const isShort = contentHeight > 0 && availableHeight > 0 && contentHeight <= availableHeight - 1;
+    if (contentHeight > this.maxVisibleThreadContentHeight) {
+      this.maxVisibleThreadContentHeight = contentHeight;
+    }
+    const reservedContentHeight = Math.max(contentHeight, this.maxVisibleThreadContentHeight);
+    const growthSpacer = Math.max(0, reservedContentHeight - contentHeight);
+    const isShort = reservedContentHeight > 0 && availableHeight > 0 && reservedContentHeight <= availableHeight - 1;
 
     if (!contentHeight || !availableHeight) {
       delete this.chatBody.dataset.chatContentFit;
       delete this.thread.dataset.threadContentFit;
+      this.thread.style.removeProperty("--wa-thread-growth-spacer");
       return;
     }
 
     const fit = isShort ? "short" : "overflow";
 
+    this.thread.style.setProperty("--wa-thread-growth-spacer", `${Math.ceil(growthSpacer * 100) / 100}px`);
     this.chatBody.dataset.chatContentFit = fit;
     this.thread.dataset.threadContentFit = fit;
   }
 
   private clearThreadContentFitState(): void {
+    this.maxVisibleThreadContentHeight = 0;
     delete this.chatBody.dataset.chatContentFit;
     delete this.thread.dataset.threadContentFit;
+    this.thread.style.removeProperty("--wa-thread-growth-spacer");
+    this.thread.style.removeProperty("--wa-thread-base-bottom-padding");
     this.clearWindowSceneScaleState();
   }
 
@@ -3324,17 +4243,25 @@ export class ChatActor {
     return measure;
   }
 
-  private getVisibleThreadContentHeight(): number {
+  private getVisibleThreadContentBounds(): { top: number; bottom: number; height: number } | null {
     const visibleChildren = Array.from(this.thread.children).filter(
       (child): child is HTMLElement => child instanceof HTMLElement && this.isMeasurableThreadChild(child),
     );
 
-    if (!visibleChildren.length) return 0;
+    if (!visibleChildren.length) return null;
 
     const top = Math.min(...visibleChildren.map((child) => child.offsetTop));
     const bottom = Math.max(...visibleChildren.map((child) => child.offsetTop + child.offsetHeight));
 
-    return Math.max(0, bottom - top);
+    return { top, bottom, height: Math.max(0, bottom - top) };
+  }
+
+  private getVisibleThreadContentHeight(): number {
+    return this.getVisibleThreadContentBounds()?.height ?? 0;
+  }
+
+  private getVisibleThreadContentBottom(): number {
+    return this.getVisibleThreadContentBounds()?.bottom ?? 0;
   }
 
   private isMeasurableThreadChild(child: HTMLElement): boolean {
@@ -3749,7 +4676,178 @@ export class ChatActor {
   }
 
   private streamThinkingStepDetail(item: HTMLElement): gsap.core.Timeline {
+    const detail = item.querySelector<HTMLElement>(".wa-research-step__detail");
+    const detailText = detail?.querySelector<HTMLElement>("[data-thinking-detail-text]");
+
+    if (detailText) {
+      const text = detailText.dataset.fullText ?? detailText.textContent ?? "";
+      const toolRows = this.queryElements(detail!, ".wa-research-step__tool-call");
+      const tl = gsap.timeline();
+
+      if (text) {
+        tl.add(this.streamText(detailText, text, {
+          duration: this.getStreamDuration(text, THINKING_STEP_STREAM),
+          targetForScroll: this.getMessageScrollTargetElement(item),
+        }));
+      }
+
+      if (toolRows.length) {
+        tl.add(this.streamThinkingToolCalls(toolRows, item), "+=0.04");
+      }
+
+      return tl;
+    }
+
     return this.streamThinkingChild(item, ".wa-research-step__detail", THINKING_STEP_STREAM);
+  }
+
+  private streamThinkingToolCalls(rows: HTMLElement[], item: HTMLElement): gsap.core.Timeline {
+    const tl = gsap.timeline();
+
+    rows.forEach((row, index) => {
+      tl.add(
+        this.streamThinkingToolCall(row, item, this.getThinkingToolCallActiveHold(item, index, rows.length)),
+        index * THINKING_TOOL_CALLS.entranceStagger,
+      );
+    });
+
+    return tl;
+  }
+
+  private streamThinkingToolCall(row: HTMLElement, item: HTMLElement, activeHold: number): gsap.core.Timeline {
+    const favicon = row.querySelector<HTMLElement>(".wa-research-step__tool-favicon");
+    const check = row.querySelector<SVGSVGElement>(".wa-research-step__tool-check");
+    const label = row.querySelector<HTMLElement>(".wa-research-step__tool-label");
+    const text = label?.dataset.fullText ?? label?.textContent ?? "";
+    const targetForScroll = this.getMessageScrollTargetElement(item);
+    const tl = gsap.timeline();
+
+    if (!label || !text) return tl;
+
+    tl.call(() => {
+      row.dataset.toolCallState = "active";
+    })
+      .set(row, { autoAlpha: 1, y: 0 });
+
+    if (favicon) {
+      tl.fromTo(
+        favicon,
+        { autoAlpha: 0, scale: 0.68, y: 0 },
+        {
+          autoAlpha: 1,
+          scale: 1,
+          y: 0,
+          duration: motionDuration(0.16),
+          ease: "back.out(2.4)",
+        },
+        0,
+      );
+    }
+
+    if (check) {
+      tl.set(check, {
+        autoAlpha: 0,
+        y: THINKING_TOOL_COMPLETE_ICON.checkStartY,
+        scale: THINKING_TOOL_COMPLETE_ICON.checkStartScale,
+      }, 0);
+    }
+
+    tl.add(this.streamText(label, text, {
+      duration: this.getStreamDuration(text, THINKING_STEP_STREAM),
+      targetForScroll,
+    }), 0.02)
+      .to({}, { duration: this.prefersReducedMotion ? 0.01 : activeHold })
+      .add(this.createThinkingToolCompleteIconTimeline(favicon, check))
+      .call(() => {
+        row.dataset.toolCallState = "complete";
+      });
+
+    tl.eventCallback("onReverseComplete", () => {
+      row.dataset.toolCallState = "pending";
+      gsap.set(row, { autoAlpha: 0, y: 0 });
+      if (favicon) gsap.set(favicon, { autoAlpha: 0, scale: 0.68, y: 0 });
+      if (check) {
+        gsap.set(check, {
+          autoAlpha: 0,
+          y: THINKING_TOOL_COMPLETE_ICON.checkStartY,
+          scale: THINKING_TOOL_COMPLETE_ICON.checkStartScale,
+        });
+      }
+    });
+
+    return tl;
+  }
+
+  private createThinkingToolCompleteIconTimeline(
+    favicon: HTMLElement | null,
+    check: SVGSVGElement | null,
+  ): gsap.core.Timeline {
+    const tl = gsap.timeline();
+
+    if (this.prefersReducedMotion) {
+      if (favicon) tl.set(favicon, { autoAlpha: 0, y: 0, scale: 1 });
+      if (check) tl.set(check, { autoAlpha: 1, y: 0, scale: 1 });
+      return tl;
+    }
+
+    if (favicon) {
+      tl.to(favicon, {
+        autoAlpha: 0,
+        y: THINKING_TOOL_COMPLETE_ICON.faviconDropY,
+        scale: THINKING_TOOL_COMPLETE_ICON.faviconDropScale,
+        duration: THINKING_TOOL_COMPLETE_ICON.faviconDropDuration,
+        ease: "power2.in",
+      }, 0);
+    }
+
+    if (check) {
+      tl.fromTo(
+        check,
+        {
+          autoAlpha: 0,
+          y: THINKING_TOOL_COMPLETE_ICON.checkStartY,
+          scale: THINKING_TOOL_COMPLETE_ICON.checkStartScale,
+        },
+        {
+          autoAlpha: 1,
+          y: 0,
+          scale: THINKING_TOOL_COMPLETE_ICON.checkPopScale,
+          duration: THINKING_TOOL_COMPLETE_ICON.checkPopDuration,
+          ease: "back.out(3.2)",
+        },
+        favicon ? THINKING_TOOL_COMPLETE_ICON.checkOverlap : 0,
+      )
+        .to(check, {
+          scale: 1,
+          duration: THINKING_TOOL_COMPLETE_ICON.checkSettleDuration,
+          ease: "power2.out",
+        });
+    }
+
+    return tl;
+  }
+
+  private getThinkingToolCallActiveHold(item: HTMLElement, index: number, totalRows: number): number {
+    if (this.prefersReducedMotion) return 0.01;
+
+    const configuredStepDuration = this.parsePositiveNumber(item.dataset.thinkingDuration);
+
+    if (configuredStepDuration === null && totalRows <= 1) {
+      return THINKING_TOOL_CALLS.singleActiveHold;
+    }
+
+    const activeWindow = configuredStepDuration === null
+      ? THINKING_TOOL_CALLS.defaultActiveWindow
+      : Math.min(
+        THINKING_TOOL_CALLS.maxActiveWindow,
+        Math.max(
+          THINKING_TOOL_CALLS.minActiveHold,
+          configuredStepDuration * THINKING_TOOL_CALLS.configuredStepActiveRatio,
+        ),
+      );
+    const factor = THINKING_TOOL_CALLS.finishFactors[index % THINKING_TOOL_CALLS.finishFactors.length];
+
+    return Math.max(THINKING_TOOL_CALLS.minActiveHold, activeWindow * factor);
   }
 
   private streamThinkingChild(root: HTMLElement, selector: string, timing: StreamTiming): gsap.core.Timeline {
@@ -3785,21 +4883,23 @@ export class ChatActor {
           onStart: () => {
             target.dataset.streaming = "true";
           },
-          onUpdate: () => {
-            const nextCount = Math.round(proxy.count);
+      onUpdate: () => {
+        const nextCount = Math.round(proxy.count);
 
-            if (nextCount === lastCount) return;
+        if (nextCount === lastCount) return;
 
-            lastCount = nextCount;
-            target.textContent = text.slice(0, nextCount);
-            this.requestMessageScroll(options.targetForScroll);
-          },
-          onComplete: () => {
-            target.textContent = text;
-            delete target.dataset.streaming;
-            this.cancelScheduledScroll();
-            this.animateMessageScrollIntoView(options.targetForScroll, CHAT_SCROLL_MOTION.followDuration * 0.7);
-          },
+        lastCount = nextCount;
+        target.textContent = text.slice(0, nextCount);
+        this.requestMessageScroll(options.targetForScroll);
+      },
+      onComplete: () => {
+        target.textContent = text;
+        delete target.dataset.streaming;
+        this.cancelScheduledScroll();
+        if (!this.shouldPreserveMessageScroll(options.targetForScroll)) {
+          this.animateMessageScrollIntoView(options.targetForScroll, CHAT_SCROLL_MOTION.followDuration * 0.7);
+        }
+      },
           onReverseComplete: () => {
             lastCount = -1;
             target.textContent = "";
@@ -3810,32 +4910,58 @@ export class ChatActor {
       );
   }
 
-  private foldThinkingStep(item: HTMLElement): gsap.core.Timeline {
+  private foldThinkingStep(item: HTMLElement, scrollTarget?: HTMLElement): gsap.core.Timeline {
     const foldTargets = this.queryElements(
       item,
       ".wa-research-step__detail, .wa-sequence-thinking-progress",
     );
+    let scrollAnchor: ThreadScrollAnchor | null = null;
 
     return gsap
       .timeline()
-      .call(() => this.reserveElementHeights(foldTargets))
+      .call(() => {
+        this.reserveElementHeights(foldTargets);
+        if (scrollTarget) {
+          this.stopScrollMotion();
+          scrollAnchor = this.createThreadScrollAnchor(scrollTarget);
+        }
+      })
       .to(foldTargets, {
         autoAlpha: 0,
+        height: 0,
+        minHeight: 0,
+        marginTop: 0,
         y: THINKING_STEP_FOLD.detailOffsetY,
         overflow: "hidden",
         transformOrigin: "left top",
         duration: THINKING_STEP_FOLD.duration,
         ease: "power2.inOut",
+        onUpdate: () => this.preserveThreadScrollAnchor(scrollAnchor),
         onComplete: () => {
           item.dataset.stepState = "complete";
+          this.setThinkingStepLabelCollapsed(item);
+          this.setThinkingStepDetailCollapsed(item);
+          this.setThinkingToolCallsCollapsed(item);
+          this.hideThinkingStepTimer(item);
+          this.showThinkingStepChevron(item);
           gsap.set(foldTargets, {
+            display: "none",
+            height: 0,
+            minHeight: 0,
+            marginTop: 0,
             overflow: "hidden",
             y: 0,
           });
+          this.preserveThreadScrollAnchor(scrollAnchor);
         },
         onReverseComplete: () => {
           item.dataset.stepState = "current";
+          this.setThinkingStepLabelActive(item);
+          this.setThinkingStepDetailActive(item);
+          this.setThinkingToolCallsComplete(item);
+          this.showThinkingStepTimer(item);
           this.clearElementHeightReservations(foldTargets);
+          this.preserveThreadScrollAnchor(scrollAnchor);
         },
       });
   }
@@ -3878,6 +5004,32 @@ export class ChatActor {
     return element.closest<HTMLElement>(".wa-message") ?? element;
   }
 
+  private createThreadScrollAnchor(message: HTMLElement | null | undefined): ThreadScrollAnchor | null {
+    if (!message?.isConnected) return null;
+
+    this.updateThreadContentFitState();
+
+    const element = message.querySelector<HTMLElement>(".wa-thinking") ?? message;
+
+    return {
+      element,
+      top: element.getBoundingClientRect().top,
+    };
+  }
+
+  private preserveThreadScrollAnchor(anchor: ThreadScrollAnchor | null): void {
+    if (!anchor?.element.isConnected) return;
+
+    this.updateThreadContentFitState();
+
+    const scale = this.getThreadContentScale();
+    const delta = anchor.element.getBoundingClientRect().top - anchor.top;
+
+    if (delta <= 0.1) return;
+
+    this.thread.scrollTop += delta / scale;
+  }
+
   private prepareThinkingMessage(
     thinking: ClaimedThinkingMessage,
     items: HTMLElement[],
@@ -3889,6 +5041,8 @@ export class ChatActor {
 
     items.forEach((item) => {
       item.dataset.stepState = "pending";
+      this.resetThinkingStepTimer(item);
+      this.hideThinkingStepChevron(item);
     });
     this.clearElementHeightReservations(foldTargets);
     this.clearElementHeightReservations([thinking.steps]);
@@ -3938,7 +5092,7 @@ export class ChatActor {
   }
 
   private createThinkingStepReveal(item: HTMLElement): gsap.core.Timeline {
-    return this.addThinkingStepReveal(gsap.timeline(), item, { position: 0 });
+    return this.addThinkingStepReveal(gsap.timeline(), item, { position: THINKING_STEP_REVEAL_DELAY });
   }
 
   private addThinkingStepStreams(tl: gsap.core.Timeline, items: HTMLElement[]): void {
@@ -3953,6 +5107,16 @@ export class ChatActor {
   private markThinkingStepsComplete(items: HTMLElement[]): void {
     items.forEach((item) => {
       item.dataset.stepState = "complete";
+      this.setThinkingStepLabelCollapsed(item);
+      this.setThinkingStepDetailCollapsed(item);
+      this.setThinkingToolCallsCollapsed(item);
+      this.hideThinkingStepTimer(item);
+
+      if (item.dataset.detailCollapsed === "true") {
+        this.showThinkingStepChevron(item);
+      } else {
+        this.hideThinkingStepChevron(item);
+      }
     });
   }
 
@@ -3973,6 +5137,63 @@ export class ChatActor {
       x: targetRect.left - baseRect.left + (targetRect.width - logoWidth) / 2 - currentX,
       y: targetRect.top - baseRect.top + (targetRect.height - logoHeight) / 2 - currentY,
     };
+  }
+
+  private getThinkingLogoTargetPositionInBlock(block: HTMLElement, traveler: HTMLElement, target: HTMLElement): { x: number; y: number } {
+    const baseRect = block.getBoundingClientRect();
+    const targetRect = target.getBoundingClientRect();
+    const logoWidth = traveler.offsetWidth || 18;
+    const logoHeight = traveler.offsetHeight || 11;
+
+    return {
+      x: targetRect.left - baseRect.left + (targetRect.width - logoWidth) / 2,
+      y: targetRect.top - baseRect.top + (targetRect.height - logoHeight) / 2,
+    };
+  }
+
+  private syncPausedThinkingLayouts(): void {
+    this.queryElements(this.chatShell, ".wa-thinking-block").forEach((block) => {
+      this.stabilizeVisibleThinkingStepFlow(block);
+      this.syncThinkingBlockToCurrentStep(block);
+    });
+  }
+
+  private stabilizeVisibleThinkingStepFlow(block: HTMLElement | null | undefined): void {
+    if (!block?.isConnected) return;
+
+    const steps = block.querySelector<HTMLElement>(".wa-research-steps");
+
+    if (!steps || !this.isElementVisible(steps)) return;
+
+    const visibleItems = this.queryElements(steps, ".wa-research-step").filter((item) =>
+      this.isElementVisible(item),
+    );
+
+    if (!visibleItems.length) return;
+
+    gsap.killTweensOf(visibleItems, "opacity,visibility,x,y,transform");
+    gsap.set(visibleItems, { autoAlpha: 1, x: 0, y: 0 });
+    gsap.set(visibleItems, { clearProps: "transform,translate,rotate,scale" });
+  }
+
+  private syncThinkingBlockToCurrentStep(block: HTMLElement | null | undefined): void {
+    if (!block?.isConnected) return;
+
+    const steps = block.querySelector<HTMLElement>(".wa-research-steps");
+    const traveler = block.querySelector<HTMLElement>(".wa-thinking-logo-traveler");
+    const marker = block.querySelector<HTMLElement>(".wa-research-step[data-step-state=\"current\"] .wa-research-step__marker");
+
+    if (!steps || !traveler || !marker || !this.isElementVisible(marker)) return;
+
+    gsap.set(traveler, {
+      ...this.getThinkingLogoTargetPositionInBlock(block, traveler, marker),
+      autoAlpha: 1,
+    });
+    this.setThinkingGuideToMarker(steps, marker);
+  }
+
+  private isElementVisible(element: HTMLElement): boolean {
+    return element.getClientRects().length > 0 && getComputedStyle(element).display !== "none";
   }
 
   private snapThinkingLogoTo(thinking: ClaimedThinkingMessage, target: HTMLElement): void {
@@ -3997,7 +5218,11 @@ export class ChatActor {
   }
 
   private getThinkingGuideStart(thinking: ClaimedThinkingMessage): number {
-    const value = getComputedStyle(thinking.steps).getPropertyValue("--wa-thinking-guide-top");
+    return this.getThinkingGuideStartForSteps(thinking.steps);
+  }
+
+  private getThinkingGuideStartForSteps(steps: HTMLElement): number {
+    const value = getComputedStyle(steps).getPropertyValue("--wa-thinking-guide-top");
     const start = Number.parseFloat(value);
 
     return Number.isFinite(start) ? start : 0;
@@ -4018,6 +5243,35 @@ export class ChatActor {
     const targetCenter = targetRect.top - stepsRect.top + targetRect.height / 2 - referenceY;
 
     return Math.max(this.getThinkingGuideStart(thinking), targetCenter);
+  }
+
+  private setPausedThinkingGuideToVisibleSteps(steps: HTMLElement): void {
+    const markers = this.queryElements(
+      steps,
+      ".wa-research-step[data-step-state=\"complete\"] .wa-research-step__marker, .wa-research-step[data-step-state=\"failed\"] .wa-research-step__marker",
+    );
+    const target = markers[markers.length - 1];
+    const guideStart = this.getThinkingGuideStartForSteps(steps);
+
+    if (!target) {
+      steps.style.setProperty("--wa-thinking-guide-end", `${guideStart}px`);
+      return;
+    }
+
+    const stepsRect = steps.getBoundingClientRect();
+    const targetRect = target.getBoundingClientRect();
+    const targetCenter = targetRect.top - stepsRect.top + targetRect.height / 2;
+
+    steps.style.setProperty("--wa-thinking-guide-end", `${Math.max(guideStart, targetCenter)}px`);
+  }
+
+  private setThinkingGuideToMarker(steps: HTMLElement, marker: HTMLElement): void {
+    const guideStart = this.getThinkingGuideStartForSteps(steps);
+    const stepsRect = steps.getBoundingClientRect();
+    const targetRect = marker.getBoundingClientRect();
+    const targetCenter = targetRect.top - stepsRect.top + targetRect.height / 2;
+
+    steps.style.setProperty("--wa-thinking-guide-end", `${Math.max(guideStart, targetCenter)}px`);
   }
 
   private moveThinkingGuideTo(
@@ -4057,31 +5311,44 @@ export class ChatActor {
   }
 
   private collapseThinkingToHeader(thinking: ClaimedThinkingMessage, items: HTMLElement[]): gsap.core.Timeline {
+    let scrollAnchor: ThreadScrollAnchor | null = null;
+
     return gsap.timeline()
       .call(() => {
         this.markThinkingStepsComplete(items);
         this.setLocalLogoMode(thinking.traveler, "done");
         this.reserveElementHeights([thinking.steps]);
+        this.stopScrollMotion();
+        scrollAnchor = this.createThreadScrollAnchor(thinking.message);
       })
       .add(this.moveThinkingLogoTo(thinking, thinking.headerGlyph, THINKING_LOGO_TRAVEL.returnDuration), 0)
       .add(this.moveThinkingGuideToStart(thinking, THINKING_LOGO_TRAVEL.returnDuration), 0)
       .to(thinking.steps, {
         autoAlpha: 0,
+        height: 0,
+        minHeight: 0,
         y: THINKING_BLOCK_COLLAPSE.y,
+        overflow: "hidden",
         duration: THINKING_BLOCK_COLLAPSE.duration,
         ease: THINKING_BLOCK_COLLAPSE.ease,
+        onUpdate: () => this.preserveThreadScrollAnchor(scrollAnchor),
         onComplete: () => {
           this.setThinkingHeaderCollapsed(thinking);
           gsap.set(thinking.steps, {
+            display: "none",
+            height: 0,
+            minHeight: 0,
             overflow: "hidden",
             y: THINKING_BLOCK_COLLAPSE.y,
           });
+          this.preserveThreadScrollAnchor(scrollAnchor);
         },
         onReverseComplete: () => {
           this.setThinkingHeaderActive(thinking);
           this.setLocalLogoMode(thinking.traveler, "thinking");
-          gsap.set(thinking.steps, { display: "grid", autoAlpha: 1 });
           this.clearElementHeightReservations([thinking.steps]);
+          gsap.set(thinking.steps, { display: "grid", autoAlpha: 1 });
+          this.preserveThreadScrollAnchor(scrollAnchor);
         },
       }, 0);
   }
@@ -4094,25 +5361,179 @@ export class ChatActor {
     return title;
   }
 
+  private isGenericThinkingTitle(titleText: string | undefined): boolean {
+    const title = (titleText || "").trim();
+
+    return !title || /^thinking(?:\.\.\.)?$/i.test(title);
+  }
+
+  private getCollapsedThinkingTitle(thinkingState: NormalizedThinkingState): string {
+    const source = this.isGenericThinkingTitle(thinkingState.title)
+      ? thinkingState.items[0]?.label
+      : thinkingState.title;
+
+    return this.getPastTenseThinkingTitle(source || DEFAULT_THINKING_TITLE);
+  }
+
+  private getPastTenseThinkingTitle(titleText: string): string {
+    const title = titleText.trim();
+    const compoundMatch = title.match(/^([A-Za-z][A-Za-z'-]*)\s+([A-Za-z][A-Za-z'-]*ing)(.*)$/);
+
+    if (compoundMatch && !compoundMatch[1].toLowerCase().endsWith("ing")) {
+      const [, prefix, action, rest = ""] = compoundMatch;
+      const pastAction = this.getPastTenseThinkingAction(action);
+
+      return `${prefix} ${this.matchCapitalization(action, pastAction)}${rest}`;
+    }
+
+    const match = title.match(/^([A-Za-z][A-Za-z'-]*)(.*)$/);
+
+    if (!match) return title || "Finished thinking";
+
+    const [, action, rest = ""] = match;
+    const pastAction = this.getPastTenseThinkingAction(action);
+
+    return `${this.matchCapitalization(action, pastAction)}${rest}`;
+  }
+
+  private getPastTenseThinkingAction(action: string): string {
+    const actionLower = action.toLowerCase();
+    const irregular: Record<string, string> = {
+      building: "built",
+      finding: "found",
+      getting: "got",
+      learning: "learned",
+      making: "made",
+      reading: "read",
+      running: "ran",
+      sending: "sent",
+      taking: "took",
+      thinking: "finished thinking",
+      understanding: "understood",
+      writing: "wrote",
+    };
+
+    return irregular[actionLower] ?? this.regularizeThinkingAction(actionLower);
+  }
+
+  private setThinkingStepLabelActive(item: HTMLElement): void {
+    this.setThinkingStepLabelText(item, "activeText");
+  }
+
+  private setThinkingStepLabelCollapsed(item: HTMLElement): void {
+    this.setThinkingStepLabelText(item, "collapsedText");
+  }
+
+  private setThinkingStepLabelText(item: HTMLElement, key: "activeText" | "collapsedText"): void {
+    const label = item.querySelector<HTMLElement>(".wa-research-step__label");
+    const text = label?.dataset[key];
+
+    if (!label || !text) return;
+
+    label.dataset.fullText = text;
+    label.textContent = text;
+    delete label.dataset.streaming;
+  }
+
+  private setThinkingStepDetailActive(item: HTMLElement): void {
+    this.setThinkingStepDetailText(item, "activeText");
+  }
+
+  private setThinkingStepDetailCollapsed(item: HTMLElement): void {
+    this.setThinkingStepDetailText(item, "collapsedText");
+  }
+
+  private setThinkingStepDetailText(item: HTMLElement, key: "activeText" | "collapsedText"): void {
+    const detail = item.querySelector<HTMLElement>(".wa-research-step__detail");
+    const textTarget = detail?.querySelector<HTMLElement>("[data-thinking-detail-text]") ?? detail;
+    const text = textTarget?.dataset[key];
+
+    if (!textTarget || !text) return;
+
+    textTarget.dataset.fullText = text;
+    textTarget.textContent = text;
+    delete textTarget.dataset.streaming;
+  }
+
+  private setThinkingToolCallsCollapsed(item: HTMLElement): void {
+    this.setThinkingToolCallsState(item, "collapsed");
+  }
+
+  private setThinkingToolCallsComplete(item: HTMLElement): void {
+    this.setThinkingToolCallsState(item, "complete");
+  }
+
+  private setThinkingToolCallsState(item: HTMLElement, state: "collapsed" | "complete"): void {
+    const rows = this.queryElements(item, ".wa-research-step__tool-call");
+
+    rows.forEach((row) => {
+      const favicon = row.querySelector<HTMLElement>(".wa-research-step__tool-favicon");
+      const check = row.querySelector<SVGSVGElement>(".wa-research-step__tool-check");
+      const label = row.querySelector<HTMLElement>(".wa-research-step__tool-label");
+      const textKey = state === "collapsed" ? "collapsedText" : "activeText";
+      const labelText = label?.dataset[textKey];
+
+      row.dataset.toolCallState = state;
+
+      if (label && labelText) {
+        label.dataset.fullText = labelText;
+        label.textContent = labelText;
+        delete label.dataset.streaming;
+      }
+
+      if (state === "collapsed") {
+        if (favicon) gsap.set(favicon, { autoAlpha: 1, scale: 1, y: 0 });
+        if (check) {
+          gsap.set(check, {
+            autoAlpha: 0,
+            y: THINKING_TOOL_COMPLETE_ICON.checkStartY,
+            scale: THINKING_TOOL_COMPLETE_ICON.checkStartScale,
+          });
+        }
+        return;
+      }
+
+      if (favicon) {
+        gsap.set(favicon, {
+          autoAlpha: 0,
+          y: THINKING_TOOL_COMPLETE_ICON.faviconDropY,
+          scale: THINKING_TOOL_COMPLETE_ICON.faviconDropScale,
+        });
+      }
+      if (check) gsap.set(check, { autoAlpha: 1, y: 0, scale: 1 });
+    });
+  }
+
+  private regularizeThinkingAction(action: string): string {
+    if (action.endsWith("ying") && action.length > 4) return `${action.slice(0, -4)}ied`;
+    if (action.endsWith("ing") && action.length > 4) return `${action.slice(0, -3)}ed`;
+    return action;
+  }
+
+  private matchCapitalization(source: string, value: string): string {
+    if (!source || source[0] !== source[0].toUpperCase()) return value;
+
+    return value.charAt(0).toUpperCase() + value.slice(1);
+  }
+
   private setThinkingHeaderActive(thinking: ClaimedThinkingMessage): void {
     const title = this.getActiveThinkingTitle(thinking.title.dataset.activeText);
 
     thinking.title.dataset.fullText = title;
     thinking.title.textContent = title;
     thinking.title.dataset.thinkingActive = "true";
+    delete thinking.header.dataset.thinkingCollapsed;
     delete thinking.title.dataset.streaming;
-    gsap.set(thinking.elapsed, { display: "", autoAlpha: 1 });
   }
 
   private setThinkingHeaderCollapsed(thinking: ClaimedThinkingMessage): void {
-    const elapsedText = thinking.elapsed.dataset.elapsedTarget || thinking.elapsed.textContent?.trim() || "";
-    const title = elapsedText ? `Thought for ${elapsedText}` : "Thought";
+    const title = thinking.title.dataset.collapsedText || this.getPastTenseThinkingTitle(thinking.title.dataset.activeText || "");
 
     thinking.title.dataset.fullText = title;
     thinking.title.textContent = title;
+    thinking.header.dataset.thinkingCollapsed = "true";
     delete thinking.title.dataset.thinkingActive;
     delete thinking.title.dataset.streaming;
-    gsap.set(thinking.elapsed, { display: "none" });
   }
 
   private setThinkingTitle(thinking: ClaimedThinkingMessage, title: string): void {
@@ -4126,34 +5547,46 @@ export class ChatActor {
     items: HTMLElement[],
     title: string,
   ): gsap.core.Timeline {
+    let scrollAnchor: ThreadScrollAnchor | null = null;
+
     return gsap.timeline()
       .call(() => {
         this.markThinkingStepsComplete(items);
         this.setLocalLogoMode(thinking.traveler, "done");
         this.setThinkingTitle(thinking, title);
-        gsap.set(thinking.elapsed, { display: "none", autoAlpha: 0 });
         this.reserveElementHeights([thinking.steps]);
+        this.stopScrollMotion();
+        scrollAnchor = this.createThreadScrollAnchor(thinking.message);
       })
       .add(this.moveThinkingLogoTo(thinking, thinking.headerGlyph, THINKING_LOGO_TRAVEL.returnDuration), 0)
       .add(this.moveThinkingGuideToStart(thinking, THINKING_LOGO_TRAVEL.returnDuration), 0)
       .to(thinking.steps, {
         autoAlpha: 0,
+        height: 0,
+        minHeight: 0,
         y: THINKING_BLOCK_COLLAPSE.y,
+        overflow: "hidden",
         duration: THINKING_BLOCK_COLLAPSE.duration,
         ease: THINKING_BLOCK_COLLAPSE.ease,
+        onUpdate: () => this.preserveThreadScrollAnchor(scrollAnchor),
         onComplete: () => {
           delete thinking.title.dataset.thinkingActive;
           delete thinking.title.dataset.streaming;
           gsap.set(thinking.steps, {
+            display: "none",
+            height: 0,
+            minHeight: 0,
             overflow: "hidden",
             y: THINKING_BLOCK_COLLAPSE.y,
           });
+          this.preserveThreadScrollAnchor(scrollAnchor);
         },
         onReverseComplete: () => {
           this.setThinkingHeaderActive(thinking);
           this.setLocalLogoMode(thinking.traveler, "thinking");
-          gsap.set(thinking.steps, { display: "grid", autoAlpha: 1 });
           this.clearElementHeightReservations([thinking.steps]);
+          gsap.set(thinking.steps, { display: "grid", autoAlpha: 1 });
+          this.preserveThreadScrollAnchor(scrollAnchor);
         },
       }, 0);
   }
@@ -4161,26 +5594,40 @@ export class ChatActor {
   private runThinkingSequence(thinkingState: NormalizedThinkingState, options: ThinkingSequenceOptions): gsap.core.Timeline {
     const tl = gsap.timeline();
     const items = thinkingState.items.map((item, index) => this.createThinkingStep(item, index));
-    const elapsedLabel = thinkingState.elapsed ?? this.getThinkingElapsed(thinkingState.items.length);
-    const thinking = this.claimThinkingMessage(items, elapsedLabel, thinkingState.title);
+    const thinking = this.claimThinkingMessage(items, thinkingState.title, this.getCollapsedThinkingTitle(thinkingState));
+    const preserveScroll = options.preserveScroll ?? false;
 
-    tl.call(() => this.prepareThinkingMessage(thinking, items, options.itemStartY))
-      .add(this.revealMessage(thinking.message))
+    tl.call(() => {
+      this.prepareThinkingMessage(thinking, items, options.itemStartY);
+      if (preserveScroll) thinking.message.dataset.preserveMessageScroll = "true";
+    })
+      .add(this.revealMessage(thinking.message, null, 0, { preserveScroll }))
       .add(this.revealThinkingHeader(thinking, options.headerDuration));
 
-    thinkingState.items.forEach((_item, index) => {
+    thinkingState.items.forEach((thinkingItem, index) => {
       const item = items[index];
       const position = index === 0 ? "+=0" : `+=${options.hold}`;
+      const reveal = this.createThinkingStepReveal(item);
+      const stepDuration = typeof thinkingItem.duration === "number" && Number.isFinite(thinkingItem.duration)
+        ? Math.max(0.1, thinkingItem.duration)
+        : null;
+      const afterStepHold = stepDuration === null
+        ? options.afterStepHold
+        : Math.max(0, stepDuration - reveal.duration());
+      const activeDuration = reveal.duration() + afterStepHold;
 
       tl.call(() => this.activateThinkingStep(items, index), undefined, position)
         .add(this.moveThinkingLogoToStep(thinking, item), "<")
-        .add(this.createThinkingStepReveal(item), "<")
-        .to({}, { duration: options.afterStepHold })
-        .add(this.foldThinkingStep(item));
+        .add(reveal, "<")
+        .to({}, { duration: afterStepHold })
+        .add(this.createThinkingStepElapsedTimer(item, activeDuration), `-=${activeDuration}`)
+        .add(this.foldThinkingStep(item, thinking.message));
     });
 
-    tl.add(this.collapseThinkingToHeader(thinking, items), `+=${options.finalHold}`);
-    this.addThinkingElapsedTimer(tl, thinking.elapsed, elapsedLabel);
+    tl.add(this.collapseThinkingToHeader(thinking, items), `+=${options.finalHold}`)
+      .call(() => {
+        delete thinking.message.dataset.preserveMessageScroll;
+      });
     return tl;
   }
 
@@ -4188,17 +5635,25 @@ export class ChatActor {
     items.forEach((item, itemIndex) => {
       if (itemIndex > activeIndex) {
         item.dataset.stepState = "pending";
+        this.setThinkingStepLabelActive(item);
+        this.hideThinkingStepTimer(item);
+        this.hideThinkingStepChevron(item);
         gsap.set(item, { display: "none" });
         return;
       }
 
       if (itemIndex === activeIndex) {
         item.dataset.stepState = "current";
+        this.setThinkingStepLabelActive(item);
+        this.showThinkingStepTimer(item);
         gsap.set(item, { display: "grid" });
         return;
       }
 
       item.dataset.stepState = "complete";
+      this.setThinkingStepLabelCollapsed(item);
+      this.hideThinkingStepTimer(item);
+      this.showThinkingStepChevron(item);
       gsap.set(item, { display: "grid" });
     });
   }
@@ -4211,8 +5666,8 @@ export class ChatActor {
 
   private claimThinkingMessage(
     items: HTMLElement[],
-    elapsedText: string,
     titleText = DEFAULT_THINKING_TITLE,
+    collapsedTitleText = this.getPastTenseThinkingTitle(titleText),
   ): ClaimedThinkingMessage {
     const content = document.createElement("div");
     content.className = "wa-thinking-block";
@@ -4230,35 +5685,339 @@ export class ChatActor {
     title.className = "wa-thinking__title";
     title.dataset.activeText = titleText;
     title.dataset.fullText = activeTitle;
+    title.dataset.collapsedText = collapsedTitleText;
     title.dataset.thinkingActive = "true";
     title.textContent = "";
 
-    const elapsed = document.createElement("span");
-    elapsed.className = "wa-thinking__elapsed";
-    elapsed.dataset.elapsedTarget = elapsedText;
-    elapsed.textContent = "0s";
+    const headerChevron = document.createElement("span");
+    headerChevron.className = "wa-thinking__chevron";
+    headerChevron.setAttribute("role", "button");
+    headerChevron.setAttribute("aria-label", "Toggle thinking steps");
+    headerChevron.setAttribute("aria-expanded", "false");
 
     const steps = document.createElement("div");
     steps.className = "wa-research-steps";
     steps.dataset.researchSteps = "";
     steps.append(...items);
 
-    header.append(glyph, title, elapsed);
+    header.append(glyph, title, headerChevron);
     content.append(header, steps, traveler);
 
     return {
       message: this.claimComponentMessage("thinking", content),
       header,
       headerGlyph: glyph,
+      headerChevron,
       title,
       traveler,
-      elapsed,
       steps,
     };
   }
 
-  private addThinkingElapsedTimer(tl: gsap.core.Timeline, elapsed: HTMLElement, finalLabel: string): void {
-    addTimelineElapsedTimer(tl, elapsed, finalLabel, { reducedMotion: this.prefersReducedMotion });
+  private getThinkingStepTimer(item: HTMLElement): HTMLElement | null {
+    return item.querySelector<HTMLElement>(".wa-research-step__elapsed");
+  }
+
+  private getThinkingStepChevron(item: HTMLElement): HTMLElement | null {
+    return item.querySelector<HTMLElement>(".wa-research-step__chevron");
+  }
+
+  private showThinkingStepChevron(item: HTMLElement): void {
+    const chevron = this.getThinkingStepChevron(item);
+
+    item.dataset.detailCollapsed = "true";
+
+    if (!chevron) return;
+
+    gsap.set(chevron, { display: "block", visibility: "visible", clearProps: "opacity" });
+  }
+
+  private hideThinkingStepChevron(item: HTMLElement): void {
+    const chevron = this.getThinkingStepChevron(item);
+
+    delete item.dataset.detailCollapsed;
+    delete item.dataset.detailExpanded;
+
+    if (!chevron) return;
+
+    gsap.set(chevron, { display: "none", autoAlpha: 0 });
+  }
+
+  private toggleThinkingSteps(header: HTMLElement): void {
+    this.setThinkingStepsExpanded(header, header.dataset.thinkingExpanded !== "true", { animate: true });
+  }
+
+  private setThinkingStepsExpanded(
+    header: HTMLElement,
+    expanded: boolean,
+    options: { animate: boolean },
+  ): void {
+    const block = header.closest<HTMLElement>(".wa-thinking-block");
+    const steps = block?.querySelector<HTMLElement>(".wa-research-steps");
+    const chevron = header.querySelector<HTMLElement>(".wa-thinking__chevron");
+
+    if (!steps) return;
+
+    const scrollAnchor = this.createThreadScrollAnchor(block?.closest<HTMLElement>(".wa-message"));
+
+    gsap.killTweensOf(steps);
+    chevron?.setAttribute("aria-expanded", String(expanded));
+
+    if (expanded) {
+      header.dataset.thinkingExpanded = "true";
+      gsap.set(steps, {
+        display: "grid",
+        height: "auto",
+        minHeight: 0,
+        overflow: "visible",
+        y: 0,
+      });
+      this.setPausedThinkingGuideToVisibleSteps(steps);
+      const expandedHeight = steps.getBoundingClientRect().height;
+
+      if (!options.animate) {
+        gsap.set(steps, { autoAlpha: 1, height: "auto", minHeight: 0, overflow: "visible", y: 0 });
+        this.requestThreadContentFitUpdate();
+        return;
+      }
+
+      gsap.fromTo(
+        steps,
+        { autoAlpha: 0, height: 0, minHeight: 0, overflow: "hidden", y: 0 },
+        {
+          autoAlpha: 1,
+          height: expandedHeight,
+          duration: THINKING_INTERACTION_TOGGLE.duration,
+          ease: THINKING_INTERACTION_TOGGLE.ease,
+          onUpdate: () => this.preserveThreadScrollAnchor(scrollAnchor),
+          onComplete: () => {
+            gsap.set(steps, { height: "auto", minHeight: 0, overflow: "visible", y: 0 });
+            this.requestThreadContentFitUpdate();
+          },
+        },
+      );
+      return;
+    }
+
+    delete header.dataset.thinkingExpanded;
+
+    if (!options.animate) {
+      gsap.set(steps, {
+        display: "none",
+        autoAlpha: 0,
+        height: 0,
+        minHeight: 0,
+        overflow: "hidden",
+        y: THINKING_BLOCK_COLLAPSE.y,
+      });
+      this.requestThreadContentFitUpdate();
+      return;
+    }
+
+    gsap.to(steps, {
+      autoAlpha: 0,
+      height: 0,
+      minHeight: 0,
+      overflow: "hidden",
+      y: THINKING_BLOCK_COLLAPSE.y,
+      duration: THINKING_INTERACTION_TOGGLE.duration,
+      ease: "power2.inOut",
+      onUpdate: () => this.preserveThreadScrollAnchor(scrollAnchor),
+      onComplete: () => {
+        gsap.set(steps, {
+          display: "none",
+          height: 0,
+          minHeight: 0,
+          overflow: "hidden",
+          y: THINKING_BLOCK_COLLAPSE.y,
+        });
+        this.requestThreadContentFitUpdate();
+      },
+    });
+  }
+
+  private toggleThinkingStepDetail(item: HTMLElement): void {
+    this.setThinkingStepDetailExpanded(item, item.dataset.detailExpanded !== "true", { animate: true });
+  }
+
+  private setThinkingStepDetailExpanded(
+    item: HTMLElement,
+    expanded: boolean,
+    options: { animate: boolean },
+  ): void {
+    const targets = this.queryElements(item, ".wa-research-step__detail, .wa-sequence-thinking-progress");
+    const chevron = this.getThinkingStepChevron(item);
+    const block = item.closest<HTMLElement>(".wa-thinking-block");
+    const scrollAnchor = this.createThreadScrollAnchor(item.closest<HTMLElement>(".wa-message"));
+
+    if (!targets.length) return;
+
+    this.stabilizeVisibleThinkingStepFlow(block);
+    gsap.killTweensOf(targets);
+    chevron?.setAttribute("aria-expanded", String(expanded));
+    gsap.set(chevron, { display: "block", visibility: "visible", clearProps: "opacity" });
+
+    if (expanded) {
+      item.dataset.detailExpanded = "true";
+      delete item.dataset.detailCollapsed;
+
+      targets.forEach((target) => {
+        gsap.set(target, {
+          display: this.getThinkingDetailDisplay(target),
+          height: "auto",
+          minHeight: 0,
+          marginTop: "",
+          overflow: "visible",
+          y: 0,
+        });
+      });
+
+      const heights = targets.map((target) => target.getBoundingClientRect().height);
+
+      if (!options.animate) {
+        gsap.set(targets, { autoAlpha: 1, height: "auto", minHeight: 0, overflow: "visible", y: 0 });
+        this.syncThinkingBlockToCurrentStep(block);
+        this.requestThreadContentFitUpdate();
+        return;
+      }
+
+      targets.forEach((target, index) => {
+        gsap.fromTo(
+          target,
+          { autoAlpha: 0, height: 0, minHeight: 0, overflow: "hidden", y: THINKING_STEP_FOLD.detailOffsetY },
+          {
+            autoAlpha: 1,
+            height: heights[index],
+            duration: THINKING_INTERACTION_TOGGLE.duration,
+            ease: THINKING_INTERACTION_TOGGLE.ease,
+            onUpdate: () => {
+              this.syncThinkingBlockToCurrentStep(block);
+              this.preserveThreadScrollAnchor(scrollAnchor);
+            },
+            onComplete: () => {
+              gsap.set(target, { height: "auto", minHeight: 0, overflow: "visible", y: 0 });
+              this.syncThinkingBlockToCurrentStep(block);
+              this.requestThreadContentFitUpdate();
+            },
+          },
+        );
+      });
+      return;
+    }
+
+    delete item.dataset.detailExpanded;
+    item.dataset.detailCollapsed = "true";
+
+    if (!options.animate) {
+      gsap.set(targets, {
+        display: "none",
+        autoAlpha: 0,
+        height: 0,
+        minHeight: 0,
+        marginTop: 0,
+        overflow: "hidden",
+        y: 0,
+      });
+      this.syncThinkingBlockToCurrentStep(block);
+      this.requestThreadContentFitUpdate();
+      return;
+    }
+
+    gsap.to(targets, {
+      autoAlpha: 0,
+      height: 0,
+      minHeight: 0,
+      marginTop: 0,
+      overflow: "hidden",
+      y: THINKING_STEP_FOLD.detailOffsetY,
+      duration: THINKING_INTERACTION_TOGGLE.duration,
+      ease: "power2.inOut",
+      onUpdate: () => {
+        this.syncThinkingBlockToCurrentStep(block);
+        this.preserveThreadScrollAnchor(scrollAnchor);
+      },
+      onComplete: () => {
+        gsap.set(targets, {
+          display: "none",
+          height: 0,
+          minHeight: 0,
+          marginTop: 0,
+          overflow: "hidden",
+          y: 0,
+        });
+        this.syncThinkingBlockToCurrentStep(block);
+        this.requestThreadContentFitUpdate();
+      },
+    });
+  }
+
+  private getThinkingDetailDisplay(target: HTMLElement): "block" | "grid" {
+    return target.classList.contains("wa-sequence-thinking-progress") || target.dataset.hasToolCalls === "true"
+      ? "grid"
+      : "block";
+  }
+
+  private resetThinkingStepTimer(item: HTMLElement): void {
+    const elapsed = this.getThinkingStepTimer(item);
+
+    if (!elapsed) return;
+
+    elapsed.textContent = "0s";
+    gsap.set(elapsed, { display: "none", autoAlpha: 0 });
+  }
+
+  private showThinkingStepTimer(item: HTMLElement): void {
+    const elapsed = this.getThinkingStepTimer(item);
+
+    this.hideThinkingStepChevron(item);
+
+    if (!elapsed) return;
+
+    gsap.set(elapsed, { display: "inline-block", autoAlpha: 1 });
+  }
+
+  private hideThinkingStepTimer(item: HTMLElement): void {
+    const elapsed = this.getThinkingStepTimer(item);
+
+    if (!elapsed) return;
+
+    gsap.set(elapsed, { display: "none", autoAlpha: 0 });
+  }
+
+  private createThinkingStepElapsedTimer(
+    item: HTMLElement,
+    duration: number,
+  ): gsap.core.Timeline {
+    const elapsed = this.getThinkingStepTimer(item);
+    const timer = gsap.timeline();
+    const elapsedClock = { seconds: 0 };
+    const timerDuration = Math.max(0.01, duration);
+
+    if (!elapsed) return timer;
+
+    timer
+      .call(() => {
+        elapsedClock.seconds = 0;
+        elapsed.textContent = "0s";
+        this.showThinkingStepTimer(item);
+      })
+      .to(elapsedClock, {
+        seconds: timerDuration,
+        duration: timerDuration,
+        ease: "none",
+        onUpdate: () => {
+          elapsed.textContent = formatElapsedSeconds(elapsedClock.seconds);
+        },
+        onComplete: () => {
+          elapsed.textContent = formatElapsedSeconds(timerDuration);
+        },
+        onReverseComplete: () => {
+          elapsedClock.seconds = 0;
+          elapsed.textContent = "0s";
+        },
+      });
+
+    return timer;
   }
 
   private createThinkingLogo(className = "wa-thinking__glyph"): HTMLElement {
@@ -4316,6 +6075,9 @@ export class ChatActor {
     item.className = "wa-research-step";
     item.dataset.researchStep = String(index);
     item.dataset.stepState = index === 0 ? "current" : "complete";
+    if (typeof itemConfig.duration === "number" && Number.isFinite(itemConfig.duration)) {
+      item.dataset.thinkingDuration = String(itemConfig.duration);
+    }
 
     const marker = document.createElement("span");
     marker.className = "wa-research-step__marker";
@@ -4329,30 +6091,137 @@ export class ChatActor {
 
     const label = document.createElement("span");
     label.className = "wa-research-step__label";
+    label.dataset.activeText = itemConfig.label;
+    label.dataset.collapsedText = this.getPastTenseThinkingTitle(itemConfig.label);
     label.dataset.fullText = itemConfig.label;
     label.textContent = "";
 
+    const elapsed = document.createElement("span");
+    elapsed.className = "wa-research-step__elapsed";
+    elapsed.textContent = "0s";
+
     const detail = document.createElement("span");
+    const detailActiveText = itemConfig.detail;
+    const detailCollapsedText = detailActiveText ? this.getPastTenseThinkingTitle(detailActiveText) : "";
+
     detail.className = "wa-research-step__detail";
-    detail.dataset.fullText = itemConfig.detail;
-    detail.textContent = "";
+    detail.dataset.activeText = detailActiveText;
+    detail.dataset.collapsedText = detailCollapsedText;
+    detail.dataset.fullText = detailActiveText;
+
+    if (itemConfig.toolCalls.length) {
+      detail.dataset.hasToolCalls = "true";
+
+      const detailText = document.createElement("span");
+      detailText.className = "wa-research-step__detail-text";
+      detailText.dataset.thinkingDetailText = "";
+      detailText.dataset.activeText = detailActiveText;
+      detailText.dataset.collapsedText = detailCollapsedText;
+      detailText.dataset.fullText = detailActiveText;
+      detail.append(detailText, this.createThinkingToolCallList(itemConfig.toolCalls));
+    } else {
+      detail.textContent = "";
+    }
 
     const chevron = document.createElement("span");
     chevron.className = "wa-research-step__chevron";
-    chevron.setAttribute("aria-hidden", "true");
+    chevron.setAttribute("role", "button");
+    chevron.setAttribute("aria-label", "Toggle thinking detail");
+    chevron.setAttribute("aria-expanded", "false");
 
-    labelRow.append(label, chevron);
+    labelRow.append(label, elapsed, chevron);
     body.append(labelRow, detail);
     item.append(marker, body);
     return item;
   }
 
-  private getThinkingDetail(labelText: string, index: number): string {
-    return getDefaultThinkingDetail(labelText, index);
+  private createThinkingToolCallList(toolCalls: NormalizedThinkingItem["toolCalls"]): HTMLElement {
+    const list = document.createElement("span");
+
+    list.className = "wa-research-step__tool-calls";
+    list.append(...toolCalls.map((toolCall) => this.createThinkingToolCall(toolCall)));
+    return list;
   }
 
-  private getThinkingElapsed(stepCount: number): string {
-    return getThinkingElapsedLabel(stepCount);
+  private createThinkingToolCall(toolCall: NormalizedThinkingItem["toolCalls"][number]): HTMLElement {
+    const row = document.createElement("span");
+    const icon = document.createElement("span");
+    const favicon = this.createThinkingToolFavicon(toolCall.vendor || toolCall.label);
+    const check = this.createSvgIcon("wa-research-step__tool-check", ["M5 12l5 5l10 -10"], {
+      size: 14,
+      pathAttributes: {
+        fill: "none",
+        stroke: "currentColor",
+        "stroke-width": "2.4",
+        "stroke-linecap": "round",
+        "stroke-linejoin": "round",
+      },
+    });
+    const label = document.createElement("span");
+
+    row.className = "wa-research-step__tool-call";
+    row.dataset.toolCallState = "pending";
+    row.style.opacity = "0";
+    row.style.visibility = "hidden";
+    icon.className = "wa-research-step__tool-icon";
+    favicon.style.opacity = "0";
+    favicon.style.transform = "scale(0.68)";
+    check.style.opacity = "0";
+    check.style.transform = `translateY(${THINKING_TOOL_COMPLETE_ICON.checkStartY}px) scale(${THINKING_TOOL_COMPLETE_ICON.checkStartScale})`;
+    label.className = "wa-research-step__tool-label";
+    label.dataset.activeText = toolCall.label;
+    label.dataset.collapsedText = this.getPastTenseThinkingTitle(toolCall.label);
+    label.dataset.fullText = toolCall.label;
+    label.textContent = "";
+    icon.append(favicon, check);
+    row.append(icon, label);
+    return row;
+  }
+
+  private createThinkingToolFavicon(vendorName: string): HTMLElement {
+    const favicon = document.createElement("span");
+
+    favicon.className = "wa-research-step__tool-favicon";
+    favicon.dataset.toolService = getToolServiceKey(vendorName);
+    favicon.setAttribute("aria-hidden", "true");
+
+    if (!this.appendToolFaviconImage(favicon, getToolFaviconUrl(vendorName), {
+      loading: "eager",
+      onError: () => {
+        favicon.textContent = getToolFallbackInitial(vendorName);
+      },
+    })) {
+      favicon.textContent = getToolFallbackInitial(vendorName);
+    }
+
+    return favicon;
+  }
+
+  private appendToolFaviconImage(
+    container: HTMLElement,
+    faviconUrl: string,
+    options: { loading: "eager" | "lazy"; onError: () => void },
+  ): boolean {
+    if (!faviconUrl) return false;
+
+    const img = document.createElement("img");
+
+    img.alt = "";
+    img.decoding = "async";
+    img.loading = options.loading;
+    img.src = this.resolveAssetUrl(faviconUrl);
+    img.addEventListener("error", () => {
+      if (!container.contains(img)) return;
+
+      img.remove();
+      options.onError();
+    }, { once: true });
+    container.append(img);
+    return true;
+  }
+
+  private getThinkingDetail(labelText: string, index: number): string {
+    return getDefaultThinkingDetail(labelText, index);
   }
 
   private normalizeThinkingInput(input: ThinkingInput): NormalizedThinkingState {
@@ -4387,6 +6256,8 @@ export class ChatActor {
             ? DEFAULT_THINKING_DISCLOSURE
             : DEFAULT_THINKING_COLLAPSED_DISCLOSURE
           : item.disclosure || (index === 0 ? DEFAULT_THINKING_DISCLOSURE : DEFAULT_THINKING_COLLAPSED_DISCLOSURE),
+      duration: typeof item === "string" ? undefined : item.duration,
+      toolCalls: typeof item === "string" ? [] : item.toolCalls ?? [],
     };
   }
 
@@ -4587,7 +6458,7 @@ export class ChatActor {
       cell.dataset.columnKey = column.key;
 
       if (isHeader) cell.textContent = column.label;
-      else this.appendDataTableCellContent(cell, column, values);
+      else this.appendDataTableCellContent(cell, column, values, tableId);
 
       row.append(cell);
     }
@@ -4614,6 +6485,7 @@ export class ChatActor {
     cell: HTMLElement,
     column: DataTableColumnConfig,
     values: Record<string, string>,
+    tableId: string,
   ): void {
     const cellType = this.getDataTableCellType(column);
 
@@ -4628,9 +6500,15 @@ export class ChatActor {
         this.appendDataTablePillDetailCell(cell, column, values);
         return;
       case "text":
-        this.appendDataTableTextCell(cell, values[column.key] ?? "");
+        this.appendDataTableTextCell(cell, values[column.key] ?? "", this.getDataTableEmptyPlaceholder(tableId, column));
         return;
     }
+  }
+
+  private getDataTableEmptyPlaceholder(tableId: string, column: DataTableColumnConfig): string {
+    if (column.key === "company") return "";
+    if (tableId === "raw-webinar-attendees" && column.key === "email") return "";
+    return "-";
   }
 
   private getDataTableCellType(column: DataTableColumnConfig): DataTableCellType {
@@ -4663,11 +6541,11 @@ export class ChatActor {
     if (values[badgeKey]) cell.append(this.createDataTableCellBadge(values[badgeKey]));
   }
 
-  private appendDataTableTextCell(cell: HTMLElement, value: string): void {
+  private appendDataTableTextCell(cell: HTMLElement, value: string, emptyPlaceholder = "-"): void {
     const text = document.createElement("span");
 
     text.className = "wa-data-table__cell-text";
-    text.textContent = value || "-";
+    text.textContent = value || emptyPlaceholder;
     cell.append(text);
     if (!value) cell.dataset.empty = "true";
   }
@@ -4750,6 +6628,8 @@ export class ChatActor {
       const controls = document.createElement("span");
       controls.className = "wa-data-table__page-controls";
 
+      controls.append(this.createDataTablePaginationChevron("previous", activePage, pages.length));
+
       for (const page of pages) {
         const button = document.createElement("button");
         const active = page.page === activePage;
@@ -4757,20 +6637,42 @@ export class ChatActor {
         button.className = "wa-data-table__page-button";
         button.type = "button";
         button.tabIndex = -1;
+        button.dataset.pageButtonRole = "dot";
+        button.dataset.pageCount = String(pages.length);
         button.dataset.tablePageButton = String(page.page);
         button.dataset.pageRange = page.range;
         button.dataset.active = String(active);
         button.setAttribute("aria-label", `Show page ${page.page}`);
         button.setAttribute("aria-current", active ? "page" : "false");
-        button.textContent = String(page.page);
         controls.append(button);
       }
+
+      controls.append(this.createDataTablePaginationChevron("next", activePage, pages.length));
 
       pagination.append(range, controls);
       footer.append(pagination);
     }
 
     return footer;
+  }
+
+  private createDataTablePaginationChevron(direction: "previous" | "next", activePage: number, pageCount: number): HTMLButtonElement {
+    const button = document.createElement("button");
+
+    button.className = "wa-data-table__page-button";
+    button.type = "button";
+    button.tabIndex = -1;
+    button.dataset.pageButtonRole = direction;
+    button.dataset.pageCount = String(pageCount);
+    button.setAttribute("aria-label", direction === "previous" ? "Show previous page" : "Show next page");
+    button.append(this.createDataTablePaginationChevronIcon(direction));
+    this.updateDataTablePageButton(button, activePage);
+    return button;
+  }
+
+  private createDataTablePaginationChevronIcon(direction: "previous" | "next"): SVGSVGElement {
+    const path = direction === "previous" ? "M15 6l-6 6l6 6" : "M9 6l6 6l-6 6";
+    return this.createSvgIcon("wa-data-table__page-chevron", [path], { size: 18 });
   }
 
   private createDataTableAction(
@@ -4784,7 +6686,9 @@ export class ChatActor {
     button.dataset.tableAction = action.id;
     button.dataset.tableActionTable = tableId;
     button.dataset.actionVariant = action.variant ?? "secondary";
+    button.dataset.selected = "false";
     button.setAttribute("aria-label", action.label);
+    button.setAttribute("aria-pressed", "false");
 
     const label = document.createElement("span");
     label.className = "wa-data-table-action__label";
@@ -4822,6 +6726,62 @@ export class ChatActor {
     return target.closest<HTMLElement>(DATA_TABLE_PAGE_BUTTON_SELECTOR);
   }
 
+  private findDataTableActionButton(target: EventTarget | null): HTMLElement | null {
+    if (!(target instanceof Element)) return null;
+    return target.closest<HTMLElement>("[data-table-action]");
+  }
+
+  dataTableActionSelected(tableId: string, actionId: string): gsap.core.Timeline {
+    return gsap.timeline().call(() => {
+      const table = this.findDataTable(tableId);
+      const actionButton = table?.querySelector<HTMLElement>(
+        `[data-table-action="${this.escapeSelectorValue(actionId)}"]`,
+      );
+
+      if (actionButton) this.selectDataTableActionButton(actionButton, { animate: true });
+    });
+  }
+
+  private selectDataTableActionButton(actionButton: HTMLElement, options: { animate?: boolean } = {}): void {
+    const table = actionButton.closest<HTMLElement>(DATA_TABLE_SELECTOR);
+
+    table?.querySelectorAll<HTMLElement>("[data-table-action]").forEach((button) => {
+      const selected = button === actionButton;
+
+      button.dataset.selected = String(selected);
+      button.setAttribute("aria-pressed", String(selected));
+    });
+
+    if (options.animate) this.playDataTableActionPress(actionButton);
+  }
+
+  private playDataTableActionPress(actionButton: HTMLElement): void {
+    if (this.prefersReducedMotion) return;
+
+    gsap.killTweensOf(actionButton, "scale,transform");
+    gsap.set(actionButton, { transformOrigin: "center center" });
+    gsap.timeline()
+      .to(actionButton, {
+        scale: 0.975,
+        duration: motionDuration(0.08),
+        ease: "power2.out",
+        overwrite: "auto",
+      })
+      .to(actionButton, {
+        scale: 1.018,
+        duration: motionDuration(0.18),
+        ease: "back.out(2.4)",
+        overwrite: "auto",
+      })
+      .to(actionButton, {
+        scale: 1,
+        duration: motionDuration(0.14),
+        ease: "power2.out",
+        overwrite: "auto",
+        clearProps: "transform",
+      });
+  }
+
   private getDataTablePageButtonRuntime(pageButton: HTMLElement): DataTablePageButtonRuntime | null {
     const table = pageButton.closest<HTMLElement>(DATA_TABLE_SELECTOR);
     const tableId = table?.dataset.dataTable;
@@ -4829,10 +6789,15 @@ export class ChatActor {
 
     if (!table || !tableId || page === null) return null;
 
+    const pageRange = pageButton.dataset.pageRange ??
+      this.findDataTablePageDotButton(table, page)?.dataset.pageRange ??
+      null;
+
     return {
       table,
       tableId,
       page,
+      pageRange,
       initialPage: this.parseFiniteNumber(table.dataset.activePage),
       initialRangeText: table.querySelector<HTMLElement>(DATA_TABLE_PAGE_RANGE_SELECTOR)?.textContent ?? null,
     };
@@ -4840,6 +6805,12 @@ export class ChatActor {
 
   private findDataTable(tableId: string): HTMLElement | null {
     return this.root.querySelector<HTMLElement>(`[data-data-table="${this.escapeSelectorValue(tableId)}"]`);
+  }
+
+  private findDataTablePageDotButton(table: HTMLElement, page: number): HTMLElement | null {
+    return table.querySelector<HTMLElement>(
+      `[data-page-button-role="dot"][data-table-page-button="${this.escapeSelectorValue(String(page))}"]`,
+    );
   }
 
   private getDataTablePageRuntime(tableId: string, page: number): DataTablePageRuntime | null {
@@ -4855,7 +6826,10 @@ export class ChatActor {
       currentRows: this.getVisibleDataTableRows(table),
       targetRows: this.queryElements(table, `.wa-data-table__row[data-page="${page}"]`),
       buttons,
-      targetButton: buttons.find((button) => this.parseFiniteNumber(button.dataset.tablePageButton) === page),
+      targetButton: buttons.find((button) =>
+        button.dataset.pageButtonRole === "dot" &&
+        this.parseFiniteNumber(button.dataset.tablePageButton) === page
+      ),
       range: table.querySelector<HTMLElement>(DATA_TABLE_PAGE_RANGE_SELECTOR),
     };
   }
@@ -5140,34 +7114,56 @@ export class ChatActor {
 
     const rows = document.createElement("div");
     rows.className = "wa-waterfall-rows";
-    rows.append(
-      this.createWaterfallRow("Work email", "complete", [
-        { label: "On Prem", service: "on-prem", state: "complete" },
-        { label: "Wiza", service: "wiza", state: "pending" },
-        { label: "ContactOut", service: "contactout", state: "pending" },
-        { label: "Prospeo", service: "prospeo", state: "pending" },
-        { label: "Waterfall", service: "waterfall", state: "pending" },
-        { label: "FullEnrich", service: "fullenrich", state: "pending" },
-      ]),
-      this.createWaterfallRow("Phone number", "complete", [
-        { label: "On Prem", service: "on-prem", state: "failed" },
-        { label: "ContactOut", service: "contactout", state: "failed" },
-        { label: "Forager", service: "forager", state: "complete" },
-        { label: "Wiza", service: "wiza", state: "pending" },
-        { label: "Prospeo", service: "prospeo", state: "pending" },
-        { label: "FullEnrich", service: "fullenrich", state: "pending" },
-      ]),
-      this.createWaterfallRow("Social profile", "complete", [
-        { label: "On Prem", service: "on-prem", state: "failed" },
-        { label: "ContactOut", service: "contactout", state: "complete" },
-        { label: "Prospeo", service: "prospeo", state: "pending" },
-        { label: "Wiza", service: "wiza", state: "pending" },
-        { label: "Forager", service: "forager", state: "pending" },
-      ]),
-    );
+    rows.append(...this.getWaterfallRows(config).map((row) =>
+      this.createWaterfallRow(row.label, row.state, row.chips),
+    ));
 
     panel.append(header, rows);
     return panel;
+  }
+
+  private getWaterfallRows(config: EnrichmentConfig): WaterfallRowConfig[] {
+    const configuredRows = config.fields
+      .map((field) => this.createWaterfallRowConfig(field.title, field.steps))
+      .filter((row): row is WaterfallRowConfig => Boolean(row));
+
+    return configuredRows.length ? configuredRows : DEFAULT_ENRICHMENT_WATERFALL_ROWS;
+  }
+
+  private createWaterfallRowConfig(label: string, serviceLabels: string[]): WaterfallRowConfig | null {
+    const labels = serviceLabels
+      .map((serviceLabel) => serviceLabel.trim())
+      .filter(Boolean);
+    const completionIndex = this.getWaterfallCompletionIndex(label, labels);
+    const chips = labels.map((serviceLabel, index): WaterfallServiceConfig => ({
+      label: serviceLabel,
+      service: getToolServiceKey(serviceLabel),
+      state: index < completionIndex
+        ? "failed"
+        : index === completionIndex
+          ? "complete"
+          : "pending",
+    }));
+
+    if (!label.trim() || !chips.length) return null;
+
+    return {
+      label: label.trim(),
+      state: chips.some((chip) => chip.state === "complete") ? "complete" : "failed",
+      chips,
+    };
+  }
+
+  private getWaterfallCompletionIndex(label: string, serviceLabels: string[]): number {
+    const mobileField = /\b(?:mobile|phone)\b/i.test(label);
+
+    if (mobileField) {
+      const unifyIndex = serviceLabels.findIndex((serviceLabel) => getToolServiceKey(serviceLabel) === "on-prem");
+
+      if (unifyIndex >= 0) return unifyIndex;
+    }
+
+    return serviceLabels.length - 1;
   }
 
   private createWaterfallRow(
@@ -5223,7 +7219,7 @@ export class ChatActor {
     item.dataset.finalStepState = config.state;
     icon.className = "wa-waterfall-chip__icon";
     icon.setAttribute("aria-hidden", "true");
-    this.appendWaterfallServiceIcon(icon, config.service);
+    this.appendWaterfallServiceIcon(icon, config);
     const stateIcon = document.createElement("span");
     stateIcon.className = "wa-waterfall-chip__state-icon";
     stateIcon.setAttribute("aria-hidden", "true");
@@ -5291,12 +7287,33 @@ export class ChatActor {
     return svg;
   }
 
-  private appendWaterfallServiceIcon(icon: HTMLElement, service: string): void {
+  private appendWaterfallServiceIcon(icon: HTMLElement, config: WaterfallServiceConfig): void {
+    const { label, service } = config;
+
     if (service === "on-prem") {
       icon.append(createUnifyMarkSvg("wa-waterfall-chip__mark"));
       return;
     }
 
+    const faviconUrl = getToolFaviconUrl(label) || getToolFaviconUrl(service);
+
+    if (faviconUrl) {
+      icon.dataset.hasFavicon = "true";
+      this.appendToolFaviconImage(icon, faviconUrl, {
+        loading: "eager",
+        onError: () => {
+          icon.replaceChildren();
+          delete icon.dataset.hasFavicon;
+          this.appendWaterfallServiceGlyph(icon, service);
+        },
+      });
+      return;
+    }
+
+    this.appendWaterfallServiceGlyph(icon, service);
+  }
+
+  private appendWaterfallServiceGlyph(icon: HTMLElement, service: string): void {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
 
@@ -5309,27 +7326,7 @@ export class ChatActor {
     path.setAttribute("stroke-linecap", "round");
     path.setAttribute("stroke-linejoin", "round");
 
-    switch (service) {
-      case "wiza":
-        path.setAttribute("d", "M8 2.4 5.2 11.8h5.6L8 2.4Zm-3.8 9.4h7.6");
-        break;
-      case "contactout":
-        path.setAttribute("d", "M4.2 10.7V5.3h7.6v5.4H4.2Zm1.2-6.8h1.2m2.8 0h1.2M6 7.9h.1m3.8 0h.1");
-        break;
-      case "prospeo":
-        path.setAttribute("d", "m8 2.7 4.4 2.5v5.6L8 13.3l-4.4-2.5V5.2L8 2.7Zm0 0v5.2m4.4-2.7L8 7.9 3.6 5.2");
-        break;
-      case "waterfall":
-        path.setAttribute("d", "m3.2 6.2 3.1 3 1.7-1.6 1.7 1.6 3.1-3");
-        break;
-      case "fullenrich":
-        path.setAttribute("d", "M3.1 9.9a5 5 0 1 1 9.8 0M5.2 8.6a2.8 2.8 0 1 1 5.6 0M2.9 11.8h10.2");
-        break;
-      case "forager":
-      default:
-        path.setAttribute("d", "M3.3 4.2 8 2l4.7 2.2M3.3 7.1 8 4.9l4.7 2.2M3.3 10 8 7.8l4.7 2.2M8 7.8v5.4");
-        break;
-    }
+    path.setAttribute("d", WATERFALL_SERVICE_GLYPH_PATHS[service] ?? WATERFALL_SERVICE_GLYPH_PATHS.default);
 
     svg.append(path);
     icon.append(svg);
@@ -5923,7 +7920,7 @@ export class ChatActor {
     progress.dataset.swipeProgress = "";
 
     const useLabel = document.createElement("span");
-    useLabel.textContent = config.labels?.use ?? "I'd use it";
+    useLabel.textContent = config.labels?.use ?? "I’d use it";
 
     axis.append(avoidLabel, progress, useLabel);
 
@@ -5965,7 +7962,7 @@ export class ChatActor {
     actions.className = "wa-swipe-game__actions";
     actions.append(
       this.createSwipeActionButton("avoid", config.labels?.avoid ?? "Never me"),
-      this.createSwipeActionButton("use", config.labels?.use ?? "I'd use it"),
+      this.createSwipeActionButton("use", config.labels?.use ?? "I’d use it"),
     );
 
     section.append(intro, prompt, axis, stack, actions);
@@ -6281,6 +8278,7 @@ export class ChatActor {
         label: labelText,
         detail: detailText,
         disclosure: index === 0 ? DEFAULT_THINKING_DISCLOSURE : DEFAULT_THINKING_COLLAPSED_DISCLOSURE,
+        toolCalls: [],
       },
       index,
     );
@@ -7084,17 +9082,22 @@ export class ChatActor {
 
     if (!el) return tl;
 
+    const styles = getComputedStyle(el);
+    const rootStyles = getComputedStyle(this.root);
+    const highlightBackground = rootStyles.getPropertyValue("--wa-highlight-bg").trim() || "rgba(213, 255, 79, 0.22)";
+    const originalBackground = styles.backgroundColor || "transparent";
+
     tl.to(el, {
-      backgroundColor: "rgba(213, 255, 79, 0.22)",
+      backgroundColor: highlightBackground,
       scale: 1.018,
       duration: motionDuration(0.16),
       ease: "power2.out",
     }).to(el, {
-      backgroundColor: "rgba(255, 255, 255, 0)",
+      backgroundColor: originalBackground,
       scale: 1,
       duration: motionDuration(0.42),
       ease: "power2.out",
-    });
+    }).set(el, { clearProps: "backgroundColor" });
 
     return tl;
   }
@@ -7216,7 +9219,7 @@ export class ChatActor {
       this.thread.clientHeight;
 
     if (this.composerVisible) {
-      return Math.max(0, target, this.getThreadBottomScrollTarget());
+      return Math.max(0, target, this.getThreadLiveScrollTarget());
     }
 
     return Math.max(0, target);
@@ -7268,11 +9271,25 @@ export class ChatActor {
   }
 
   private getThreadBottomPadding(): number {
-    return Number.parseFloat(getComputedStyle(this.thread).paddingBottom) || 0;
+    const style = getComputedStyle(this.thread);
+    const basePadding = Number.parseFloat(style.getPropertyValue("--wa-thread-base-bottom-padding"));
+    const defaultPadding = Number.parseFloat(style.getPropertyValue("--wa-chat-bottom-clearance"));
+
+    if (Number.isFinite(basePadding)) return basePadding;
+    if (Number.isFinite(defaultPadding)) return defaultPadding;
+
+    return CHAT_BOTTOM_CLEARANCE;
   }
 
   private getThreadBottomScrollTarget(): number {
     return Math.max(0, this.thread.scrollHeight - this.thread.clientHeight);
+  }
+
+  private getThreadLiveScrollTarget(): number {
+    const contentBottom = this.getVisibleThreadContentBottom();
+    const target = contentBottom + this.getThreadBottomPadding() - this.thread.clientHeight;
+
+    return Math.min(this.getThreadBottomScrollTarget(), Math.max(0, target));
   }
 
   private getElementBottomScrollTarget(element: HTMLElement, extraScroll = 0): number {
@@ -7289,7 +9306,7 @@ export class ChatActor {
   }
 
   private pinThreadToBottom(): void {
-    this.thread.scrollTop = this.getThreadBottomScrollTarget();
+    this.thread.scrollTop = this.getThreadLiveScrollTarget();
   }
 
   private tweenThreadToBottom(duration = CHAT_SCROLL_MOTION.followDuration, ease = CHAT_SCROLL_MOTION.followEase): gsap.core.Timeline {
@@ -7299,7 +9316,7 @@ export class ChatActor {
     tl.call(() => {
       this.stopScrollMotion();
       this.updateThreadContentFitState();
-      target = this.getThreadBottomScrollTarget();
+      target = this.getThreadLiveScrollTarget();
     });
 
     tl.to(this.thread, {
@@ -7321,6 +9338,8 @@ export class ChatActor {
     this.updateThreadContentFitState();
     const target = this.getMessageScrollTarget(message, scrollAnchor, scrollOffset);
 
+    if (target <= this.thread.scrollTop + 0.5) return;
+
     if (this.prefersReducedMotion || Math.abs(this.thread.scrollTop - target) < 1) {
       this.thread.scrollTop = target;
       return;
@@ -7340,6 +9359,8 @@ export class ChatActor {
   }
 
   private requestMessageScroll(message: HTMLElement): void {
+    if (this.shouldPreserveMessageScroll(message)) return;
+
     const now = performance.now();
 
     this.scheduledScrollMessage = message;
@@ -7356,6 +9377,12 @@ export class ChatActor {
 
       if (target?.isConnected) this.animateMessageScrollIntoView(target);
     });
+  }
+
+  private shouldPreserveMessageScroll(message: HTMLElement): boolean {
+    const target = this.getMessageScrollTargetElement(message);
+
+    return target.dataset.preserveMessageScroll === "true";
   }
 
   private cancelScheduledScroll(): void {
