@@ -522,7 +522,8 @@ body {
   column-gap: var(--wa-column-gap);
   row-gap: var(--wa-row-gap);
   align-items: start;
-  width: 100%;
+  width: min(var(--wa-content-max), 100%);
+  margin: 0 auto;
 }
 
 .wa-copy {
