@@ -124,7 +124,7 @@ function getAssetUrlMapTemplate(assetEntries) {
     window.ChatbotStories.init("[data-chatbot-stories]", {
       autoplay: true,
       loop: true,
-      autoAdvanceDelay: 3.2,
+      autoAdvanceDelay: 0.35,
       builderDraftEndpoint: false,
       assetUrlMap: {
 ${mapEntries}
@@ -231,7 +231,7 @@ function getCmsCollectionListAdapterTemplate() {
         assetBaseUrl: "https://cdn.example.com/unify-chatbot-stories/assets",
         autoplay: true,
         loop: true,
-        autoAdvanceDelay: 3.2
+        autoAdvanceDelay: 0.35
       });
     });
   })();
@@ -326,7 +326,7 @@ Manual JS config is also supported:
     builderDraftEndpoint: false,
     autoplay: true,
     loop: true,
-    autoAdvanceDelay: 3.2
+    autoAdvanceDelay: 0.35
   });
 </script>
 \`\`\`

@@ -2371,7 +2371,7 @@ function createEnrichmentComponent(): BuilderEnrichmentComponent {
       },
       {
         title: "Mobile number",
-        steps: ["ContactOut", "FullEnrich"],
+        steps: ["ContactOut"],
       },
       {
         title: "LinkedIn",
@@ -2379,7 +2379,7 @@ function createEnrichmentComponent(): BuilderEnrichmentComponent {
       },
       {
         title: "Title",
-        steps: ["Wiza", "ZoomInfo", "FullEnrich"],
+        steps: ["Wiza", "ZoomInfo", "ContactOut"],
       },
     ],
   };

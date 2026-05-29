@@ -73,7 +73,7 @@ The Webflow bundle supports these data attributes on `[data-chatbot-stories]`:
 - `data-builder-draft-script-id="unify-chatbot-stories-cms-draft"` to load CMS-provided draft JSON from a script tag.
 - `data-autoplay="false"` to load paused.
 - `data-loop="false"` to stop at the final story.
-- `data-auto-advance-delay="3.2"` to change story advance timing.
+- `data-auto-advance-delay="0.35"` to change story advance timing.
 - `data-initial-story="data-marketplace"` or a zero-based index.
 
 Manual initialization is also supported:
@@ -85,7 +85,7 @@ Manual initialization is also supported:
     builderDraftEndpoint: false,
     autoplay: true,
     loop: true,
-    autoAdvanceDelay: 3.2
+    autoAdvanceDelay: 0.35
   });
 </script>
 ```

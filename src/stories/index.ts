@@ -356,11 +356,11 @@ const DATA_MARKETPLACE_ENRICHMENT = {
   fields: [
     {
       title: "Business emails",
-      steps: ["Unify Data", "5-Step Waterfall", "FullEnrich"],
+      steps: ["Unify Data", "5-Step Waterfall", "ContactOut"],
     },
     {
       title: "Mobile phones",
-      steps: ["Unify Data", "5-Step Waterfall", "FullEnrich"],
+      steps: ["Unify Data", "5-Step Waterfall", "ContactOut"],
     },
   ],
 } satisfies EnrichmentConfig;

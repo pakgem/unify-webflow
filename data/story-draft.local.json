@@ -318,7 +318,7 @@
                 "title": "Mobile number",
                 "steps": [
                   "Unify",
-                  "FullEnrich"
+                  "ContactOut"
                 ]
               },
               {

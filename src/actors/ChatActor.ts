@@ -762,7 +762,6 @@ const DEFAULT_ENRICHMENT_WATERFALL_ROWS: WaterfallRowConfig[] = [
       { label: "ContactOut", service: "contactout", state: "pending" },
       { label: "Prospeo", service: "prospeo", state: "pending" },
       { label: "Waterfall", service: "waterfall", state: "pending" },
-      { label: "FullEnrich", service: "fullenrich", state: "pending" },
     ],
   },
   {
@@ -774,7 +773,6 @@ const DEFAULT_ENRICHMENT_WATERFALL_ROWS: WaterfallRowConfig[] = [
       { label: "Forager", service: "forager", state: "pending" },
       { label: "Wiza", service: "wiza", state: "pending" },
       { label: "Prospeo", service: "prospeo", state: "pending" },
-      { label: "FullEnrich", service: "fullenrich", state: "pending" },
     ],
   },
   {

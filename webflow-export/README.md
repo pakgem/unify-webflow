@@ -1,12 +1,12 @@
 # Webflow Export
 
-Generated: 2026-05-28T23:43:25.169Z
+Generated: 2026-05-29T00:14:13.903Z
 
 This folder is the implementation handoff for the Unify chatbot stories animation in Webflow.
 
 ## Files
 
-- `chatbot-stories.js`: production IIFE runtime for Webflow custom code (579 KB).
+- `chatbot-stories.js`: production IIFE runtime for Webflow custom code (582 KB).
 - `assets/media/chat-background.png`: media slab background used by the animation.
 - `assets/data-logos/*`: vendor logos referenced by the data marketplace story.
 - `embed-element.html`: paste into a Webflow HTML Embed element where the animation should appear.
@@ -78,7 +78,7 @@ Manual JS config is also supported:
     builderDraftEndpoint: false,
     autoplay: true,
     loop: true,
-    autoAdvanceDelay: 3.2
+    autoAdvanceDelay: 0.35
   });
 </script>
 ```

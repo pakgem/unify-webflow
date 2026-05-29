@@ -1,3 +1,4 @@
+import { gsap } from "gsap";
 import type { CursorActor } from "../actors/CursorActor";
 import type { Point } from "./types";
 
@@ -57,6 +58,9 @@ const MIMIC_SNIFF = {
 };
 const MIMIC_RETURN = {
   durationMs: 980,
+  playDurationMin: 0.34,
+  playDurationMax: 0.62,
+  playPixelsPerSecond: 980,
   amplitude: 18,
   arriveDistance: 3.5,
 };
@@ -107,6 +111,60 @@ export class PausedCursorMimic {
 
     this.stopMimicking();
     this.unlisten();
+  }
+
+  releaseToIdle(): gsap.core.Timeline | null {
+    if (!this.active) {
+      this.setPaused(false);
+      return null;
+    }
+
+    this.paused = false;
+    this.samples = [];
+    this.dismissSamples = [];
+    this.unlisten();
+    window.cancelAnimationFrame(this.frame);
+    this.frame = 0;
+
+    const start = this.getCursorViewportPoint();
+    const home = this.getReturnHomePoint();
+    const state = { progress: 0 };
+    const duration = clamp(
+      distance(start, home) / MIMIC_RETURN.playPixelsPerSecond,
+      MIMIC_RETURN.playDurationMin,
+      MIMIC_RETURN.playDurationMax,
+    );
+
+    this.mode = "return";
+    this.target = home;
+    this.pointer = null;
+    this.sniffAnchor = null;
+    this.returnStart = start;
+    this.returnStartedAt = performance.now();
+    this.returnWaveDirection = home.y >= start.y ? 1 : -1;
+    this.playStartedAt = 0;
+    this.playPhase = 0;
+    this.lastPointer = null;
+    this.velocity = { x: 0, y: 0 };
+
+    return gsap.timeline({
+      onComplete: () => {
+        this.cursor.mimicViewportPoint(home, 1, home);
+        this.completeReturn();
+      },
+      onInterrupt: () => this.stopMimicking(),
+    }).to(state, {
+      progress: 1,
+      duration,
+      ease: "none",
+      onUpdate: () => {
+        const progress = clampUnit(state.progress);
+        const point = this.getReturnWavePoint(progress, home);
+        const lookAhead = this.getReturnWavePoint(Math.min(1, progress + 0.035), home);
+
+        this.cursor.mimicViewportPoint(point, 1, progress < 1 ? lookAhead : home);
+      },
+    });
   }
 
   destroy(): void {

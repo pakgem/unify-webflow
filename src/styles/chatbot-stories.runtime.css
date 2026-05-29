@@ -1040,7 +1040,7 @@ body {
   width: 42px;
   aspect-ratio: 18 / 11;
   margin-bottom: -2px;
-  color: var(--wa-signup-muted);
+  color: var(--wa-orange);
   pointer-events: none;
 }
 
@@ -1806,6 +1806,12 @@ body {
 .wa-research-step__tool-favicon[data-tool-service="salesforce"] {
   border-radius: 0;
   background: transparent;
+}
+
+.wa-research-step__tool-favicon[data-tool-service="theswarm"],
+.wa-research-step__tool-favicon[data-tool-service="swarm"] {
+  border-radius: 999px;
+  clip-path: circle(50%);
 }
 
 .wa-research-step__tool-favicon img {
@@ -5895,6 +5901,7 @@ body {
     transform 180ms ease;
 }
 
+.wa-section[data-story-paused="true"] .wa-history-resume,
 .wa-section[data-chat-history-paused="true"] .wa-history-resume {
   opacity: 1;
   pointer-events: auto;

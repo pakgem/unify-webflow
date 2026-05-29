@@ -29,8 +29,12 @@ type StoryProgressScrubState = {
 };
 type StorySwitchOptions = {
   animateExit?: boolean;
+  preservePlayback?: boolean;
 };
 type ThemePreference = "light" | "dark" | "system";
+type HistoryPausedOptions = {
+  preserveActiveMimic?: boolean;
+};
 
 const CHAT_HISTORY_SCROLL = {
   minPixelDelta: 0.5,
@@ -48,6 +52,26 @@ const RESTORE_PAGE_CURSOR_MOVE = {
 const ENABLE_PAUSED_CURSOR_MIMIC = true;
 const THEME_STORAGE_KEY = "chatbotStoriesTheme";
 const THEME_PREFERENCES = new Set<ThemePreference>(["light", "dark", "system"]);
+const PLAYBACK_CLICK_INTERACTIVE_SELECTOR = [
+  "a[href]",
+  "button",
+  "input",
+  "select",
+  "textarea",
+  "summary",
+  "[role='button']",
+  "[role='link']",
+  "[contenteditable='true']",
+  "[data-story-scrubber]",
+  "[data-theme-toggle]",
+  "[data-story-tab]",
+  "[data-history-resume]",
+  "[data-toggle-play]",
+  ".wa-story-tab__link",
+  ".wa-thinking",
+  ".wa-research-step__label-row",
+  ".wa-research-step__chevron",
+].join(",");
 
 export class StoryController implements ChatbotStoriesInstance {
   private activeIndex = 0;
@@ -102,17 +126,32 @@ export class StoryController implements ChatbotStoriesInstance {
 
   play(): void {
     const shouldRestoreDataTables = this.historyPaused;
+    const mimicReturnTimeline = this.pausedCursorMimic?.releaseToIdle() ?? null;
 
     this.seekTween?.kill();
     this.seekTween = null;
-    this.setHistoryPaused(false);
+    this.setHistoryPaused(false, { preserveActiveMimic: Boolean(mimicReturnTimeline) });
     this.chat.collapsePausedThinkingInteractions();
     this.chat.scrollToLive();
     this.playing = true;
     this.updatePlayButton();
 
-    if (shouldRestoreDataTables && this.restoreDataTablePagesBeforePlay()) return;
+    if (mimicReturnTimeline) {
+      this.resumeRestoreTimeline = gsap.timeline({
+        onComplete: () => {
+          this.resumeRestoreTimeline = null;
+          if (this.playing) this.resumePlaybackAfterPlayRequest(shouldRestoreDataTables);
+        },
+      });
+      this.resumeRestoreTimeline.add(mimicReturnTimeline);
+      return;
+    }
 
+    this.resumePlaybackAfterPlayRequest(shouldRestoreDataTables);
+  }
+
+  private resumePlaybackAfterPlayRequest(shouldRestoreDataTables: boolean): void {
+    if (shouldRestoreDataTables && this.restoreDataTablePagesBeforePlay()) return;
     this.resumeActiveTimeline();
   }
 
@@ -120,9 +159,11 @@ export class StoryController implements ChatbotStoriesInstance {
     this.setHistoryPaused(false);
     this.playing = false;
     this.activeTimeline?.pause();
+    this.chat.stopScrollMotion();
     this.autoAdvance?.kill();
     this.seekTween?.kill();
     this.seekTween = null;
+    this.parkCursorForPausedPlayback();
     this.updatePlayButton();
     this.resumeRestoreTimeline?.kill();
     this.resumeRestoreTimeline = null;
@@ -238,6 +279,7 @@ export class StoryController implements ChatbotStoriesInstance {
   private transitionToStory(nextIndex: number, options: StorySwitchOptions = {}): void {
     const startPoint = this.cursor.getPosition();
     const shouldAnimateCurrentStoryOut = Boolean(options.animateExit && this.activeTimeline);
+    const shouldPreservePlayback = Boolean(options.preservePlayback && this.playing);
 
     this.storyProgress[nextIndex] = 0;
     this.storySwitchTimeline?.kill();
@@ -250,7 +292,7 @@ export class StoryController implements ChatbotStoriesInstance {
       return;
     }
 
-    this.playing = false;
+    this.playing = shouldPreservePlayback;
     this.updatePlayButton();
     this.storySwitchTimeline = gsap.timeline({
       onComplete: () => {
@@ -363,13 +405,16 @@ export class StoryController implements ChatbotStoriesInstance {
   }
 
   private handleComplete(): void {
-    const shouldAutoAdvance = this.playing;
+    const shouldAutoAdvance =
+      this.playing &&
+      this.options.autoplay &&
+      (this.options.loop || this.activeIndex < this.stories.length - 1);
 
-    this.playing = false;
-    this.updatePlayButton();
-
-    if (!this.options.autoplay || !shouldAutoAdvance) return;
-    if (!this.options.loop && this.activeIndex === this.stories.length - 1) return;
+    if (!shouldAutoAdvance) {
+      this.playing = false;
+      this.updatePlayButton();
+      return;
+    }
 
     this.autoAdvance?.kill();
     this.autoAdvance = gsap.delayedCall(this.options.autoAdvanceDelay, () => {
@@ -377,11 +422,11 @@ export class StoryController implements ChatbotStoriesInstance {
 
       if (nextIndex >= this.stories.length) {
         if (this.options.loop) this.resetStoryProgress();
-        this.goTo(this.options.loop ? 0 : this.activeIndex, { animateExit: true });
+        this.goTo(this.options.loop ? 0 : this.activeIndex, { animateExit: true, preservePlayback: true });
         return;
       }
 
-      this.goTo(nextIndex, { animateExit: true });
+      this.goTo(nextIndex, { animateExit: true, preservePlayback: true });
     });
   }
 
@@ -441,6 +486,8 @@ export class StoryController implements ChatbotStoriesInstance {
     const button = this.playButton;
 
     this.root.dataset.storyPaused = String(!this.playing);
+    this.syncPausedCursorMimic();
+    this.updateResumeButtonVisibility();
 
     if (!button) return;
 
@@ -472,11 +519,33 @@ export class StoryController implements ChatbotStoriesInstance {
       event.preventDefault();
       if (this.playing) this.pauseForChatHistory();
     });
+    this.onRoot("click", (event) => this.handlePlaybackSurfaceClick(event as MouseEvent));
     this.on("[data-story-scrubber]", "input", (event) => {
       const input = event.currentTarget as HTMLInputElement;
       this.seekTo(Number(input.value) / 1000);
     });
     this.attachChatHistoryScroll();
+  }
+
+  private handlePlaybackSurfaceClick(event: MouseEvent): void {
+    if (event.defaultPrevented || event.button !== 0) return;
+    if (!(event.target instanceof Element)) return;
+    if (this.isPlaybackInteractiveClickTarget(event.target)) return;
+
+    if (this.playing) {
+      if (this.isFakeBrowserClickTarget(event.target)) this.pause();
+      return;
+    }
+
+    this.play();
+  }
+
+  private isPlaybackInteractiveClickTarget(target: Element): boolean {
+    return Boolean(target.closest(PLAYBACK_CLICK_INTERACTIVE_SELECTOR));
+  }
+
+  private isFakeBrowserClickTarget(target: Element): boolean {
+    return Boolean(target.closest(".wa-window, [data-chat-shell]"));
   }
 
   private attachThemeToggle(): void {
@@ -920,29 +989,43 @@ export class StoryController implements ChatbotStoriesInstance {
     this.activeTimeline?.pause();
     this.chat.stopScrollMotion();
     this.chat.prepareForChatHistoryPause();
-    this.cursor.clearTransientInteraction();
-    this.cancelHistoryParkMotion();
-    this.historyParkTimeline = this.cursor.parkForChatHistory();
+    this.parkCursorForPausedPlayback();
     this.setHistoryPaused(true);
     this.updatePlayButton();
   }
 
-  private setHistoryPaused(paused: boolean): void {
+  private parkCursorForPausedPlayback(): void {
+    this.cursor.clearTransientInteraction();
+    this.cancelHistoryParkMotion();
+    this.historyParkTimeline = this.cursor.parkForChatHistory();
+  }
+
+  private setHistoryPaused(paused: boolean, options: HistoryPausedOptions = {}): void {
     if (!paused) {
-      this.pausedCursorMimic?.setPaused(false);
+      if (!options.preserveActiveMimic) this.pausedCursorMimic?.setPaused(false);
       this.cancelHistoryParkMotion();
     }
 
     this.historyPaused = paused;
     this.root.dataset.chatHistoryPaused = String(paused);
-    this.pausedCursorMimic?.setPaused(paused);
+    if (paused || !options.preserveActiveMimic) this.pausedCursorMimic?.setPaused(paused);
+    this.updateResumeButtonVisibility();
+  }
 
+  private updateResumeButtonVisibility(): void {
     const resume = this.resumeButton;
+    const paused = !this.playing || this.historyPaused;
 
     if (!resume) return;
 
     resume.setAttribute("aria-hidden", String(!paused));
     resume.tabIndex = paused ? 0 : -1;
+  }
+
+  private syncPausedCursorMimic(): void {
+    const canMimicPausedCursor = Boolean(this.activeTimeline && !this.storySwitchTimeline);
+
+    this.pausedCursorMimic?.setPaused(canMimicPausedCursor && (!this.playing || this.historyPaused));
   }
 
   private cancelHistoryParkMotion(): void {
