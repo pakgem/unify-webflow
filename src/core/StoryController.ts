@@ -63,7 +63,6 @@ const PLAYBACK_CLICK_INTERACTIVE_SELECTOR = [
   "[role='link']",
   "[contenteditable='true']",
   "[data-story-scrubber]",
-  "[data-theme-toggle]",
   "[data-story-tab]",
   "[data-history-resume]",
   "[data-toggle-play]",
@@ -93,8 +92,6 @@ export class StoryController implements ChatbotStoriesInstance {
   private scrubber: HTMLInputElement | null = null;
   private playButton: HTMLButtonElement | null = null;
   private resumeButton: HTMLButtonElement | null = null;
-  private themeButton: HTMLButtonElement | null = null;
-  private themeLabel: HTMLElement | null = null;
   private themePreference: ThemePreference = "system";
   private systemThemeQuery: MediaQueryList | null = null;
   private playing = false;
@@ -501,9 +498,7 @@ export class StoryController implements ChatbotStoriesInstance {
     this.scrubber = this.root.querySelector<HTMLInputElement>("[data-story-scrubber]");
     this.playButton = this.root.querySelector<HTMLButtonElement>("[data-toggle-play]");
     this.resumeButton = this.root.querySelector<HTMLButtonElement>("[data-history-resume]");
-    this.themeButton = this.root.querySelector<HTMLButtonElement>("[data-theme-toggle]");
-    this.themeLabel = this.root.querySelector<HTMLElement>("[data-theme-toggle-label]");
-    this.attachThemeToggle();
+    this.attachTheme();
 
     this.on("[data-prev-story]", "click", () => this.previous());
     this.on("[data-next-story]", "click", () => this.next());
@@ -548,7 +543,7 @@ export class StoryController implements ChatbotStoriesInstance {
     return Boolean(target.closest(".wa-window, [data-chat-shell]"));
   }
 
-  private attachThemeToggle(): void {
+  private attachTheme(): void {
     this.systemThemeQuery = window.matchMedia?.("(prefers-color-scheme: dark)") ?? null;
     this.themePreference = this.getInitialThemePreference();
     this.applyThemePreference(this.themePreference);
@@ -560,12 +555,6 @@ export class StoryController implements ChatbotStoriesInstance {
       query.addEventListener("change", handleSystemThemeChange);
       this.listeners.push(() => query.removeEventListener("change", handleSystemThemeChange));
     }
-
-    this.on("[data-theme-toggle]", "click", () => {
-      const nextTheme: ThemePreference = this.getResolvedTheme() === "dark" ? "light" : "dark";
-
-      this.setThemePreference(nextTheme);
-    });
   }
 
   private getInitialThemePreference(): ThemePreference {
@@ -590,17 +579,6 @@ export class StoryController implements ChatbotStoriesInstance {
     return THEME_PREFERENCES.has(value as ThemePreference) ? value as ThemePreference : null;
   }
 
-  private setThemePreference(preference: ThemePreference): void {
-    this.themePreference = preference;
-    this.applyThemePreference(preference);
-
-    try {
-      window.localStorage?.setItem(THEME_STORAGE_KEY, preference);
-    } catch {
-      // Ignore storage failures; the current session theme still updates.
-    }
-  }
-
   private applyThemePreference(preference: ThemePreference): void {
     const resolvedTheme = this.resolveTheme(preference);
 
@@ -608,28 +586,12 @@ export class StoryController implements ChatbotStoriesInstance {
     this.root.dataset.resolvedTheme = resolvedTheme;
     document.documentElement.style.setProperty("--wa-page-bg", resolvedTheme === "dark" ? "#10100d" : "#fffff9");
     document.documentElement.style.colorScheme = resolvedTheme;
-    this.updateThemeToggle(resolvedTheme);
   }
 
   private resolveTheme(preference: ThemePreference): "light" | "dark" {
     if (preference !== "system") return preference;
 
     return this.systemThemeQuery?.matches ? "dark" : "light";
-  }
-
-  private getResolvedTheme(): "light" | "dark" {
-    return this.resolveTheme(this.themePreference);
-  }
-
-  private updateThemeToggle(resolvedTheme: "light" | "dark"): void {
-    const button = this.themeButton;
-    const dark = resolvedTheme === "dark";
-
-    if (this.themeLabel) this.themeLabel.textContent = dark ? "Dark" : "Light";
-    if (!button) return;
-
-    button.setAttribute("aria-pressed", String(dark));
-    button.setAttribute("aria-label", dark ? "Switch to light mode" : "Switch to dark mode");
   }
 
   private createStoryTab(story: StoryDefinition, index: number): HTMLElement {
